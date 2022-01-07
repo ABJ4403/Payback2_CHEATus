@@ -1,4 +1,4 @@
-# Payback2_CHEATus, dibuat oleh ABJ4403, Skrip original oleh Mangyu.
+# Payback2 CHEATus, dibuat oleh ABJ4403, Skrip original oleh Mangyu.
 [🇺🇸️ README English](https://github.com/ABJ4403/Payback2_CHEATus)
 
 Cheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietari)
@@ -15,11 +15,11 @@ Diuji di:
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
 
 # Pengunaan
-- Pastikan ponsel Anda telah di-root (saya sarankan menggunakan [Magisk](https://github.com/topjohnwu/magisk) karena Magisk bersumber-terbuka) untuk menggunakan GameGuardian.
+- Pastikan ponsel Anda telah di-root (saya sarankan menggunakan [Magisk](https://github.com/topjohnwu/magisk) karena Magisk bersumber-terbuka) untuk menggunakan [GameGuardian](https://gameguardian.net).
 	- Anda dapat menggunakan GameGuardian tanpa root di lingkungan virtual, tetapi mungkin tidak berfungsi.
 	- (Disarankan) Karena "Payback 2" banyak iklan, saya sarankan menggunakan Hosts AdBlocking, seperti [AdAway](https://awaway.org)
 - Instal versi terbaru [GameGuardian](https://gameguardian.net).
-- Instal "[Payback 2](https://play.google.com/net.apex_design.payback2) (link not done yet)" terbaru (jika tidak berhasil, unduh versi 2.104.12.4, saya sarankan untuk mendapatkannya dari [Aurora Store](https://auroraoss.org), atau dari [APKMirror](https://apkmirror.com))
+- Instal "[Payback 2](https://play.google.com/net.apex_design.payback2) (link not done yet)" versi terbaru (jika tidak berhasil, unduh versi 2.104.12.4, saya sarankan untuk mendapatkannya dari [Aurora Store](https://auroraoss.org), atau dari [APKMirror](https://apkmirror.com))
 - Unduh [skrip cheat](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/Payback2_CHEATus.lua?raw=true). PERINGATAN: HANYA unduh dari sumber ini, jika Anda adalah pembuat konten, ANDA HARUS memberikan tautan GitHub langsung, ANDA TIDAK DIPERBOLEHKAN UNTUK MEMBERI LINK DOWNLOAD KE SITUS LAIN DENGAN MENGCOMPILE SCRIPT LUA!
 	- Setiap perubahan dalam hal sumber kode HARUS ditunjukkan kepada publik, sesuai dengan lisensi GPLv3.
 
