@@ -14,8 +14,16 @@ Tested on:
 
 This cheat is part of FOSS (Free and Open-Source Software)
 
+# Usage
+- Make sure your phone is rooted (i recommend using [Magisk](https://github.com/topjohnwu/magisk) because its open-source) to use GameGuardian.
+  - You can use GameGuardian without root in virtual environment, but it might not work.
+  - (Recommended) because the game has so many ads, i recommend using Hosts AdBlocking, like [AdAway](https://adaway.org)
+- Install The latest version of [GameGuardian](https://gameguardian.net).
+- Install latest "Payback 2" (if it does'nt work, download the version 2.104.12.4, i recommend getting it from [Aurora store](https://auroraoss.org), or use [APKMirror](https://apkmirror.com))
+- Download the cheat script. WARNING: ONLY download from this source, if you are a content creator, YOU HAVE TO give the DIRECT GitHub Link!
+  - Any changes in terms of source-code MUST be SHOWN to public, according to GPLv3 license.
 
-Why i make this:
+# Why i make this?
 Because i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source rules, we need to see the source code so that we can make sure its safe and not malware. Just take a look at Hydra for example (Payback gamer name: HydraAssasins/HYDRAofINDONESIA) YouTube videos. he's hiding every technique of cheating, the hiding is SO EXTREME. even if he gives download link of one cheat (wall-hack)
 
 its still proprietary, i cant read any single code to make sure its not malware, and also its whopping 200kb! im done. this is why the "Payback2 CHEATus" project comes
