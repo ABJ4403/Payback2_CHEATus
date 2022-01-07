@@ -1,5 +1,5 @@
 # Payback2 CHEATus. created by ABJ4403, Original script by Mangyu.
-[🇮🇩️ README Bahasa Indonesia](https://github.com/ABJ4403/Payback2_CHEATus/README_id.md)
+[🇮🇩️ README Bahasa Indonesia](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
 
