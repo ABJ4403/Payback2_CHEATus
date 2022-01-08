@@ -1,4 +1,4 @@
-# Payback2 CHEATus. created by ABJ4403, Original script by Mangyu.
+# Payback2 CHEATus. created by ABJ4403.
 [🇮🇩️ README Bahasa Indonesia](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
@@ -27,3 +27,7 @@ This cheat is part of FOSS (Free and Open-Source Software)
 Because i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source rules, we need to see the source code so that we can make sure its safe and not malware. Just take a look at Hydra for example (Payback gamer name: HydraAssasins/HYDRAofINDONESIA) YouTube videos. he's hiding every technique of cheating, the hiding is SO EXTREME. even if he gives download link of one cheat (wall-hack)
 
 its still proprietary, i cant read any single code to make sure its not malware, and also its whopping 200kb! im done. this is why the "Payback2 CHEATus" project comes
+
+# Credit
+- Mangyu - Original script
+- ToxicCoder/Crystal_Mods100x (idk who the actual creator is lmao) - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) and [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
