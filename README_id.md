@@ -19,7 +19,7 @@ Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuk
 	- Anda dapat menggunakan GameGuardian tanpa root di lingkungan virtual, tetapi mungkin tidak berfungsi.
 	- (Disarankan) Karena "Payback 2" banyak iklan, saya sarankan menggunakan Hosts AdBlocking, seperti [AdAway](https://awaway.org)
 - Instal versi terbaru [GameGuardian](https://gameguardian.net).
-- Instal "[Payback 2](https://play.google.com/net.apex_design.payback2) (link not done yet)" versi terbaru (jika tidak berhasil, unduh versi 2.104.12.4, saya sarankan untuk mendapatkannya dari [Aurora Store](https://auroraoss.org), atau dari [APKMirror](https://apkmirror.com))
+- Instal "[Payback 2](https://play.google.com/store/apps/details?id=net.apex_designs.payback2)" versi terbaru (jika tidak berhasil, unduh versi 2.104.12.4, saya sarankan untuk mendapatkannya dari [Aurora Store](https://auroraoss.org), atau dari [APKMirror](https://apkmirror.com))
 - Unduh [skrip cheat](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/Payback2_CHEATus.lua?raw=true). PERINGATAN: HANYA unduh dari sumber ini, jika Anda adalah pembuat konten, ANDA HARUS memberikan [tautan GitHub](https://github.com/ABJ4403/Payback2_CHEATus) langsung, ANDA TIDAK DIPERBOLEHKAN UNTUK MEMBERI LINK DOWNLOAD KE SITUS LAIN DENGAN MENGCOMPILE SCRIPT LUA DAN MEMBUATNYA TIDAK BISA DIDECOMPILE!
 	- Setiap perubahan dalam hal sumber kode HARUS ditunjukkan kepada publik, sesuai dengan lisensi GPLv3.
 
