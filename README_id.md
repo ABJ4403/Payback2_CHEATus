@@ -27,6 +27,7 @@ Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuk
 Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source (karena saya adalah open-source oriented), kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim. Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall), itu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek "Payback2 CHEATus" datang
 
 # Kredit
-- Mangyu - Skrip original
-- ToxicCoder/Crystal_Mods100x (gw tidak tau siapa yang buat wkwk) - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) dan [ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
-- mdp43140 - Contributor
+- Mangyu - Skrip original.
+- Crystal_Mods100x (jadi, setelah saya mencari pembuatnya, pembuat aslinya adalah CrystalMods. ToxicCoder adalah Channel YouTube yang mengunggah kode ini, tetapi dia tidak memberi kredit kepada pembuat aslinya) - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
+- ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui youtube dan mediafire.
+- mdp43140 - Contributor.
