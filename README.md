@@ -19,7 +19,7 @@ This cheat is part of FOSS (Free and Open-Source Software)
   - You can use GameGuardian without root in virtual environment, but it might not work.
   - (Recommended) because the game has so many ads, i recommend using Hosts AdBlocking, like [AdAway](https://adaway.org)
 - Install The latest version of [GameGuardian](https://gameguardian.net).
-- Install the latest "[Payback 2](https://play.google.com/net.apex_design.payback2) (link not done yet)" (if it does'nt work, download the version 2.104.12.4, i recommend getting it from [Aurora store](https://auroraoss.org), or use [APKMirror](https://apkmirror.com))
+- Install the latest "[Payback 2](https://play.google.com/store/apps/details?id=net.apex_designs.payback2)" (if it does'nt work, download the version 2.104.12.4, i recommend getting it from [Aurora store](https://auroraoss.org), or use [APKMirror](https://apkmirror.com))
 - Download the [cheat script](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/Payback2_CHEATus.lua?raw=true). WARNING: ONLY download from this source, if you are a content creator, YOU HAVE TO give the DIRECT GitHub Link, YOU'RE NOT ALLOWED TO GIVE DOWNLOAD LINK TO OTHER SITES WITH COMPILED LUA SCRIPT!
   - Any changes in terms of source-code MUST be SHOWN to public, according to GPLv3 license.
 
