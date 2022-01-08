@@ -27,6 +27,7 @@ This cheat is part of FOSS (Free and Open-Source Software)
 Because i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy (because im foss oriented lol), we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HydraAssasins/HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker censor, zoom censor, speedup, expecially something related with memory value, or well... any number). even if he gives download link of one cheat (wall-hack), its still proprietary, i cant read any single code to make sure its not malware, and also its whopping 200kb! I'm done. This is why the "Payback2 CHEATus" project comes
 
 # Credit
-- Mangyu - Original script
-- ToxicCoder/Crystal_Mods100x (idk who the actual creator is lmao) - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) and [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
+- Mangyu - Original script author
+- Crystal_Mods100x (so, after i researched the author, its CrystalMods. ToxicCoder is a YouTube Channel whose uploads this code, but he didn't credit the original author) - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
+- ToxicCoder - for providing the removed script through youtube and mediafire.
 - mdp43140 - Contributor
