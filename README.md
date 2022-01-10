@@ -1,4 +1,4 @@
-# Payback2 CHEATus. created by ABJ4403.
+# Payback2 CHEATus, created by ABJ4403.
 [🇮🇩️ README Bahasa Indonesia](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
@@ -24,10 +24,10 @@ This cheat is part of FOSS (Free and Open-Source Software)
   - Any changes in terms of source-code MUST be SHOWN to public, according to GPLv3 license.
 
 # Why i make this?
-Because i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy (because im foss oriented lol), we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HydraAssasins/HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker censor, zoom censor, speedup, expecially something related with memory value, or well... any number). even if he gives download link of one cheat (wall-hack), its still proprietary, i cant read any single code to make sure its not malware, and also its whopping 200kb! I'm done. This is why the "Payback2 CHEATus" project comes
+Because i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy (because im foss oriented lol), we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number). even if he gives [download link of one cheat (wall-hack)](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file), its still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word "[LOCKED]" and on the video description which he provides, theres garbled text that says "7o31kql9p", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the "Payback2 CHEATus" project comes
 
 # Credit
 - Mangyu - Original script author
-- Crystal_Mods100x (so, after i researched the author, its CrystalMods. ToxicCoder is a YouTube Channel whose uploads this code, but he didn't credit the original author) - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
+- Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
 - Latic AX and ToxicCoder - for providing the removed script through youtube and mediafire.
 - mdp43140 - Contributor
