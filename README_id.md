@@ -14,6 +14,14 @@ Diuji di:
 
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
 
+
+
+# Fitur:
+- Nilai Knockback Pistol/Shotgun Kustom.
+- Modifier Ammo Senjata.
+- Wall Hack.
+- Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
+
 # Pengunaan
 - Pastikan ponsel Anda telah di-root (saya sarankan menggunakan [Magisk](https://github.com/topjohnwu/magisk) karena Magisk bersumber-terbuka) untuk menggunakan [GameGuardian](https://gameguardian.net).
 	- Anda dapat menggunakan GameGuardian tanpa root di lingkungan virtual, tetapi mungkin tidak berfungsi.
