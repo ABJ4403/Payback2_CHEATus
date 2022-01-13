@@ -11,8 +11,13 @@ Tested on:
 - Payback2 v2.104.12.4
 - GameGuardian v101.0
 
-
 This cheat is part of FOSS (Free and Open-Source Software)
+
+# Features:
+- Pistol/Shotgun Custom Knockback Value
+- Weapon Ammo Modifier
+- Wall Hack
+- And more that i didnt mention here (because some of them wont work).
 
 # Usage
 - Make sure your phone is rooted (i recommend using [Magisk](https://github.com/topjohnwu/magisk) because its open-source) to use [GameGuardian](https://gameguardian.net).
