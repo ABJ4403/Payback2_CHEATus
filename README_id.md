@@ -28,6 +28,8 @@ Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak m
 
 # Kredit
 - Mangyu - Skrip original.
+- mdp43140 - Kontributor.
 - Crystal_Mods100x (jadi, setelah saya mencari pembuatnya, pembuat aslinya adalah CrystalMods. ToxicCoder adalah Channel YouTube yang mengunggah kode ini, tetapi dia tidak memberi kredit kepada pembuat aslinya) - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui youtube dan mediafire.
-- mdp43140 - Contributor.
+- Alpha GG Hacker YT - Untuk menyediakan Value Wall Hack GameGuardian.
+- Hydra (tidak terimakasih untuk wall hack yang bisa jalan aja nggak broo).
