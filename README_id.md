@@ -1,6 +1,14 @@
 # Payback2 CHEATus, dibuat oleh ABJ4403.
 [🇺🇸️ README English](https://github.com/ABJ4403/Payback2_CHEATus)
 
+# Fitur:
+- Nilai Knockback Pistol/Shotgun Kustom.
+- Modifier Ammo Senjata.
+- Wall Hack.
+- Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
+
+Masih bingung? menuju ke [wiki](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
+
 Cheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)
 
 [Laporkan isu disini](https://github.com/ABJ4403/Payback2_CHEATus)
@@ -13,14 +21,6 @@ Diuji di:
 
 
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
-
-
-
-# Fitur:
-- Nilai Knockback Pistol/Shotgun Kustom.
-- Modifier Ammo Senjata.
-- Wall Hack.
-- Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
 
 # Pengunaan
 - Pastikan ponsel Anda telah di-root (saya sarankan menggunakan [Magisk](https://github.com/topjohnwu/magisk) karena Magisk bersumber-terbuka) untuk menggunakan [GameGuardian](https://gameguardian.net).
