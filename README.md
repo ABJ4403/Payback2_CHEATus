@@ -1,6 +1,14 @@
 # Payback2 CHEATus, created by ABJ4403.
 [🇮🇩️ README Bahasa Indonesia](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 
+# Features:
+- Pistol/Shotgun Custom Knockback Value
+- Weapon Ammo Modifier
+- Wall Hack
+- And more that i didnt mention here (because some of them wont work).
+
+If you still confused about these stuff, go to [wiki](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
+
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
 
 [Report issues here](https://github.com/ABJ4403/Payback2_CHEATus)
@@ -12,12 +20,6 @@ Tested on:
 - GameGuardian v101.0
 
 This cheat is part of FOSS (Free and Open-Source Software)
-
-# Features:
-- Pistol/Shotgun Custom Knockback Value
-- Weapon Ammo Modifier
-- Wall Hack
-- And more that i didnt mention here (because some of them wont work).
 
 # Usage
 - Make sure your phone is rooted (i recommend using [Magisk](https://github.com/topjohnwu/magisk) because its open-source) to use [GameGuardian](https://gameguardian.net).
