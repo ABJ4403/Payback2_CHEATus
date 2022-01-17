@@ -1,19 +1,20 @@
 # Payback2 CHEATus, created by ABJ4403.
-[🇮🇩️ README Bahasa Indonesia](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
+[```🇮🇩️ README Bahasa Indonesia```](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 
 # Features:
+```🔫 Pistol/SG Knockback``` ```🔫 Weapon ammo``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware``` ```💰❌ FOSS (Free & Open-source)``` ```etc```
 - Pistol/Shotgun Custom Knockback Value
 - Weapon Ammo Modifier
 - Wall Hack
 - And more that i didnt mention here (because some of them wont work).
 
-If you still confused about these stuff, go to [wiki](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
+If you still confused about these stuff, go to [```Wiki```](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
 
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
 
-[Report issues here](https://github.com/ABJ4403/Payback2_CHEATus)
+[```Report issues here```](https://github.com/ABJ4403/Payback2_CHEATus)
 
-License: GPLv3
+License: [GPLv3](https://gnu.org/licenses)
 
 Tested on:
 - Payback2 v2.104.12.4
@@ -38,5 +39,5 @@ Because i see Payback 2 players (notably cheaters) are very rude, and did'nt wan
 - mdp43140 - Contributor
 - Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
 - Latic AX and ToxicCoder - for providing the removed script through youtube and mediafire
-- Alpha GG Hacker YT - for providing wall hack GameGuardian Values
+- Alpha GG Hacker - for providing wall hack GameGuardian Values (no thanks for ridicilous military-encryption script)
 - Hydra (no thanks for "no reload cheat" tutor that doesnt even work)
