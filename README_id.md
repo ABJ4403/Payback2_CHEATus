@@ -1,19 +1,20 @@
 # Payback2 CHEATus, dibuat oleh ABJ4403.
-[🇺🇸️ README English](https://github.com/ABJ4403/Payback2_CHEATus)
+[```🇺🇸️ README English```](https://github.com/ABJ4403/Payback2_CHEATus)
 
 # Fitur:
+```🔫 Pistol/SG Knockback``` ```🔫 Ammo senjata``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware verified``` ```💰❌ FOSS (Gratis & bersumber-terbuka)``` ```dll```
 - Nilai Knockback Pistol/Shotgun Kustom.
 - Modifier Ammo Senjata.
 - Wall Hack.
 - Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
 
-Masih bingung? menuju ke [wiki](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
+Masih bingung? menuju ke [```Wiki```](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
 
 Cheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)
 
-[Laporkan isu disini](https://github.com/ABJ4403/Payback2_CHEATus)
+[```Laporkan isu disini```](https://github.com/ABJ4403/Payback2_CHEATus)
 
-Lisensi: GPLv3
+Lisensi: [GPLv3](https://gnu.org/licenses)
 
 Diuji di:
 - Payback2 v2.104.12.4
@@ -23,11 +24,11 @@ Diuji di:
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
 
 # Pengunaan
-- Pastikan ponsel Anda telah di-root (saya sarankan menggunakan [Magisk](https://github.com/topjohnwu/magisk) karena Magisk bersumber-terbuka) untuk menggunakan [GameGuardian](https://gameguardian.net).
+- Pastikan ponsel Anda telah di-root untuk menggunakan [GameGuardian](https://gameguardian.net) ([Lihat Wiki ini untuk bantuannya](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-root-your-phone), ya gw tau itu basa ingris wkwk).
 	- Anda dapat menggunakan GameGuardian tanpa root di lingkungan virtual, tetapi mungkin tidak berfungsi.
 	- (Disarankan) Karena "Payback 2" banyak iklan, saya sarankan menggunakan Hosts AdBlocking, seperti [AdAway](https://awaway.org)
 - Instal versi terbaru [GameGuardian](https://gameguardian.net).
-- Instal "[Payback 2](https://play.google.com/store/apps/details?id=net.apex_designs.payback2)" versi terbaru (jika tidak berhasil, unduh versi 2.104.12.4, saya sarankan untuk mendapatkannya dari [Aurora Store](https://auroraoss.org), atau dari [APKMirror](https://apkmirror.com))
+- Instal [Payback 2](https://play.google.com/store/apps/details?id=net.apex_designs.payback2) versi terbaru (jika tidak berhasil, unduh versi 2.104.12.4, saya sarankan untuk mendapatkannya dari [Aurora Store](https://auroraoss.org), atau dari [APKMirror](https://apkmirror.com))
 - Unduh [skrip cheat](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/Payback2_CHEATus.lua?raw=true). PERINGATAN: HANYA unduh dari sumber ini, jika Anda adalah pembuat konten, ANDA HARUS memberikan [tautan GitHub](https://github.com/ABJ4403/Payback2_CHEATus) langsung, ANDA TIDAK DIPERBOLEHKAN UNTUK MEMBERI LINK DOWNLOAD KE SITUS LAIN DENGAN MENGCOMPILE SCRIPT LUA DAN MEMBUATNYA TIDAK BISA DIDECOMPILE!
 	- Setiap perubahan dalam hal sumber kode HARUS ditunjukkan kepada publik, sesuai dengan lisensi GPLv3.
 
@@ -37,7 +38,7 @@ Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak m
 # Kredit
 - Mangyu - Skrip original.
 - mdp43140 - Kontributor.
-- Crystal_Mods100x (jadi, setelah saya mencari pembuatnya, pembuat aslinya adalah CrystalMods. ToxicCoder adalah Channel YouTube yang mengunggah kode ini, tetapi dia tidak memberi kredit kepada pembuat aslinya) - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
+- Crystal_Mods100x - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui youtube dan mediafire.
-- Alpha GG Hacker YT - Untuk menyediakan Value Wall Hack GameGuardian.
+- Alpha GG Hacker - Untuk menyediakan Value Wall Hack GameGuardian (tidak terimakasih untuk "enkripsi level 666 yang sangggggat giilaaa").
 - Hydra (tidak terimakasih untuk wall hack yang bisa jalan aja nggak broo).
