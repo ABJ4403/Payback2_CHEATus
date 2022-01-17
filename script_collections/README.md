@@ -2,7 +2,7 @@
 This directory is a list of collection of Payback 2 cheat LUA Script for GameGuardian
 
 # Lists:
-"FileName.lua" ("ActualFileName.lua", from "https:/LinkDownloadIfAny"), By "Author" <(uploaded by "Uploader")>
+"FileName.lua" ("ActualFileName.lua", from "[some website]()"), By "Author" <(uploaded by "Uploader")>
 ---
 - "PB2_Cheat-Mangyu.lua" (idk the original file name lol, and also link idk), By "Mangyu".
 - "PB2_ICE-Menu_v1.0.lua" ("{1.0} PB 2.lua", from "[MediaFire](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)"), By "Crystal_Mods100x" (uploaded by "Toxic Coder")
@@ -35,9 +35,9 @@ anyone can decrypt these files?
 
 - "PB2_GKTV_v1.lua" ("Payback 2 - CHEAT [V1].lua" from "[MediaFire](https://www.mediafire.com/file/hros99ssjzmkp00/Payback_2_-_CHEAT_%255BV1%255D.lua/file)"), by GKTV (now "Pumpkin Hacker")
 
-	Thankfully unlike others, this one is a bit easy, but i just cant decompile it using unluac.
+	Thankfully unlike others, this one is a bit easy, but i just cant decompile it using unluac and luadec (they always thrown errors no matter what i do, its because its too old, 7 years. bruf again, thats why i hate lua soo much rust is just better than this spanish-nonsense).
 
-	If you want to decompile this using unluac, if it errors, reassemble the binary file (there might be error coming, that error you remove the said text)
+	If you want to decompile this using unluac, if it errors, reassemble the binary file (there might be error thrown when you assemble the file (eg. ```error: Unexpected token "op43"```), just remove the line containing said ```unexpected token``` (in this case it was ```op43```) in your assembly file (your mileage may vary)).
 
 	Difficulty: 2
 
@@ -52,7 +52,7 @@ Because its VERY HARD to find these scripts dude...
 # Decompiler/Decryptor resources:
 - [unluac - ```Common``` Decompiler for LUA v5.x](https://sourceforge.net/projects/unluac)
 - [LuaDec - LUA Decompiler for lua v5.1-3](https://github.com/viruscamp/luadec)
-- [ChunkSpy - LUA Chuck inspector/dissasembler idk the link lol](https://github.com/viruscamp/luadec/blob/master/ChunkSpy)
+- [ChunkSpy - LUA Chuck inspector/dissasembler](https://github.com/viruscamp/luadec/blob/master/ChunkSpy)
 
 # Challenge for decryptors
-i will give a challenge here for decryptors. anyone that can decrypt this and send it to me (ofcourse, not just some showcase pay shit cuz were open-source community here, peoples here are donated not paid, aka. paying is optional), i will give EXCLUSIVE credit on GitHub READme section (yeah i dont hav money so that is the only thing i can pay for lol)
+i will give a challenge here for decryptors. anyone that can decrypt this and send it to me (not just some showcase pay shit, cuz were foss (open-source) community here, people's here are donated not paid, aka. paying is optional), i will give EXCLUSIVE credit on GitHub ReadMe section (yeah i dont hav money so that is the only thing i can pay for lol)
