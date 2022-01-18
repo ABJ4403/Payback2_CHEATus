@@ -6,8 +6,6 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 
 - ```PB2_Cheat-Mangyu.lua``` ("PAYBACK2.lua", from [```MediaFire```](https://www.mediafire.com/file/9m1s41x7fjorzrf/PAYBACK2.lua/file)), By Mangyu (uploaded by "Latic AX")
 - ```PB2_ICE-Menu_v1.0.lua``` ("{1.0} PB 2.lua", from [```MediaFire```](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)), By Crystal_Mods100x (uploaded by "Toxic Coder")
-
-## DECRYPTED:
 - ```PB2_VIPTheSmat7Pro27-Mangyu.lua``` (from [```MediaFire```](https://www.mediafire.com/file/6t6hy9cdszcezpr/%25E2%259C%25A8SCRIPT_PAYBACK2_VIP_THE_SMAT7_PRO_27%25E2%259C%25A8_.lua.7z/file), fork of Mangyu's script), by VIPTheSmat7Pro27
 
 	```Difficulty: 2``` ```🔐️ 7z+AES Encrypted``` ```🔏️ Decryptor: ABJ4403``` ```⚙️ Decryption tools: none``` ```⚙️ Requirement: 7z```
@@ -15,6 +13,12 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 	Encrypted in 7z format, Password: ```LUA V1```. Where do i get this you say? from his video comment, because its in spanish i cant read it until i use Google Translate, everything revealed.
   Unfortunately, this script is just another modified version of Mangyu's cheat Script, didnt have any cheat changes except adding replacing ```Mangyu``` with his name ```THE SMAT7 PRO 27```, adding more bloat and stuff.
 
+- ```PB2_GKTV_v1.lua``` (```Payback 2 - CHEAT [V1].lua``` from [```MediaFire```](https://www.mediafire.com/file/hros99ssjzmkp00/Payback_2_-_CHEAT_%255BV1%255D.lua/file)), by GKTV (now "Pumpkin Hacker")
+
+	```Difficulty: 2``` ```🔏️ Decryptor: MDP43140``` ```💾️ Compiled binary``` ```💧️ Leaks variables``` ```⚙️ Decryption tools: [Custom Patched Unluac](https://sourceforge.net/p/unluac/discussion/general/thread/88e9b323cc/)``` ```⚙️ Requirement: [Java](https://java.com)```
+
+	Thankfully unlike others, this one is a bit easy. i cant decrypt this using unluac/luadec, i just need the patched custom unluac that has modified non-standard OPCodes.
+	Then it works
 	
 
 ## HELP WANTED decryption:
@@ -34,14 +38,6 @@ anyone can decrypt these files?
 	Assembled, Obfuscated, Encrypted. All that + the author bullying you in the code itself (the text says ```N O O B   D E C R Y P T   ( F * * *   Y O U )``` on the end of the raw binary file, and ```NoTouchyTouchy```,```OopsSorry``` when disassembling the file).
 	
 	Yeah... looks like he's flexing on his ```🛡️🔒🛡️ new proprietary PHILIPPINES's super 👹️ic 666 military-grade encryption 🛡️🔒🛡️``` that wont even launch the script at all (yes i cant open the script because the encryption was too much even for gameguardian itself lol XD)
----
-- ```PB2_GKTV_v1.lua``` (```Payback 2 - CHEAT [V1].lua``` from [```MediaFire```](https://www.mediafire.com/file/hros99ssjzmkp00/Payback_2_-_CHEAT_%255BV1%255D.lua/file)), by GKTV (now "Pumpkin Hacker")
-
-	```Difficulty: 2``` ```💾️ Compiled binary``` ```💧️ Leaks variables```
-
-	Thankfully unlike others, this one is a bit easy, but i just cant decompile it using unluac and luadec (they always thrown errors no matter what i do, its because its too old, 7 years. bruf again, thats why i hate lua soo much rust is just better than this spanish-nonsense).
-
-	If you want to decompile this using unluac, if it errors, reassemble the binary file (there might be error thrown when you assemble the file (eg. ```error: Unexpected token "op43"```), just remove the line containing said ```unexpected token``` (in this case it was ```op43```) in your assembly file (your mileage may vary)).
 
 I can't upload these encrypted files due to unknown CORS failure when trying to upload to GitHub (idk why, maybe because github is using external stuff...)
 
