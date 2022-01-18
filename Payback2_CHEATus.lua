@@ -1,21 +1,24 @@
 function HOME()
 	local CH = gg.choice({
 		"Works on PB2 2.104.12.4/GG 101.0:",
-		"1. Pistol/Shotgun Knockback cheat",
+		"1. Pistol/SG Knockback cheat",
 		"2. Weapon ammo",
-		"3. Toggle void mode (not work for now due to memory address issue)",
-		"4. Wall Hack",
+		"3. Wall Hack",
+		"4. Toggle void mode (not work for now due to memory address issue)",
+		"5. Change Name (EXPERIMENTAL)",
+		"6. Change Name Color (EXPERIMENTAL)",
 		"---",
 		"Not work on PB2 2.104.12.4/GG 101.0:",
-		"5. Weapon",
-		"6. Burning body",
-		"7. Big body",
-		"8. Destroy all cars",
-		"9. Give Grenades (From ICE Menu, wont work)",
-		"10. Give C4s (From ICE Menu, wont work)",
-		"11. Give Laser (From ICE Menu, wont work)",
-		"12. Win Level (From ICE Menu, wont work)",
-		"13. No reload (Source from Hydra, may not work)",
+		"7. Weapon",
+		"8. Burning body",
+		"9. Big body",
+		"10. Destroy all cars",
+		"11. Give Grenades (From ICE Menu, wont work)",
+		"12. Give C4s (From ICE Menu, wont work)",
+		"13. Give Laser (From ICE Menu, wont work)",
+		"14. Win Level (From ICE Menu, wont work)",
+		"15. No reload (may not work)",
+		"16. Walk animation Wonkyness (client-side only)",
 		"---",
 		"About/Tentang",
 		"Exit/Keluar"
@@ -23,24 +26,32 @@ function HOME()
 --Title:Works on PB2...
 	if CH == 2 then cheat_pistolknockback_multichoice() end
 	if CH == 3 then cheat_weaponammo() end
-	if CH == 4 then cheat_togglevoidmode() end
-	if CH == 5 then cheat_togglewallhack() end
+	if CH == 4 then cheat_togglewallhack() end
+	if CH == 5 then cheat_togglevoidmode() end
+	if CH == 6 then cheat_changeplayername() end
+	if CH == 7 then cheat_changeplayernamecolor() end
 ---
 --Title:Not work on PB2...
-	if CH == 8 then cheat_weapon_on() end
-	if CH == 9 then cheat_firebody_on() end
-	if CH == 10 then cheat_bigbody_togglechoice() end
-	if CH == 11 then cheat_destroycar_togglechoice() end
-	if CH == 12 then cheat_givegrenade() end
-	if CH == 13 then cheat_givebomb() end
-	if CH == 14 then cheat_givelaser() end
-	if CH == 15 then cheat_win() end
-	if CH == 16 then cheat_togglenoreload_exp() end
+	if CH == 10 then cheat_weapon_on() end
+	if CH == 11 then cheat_firebody_on() end
+	if CH == 12 then cheat_bigbody_togglechoice() end
+	if CH == 13 then cheat_destroycar_togglechoice() end
+	if CH == 14 then cheat_givegrenade() end
+	if CH == 15 then cheat_givebomb() end
+	if CH == 16 then cheat_givelaser() end
+	if CH == 17 then cheat_win() end
+	if CH == 18 then cheat_togglenoreload_exp() end
+	if CH == 19 then cheat_walkwonkyness() end
 ---
-	if CH == 18 then show_about() end
-	if CH == 19 then exit() end
+	if CH == 21 then show_about() end
+	if CH == 22 then exit() end
 	HOMEDM = -1
 end
+--[[
+  A little note before looking at the cheat mechanics:
+  On newer version of the game, now it stores data mostly on OTHER region, not Ca,Ch,Jh,A
+  And also the previoud value that is fail when tested, will fail even if you change memory region and still use same value
+]]
 
 function cheat_weapon_on()
 	gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
@@ -65,7 +76,8 @@ end
 function cheat_weaponammo()
 	local CH = gg.choice({
 		"Automatic",
-		"Fallback (Default)",
+		"Fallback (Default, modifies the DWORD, works best in offline mode)",
+		"Fallback (v2, modified the WORD, no respawn required, but cant survive respawn)",
 		"Back"
 	}, nil, "Select method for modifying weapon amount - Modify Weapon Amount\nPS: not tested for multiplayer (while the gameplay running), might not work.")
 	if CH == nil then else
@@ -121,6 +133,20 @@ function cheat_weaponammo()
 		end
 		if CH == 2 then -- Fallback method (requires manually putting values, but will work in most cases)
 			local WEAPON_AMMO_AMOUNT = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;150;60;45'})
+			if WEAPON_AMMO_AMOUNT == nil then else
+				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
+				gg.getResults(16)
+				local found = gg.getResultCount()
+				if found == 0 then
+					gg.toast("Can't find the said number, did you put the right number?")
+				else
+					gg.editAll(9999, gg.TYPE_DWORD)
+					gg.toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number")
+				end
+			end
+		end
+		if CH == 3 then -- Fallback v2 method (requires manually putting values, but will search WORD instead of DWORD, )
+			local WEAPON_AMMO_AMOUNT = gg.prompt({'Put one of your weapon ammo','Freeze'},{},{[2]="checkbox"})
 			if WEAPON_AMMO_AMOUNT == nil then else
 				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
 				gg.getResults(16)
@@ -215,7 +241,7 @@ function cheat_pistolknockback_multichoice()
 	 -- Find specific value
 			gg.searchNumber(GRAPPLE_CURR_VAL.."F;1067869798D;1067869798D;1065353216D;1080326881D;1065353216D::37", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL)
 	 -- Get float type only result
-			t = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_FLOAT)
+			local t = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_FLOAT)
 	 -- Check if found any result
 			local found = gg.getResultCount()
 			if found == 0 then
@@ -226,7 +252,7 @@ function cheat_pistolknockback_multichoice()
 				end
 				GRAPPLE_CURR_VAL = PISTOL_KNOCKBACK_VALUE
 				PISTOL_KNOCKBACK_VALUE = nil
-				gg.toast("Pistol Knockback "..GRAPPLE_CURR_VAL)
+				gg.toast("Pistol/SG Knockback "..GRAPPLE_CURR_VAL)
 				gg.setValues(t)
 			end
 			gg.clearResults()
@@ -250,7 +276,7 @@ function cheat_bigbody_togglechoice()
 		local t
 		local found
 		if CH == 1 then
-			gg.searchNumber("1.09500002861", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL)
+			gg.searchNumber("1.09500002861", gg.TYPE_FLOAT)
 			t = gg.getResults(555)
 			found = gg.getResultCount()
 			if found == 0 then
@@ -266,7 +292,7 @@ function cheat_bigbody_togglechoice()
 			end
 		end
 		if CH == 2 then
-			gg.searchNumber("3.333111555", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL)
+			gg.searchNumber("3.333111555", gg.TYPE_FLOAT)
 			t = gg.getResults(555)
 			found = gg.getResultCount()
 			if found == 0 then
@@ -368,27 +394,23 @@ function cheat_togglevoidmode()
 end
 
 function cheat_togglewallhack()
---Num1 1140457472D;500F
---Type Float,Dword
---GetResult Dword
---Val -5000
---Freeze true
---Range Ch,Ca
---Credit "Alpha GG Hacker YT"
 	local CH = gg.choice({
-		"ON",
+		"ON (Default, physics works best. need to reapplied every match, takes some time)",
+		"ON (Alternative, wonky physics. but fast to enable, and survives multiple match)",
+		"OFF (Alternative)",
 		"Restore previous value",
+		"Use custom value",
 		"Back"
-	}, nil, "Wall Hack\nOnly survives single match, needs to reapplied every rematch\nWarn:\n- Careful, some walls have holes on them, now instead of going on walls, youre going to holes and get drowned lol\n-Don't use Wall Hack if you use Helicopter (if you respawn, the helicopter will sunk down due to less power to pull helicopter up),\n- Don't use Wall Hack if you use Pistol/SG Custom Knockback Cheat\n- Don't use Wall Hack if you doing racing\n- Best use cases are for CTFs (Capture The Flag/Swag)")
+	}, nil, "Wall Hack. Warn:\n- Only use one method at a time\n- some walls have holes behind them\n- Dont use Wall Hack if you use Helicopter (if you respawn, the helicopter will sunk down due to less power to pull helicopter up),\n- Don't use Wall Hack if you do racing\n- Best use cases are for Capture The Swags, especially in Metropolis, because theres less holes there")
 	if CH == nil then else
-		if CH == 3 then HOME() end
+		if CH == 6 then HOME() end
  -- Set ranges
-		gg.setRanges(gg.REGION_C_ALLOC)
 		if CH == 1 then
+	 -- This default method is slow, and only survives single match, but physics works best here.
+			gg.setRanges(gg.REGION_C_ALLOC)
 	 -- Search for specific number
-			gg.searchNumber("1140457472D;500F")
-	 -- Restore previous value (mostly this is useful when youre done a match)
-			if revert_wallhack == nil then else gg.setValues(revert_wallhack) end
+			gg.searchNumber("1140457472D;500F::")
+	 -- Restore previous value (mostly this is useful when youre done a match, but it wont be here due to its modifying certain changed areas, which can cause crash, bruh c++ nature)
 	 -- Get a result and set a backup just in case...
 			revert_wallhack = gg.getResults(50)
 			local t = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
@@ -398,52 +420,236 @@ function cheat_togglewallhack()
 				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i, v in ipairs(t) do
-					v.value = "-500" -- Recommended value:-500 - -5000, putting it to 0 will make you drowned lmao
-					v.freeze = true -- actually for the most part its not required, but sometimes the value will increase/decrease a bit closer to value that prevents wall hack, or causes even more bug lol
+					v.value = WALL_RESIST_VAL[1] -- Recommended value:-500 - -5000, putting it to 0 will make you drowned lmao
+				--v.freeze = true -- actually for the most part its not required, but sometimes the value will increase/decrease a bit closer to value that prevents wall hack, or causes even more bug lol, but if it freezed, c++ runtime cant clear the memory
 				end
-				gg.addListItems(t) -- idk wut this does, can we remove this? will this affect stuff?
+			--gg.addListItems(t) -- idk wut this does, can we remove this? will this affect stuff?
 				gg.setValues(t)
 				gg.clearResults()
 				gg.toast("Wall hack ON")
 			end
 		end
 		if CH == 2 then
+	 -- This altervative method can survive multiple matches, and the value can be found very fast (because it only scans CodeApp), but the physics is wonky
+			gg.setRanges(gg.REGION_CODE_APP)
+	 -- Search for specific number
+			gg.searchNumber("0.001", gg.TYPE_FLOAT)
+	 -- Get a result and set a backup just in case...
+			revert_wallhack = gg.getResults(20)
+	 -- Make sure its there
+			local found = gg.getResultCount()
+			if found == 0 then
+				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			else
+				gg.editAll(WALL_RESIST_VAL[2], gg.TYPE_FLOAT)
+				gg.clearResults()
+				gg.toast("Wall Hack ON")
+			end
+		end
+		if CH == 3 then
+			gg.setRanges(gg.REGION_CODE_APP)
+	 -- Search for specific number
+			gg.searchNumber(WALL_RESIST_VAL[2], gg.TYPE_FLOAT)
+	 -- Get a result and set a backup just in case...
+			revert_wallhack = gg.getResults(20)
+	 -- Make sure its there
+			local found = gg.getResultCount()
+			if found == 0 then
+				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			else
+				gg.editAll("0.001", gg.TYPE_FLOAT)
+				gg.clearResults()
+				gg.toast("Wall Hack ON")
+			end
+		end
+		if CH == 4 then
 			if revert_wallhack == nil then
 				gg.toast("No values to restore, this might be a bug. if you think so, report bug on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
-			 -- Known bug: idk, but it wont restore lol
+		 -- bug:idk, it wot restore lol
 				gg.setValues(revert_wallhack)
 				revert_wallhack = nil
 				gg.clearResults()
-				gg.toast("Wall hack previous value restored")
+				gg.toast("Wall hack previous value restored, be warned though this will cause instability")
 			end
+		end
+		if CH == 5 then
+			local CH = gg.prompt({
+				'Put your custom value for Default method (Game default:1140457472,Cheatus default:-500)',
+				'Put your custom value for Alternative method (Game default:0.001,Cheatus default:-1.00001)'
+			},{
+				[1] = WALL_RESIST_VAL[1],
+				[2] = WALL_RESIST_VAL[2]
+			},{
+				[1] = 'number',
+				[2] = 'number'
+			})
+			if CH == nil then else
+				if CH[1] == "" then else WALL_RESIST_VAL[1] = CH[1] end
+				if CH[2] == "" then else WALL_RESIST_VAL[2] = CH[2] end
+			end
+			CH = nil
+			cheat_togglewallhack()
 		end
 	end
 	HOMEDM = -1
 end
 
 function cheat_togglenoreload_exp()
---This mostly is fake, why?
---because (atleast on latest version of pb2 and gg) this memory address points to nothing, and its read-only.
-	gg.toast('this will change BA26C5D4:Word 0 to 500:Freeze\nWarning: this might not work because its for older version or its sourcing from Hydra channel')
---Prepare the table
-	local t = {}
-	t[1] = {}
-	t[1].address = 0xBA26C5D4
-	t[1].flags = gg.TYPE_DWORD
-	t[1].value = 555
-	t[1].freeze = true
-	gg.setValues(t)
+	local CH = gg.choice({
+		"Automatic (Hydra method, Won't work or for old versions)",
+		"Fallback (Default, can cause instability)",
+		"Back"
+	}, nil, "Select method for applying no reload values - No Reload")
+	if CH == nil then else
+		if CH == 3 then
+			HOME()
+		end
+		if CH == 1 then
+	 -- This mostly fake, Why?
+	 -- because (on latest version of PB2/GG) this memory address points to nothing (the game didnt use this. not even near that address).
+	 -- Prepare the table
+			local t = {}
+			t[1] = {}
+			t[1].address = 0xBA26C5D4
+			t[1].flags = gg.TYPE_DWORD
+			t[1].value = 555
+			t[1].freeze = true
+			gg.setValues(t)
+			gg.toast('this will change BA26C5D4:Word 0 to 500:Freeze\nNo reload ON')
+		end
+		if CH == 2 then
+			gg.setRanges(gg.REGION_OTHER)
+			local stp = gg.prompt({
+				'Put your weapon ammo\n(works best for rocket, because this affects rocket only)\nResets after respawn',
+				'Put your new weapon ammo'
+			})
+			gg.searchNumber(stp[1],gg.TYPE_WORD)
+			gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+			gg.sleep(10000)
+			gg.toast('Timeout, searching for '..stp[2])
+			local t = gg.refineNumber(stp[2], gg.TYPE_WORD)
+			local found = gg.getResultCount()
+			if found == 0 then
+				gg.toast('Can\'t find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			else
+				for i, v in ipairs(t) do
+					v[i].value = 1
+					v[i].freeze = true
+				end
+				gg.setValues(t)
+				gg.clearResults()
+				gg.toast('No reload ON')
+			end
+		end
+	end
 	HOMEDM = -1
 end
 
+function cheat_changeplayername()
+--known to be located in other regions (idk...)
+	gg.setRanges(gg.REGION_OTHER)
+--request user to give player name
+	local player_name = gg.prompt({
+	  'Put your current player name (case-sensitive)',
+	  'Put new player name (cannot be longer than current name, you can change the color by converting to hex and use hex 1-9 for color)'
+	},{
+	  [1]=":Player",
+	  [2]=":CoolFoe"
+	},{
+	  [1]="number",
+	  [2]="number"
+	})
+--search old player name
+	gg.searchNumber(':'..player_name[1], gg.TYPE_BYTE)
+--generic found stuff
+	if found == 0 then
+		gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+	else
+	--this is where the problem arises, does this vvv work?
+		gg.editAll(':'..player_name[2], gg.TYPE_BYTE)
+		gg.toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others')
+	end
+end
+
+function cheat_changeplayernamecolor()
+--known to be located in other regions (idk...)
+	gg.setRanges(gg.REGION_OTHER)
+--request user to give player name
+	local player_name = gg.prompt({'Put your current player name (case-sensitive)'})
+	local player_color_choice = gg.choice({
+		"None (default)",
+		"Black",
+		"White",
+		"Red",
+		"Green",
+		"Blue"
+	},nil,"Select the color you want")
+--search old player name
+	gg.searchNumber(':'..player_name[1], gg.TYPE_BYTE)
+	v = gg.getResults(100)
+	found = gg.getResultCount()
+--generic found stuff
+	if found == 0 then
+		gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+	else
+	--this is where the problem arises, will this vvv work? probably not.
+		local t = {}
+		t[1] = {}
+		t[1].address = v[1].address - 0x1
+		t[1].flags = gg.TYPE_BYTE
+		t[1].value = player_color_choice[1].."h"
+		gg.setValues(t)
+		gg.toast('Color set to '..player_color_choice[1])
+	end
+end
+
+
+function cheat_walkwonkyness()
+	local CH = gg.choice({
+		"Default (0.004)",
+		"ON (1)",
+		"OFF (0)",
+		"Restore",
+		"Back"
+	}, nil, "Walk Wonkyness (fancy-cheat)")
+	if CH == nil then else
+		if CH == 5 then HOME() end
+		gg.setRanges(gg.REGION_CODE_APP)
+		if CH == 1 then
+			gg.searchNumber("0~1", gg.TYPE_FLOAT)
+			revert = gg.getResults(10)
+			gg.editAll("0.004", gg.TYPE_FLOAT)
+			gg.toast("Walk Wonkyness Default")
+		end
+		if CH == 2 then
+			gg.searchNumber("0.004", gg.TYPE_FLOAT)
+			revert = gg.getResults(10)
+			gg.editAll("1", gg.TYPE_FLOAT)
+			gg.toast("Walk Wonkyness ON")
+		end
+		if CH == 3 then
+			gg.searchNumber("1", gg.TYPE_FLOAT)
+			revert = gg.getResults(10)
+			gg.editAll("0.004", gg.TYPE_FLOAT)
+			gg.toast("Walk Wonkyness OFF")
+		end
+		gg.clearResults()
+		CH = nil
+	end
+	HOMEDM = -1
+end
+
+
 function cheat_givegrenade()
 	gg.setRanges(gg.REGION_C_BSS)
-	gg.searchNumber("20", gg.TYPE_DWORD)
-	gg.alert('Change Ammo to: 16, 10 seconds')
+	local stp = gg.prompt({'Put grenade current ammo','Put new grenade ammo'})
+	gg.toast('Don\'t change the ammo just yet')
+	gg.searchNumber(stp[1], gg.TYPE_DWORD)
+	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	gg.sleep(10000)
-	gg.refineNumber("16", gg.TYPE_DWORD)
-	local v = gg.getResults(1)
+	gg.toast('Timeout, searching for '..stp[2])
+	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	local found = gg.getResultCount()
 	if found == 0 then
 		gg.toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
@@ -455,18 +661,20 @@ function cheat_givegrenade()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		gg.toast('Grenade ON')
+		gg.toast('Grenade ammo ON')
 	end
 	HOMEDM = -1
 end
 
 function cheat_givebomb()
 	gg.setRanges(gg.REGION_C_BSS)
-	gg.searchNumber("16", gg.TYPE_DWORD)
-	gg.alert('Change value to: 10, 10 seconds')
+	local stp = gg.prompt({'Put Sticky bomb current ammo','Put new Sticky bomb ammo'})
+	gg.toast('Don\'t change the ammo just yet')
+	gg.searchNumber(stp[1], gg.TYPE_DWORD)
+	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	gg.sleep(10000)
-	gg.refineNumber("10", gg.TYPE_DWORD)
-	local v = gg.getResults(1)
+	gg.toast('Timeout, searching for '..stp[2])
+	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	local found = gg.getResultCount()
 	if found == 0 then
 		gg.toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
@@ -478,18 +686,20 @@ function cheat_givebomb()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		gg.toast('C4 ON')
+		gg.toast('C4 ammo ON')
 	end
 	HOMEDM = -1
 end
 
 function cheat_givelaser()
 	gg.setRanges(gg.REGION_C_BSS)
-	gg.searchNumber("10", gg.TYPE_DWORD)
-	gg.alert('Change to 6 in 10secs')
+	local stp = gg.prompt({'Put laser current ammo','Put laser new ammo'})
+	gg.toast('Don\'t change the ammo just yet')
+	gg.searchNumber(stp[1], gg.TYPE_DWORD)
+	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	gg.sleep(10000)
-	gg.refineNumber("6", gg.TYPE_DWORD)
-	local v = gg.getResults(1)
+	gg.toast('Timeout, searching for '..stp[2])
+	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	local found = gg.getResultCount()
 	if found == 0 then
 		gg.toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
@@ -501,7 +711,7 @@ function cheat_givelaser()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		gg.toast('Laser ON')
+		gg.toast('Laser ammo ON')
 	end
 	tmp = nil
 	HOMEDM = -1
@@ -560,7 +770,12 @@ end
 -- Initialization
 --for pistol grapple
 GRAPPLE_CURR_VAL="0.25" -- Don't change this, this is the pistol/sg bullet knockback default value when the game starts, changing this will cause the script to fail, until you restore them manually
-VERSION="1.4.2"
+WALL_RESIST_VAL={}
+WALL_RESIST_VAL[1]="-500"
+WALL_RESIST_VAL[2]="-1.00001"
+--not used yet TODO: Add translation
+DEFAULT_LANGUAGE="en"
+VERSION="1.5.2"
 --loop
 while true do
 --open home if gg icon is clicked (aka. if its visible, hide the gg menu and show our menu)
@@ -572,3 +787,4 @@ while true do
 		HOME()
 	end
 end
+
