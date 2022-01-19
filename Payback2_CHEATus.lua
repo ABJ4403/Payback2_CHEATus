@@ -33,7 +33,7 @@ function MENU_CSD()
 		"1. Walk animation Wonkyness (client-side only)",
 		"2. Change Name (EXPERIMENTAL)",
 		"3. Change Name Color (EXPERIMENTAL)",
-		"4. Burning body", -- is this considered cosmetic, kinda not though, because it makes you unkillable too, but incompat lol
+		"4. Burning body", -- is this considered cosmetic, kinda not though, because it makes you unkillable too, but incompat lol.
 		"5. Big body",
 		"---",
 		"Back/Kembali"
@@ -109,7 +109,7 @@ function cheat_weaponammo()
 		"Fallback (v2, modified the WORD, no respawn required, but cant survive respawn)",
 		"Back"
 	}, nil, "Select method for modifying weapon amount - Modify Weapon Amount\nPS: not tested for multiplayer (while the gameplay running), might not work.")
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 3 then
 			MENU()
 		end
@@ -162,7 +162,7 @@ function cheat_weaponammo()
 		end
 		if CH == 2 then -- Fallback method (requires manually putting values, but will work in most cases)
 			local WEAPON_AMMO_AMOUNT = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;150;60;45'})
-			if WEAPON_AMMO_AMOUNT == nil then else
+			if WEAPON_AMMO_AMOUNT ~= nil then
 				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
 				gg.getResults(16)
 				local found = gg.getResultCount()
@@ -176,7 +176,7 @@ function cheat_weaponammo()
 		end
 		if CH == 3 then -- Fallback v2 method (requires manually putting values, but will search WORD instead of DWORD, )
 			local WEAPON_AMMO_AMOUNT = gg.prompt({'Put one of your weapon ammo','Freeze'},{},{[2]="checkbox"})
-			if WEAPON_AMMO_AMOUNT == nil then else
+			if WEAPON_AMMO_AMOUNT ~= nil then
 				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
 				gg.getResults(16)
 				local found = gg.getResultCount()
@@ -200,7 +200,7 @@ function cheat_firebody()
 		"OFF",
 		"Back"
 	}, nil, "Burning body")
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 3 then MENU() end
 		if CH == 1 then bruh = "9999" hurb = "ON" end
 		if CH == 2 then bruh = "0" hurb = "OFF" end
@@ -237,13 +237,13 @@ function cheat_pistolknockback()
 		"Back"
 	}, nil, "Pistol/Shotgun knockback modifier\nCurrent: "..VAL_PstlSgKnockback.."\nHint: recommended value is -20 to 20 if you use pistol")
  -- Hint: if you want to search these value below in gui, change . to , :)
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 8 then
 			MENU()
 		end
 		if CH == 7 then
 			local CH = gg.prompt({'If you think the current knockback value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current pistol/shotgun knockback value'},{[1] = VAL_PstlSgKnockback},{[1] = 'number'})
-			if CH[1] == nil then else
+			if CH[1] ~= nil then
 				VAL_PstlSgKnockback = CH[1]
 			end
 			CH = nil
@@ -261,7 +261,7 @@ function cheat_pistolknockback()
 				PISTOL_KNOCKBACK_VALUE = CH[1]
 			end
 		end
-		if PISTOL_KNOCKBACK_VALUE == nil then else
+		if PISTOL_KNOCKBACK_VALUE ~= nil then
 	 -- Set range
 			gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS)
 	 -- Find specific value
@@ -296,7 +296,7 @@ function cheat_bigbody()
 		"Use custom value",
 		"Back"
 	}, nil, "Big body")
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 3 then
 			MENU()
 		end
@@ -384,9 +384,9 @@ function cheat_bigbody()
 				[1] = 'number',
 				[2] = 'number'
 			})
-			if CH == nil then else
-				if CH[1] == "" then else VAL_BigBody[1] = CH[1] end
-				if CH[2] == "" then else VAL_BigBody[2] = CH[2] end
+			if CH ~= nil then
+				if CH[1] ~= "" then VAL_BigBody[1] = CH[1] end
+				if CH[2] ~= "" then VAL_BigBody[2] = CH[2] end
 			end
 			CH = nil
 			cheat_bigbody()
@@ -404,7 +404,7 @@ function cheat_destroycar()
 		"OFF",
 		"Back"
 	}, nil, "Destroy cars")
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 3 then
 			MENU()
 		end
@@ -483,7 +483,7 @@ function cheat_togglewallhack()
 		"Use custom value",
 		"Back"
 	}, nil, "Wall Hack. Warn:\n- Only use one method at a time\n- some walls have holes behind them\n- Dont use Wall Hack if you use Helicopter (if you respawn, the helicopter will sunk down due to less power to pull helicopter up),\n- Don't use Wall Hack if you do racing\n- Best use cases are for Capture The Swags, especially in Metropolis, because theres less holes there")
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 6 then MENU() end
  -- Set ranges
 		if CH == 1 then
@@ -564,9 +564,9 @@ function cheat_togglewallhack()
 				[1] = 'number',
 				[2] = 'number'
 			})
-			if CH == nil then else
-				if CH[1] == "" then else VAL_WallResist[1] = CH[1] end
-				if CH[2] == "" then else VAL_WallResist[2] = CH[2] end
+			if CH ~= nil then
+				if CH[1] ~= "" then VAL_WallResist[1] = CH[1] end
+				if CH[2] ~= "" then VAL_WallResist[2] = CH[2] end
 			end
 			CH = nil
 			cheat_togglewallhack()
@@ -581,7 +581,7 @@ function cheat_togglenoreload_exp()
 		"Fallback (Default, can cause instability)",
 		"Back"
 	}, nil, "Select method for applying no reload values - No Reload")
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 3 then
 			MENU()
 		end
@@ -691,7 +691,7 @@ function cheat_walkwonkyness()
 		"Restore",
 		"Back"
 	}, nil, "Walk Wonkyness (fancy-cheat)")
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 5 then MENU() end
 		gg.setRanges(gg.REGION_CODE_APP)
 		if CH == 1 then
@@ -825,7 +825,7 @@ function show_about()
 		"Credits/Kredit",
 		"Back/Kembali",
 	}, nil, "Select your language\nPilih bahasa")
-	if CH == nil then else
+	if CH ~= nil then
 		if CH == 1 then gg.alert("Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes") show_about() end
 		if CH == 2 then gg.alert("Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang") show_about() end
 		---
