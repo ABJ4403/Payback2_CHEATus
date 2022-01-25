@@ -1,6 +1,4 @@
-A0_1 = collectgarbage
-A1_1 = "collect"
-A0_1(A1_1)
+collectgarbage("collect")
 A0_1 = "[' Locked ']\t"
 A1_1 = "\n🔥HydraAssassins🔥"
 A2_1 = {}
