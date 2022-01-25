@@ -24,7 +24,7 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 
 	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi` `🛡️ Obfuscation` `🔐️ Built-in lock` `📈️ Function argument overflow` `Bytecode modification` `Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
 
-  Finally i had this file decrypted, Thank you tehtmi (Unluac developer) for some decryption stuff.
+  Finally i had this file decrypted, Thank you [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
   Actually what happened that is the file had some nonsense, this will be visible if you dissasemble the file:
 ```
 settable     r59   r71   r71
