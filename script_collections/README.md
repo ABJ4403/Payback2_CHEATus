@@ -68,6 +68,7 @@ newtable     r71     0     0
 ```
   and this nonsense: ```loadk         r0   k36```.
   both fills the script alot and confuses unluac, eats ~100-200kb size. just disassemble the file, remove all that above, reassemble the file, and decompile it again, it will work.
+	I know this isn't really 'decompiled' because bunch of variables were gone, replaced by A\*_\* and its huge (400kb), so this makes it harder to reverse-engineer.
 
 ## HELP WANTED decryption:
 anyone can decrypt these files?
