@@ -4,7 +4,7 @@ function MENU()
 		"1. Pistol/SG Knockback",
 		"2. Weapon ammo",
 		"3. Wall Hack",
-		"4. Toggle void mode (not work for now due to memory address issue)",
+		"4. Strong veichle",
 		"---",
 		"Other cheats:",
 		"5. Client-side cosmetics",
@@ -16,7 +16,7 @@ function MENU()
 	if CH == 1 then cheat_pistolknockback() end
 	if CH == 2 then cheat_weaponammo() end
 	if CH == 3 then cheat_wallhack() end
-	if CH == 4 then cheat_togglevoidmode() end
+	if CH == 4 then cheat_strongveichle() end
 ---
 --Title:Othercheat..
 	if CH == 7 then MENU_CSD() end
@@ -40,7 +40,7 @@ function MENU_CSD()
 		"6. Colored trees",
 		"7. Big Flamethrower (Item)",
 		"8. Shadows",
-		"9. Colored People ESP (dk wut this is, from GKTV)",
+		"9. Colored People ESP (ExtraSensoryPerception, i think this is xray hack. from GKTV)",
 		"10. Delete All Names",
 		"---",
 		"Back/Kembali"
@@ -66,33 +66,35 @@ function MENU_incompat()
 --Let the user choose stuff
 	local CH = gg.choice({
 		"Incompatible cheats (below PB2 v2.104.12.4/GG v101.0)",
-		"These cheats isnt compatible with the latest version of PB2. searching these will result in values not found, especially those that isnt located in JavaHeap,CAlloc,Annonymous,Other,CodeApp",
-		"1. Weapon",
-		"2. Destroy all cars",
-		"3. No reload (From Hydra and other yt channel i forgot...)",
-		"4. Win Level (From ICE Menu)",
-		"5. Give Grenades (From ICE Menu)",
-		"6. Give C4s (From ICE Menu)",
-		"7. Give Laser (From ICE Menu)",
+		"These cheats isn't compatible with the latest version of PB2. searching these will result in values not found, especially those that isnt located in JavaHeap,CAlloc,Annonymous,Other,CodeApp",
+		"1. Toggle void mode (not work for now due to memory address issue)",
+		"2. Weapon",
+		"3. Destroy all cars",
+		"4. No reload (From Hydra and other yt channel i forgot...)",
+		"5. Win Level (From ICE Menu)",
+		"6. Give Grenades (From ICE Menu)",
+		"7. Give C4s (From ICE Menu)",
+		"8. Give Laser (From ICE Menu)",
 		"---",
 		"Back/Kembali"
 	}, nil, "Payback2 CHEATus v"..VERSION..", by ABJ4403.")
 --Title:CSD...
 --Title:This menu...
-	if CH == 3 then cheat_weapon() end
-	if CH == 4 then cheat_destroycar() end
-	if CH == 5 then cheat_togglenoreload_exp() end
-	if CH == 6 then cheat2_win() end
-	if CH == 7 then cheat2_givegrenade() end
-	if CH == 8 then cheat2_givebomb() end
-	if CH == 9 then cheat2_givelaser() end
+	if CH == 3 then cheat_togglevoidmode() end
+	if CH == 4 then cheat_weapon() end
+	if CH == 5 then cheat_destroycar() end
+	if CH == 6 then cheat_togglenoreload_exp() end
+	if CH == 7 then cheat2_win() end
+	if CH == 8 then cheat2_givegrenade() end
+	if CH == 9 then cheat2_givebomb() end
+	if CH == 10 then cheat2_givelaser() end
 ---
-	if CH == 11 then MENU() end
+	if CH == 12 then MENU() end
 	HOMEDM = -1
 end
 --[[
 	A little note before looking at the cheat mechanics:
-	On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in JavaHeap?, Calloc, Annonymous, and CodeApp), not Ca,Ch,Jh,A
+	On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, Annonymous, and CodeApp), not Ca,Ch,Jh,A
 	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
 ]]
 
@@ -514,6 +516,84 @@ function cheat_bigbody()
 	HOMEDM = -1
 end
 
+function cheat_strongveichle()
+	local CH = gg.choice({
+		"ON (85000)",
+		"OFF (125)",
+		"Destroy (-1)",
+		"Custom",
+		"---",
+		"Change current health variable",
+		"Restore previous value",
+		"Clear memory buffer",
+		"Back"
+	}, nil, "Veichle default health modifier")
+	if CH ~= nil then
+		if CH == 10 then MENU() end
+		if CH == 1 then CAR_HEALTH_VALUE = "85000" end
+		if CH == 2 then CAR_HEALTH_VALUE = "125" end
+		if CH == 3 then CAR_HEALTH_VALUE = "-1" end
+		if CH == 5 then
+			local CH = gg.prompt({'Input your custom Veichle default health value'})
+			if CH[1] == nil then
+				cheat_strongveichle()
+			else
+				CAR_HEALTH_VALUE,CH = CH[1],nil
+			end
+		end
+		---
+		if CH == 7 then
+			local CH = gg.prompt({'If you think the current Veichle default health value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Veichle default health value'},{[1] = VAL_CrDfltHlth},{[1] = 'number'})
+			if CH[1] ~= nil then
+				VAL_CrDfltHlth = CH[1]
+			end
+			CH = nil
+			cheat_strongveichle()
+		end
+		if CH == 8 then
+			CH,revert['CarHealth'] = nil,nil
+			cheat_strongveichle()
+		end
+		if CH == 9 then
+			CH,MemoryBuffer['CarHealth'] = nil,nil
+			cheat_strongveichle()
+		end		
+ -- Main carhealth code
+		if CAR_HEALTH_VALUE ~= nil then
+	 -- Set ranges
+			gg.setRanges(gg.REGION_CODE_APP)
+	 -- Memory buffer
+			if MemoryBuffer['CarHealth'] == nil then
+				gg.toast('No buffer found, creating new buffer')
+		 -- Find specific value
+				gg.searchNumber(VAL_CrDfltHlth, gg.TYPE_DWORD)
+		 -- Get float-type-only result, and make a backup.
+				MemoryBuffer['CarHealth'],revert['CarHealth'] = gg.getResults(50),gg.getResults(50)
+			else
+				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
+				gg.loadResults(MemoryBuffer['CarHealth'])
+			end
+	 -- Check if found any result
+			if gg.getResultCount() == 0 then
+		 -- Set memory buffer and backup
+				MemoryBuffer['CarHealth'],revert['CarHealth'] = nil,nil
+				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
+			else
+				for i, v in ipairs(MemoryBuffer['CarHealth']) do
+					v.value = CAR_HEALTH_VALUE
+				end
+		 -- Set current value to, well... current value ofcourse...
+				VAL_CrDfltHlth,CAR_HEALTH_VALUE = CAR_HEALTH_VALUE,nil
+				gg.toast("Veichles default health "..VAL_CrDfltHlth)
+				gg.setValues(MemoryBuffer['CarHealth'])
+			end
+			gg.clearResults()
+		end
+		CH = nil
+	end
+	HOMEDM = -1
+end
+
 function cheat_destroycar()
 	local CH = gg.choice({
 		"ON",
@@ -759,7 +839,7 @@ function cheat_bigflamethroweritem()
 		"ON",
 		"OFF",
 		"Back"
-	}, nil, "Big flamethrower (Item)")
+	}, nil, "Big flamethrower (Item)\nInfo: this will not make the flame burst bigger")
 	if CH ~= nil then
 		if CH == 3 then MENU() end
 		if CH == 1 then tmp0[1] = "0.9" tmp0[2] = "999" tmp0[3] = "ON" end
@@ -982,23 +1062,18 @@ end
 --for pistol grapple
 --Configurable values
 VAL_PstlSgKnockback="0.25" -- Don't change this, this is the pistol/sg bullet knockback default value when the game starts, changing this will cause the script to fail, until you restore them manually
-VAL_WallResist={}
-VAL_WallResist[1]="-500"
-VAL_WallResist[2]="-1.00001"
-VAL_BigBody={}
-VAL_BigBody[1]="3"
-VAL_BigBody[2]="5.9"
+VAL_CrDfltHlth="125" -- this is veichles default health
+VAL_WallResist={"-500","-1.00001"} -- same as two above but have multiple methods, thats why its put to tables (i better call it array, btw)
+VAL_BigBody={"3","5.9"}
 --Number Offsets, don't change or the memory search thingy will miss
-SPECIALOFFSET_bigbody={}
-SPECIALOFFSET_bigbody[1]="0.09500002861"
-SPECIALOFFSET_bigbody[2]="0.00000019073"
+SPECIALOFFSET_bigbody={"0.09500002861","0.00000019073"}
 --bunch of global variables
 revert = {}
 MemoryBuffer = {}
 --not used yet TODO: Add translation
 DEFAULT_LANGUAGE="en"
-VERSION="1.6.5"
---loop
+VERSION="1.7.2"
+--loop to open the menu if gg menu is visible (aka. pressing floating gg icon)
 while true do
 --open home if gg icon is clicked (aka. if its visible, hide the gg menu and show our menu)
 	if gg.isVisible() then
@@ -1009,4 +1084,3 @@ while true do
 		MENU()
 	end
 end
-
