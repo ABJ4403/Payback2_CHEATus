@@ -20,15 +20,57 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 	Thankfully unlike others, this one is a bit easy. i cant decrypt this using unluac/luadec, i just need the patched custom unluac that has modified non-standard OPCodes.
 	Then it works
 	
+- `PB2_Hydra-WallHack.lua` (`WALL HACK payback2.lua` from [`MediaFire`](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file)), by Hydra.
+
+	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi` `🛡️ Obfuscation` `🔐️ Built-in lock` `📈️ Function argument overflow` `Bytecode modification` `Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
+
+  Finally i had this file decrypted, Thank you tehtmi (Unluac developer) for some decryption stuff.
+  Actually what happened that is the file had some nonsense, this will be visible if you dissasemble the file:
+```
+settable     r59   r71   r71
+gettable     r71   r59   r71
+gettable     r71   r59   r71
+settable     r71    k7   r74
+call         r71     4     2
+settable     r59   r71   r71
+loadnil      r59     0
+test         r59     0
+move         r74   r59
+test         r59     0
+loadbool     r59     0     0
+settable     r59   r71   r71
+call         r71     1     1
+settable     r71    k8   r74
+test         r59     0
+settable     r74   r77   r79
+gettable     r79   r71   r79
+loadnil      r71     8
+newtable     r71     0     0
+settable     r59   r71   r71
+gettable     r71   r59   r71
+gettable     r71   r59   r71
+settable     r71    k7   r74
+call         r71     4     2
+settable     r59   r71   r71
+loadnil      r59     0
+test         r59     0
+move         r74   r59
+test         r59     0
+loadbool     r59     0     0
+settable     r59   r71   r71
+call         r71     1     1
+settable     r71    k8   r74
+test         r59     0
+settable     r74   r77   r79
+gettable     r79   r71   r79
+loadnil      r71     8
+newtable     r71     0     0
+```
+  and this nonsense: ```loadk         r0   k36```.
+  both fills the script alot and confuses unluac, eats ~100-200kb size. just disassemble the file, remove all that above, reassemble the file, and decompile it again, it will work.
 
 ## HELP WANTED decryption:
 anyone can decrypt these files?
-- `PB2_Hydra-WallHack.lua` (`WALL HACK payback2.lua` from [`MediaFire`](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file)), by Hydra.
-
-	`Difficulty: 3` `🛡️ Obfuscation` `🔐️ Built-in lock` `📈️ Function argument overflow` `❌️ Anti-decompiler`
-
-  Assembled and obfuscated in LUA languange (i hate lua. why gameguardian even use lua, why not use rust).
----
 - `PB2_AlphaGGHackerYT_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
 
 	`Difficulty: 4` `🛡️ Obfuscation` `🔒️ Built-in Encryption` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st`
