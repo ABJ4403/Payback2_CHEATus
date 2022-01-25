@@ -48,6 +48,7 @@ I can't upload these encrypted files due to unknown CORS failure when trying to 
 Because its VERY HARD to find these scripts dude...
 
 # Decompiler/Decryptor resources:
+- [unluac Discussion about decrypting nonsense (im the one that reports these lool)](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
 - [unluac - `Common` Decompiler for LUA v5.x](https://sourceforge.net/projects/unluac)
 - [unluac_patch - Custom patched version of (older) unluac with modified non-standard OPCODES (works with some GameGuardian scripts)](https://sourceforge.net/p/unluac/discussion/general/thread/88e9b323cc)
 - [LuaDec - LUA Decompiler for lua v5.1-3](https://github.com/viruscamp/luadec)
