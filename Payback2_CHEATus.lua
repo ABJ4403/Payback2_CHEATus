@@ -6,6 +6,7 @@ function MENU()
 		"3. Wall Hack",
 		"4. Strong veichle",
 		"5. No blast damage",
+		"6. Change XP",
 		"---",
 		"Other cheats:",
 		"5. Client-side cosmetics",
@@ -19,13 +20,14 @@ function MENU()
 	if CH == 3 then cheat_wallhack() end
 	if CH == 4 then cheat_strongveichle() end
 	if CH == 5 then cheat_noblastdamage() end
+	if CH == 6 then cheat_xpmodifier() end
 ---
 --Title:Othercheat..
-	if CH == 8 then MENU_CSD() end
-	if CH == 9 then MENU_incompat() end
+	if CH == 9 then MENU_CSD() end
+	if CH == 10 then MENU_incompat() end
 ---
-	if CH == 11 then show_about() end
-	if CH == 12 then exit() end
+	if CH == 12 then show_about() end
+	if CH == 13 then exit() end
 	HOMEDM = -1
 end
 
@@ -793,6 +795,38 @@ function cheat_togglenoreload_exp()
 		end
 	end
 	HOMEDM = -1
+end
+
+function cheat_xpmodifier()
+	gg.setRanges(gg.REGION_ANNONYMOUS)-- | gg.REGION_CODE_APP
+--request user to give player name
+	local player_xp = gg.prompt({
+		'Put your current XP (make sure that your XP value is differentiateable, because theres no looping thingy method)',
+		'Put new XP (known limit is 999999)',
+		'Freeze (recommended)'
+	},{
+		[1]="number",
+		[2]="number",
+		[3]="checkbox"
+	})
+	if CH ~= nil then
+ -- Search current player xp
+		gg.searchNumber(player_xp[1], gg.TYPE_DWORD)
+		t,revert['PlayerXP'] = gg.getResults(10),gg.getResults(10)
+ -- Check if found or not
+		if gg.getResultCount() == 0 then
+			gg.toast('Can\'t find the player xp, this cheat is still in experimentation phase. report issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+		else
+	 -- and put the new XP
+			for i, v in ipairs(t) do
+				v[i].value = player_xp[2]
+				v[i].freeze = player_xp[3]
+			end
+			gg.setValues(t)
+			gg.clearResults()
+			gg.toast('"'..player_xp[1]..'" changed to "'..player_xp[2]..'"\nWarn: this is still in experimentation phase, the xp might only apply on your client and not others')
+		end
+	end
 end
 
 function cheat_changeplayername()
