@@ -37,6 +37,7 @@ Because i see Payback 2 players (notably cheaters) are very rude, and did'nt wan
 # Credit
 - Mangyu - Original script author
 - mdp43140 - Contributor
+- tehtmi - unluac Creator (and decompile helper).
 - Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
 - Latic AX and ToxicCoder - for providing the removed script through youtube and mediafire
 - Alpha GG Hacker - for providing wall hack GameGuardian Values (no thanks for ridicilous military-encryption script)
