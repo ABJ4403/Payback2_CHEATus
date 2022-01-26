@@ -5,6 +5,7 @@ function MENU()
 		"2. Weapon ammo",
 		"3. Wall Hack",
 		"4. Strong veichle",
+		"5. No blast damage",
 		"---",
 		"Other cheats:",
 		"5. Client-side cosmetics",
@@ -17,13 +18,14 @@ function MENU()
 	if CH == 2 then cheat_weaponammo() end
 	if CH == 3 then cheat_wallhack() end
 	if CH == 4 then cheat_strongveichle() end
+	if CH == 5 then cheat_noblastdamage() end
 ---
 --Title:Othercheat..
-	if CH == 7 then MENU_CSD() end
-	if CH == 8 then MENU_incompat() end
+	if CH == 8 then MENU_CSD() end
+	if CH == 9 then MENU_incompat() end
 ---
-	if CH == 10 then show_about() end
-	if CH == 11 then exit() end
+	if CH == 11 then show_about() end
+	if CH == 12 then exit() end
 	HOMEDM = -1
 end
 
@@ -577,7 +579,7 @@ function cheat_strongveichle()
 			if gg.getResultCount() == 0 then
 		 -- Set memory buffer and backup
 				MemoryBuffer['CarHealth'],revert['CarHealth'] = nil,nil
-				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
+				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current health variable' menu")
 			else
 				for i, v in ipairs(MemoryBuffer['CarHealth']) do
 					v.value = CAR_HEALTH_VALUE
@@ -586,6 +588,82 @@ function cheat_strongveichle()
 				VAL_CrDfltHlth,CAR_HEALTH_VALUE = CAR_HEALTH_VALUE,nil
 				gg.toast("Veichles default health "..VAL_CrDfltHlth)
 				gg.setValues(MemoryBuffer['CarHealth'])
+			end
+			gg.clearResults()
+		end
+		CH = nil
+	end
+	HOMEDM = -1
+end
+
+function cheat_noblastdamage()
+	local CH = gg.choice({
+		"ON (0)",
+		"OFF (300)",
+		"Custom",
+		"---",
+		"Change current damage value",
+		"Restore previous value",
+		"Clear memory buffer",
+		"Back"
+	}, nil, "No damage\nThis will make you unable to get killed using any explosion blasts (that means you still can get killed by sg,mg,laser,turret,any non explosive weapons)\nPS: this will make your character buggy though")
+	if CH ~= nil then
+		if CH == 10 then MENU() end
+		if CH == 1 then DAMAGE_INTENSITY_VALUE = "0" end
+		if CH == 2 then DAMAGE_INTENSITY_VALUE = "300" end
+		if CH == 5 then
+			local CH = gg.prompt({'Input your custom damage intensity'})
+			if CH[1] == nil then
+				cheat_noblastdamage()
+			else
+				DAMAGE_INTENSITY_VALUE,CH = CH[1],nil
+			end
+		end
+		---
+		if CH == 7 then
+			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{[1] = VAL_DmgIntnsty},{[1] = 'number'})
+			if CH[1] ~= nil then
+				VAL_DmgIntnsty = CH[1]
+			end
+			CH = nil
+			cheat_noblastdamage()
+		end
+		if CH == 8 then
+			CH,revert['NoBlastDamage'] = nil,nil
+			cheat_noblastdamage()
+		end
+		if CH == 9 then
+			CH,MemoryBuffer['NoBlastDamage'] = nil,nil
+			cheat_noblastdamage()
+		end		
+ -- Main NoBlastDamage code
+		if DAMAGE_INTENSITY_VALUE ~= nil then
+	 -- Set ranges
+			gg.setRanges(gg.REGION_CODE_APP)
+	 -- Memory buffer
+			if MemoryBuffer['NoBlastDamage'] == nil then
+				gg.toast('No buffer found, creating new buffer')
+		 -- Find specific value
+				gg.searchNumber(VAL_DmgIntnsty, gg.TYPE_FLOAT)
+		 -- Get float-type-only result, and make a backup.
+				MemoryBuffer['NoBlastDamage'],revert['NoBlastDamage'] = gg.getResults(10),gg.getResults(10)
+			else
+				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
+				gg.loadResults(MemoryBuffer['NoBlastDamage'])
+			end
+	 -- Check if found any result
+			if gg.getResultCount() == 0 then
+		 -- Set memory buffer and backup
+				MemoryBuffer['NoBlastDamage'],revert['NoBlastDamage'] = nil,nil
+				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current damage value' menu")
+			else
+				for i, v in ipairs(MemoryBuffer['NoBlastDamage']) do
+					v.value = DAMAGE_INTENSITY_VALUE
+				end
+		 -- Set current value to, well... current value ofcourse...
+				VAL_DmgIntnsty,DAMAGE_INTENSITY_VALUE = DAMAGE_INTENSITY_VALUE,nil
+				gg.toast("Blast damage intensity "..VAL_DmgIntnsty)
+				gg.setValues(MemoryBuffer['NoBlastDamage'])
 			end
 			gg.clearResults()
 		end
@@ -1047,7 +1125,7 @@ function show_about()
 		---
 		if CH == 4 then gg.alert("DISCLAIMMER/DISKLAIMMER:\nPlease DO NOT misuse the script to abuse other players. Remember to keep your patience out of other players. i recommend ONLY using this script in offline mode.") show_about() end
 		if CH == 5 then gg.alert("Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses") show_about() end
-		if CH == 6 then gg.alert("Credit/Kredit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ Crystal_Mods100x - ICE Menu\n+ GKTV (Pumpkin Hacker) - Payback 2 lua script\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker YT - Wall Hack GameGuardian Values") show_about() end
+		if CH == 6 then gg.alert("Credit/Kredit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ Crystal_Mods100x - ICE Menu\n+ GKTV (Pumpkin Hacker) - Payback 2 lua script\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Joker - No Blast Damage GameGuardian Values (good guy that doesnt censor gg values.. idk)\n+ Alpha GG Hacker YT - Wall Hack GameGuardian Values") show_about() end
 		if CH == 7 then CH = nil MENU() end
 		CH = nil
 	end
@@ -1065,6 +1143,7 @@ end
 --Configurable values
 VAL_PstlSgKnockback="0.25" -- Don't change this, this is the pistol/sg bullet knockback default value when the game starts, changing this will cause the script to fail, until you restore them manually
 VAL_CrDfltHlth="125" -- this is veichles default health
+VAL_DmgIntnsty="300" -- this is your default damage intensity
 VAL_WallResist={"-500","-1.00001"} -- same as two above but have multiple methods, thats why its put to tables (i better call it array, btw)
 VAL_BigBody={"3","5.9"}
 --Number Offsets, don't change or the memory search thingy will miss
@@ -1074,7 +1153,7 @@ revert = {}
 MemoryBuffer = {}
 --not used yet TODO: Add translation
 DEFAULT_LANGUAGE="en"
-VERSION="1.7.2"
+VERSION="1.7.5"
 --loop to open the menu if gg menu is visible (aka. pressing floating gg icon)
 while true do
 --open home if gg icon is clicked (aka. if its visible, hide the gg menu and show our menu)
