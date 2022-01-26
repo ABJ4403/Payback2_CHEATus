@@ -1,11 +1,14 @@
 # Payback2 CHEATus, dibuat oleh ABJ4403.
 [```🇺🇸️ README English```](https://github.com/ABJ4403/Payback2_CHEATus)
 
+Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang dimana ini adalah "fork" dari skrip cheat Mangyu tapi lebih bagus, sedikit-bloated, dan mudah untuk dibaca.
+
 # Fitur:
 ```🔫 Pistol/SG Knockback``` ```🔫 Ammo senjata``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware verified``` ```💰❌ FOSS (Gratis & bersumber-terbuka)``` ```dll```
 - Nilai Knockback Pistol/Shotgun Kustom.
 - Modifier Ammo Senjata.
 - Wall Hack.
+- Buffer Memori (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
 - Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
 
 Masih bingung? menuju ke [```Wiki```](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
@@ -19,7 +22,6 @@ Lisensi: [GPLv3](https://gnu.org/licenses)
 Diuji di:
 - Payback2 v2.104.12.4
 - GameGuardian v101.0
-
 
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
 
@@ -36,9 +38,13 @@ Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuk
 Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source (karena saya adalah open-source oriented), kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim. Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall), itu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek "Payback2 CHEATus" datang
 
 # Kredit
-- Mangyu - Skrip original.
+- Mangyu - Pembuat skrip original.
 - mdp43140 - Kontributor.
+- tehtmi - Pembuat unluac (dan helper dekompilasi).
 - Crystal_Mods100x - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
-- Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui youtube dan mediafire.
-- Alpha GG Hacker - Untuk menyediakan Value Wall Hack GameGuardian (tidak terimakasih untuk "enkripsi level 666 yang sangggggat giilaaa").
+- Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui YouTube dan MediaFire.
+- Alpha GG Hacker - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk ```enkripsi level 666 yang sangggggat giilaaa```).
+- GKTV (Pumpkin Hacker) - Skrip GG Payback2.
 - Hydra (tidak terimakasih untuk wall hack yang bisa jalan aja nggak broo).
+- Joker - Untuk menyediakan Value "No Blast Damage" GameGuardian (orang baik yang tidak menyensor value gg.. idk).
+

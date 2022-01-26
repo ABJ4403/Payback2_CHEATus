@@ -1,11 +1,14 @@
 # Payback2 CHEATus, created by ABJ4403.
 [```🇮🇩️ README Bahasa Indonesia```](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 
+Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "fork" of Mangyu's cheat script but better, less-bloated, and easier to read.
+
 # Features:
 ```🔫 Pistol/SG Knockback``` ```🔫 Weapon ammo``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware``` ```💰❌ FOSS (Free & Open-source)``` ```etc```
 - Pistol/Shotgun Custom Knockback Value
 - Weapon Ammo Modifier
 - Wall Hack
+- Memory Buffer (technical feature that accelerates searches on area that won't change alot).
 - And more that i didnt mention here (because some of them wont work).
 
 If you still confused about these stuff, go to [```Wiki```](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
@@ -35,10 +38,13 @@ This cheat is part of FOSS (Free and Open-Source Software)
 Because i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy (because im foss oriented lol), we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number). even if he gives [download link of one cheat (wall-hack)](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file), its still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word "[LOCKED]" and on the video description which he provides, theres garbled text that says "7o31kql9p", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the "Payback2 CHEATus" project comes
 
 # Credit
-- Mangyu - Original script author
-- mdp43140 - Contributor
+- Mangyu - Original script author.
+- mdp43140 - Contributor.
 - tehtmi - unluac Creator (and decompile helper).
-- Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file))
-- Latic AX and ToxicCoder - for providing the removed script through youtube and mediafire
-- Alpha GG Hacker - for providing wall hack GameGuardian Values (no thanks for ridicilous military-encryption script)
-- Hydra (no thanks for "no reload cheat" tutor that doesnt even work)
+- Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
+- Latic AX and ToxicCoder - for providing the removed script through YouTube and MediaFire.
+- Alpha GG Hacker - for providing "Wall Hack" & "Car Health" GameGuardian Values (no thanks for ridicilous military-encryption script though...)
+- GKTV (Pumpkin Hacker) - Payback2 GG script.
+- Hydra - no thanks for "no reload cheat" tutor that doesn't even work.
+- Joker - for providing "No Blast Damage" GameGuardian Values (good guy that doesnt censor gg values.. idk).
+
