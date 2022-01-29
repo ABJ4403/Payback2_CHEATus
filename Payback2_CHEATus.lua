@@ -107,7 +107,7 @@ function cheat_weapon()
 	gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61", gg.TYPE_DWORD)
 	local t = gg.getResults(5000, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+		gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 	else
 		for i, v in ipairs(t) do
 			v.value = 71131136
@@ -128,9 +128,7 @@ function cheat_weaponammo()
 		"Back"
 	}, nil, "Select method for modifying weapon amount - Modify Weapon Amount\nPS: not tested for multiplayer (while the gameplay running), might not work.")
 	if CH ~= nil then
-		if CH == 3 then
-			MENU()
-		end
+		if CH == 3 then MENU() end
 		gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_OTHER)
 		if CH == 1 then -- automatic method (wont work due to memory location always change)
 	 -- Prepare the table
@@ -180,7 +178,7 @@ function cheat_weaponammo()
 		end
 		if CH == 2 then -- Fallback method (requires manually putting values, but will work in most cases)
 			local WEAPON_AMMO_AMOUNT = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;150;60;45'})
-			if WEAPON_AMMO_AMOUNT ~= nil then
+			if (WEAPON_AMMO_AMOUNT ~= nil and WEAPON_AMMO_AMOUNT[1] ~= nil) then
 				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
 				gg.getResults(16)
 				if gg.getResultCount() == 0 then
@@ -193,7 +191,7 @@ function cheat_weaponammo()
 		end
 		if CH == 3 then -- Fallback v2 method (requires manually putting values, but will search WORD instead of DWORD, )
 			local WEAPON_AMMO_AMOUNT = gg.prompt({'Put one of your weapon ammo','Freeze'},{},{[2]="checkbox"})
-			if WEAPON_AMMO_AMOUNT ~= nil then
+			if (WEAPON_AMMO_AMOUNT ~= nil and WEAPON_AMMO_AMOUNT[1] ~= nil) then
 				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
 				gg.getResults(16)
 				if gg.getResultCount() == 0 then
@@ -224,7 +222,7 @@ function cheat_firebody()
 		gg.searchNumber("1.68155816e-43F;0D~9999D;2.80259693e-44F;1.12103877e-42F;1.821688e-44F::45", gg.TYPE_DWORD)
 		local t = gg.getResults(555, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			for i, v in ipairs(t) do
 				v.value = tmp0[1]
@@ -261,7 +259,7 @@ function cheat_pistolknockback()
 		if CH == 4 then PISTOL_KNOCKBACK_VALUE = "0" end
 		if CH == 5 then
 			local CH = gg.prompt({'Input your custom knockback value'})
-			if CH[1] == nil then
+			if (CH == nil and CH[1] == nil) then
 				cheat_pistolknockback()
 			else
 				PISTOL_KNOCKBACK_VALUE,CH = CH[1],nil
@@ -270,7 +268,7 @@ function cheat_pistolknockback()
 		---
 		if CH == 7 then
 			local CH = gg.prompt({'If you think the current knockback value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current pistol/shotgun knockback value'},{[1] = VAL_PstlSgKnockback},{[1] = 'number'})
-			if CH[1] ~= nil then
+			if (CH == nil and CH[1] == nil) then
 				VAL_PstlSgKnockback = CH[1]
 			end
 			CH = nil
@@ -377,7 +375,7 @@ function cheat_wallhack()
 --				gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 --			end
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i, v in ipairs(MemoryBuffer['wallhack']) do
 					v.value = tmp0[3]
@@ -399,7 +397,7 @@ function cheat_wallhack()
 --				gg.getResults(50)
 --			end
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i, v in ipairs(MemoryBuffer['wallhack_alternative']) do
 					v.value = tmp0[3]
@@ -435,7 +433,7 @@ function cheat_bigbody()
 			t = gg.getResults(555)
 			revert['bigbody'] = gg.getResults(555)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i, v in ipairs(t) do
 					v.value = VAL_BigBody[1]+SPECIALOFFSET_bigbody[1]
@@ -451,7 +449,7 @@ function cheat_bigbody()
 			t = gg.getResults(22)
 			revert['bigbody'] = gg.getResults(22)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.editAll(VAL_BigBody[2]+SPECIALOFFSET_bigbody[2], gg.TYPE_FLOAT)
 				gg.toast("Big Body ON")
@@ -463,7 +461,7 @@ function cheat_bigbody()
 			t = gg.getResults(555)
 			revert['bigbody'] = gg.getResults(555)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i, v in ipairs(t) do
 					v.value = "1"+SPECIALOFFSET_bigbody[1]
@@ -479,7 +477,7 @@ function cheat_bigbody()
 			t = gg.getResults(22)
 			revert['bigbody'] = gg.getResults(22)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.editAll("4.3"+SPECIALOFFSET_bigbody[2], gg.TYPE_FLOAT)
 				gg.toast("Big body OFF")
@@ -487,7 +485,7 @@ function cheat_bigbody()
 		end
 		if CH == 5 then
 			if revert['bigbody'] == nil then
-				gg.toast("No values to restore, this might be a bug. if you think so, report bug on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("No values to restore, this might be a bug. if you think so, report bug on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.setValues(revert['bigbody'])
 				revert['bigbody'] = nil
@@ -539,7 +537,7 @@ function cheat_strongveichle()
 		if CH == 3 then CAR_HEALTH_VALUE = "-1" end
 		if CH == 5 then
 			local CH = gg.prompt({'Input your custom Veichle default health value'})
-			if CH[1] == nil then
+			if (CH == nil and CH[1] == nil) then
 				cheat_strongveichle()
 			else
 				CAR_HEALTH_VALUE,CH = CH[1],nil
@@ -548,7 +546,7 @@ function cheat_strongveichle()
 		---
 		if CH == 7 then
 			local CH = gg.prompt({'If you think the current Veichle default health value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Veichle default health value'},{[1] = VAL_CrDfltHlth},{[1] = 'number'})
-			if CH[1] ~= nil then
+			if (CH == nil and CH[1] == nil) then
 				VAL_CrDfltHlth = CH[1]
 			end
 			CH = nil
@@ -615,7 +613,7 @@ function cheat_noblastdamage()
 		if CH == 2 then DAMAGE_INTENSITY_VALUE = "300" end
 		if CH == 5 then
 			local CH = gg.prompt({'Input your custom damage intensity'})
-			if CH[1] == nil then
+			if (CH == nil and CH[1] == nil) then
 				cheat_noblastdamage()
 			else
 				DAMAGE_INTENSITY_VALUE,CH = CH[1],nil
@@ -624,7 +622,7 @@ function cheat_noblastdamage()
 		---
 		if CH == 7 then
 			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{[1] = VAL_DmgIntnsty},{[1] = 'number'})
-			if CH[1] ~= nil then
+			if (CH == nil and CH[1] == nil) then
 				VAL_DmgIntnsty = CH[1]
 			end
 			CH = nil
@@ -690,7 +688,7 @@ function cheat_destroycar()
 			gg.refineNumber("1.0")
 			gg.getResults(50)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.editAll("-500", gg.TYPE_FLOAT)
 				gg.toast("Destroy all cars ON")
@@ -701,7 +699,7 @@ function cheat_destroycar()
 			gg.refineNumber("-500")
 			gg.getResults(50)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.editAll("1.0", gg.TYPE_FLOAT)
 				gg.toast("Destroy all cars OFF")
@@ -761,6 +759,7 @@ function cheat_togglenoreload_exp()
 	 -- This mostly fake, Why?
 	 -- because (on latest version of PB2/GG) this memory address points to nothing (the game didnt use this. not even near that address).
 	 -- Prepare the table
+	 -- PS: This works ONLY in old version, because the thing that hydra shows located in region Cb (C .BSS)
 			local t = {}
 			t[1] = {}
 			t[1].address = 0xBA26C5D4
@@ -782,7 +781,7 @@ function cheat_togglenoreload_exp()
 			gg.toast('Timeout, searching for '..stp[2])
 			local t = gg.refineNumber(stp[2], gg.TYPE_WORD)
 			if gg.getResultCount() == 0 then
-				gg.toast('Can\'t find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
 				for i, v in ipairs(t) do
 					v[i].value = 1
@@ -816,7 +815,7 @@ function cheat_xpmodifier()
 		t,revert['PlayerXP'] = gg.getResults(10),gg.getResults(10)
  -- Check if found or not
 		if gg.getResultCount() == 0 then
-			gg.toast('Can\'t find the player xp, this cheat is still in experimentation phase. report issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			gg.toast('Can\'t find the player xp, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
 	 -- and put the new XP
 			for i, v in ipairs(t) do
@@ -831,26 +830,27 @@ function cheat_xpmodifier()
 end
 
 function cheat_changeplayername()
-	gg.setRanges(gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_OTHER)
 --request user to give player name
 	local player_name = gg.prompt({
 		'Put your current player name (case-sensitive, ":" is required at the beginning because how GameGuardian search works)',
-		'Put new player name (cannot be longer than current name, you can change the color by converting to hex and use hex 1-9 for color)'
+		'Put new player name (cannot be longer than current name, you can change color/add icon by converting to hex and use hex 1-9 for color)'
 	},{
 		[1]=VAL_PlayerCurrentName,
-		[2]=":CoolFoe"
+		[2]=cfg['PlayerCustomName']
 	},{
 		[1]="number",
 		[2]="number"
 	})
 --search old player name
-	gg.searchNumber(..player_name[1], gg.TYPE_BYTE)
+	gg.searchNumber(player_name[1], gg.TYPE_BYTE)
 	revert['PlayerName'] = gg.getResults(5555)
 	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+		gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 	else
-	--this is where the problem arises, does this vvv work?
-		gg.editAll(..player_name[2], gg.TYPE_BYTE)
+		gg.editAll(player_name[2], gg.TYPE_BYTE)
+		VAL_PlayerCurrentName = player_name[2]
+		gg.clearResults()
 		gg.toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others')
 	end
 end
@@ -858,34 +858,82 @@ end
 function cheat_changeplayernamecolor()
 	gg.setRanges(gg.REGION_OTHER)
 --request user to give player name
-	local player_name,player_color_choice = gg.prompt({'Put your current player name (case-sensitive)'}),gg.choice({
+	local CH,player_name,player_color_choice = gg.choice({
+		"Color:",
+		"Red (2)",
+		"Blue (3)",
+		"White (4)",
+		"Yellow (5,9)",
+		"Green (6h)",
+		"---",
+		"Icon (more will be added later...):",
+		"Coin (7h)",
+		"White people (8h)",
+		"Corrupted (10h)",
+		"---",
 		"None (default)",
-		"Black (00h?)",
-		"EXP",
-		"EXP",
-		"EXP",
-		"White (04h)",
-		"Yellow (05h)",
-		"Red (??h)",
-		"Green (??h)",
-		"Blue (??h)",
-		"what about some of that fancy icons seen on some cheaters? (i will do it in future... maybe??)"
-	},nil,"Select the color you want")
---search old player name
-	gg.searchNumber(':'..player_name[1], gg.TYPE_BYTE)
-	v,revert['PlayerName'] = gg.getResults(5555),gg.getResults(5555)
---generic found stuff
-	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
-	else
-	--this is where the problem arises, will this vvv work? probably not.
-		local t = {}
-		t[1] = {}
-		t[1].address = v[1].address - 0x1
-		t[1].flags = gg.TYPE_BYTE
-		t[1].value = player_color_choice[1].."h"
-		gg.setValues(t)
-		gg.toast('Color set to '..player_color_choice[1]..'. PS: still in experimental phase, might not work')
+		"---",
+		"Back"
+	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'number'})
+	if (CH ~= nil or player_name ~= nil) then
+	--Color
+		if CH == 2 then player_color_choice = 2 end
+		if CH == 3 then player_color_choice = 3 end
+		if CH == 4 then player_color_choice = 4 end
+		if CH == 5 then player_color_choice = 5 end
+		if CH == 6 then player_color_choice = 6 end
+	---
+	--Icon
+		if CH == 9 then player_color_choice = 7 end
+		if CH == 10 then player_color_choice = 8 end
+		if CH == 11 then player_color_choice = 10 end
+	---
+		if CH == 13 then player_color_choice = 0 end
+	---
+		if CH == 15 then MENU() end
+
+		if player_color_choice ~= nil then
+
+		--search old player name
+			gg.searchNumber(player_name[1], gg.TYPE_BYTE)
+			t,revert['PlayerName'] = gg.getResults(5555),gg.getResults(5555)
+		--generic found stuff
+			if gg.getResultCount() == 0 then
+				gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			else
+				if player_color_choice ~= 0 then
+				--this is where the problem arises, will this vvv work? probably not, mostly.
+				--1. shift all addreses
+					for i, v in ipairs(t) do
+					--v[i].address = v[i].address + 0x1
+						v[i].freeze = false
+						v[1].flags = gg.TYPE_BYTE
+					end
+				--2. add value whatever
+					table.insert(t,1,{})
+				--t[1].address = t[2].address - 0x1
+					t[1].freeze = false
+					t[1].flags = gg.TYPE_BYTE
+					t[1].value = player_color_choice
+				else
+					for i, v in ipairs(t) do
+					--if within the custom color/icon range
+						if (t[i].value > 0 and t[i].value < 20) then
+						--nil it
+							t[i] = nil
+						else
+						--and -1 for the rest
+							v[i].address = v[i].address - 0x1
+							v[i].freeze = false
+							v[i].flags = gg.TYPE_BYTE
+						end
+					end
+				end
+				gg.setValues(t)
+				gg.toast('Color set to '..player_color_choice..'. PS: still in experimental phase, might not work')
+			end
+
+		end
 	end
 end
 
@@ -939,7 +987,7 @@ function cheat_coloredtree()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 		--gg.clearResults()
@@ -964,7 +1012,7 @@ function cheat_bigflamethroweritem()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 		--gg.clearResults()
@@ -989,7 +1037,7 @@ function cheat_shadowfx()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 		--gg.clearResults()
@@ -1014,7 +1062,7 @@ function cheat_clrdpplesp()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my github page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 		--gg.clearResults()
@@ -1163,7 +1211,7 @@ function show_about()
 		---
 		if CH == 4 then gg.alert("DISCLAIMMER/DISKLAIMMER:\nPlease DO NOT misuse the script to abuse other players.\nRemember to keep your patience out of other players.\ni recommend ONLY using this script in offline mode.\n\nJANGAN salahgunakan skrip ini untuk menjahili pemain lain.\nIngat untuk menjaga kesabaran anda dari pemain lain.\nSaya merekomendasikan menggunakan skrip ini HANYA di mode offline.") show_about() end
 		if CH == 5 then gg.alert("Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses") show_about() end
-		if CH == 6 then gg.alert("Credit/Kredit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n- tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for "no reload cheat" tutor that doesn't even work.\n+ Joker - No Blast Damage GameGuardian Values.") show_about() end
+		if CH == 6 then gg.alert("Credit/Kredit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for \"no reload cheat\" tutor that doesn't even work.\n+ Joker - No Blast Damage GameGuardian Values.") show_about() end
 		if CH == 7 then CH = nil MENU() end
 		CH = nil
 	end
@@ -1171,15 +1219,18 @@ end
 
 function exit()
 	print("If you experienced a bug, report it on my GitHub page:https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki")
+	gg.saveVariable(cfg,cfg_file)
 	gg.clearResults()
 	gg.clearList()
 	os.exit()
 end
 
 -- Initialization
---for pistol grapple
 --Configurable values
-VAL_PlayerCurrentName=":Player" -- you can change this to your name
+--for the cfg i recommend running the script, get out, and edit the .conf file (generated in the script location)
+cfg = {}
+cfg['PlayerCurrentName']=":Player" -- you can change this to your name
+cfg['PlayerCustomName']=":CoolFoe" -- you can change this at your likings
 VAL_PstlSgKnockback="0.25" -- Don't change this, this is the pistol/sg bullet knockback default value when the game starts, changing this will cause the script to fail, until you restore them manually
 VAL_CrDfltHlth="125" -- this is veichles default health
 VAL_DmgIntnsty="300" -- this is your default damage intensity
@@ -1187,12 +1238,21 @@ VAL_WallResist={"-500","-1.00001"} -- same as two above but have multiple method
 VAL_BigBody={"3","5.9"}
 --Number Offsets, don't change or the memory search thingy will miss
 SPECIALOFFSET_bigbody={"0.09500002861","0.00000019073"}
+--Load settings
+cfg_file = gg.getFile()..'.conf'
+local cfg_load = loadfile(cfg_file)
+if cfg_load ~= nil then
+	cfg = cfg_load()
+end
+VAL_PlayerCurrentName = cfg['PlayerCurrentName']
 --bunch of global variables
 revert = {}
 MemoryBuffer = {}
 --not used yet TODO: Add translation
 DEFAULT_LANGUAGE="en"
-VERSION="1.7.6"
+VERSION="1.7.9"
+--memory cleanup
+collectgarbage("collect")
 --loop to open the menu if gg menu is visible (aka. pressing floating gg icon)
 while true do
 --open home if gg icon is clicked (aka. if its visible, hide the gg menu and show our menu)
