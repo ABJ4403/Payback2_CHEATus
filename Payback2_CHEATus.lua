@@ -757,9 +757,8 @@ function cheat_togglenoreload_exp()
 		end
 		if CH == 1 then
 	 -- This mostly fake, Why?
-	 -- because (on latest version of PB2/GG) this memory address points to nothing (the game didnt use this. not even near that address).
+	 -- because on old version, this points to Cb (C++ .BSS). which all of us know, (on latest version of PB2/GG) this memory address points to nothing (the game didnt use this. not even near that address).
 	 -- Prepare the table
-	 -- PS: This works ONLY in old version, because the thing that hydra shows located in region Cb (C .BSS)
 			local t = {}
 			t[1] = {}
 			t[1].address = 0xBA26C5D4
@@ -797,12 +796,11 @@ function cheat_togglenoreload_exp()
 end
 
 function cheat_xpmodifier()
--- gg.REGION_OTHER,C_ALLOC
-	gg.setRanges(gg.REGION_ANNONYMOUS)
+	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANNONYMOUS | gg.REGION_OTHER)
 --request user to give player name
 	local player_xp = gg.prompt({
-		'Put your current XP (make sure that your XP value is differentiateable, because there\'s no looping thingy method yet)',
-		'Put new XP (known limit is 999999)',
+		'Put your current XP (make sure that your XP value is differentiateable, because there\'s no looping thingy method yet.)',
+		'Put new XP (Google Play Game limit is 999999, while the DWORD limit is 1.999.999.998)',
 		'Freeze'
 	},{
 		[1]="number",
@@ -824,7 +822,7 @@ function cheat_xpmodifier()
 			end
 			gg.setValues(t)
 			gg.clearResults()
-			gg.toast('"'..player_xp[1]..'" changed to "'..player_xp[2]..'"\nWarn: this is still in experimentation phase, the xp might only apply on your client, or not affect Google Play Game score')
+			gg.toast('"'..player_xp[1]..'" changed to "'..player_xp[2]..'"\nWarn: this is still in experimentation phase, the xp wont applied permanently, it will get reset to original. to chnage it permanently, you have to modify the .sav data, which is impossible because its encrypted')
 		end
 	end
 end
@@ -896,7 +894,8 @@ function cheat_changeplayernamecolor()
 
 		--search old player name
 			gg.searchNumber(player_name[1], gg.TYPE_BYTE)
-			t,revert['PlayerName'] = gg.getResults(5555),gg.getResults(5555)
+			local t,tmp0 = gg.getResults(5555)
+			revert['PlayerName'] = gg.getResults(5555)
 		--generic found stuff
 			if gg.getResultCount() == 0 then
 				gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
@@ -905,7 +904,8 @@ function cheat_changeplayernamecolor()
 				--this is where the problem arises, will this vvv work? probably not, mostly.
 				--1. shift all addreses
 					for i, v in ipairs(t) do
-					--v[i].address = v[i].address + 0x1
+						tmp0 = v[i].address
+						v[i].address = tmp0 + 0x1
 						v[i].freeze = false
 						v[1].flags = gg.TYPE_BYTE
 					end
@@ -923,7 +923,8 @@ function cheat_changeplayernamecolor()
 							t[i] = nil
 						else
 						--and -1 for the rest
-							v[i].address = v[i].address - 0x1
+							tmp0 = v[i].address
+							v[i].address = tmp0 - 0x1
 							v[i].freeze = false
 							v[i].flags = gg.TYPE_BYTE
 						end
@@ -932,6 +933,7 @@ function cheat_changeplayernamecolor()
 				gg.setValues(t)
 				gg.toast('Color set to '..player_color_choice..'. PS: still in experimental phase, might not work')
 			end
+			tmp0 = nil
 
 		end
 	end
@@ -983,14 +985,15 @@ function cheat_coloredtree()
 		if CH == 3 then MENU() end
 		if CH == 1 then tmp0[1] = "0.04" tmp0[2] = "-999" tmp0[3] = "ON" end
 		if CH == 2 then tmp0[1] = "-999" tmp0[2] = "0.04" tmp0[3] = "OFF" end
-		gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_CODE_APP)
+	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
+		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
 			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
-		--gg.clearResults()
+			gg.clearResults()
 			gg.toast("Colored trees "..tmp0[3])
 		end
 		tmp0 = nil
@@ -1008,14 +1011,15 @@ function cheat_bigflamethroweritem()
 		if CH == 3 then MENU() end
 		if CH == 1 then tmp0[1] = "0.9" tmp0[2] = "999" tmp0[3] = "ON" end
 		if CH == 2 then tmp0[1] = "999" tmp0[2] = "0.9" tmp0[3] = "OFF" end
-		gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_CODE_APP)
+	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
+		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
 			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
-		--gg.clearResults()
+			gg.clearResults()
 			gg.toast("Big flamethrower "..tmp0[3])
 		end
 		tmp0 = nil
@@ -1033,14 +1037,15 @@ function cheat_shadowfx()
 		if CH == 3 then MENU() end
 		if CH == 1 then tmp0[1] = "0.0001" tmp0[2] = "-1.0012" tmp0[3] = "Disabled" end
 		if CH == 2 then tmp0[1] = "-1.0012" tmp0[2] = "0.0001" tmp0[3] = "Enabled" end
-		gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_CODE_APP)
+	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
+		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
 			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
-		--gg.clearResults()
+			gg.clearResults()
 			gg.toast("Shadow "..tmp0[3])
 		end
 		tmp0 = nil
@@ -1058,14 +1063,15 @@ function cheat_clrdpplesp()
 		if CH == 3 then MENU() end
 		if CH == 1 then tmp0[1] = "0.08" tmp0[2] = "436" tmp0[3] = "ON" end
 		if CH == 2 then tmp0[1] = "436" tmp0[2] = "0.08" tmp0[3] = "OFF" end
-		gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_CODE_APP)
+	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
+		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
 			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
-		--gg.clearResults()
+			gg.clearResults()
 			gg.toast("Colored people ESP "..tmp0[3])
 		end
 		tmp0 = nil
@@ -1209,7 +1215,7 @@ function show_about()
 		if CH == 1 then gg.alert("Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes") show_about() end
 		if CH == 2 then gg.alert("Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang") show_about() end
 		---
-		if CH == 4 then gg.alert("DISCLAIMMER/DISKLAIMMER:\nPlease DO NOT misuse the script to abuse other players.\nRemember to keep your patience out of other players.\ni recommend ONLY using this script in offline mode.\n\nJANGAN salahgunakan skrip ini untuk menjahili pemain lain.\nIngat untuk menjaga kesabaran anda dari pemain lain.\nSaya merekomendasikan menggunakan skrip ini HANYA di mode offline.") show_about() end
+		if CH == 4 then gg.alert("DISCLAIMMER/DISKLAIMMER:\nPlease DO NOT misuse the script to abuse other players.\nRemember to keep your patience out of other players.\ni recommend ONLY using this script in offline mode.\nI made this because no one would share their cheat script.\n\nJANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\nIngat untuk menjaga kesabaran anda dari pemain lain.\nSaya merekomendasikan menggunakan skrip ini HANYA di mode offline.\nSaya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.") show_about() end
 		if CH == 5 then gg.alert("Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses") show_about() end
 		if CH == 6 then gg.alert("Credit/Kredit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for \"no reload cheat\" tutor that doesn't even work.\n+ Joker - No Blast Damage GameGuardian Values.") show_about() end
 		if CH == 7 then CH = nil MENU() end
@@ -1221,7 +1227,7 @@ function exit()
 	print("If you experienced a bug, report it on my GitHub page:https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki")
 	gg.saveVariable(cfg,cfg_file)
 	gg.clearResults()
-	gg.clearList()
+--gg.clearList() -- this will clear your list not recommend though...
 	os.exit()
 end
 
