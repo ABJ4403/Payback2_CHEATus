@@ -22,9 +22,9 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 	
 - `PB2_Hydra-WallHack.lua` (`WALL HACK payback2.lua` from [`MediaFire`](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file)), by Hydra.
 
-	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi` `🛡️ Obfuscation` `🔐️ Built-in lock` `📈️ Function argument overflow` `Bytecode modification` `Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
+	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi` `🛡️ Obfuscation (level:3)` `🔐️String Encryption (difficulty:3)` `🔐️ Password: 7o31kql9p0` `📈️ Function argument overflow` `✏️ Bytecode modification` `💣️ Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
 
-  Finally i had this file decrypted, Thank you [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
+  Finally i had this file decrypted (kindof) , Thank you [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
   Actually what happened that is the file had some nonsense, this will be visible if you dissasemble the file:
 ```
 settable     r59   r71   r71
@@ -67,22 +67,19 @@ loadnil      r71     8
 newtable     r71     0     0
 ```
   and this nonsense: ```loadk         r0   k36```.
-  both fills the script alot and confuses unluac, eats ~100-200kb size. just disassemble the file, remove all that above, reassemble the file, and decompile it again, it will work.
+  both fills the script alot and confuses unluac, eats ~100-200kb size. just disassemble the file, remove all that above, reassemble the file, and decompile it again using patched unluac, it will work.
+
 	I know this isn't really 'decompiled' because bunch of variables were gone, replaced by A\*_\* and its huge (400kb), so this makes it harder to reverse-engineer.
 
-## HELP WANTED decryption:
-anyone can decrypt these files?
 - `PB2_AlphaGGHackerYT_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
 
-	`Difficulty: 4` `🛡️ Obfuscation` `🔒️ Built-in Encryption` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st`
+	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, mdp43140` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
 
 	Ridicilous Arbitrary slow loading embedded on the script with 0 way to bypass that at all.
 
-	Assembled, Obfuscated, Encrypted. All that + the author bullying you in the code itself (the text says `N O O B   D E C R Y P T   ( F * * *   Y O U )` on the end of the raw binary file, and `NoTouchyTouchy`,`OopsSorry` when disassembling the file).
+	Assembled, Obfuscated, Encrypted + the author bullying you in the code itself (even though he missed one thing... password, which is a good thing).
 	
-	Yeah... looks like he's flexing on his `🛡️🔒🛡️ new proprietary PHILIPPINES's super 👹️ic 666 military-grade encryption 🛡️🔒🛡️` that wont even launch the script at all (yes i cant open the script because the encryption was too much even for gameguardian itself lol XD)
-
-I can't upload these encrypted files due to unknown CORS failure when trying to upload to GitHub (idk why, maybe because github is using external stuff...)
+	OR AM I? its DECOMPILED, so he thought his encryption works like a charm, eh?
 
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
@@ -93,7 +90,8 @@ Because its VERY HARD to find these scripts dude...
 # Decompiler/Decryptor resources:
 - [unluac Discussion about decrypting nonsense (im the one that reports these lool)](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
 - [unluac - `Common` Decompiler for LUA v5.x](https://sourceforge.net/projects/unluac)
-- [unluac_patch - Custom patched version of (older) unluac with modified non-standard OPCODES (works with some GameGuardian scripts)](https://sourceforge.net/p/unluac/discussion/general/thread/88e9b323cc)
+- [unluac_patch - Custom patched version of (older) unluac that used to decode AlphaGG script](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
+- [unluac_patch - Custom patched version of (older) unluac with modified non-standard OPCODES](https://sourceforge.net/p/unluac/discussion/general/thread/88e9b323cc)
 - [LuaDec - LUA Decompiler for lua v5.1-3](https://github.com/viruscamp/luadec)
 - [ChunkSpy - LUA Chuck inspector/dissasembler](https://github.com/viruscamp/luadec/blob/master/ChunkSpy)
 
