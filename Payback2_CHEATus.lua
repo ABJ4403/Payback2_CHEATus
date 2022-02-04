@@ -11,6 +11,7 @@ function MENU()
 		"5. Client-side cosmetics",
 		"6. Incompatible cheats",
 		"---",
+		"Settings/Pengaturan",
 		"About/Tentang",
 		"Exit/Keluar",
 	}, nil, "Payback2 CHEATus v"..VERSION..", by ABJ4403.")
@@ -24,8 +25,9 @@ function MENU()
 	if CH == 8 then MENU_CSD() end
 	if CH == 9 then MENU_incompat() end
 ---
-	if CH == 11 then show_about() end
-	if CH == 12 then exit() end
+	if CH == 11 then MENU_settings() end
+	if CH == 12 then show_about() end
+	if CH == 13 then exit() end
 	HOMEDM = -1
 end
 
@@ -94,6 +96,15 @@ function MENU_incompat()
 	if CH == 11 then cheat2_givelaser() end
 ---
 	if CH == 13 then MENU() end
+	HOMEDM = -1
+end
+
+function MENU_settings()
+--Let the user choose stuff
+	local CH = gg.choice({
+		"Back",
+	}, nil, "Payback2 CHEATus v"..VERSION..", by ABJ4403.")
+	if CH == 1 then exit() end
 	HOMEDM = -1
 end
 --[[
@@ -318,8 +329,10 @@ function cheat_wallhack()
 	local tmp0,CH = {},gg.choice({
 		"ON (Default, physics works best. need to reapplied every match, takes some time)",
 		"ON (Alternative, wonky physics. but fast to enable, survives multiple match, and can wallhack a veichle & peoples too not just a wall)",
+		"ON (Hydra method, not work for latest version, unknown (dis)abilities)",
 		"OFF (Default, Not recommended if buffer is empty)",
 		"OFF (Alternative)",
+		"OFF (Hydra method)",
 		"---",
 		"Restore previous value",
 		"Use custom value",
@@ -329,31 +342,38 @@ function cheat_wallhack()
 	if CH ~= nil then
 		if CH == 9 then MENU() end
  -- Set ranges
- 		if CH == 1 then tmp0[1]="default"     tmp0[2]="1140457472D;500F::" tmp0[3]=VAL_WallResist[1] tmp0[4]="ON" end
- 		if CH == 2 then tmp0[1]="alternative" tmp0[2]="0.001"              tmp0[3]=VAL_WallResist[2] tmp0[4]="ON" end
- 		if CH == 3 then tmp0[1]="default"     tmp0[2]=VAL_WallResist[1]    tmp0[3]="1140457472"      tmp0[4]="OFF" end
- 		if CH == 4 then tmp0[1]="alternative" tmp0[2]=VAL_WallResist[2]    tmp0[3]="0.001"           tmp0[4]="OFF" end
+ 		if CH == 1 then tmp0[1]="default"		  tmp0[2]="1140457472D;500F::" tmp0[3]=VAL_WallResist[1] tmp0[4]="ON" end
+ 		if CH == 2 then tmp0[1]="alternative" tmp0[2]="0.001"							tmp0[3]=VAL_WallResist[2] tmp0[4]="ON" end
+ 		if CH == 3 then tmp0[1]="hydra"       tmp0[2]="1078618499;1094412911;1;1034868570;1050796852::493" tmp0[3]=VAL_WallResist[3] tmp0[4]="ON" end
+ 		if CH == 4 then tmp0[1]="default"		  tmp0[2]=VAL_WallResist[1]		tmp0[3]="1140457472"			tmp0[4]="OFF" end
+ 		if CH == 5 then tmp0[1]="alternative" tmp0[2]=VAL_WallResist[2]		tmp0[3]="0.001"					 tmp0[4]="OFF" end
+ 		if CH == 6 then tmp0[1]="hydra"       tmp0[2]="1078618499;1094412911;"..VAL_WallResist[3]..";1034868570;1050796852::493" tmp0[3]="1" tmp0[4]="OFF" end
 		---
 		if CH == 6 then
 			gg.setValues(revert['wallhack'])
 			gg.setValues(revert['wallhack_alternative'])
-			revert['wallhack'],revert['wallhack_alternative'] = nil,nil
+			gg.setValues(revert['wallhack_hydra'])
+			revert['wallhack'],revert['wallhack_alternative'],revert['wallhack_hydra'] = nil,nil,nil
 			gg.toast("Previous value restored, be warned though this will cause instability")
 		end
 		if CH == 7 then
 			local CH = gg.prompt({
 				'Put your custom value for Default method (Game default:1140457472,Cheatus default:-500)',
-				'Put your custom value for Alternative method (Game default:0.001,Cheatus default:-1.00001)'
+				'Put your custom value for Alternative method (Game default:0.001,Cheatus default:-1.00001)',
+				'Put your custom value for Hydra method (Game default:1,known cheatus default:-1)'
 			},{
 				[1] = VAL_WallResist[1],
-				[2] = VAL_WallResist[2]
+				[2] = VAL_WallResist[2],
+				[3] = VAL_WallResist[3]
 			},{
 				[1] = 'number',
-				[2] = 'number'
+				[2] = 'number',
+				[3] = 'number'
 			})
 			if CH ~= nil then
 				if CH[1] ~= "" then VAL_WallResist[1] = CH[1] end
 				if CH[2] ~= "" then VAL_WallResist[2] = CH[2] end
+				if CH[3] ~= "" then VAL_WallResist[3] = CH[3] end
 			end
 			CH = nil
 			cheat_wallhack()
@@ -403,6 +423,29 @@ function cheat_wallhack()
 					v.value = tmp0[3]
 				end
 				gg.setValues(MemoryBuffer['wallhack_alternative'])
+				gg.clearResults()
+				gg.toast("Wall Hack "..tmp0[4])
+			end
+		end
+		if tmp0[1] == "hydra" then -- Hydra method had no (dis)advantages... coz it isnt affecting latest version...
+			gg.setRanges(gg.REGION_OTHER)
+			if MemoryBuffer['wallhack_hydra'] == nil then
+				gg.toast('No previous memory buffer found, creating new buffer.')
+				gg.searchNumber(tmp0[2], gg.TYPE_DWORD)
+				gg.refineNumber(1)
+				MemoryBuffer['wallhack_hydra'],revert['wallhack_hydra'] = gg.getResults(40),gg.getResults(40)
+			else
+				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
+				gg.loadResults(MemoryBuffer['wallhack_hydra'])
+				gg.getResults(40)
+			end
+			if gg.getResultCount() == 0 then
+				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			else
+				for i, v in ipairs(MemoryBuffer['wallhack_hydra']) do
+					v.value = tmp0[3]
+				end
+				gg.setValues(MemoryBuffer['wallhack_hydra'])
 				gg.clearResults()
 				gg.toast("Wall Hack "..tmp0[4])
 			end
@@ -746,56 +789,47 @@ function cheat_togglevoidmode()
 end
 
 function cheat_togglenoreload_exp()
-	local CH = gg.choice({
-		"Automatic (Hydra method, Won't work or for old versions)",
-		"Fallback (Default, can cause instability)",
-		"Back"
-	}, nil, "Select method for applying no reload values - No Reload")
-	if CH ~= nil then
-		if CH == 3 then
-			MENU()
+-- This mostly fake, Why?
+-- because on old version, this points to Cb (C++ .BSS). which all of us know, (on latest version of PB2/GG) this memory address points to nothing (the game didnt use this. not even near that address).
+-- Prepare the table
+-- its. a. prank, yep... coz i tried with old version and STILL wont work, nothing even found
+--local t = {}
+--t[1] = {}
+--t[1].address = 0xBA26C5D4
+--t[1].flags = gg.TYPE_DWORD
+--t[1].value = 555
+--t[1].freeze = true
+--gg.setValues(t)
+--gg.toast('this will change BA26C5D4:Word 0 to 500:Freeze\nNo reload ON')
+	gg.setRanges(gg.REGION_OTHER)
+	local stp = gg.prompt({
+		'Put your weapon ammo\n(works best for rocket, because this affects rocket only)\nResets after respawn',
+		'Put your new weapon ammo'
+	})
+	gg.searchNumber(stp[1],gg.TYPE_WORD)
+	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	gg.sleep(10000)
+	gg.toast('Timeout, searching for '..stp[2])
+	local t = gg.refineNumber(stp[2], gg.TYPE_WORD)
+	if gg.getResultCount() == 0 then
+		gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+	else
+		for i, v in ipairs(t) do
+			v[i].value = 1
+			v[i].freeze = true
 		end
-		if CH == 1 then
-	 -- This mostly fake, Why?
-	 -- because on old version, this points to Cb (C++ .BSS). which all of us know, (on latest version of PB2/GG) this memory address points to nothing (the game didnt use this. not even near that address).
-	 -- Prepare the table
-			local t = {}
-			t[1] = {}
-			t[1].address = 0xBA26C5D4
-			t[1].flags = gg.TYPE_DWORD
-			t[1].value = 555
-			t[1].freeze = true
-			gg.setValues(t)
-			gg.toast('this will change BA26C5D4:Word 0 to 500:Freeze\nNo reload ON')
-		end
-		if CH == 2 then
-			gg.setRanges(gg.REGION_OTHER)
-			local stp = gg.prompt({
-				'Put your weapon ammo\n(works best for rocket, because this affects rocket only)\nResets after respawn',
-				'Put your new weapon ammo'
-			})
-			gg.searchNumber(stp[1],gg.TYPE_WORD)
-			gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-			gg.sleep(10000)
-			gg.toast('Timeout, searching for '..stp[2])
-			local t = gg.refineNumber(stp[2], gg.TYPE_WORD)
-			if gg.getResultCount() == 0 then
-				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
-			else
-				for i, v in ipairs(t) do
-					v[i].value = 1
-					v[i].freeze = true
-				end
-				gg.setValues(t)
-				gg.clearResults()
-				gg.toast('No reload ON')
-			end
-		end
+		gg.setValues(t)
+		gg.clearResults()
+		gg.toast('No reload ON')
 	end
 	HOMEDM = -1
 end
 
 function cheat_xpmodifier()
+--CAlloc for the gameplay and actual google play value
+--Annonymous from joker video
+--OTHER for the Chat and Displayed XP
+--Won't affect stored xp (aka. temporary)
 	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANNONYMOUS | gg.REGION_OTHER)
 --request user to give player name
 	local player_xp = gg.prompt({
@@ -1240,7 +1274,7 @@ cfg['PlayerCustomName']=":CoolFoe" -- you can change this at your likings
 VAL_PstlSgKnockback="0.25" -- Don't change this, this is the pistol/sg bullet knockback default value when the game starts, changing this will cause the script to fail, until you restore them manually
 VAL_CrDfltHlth="125" -- this is veichles default health
 VAL_DmgIntnsty="300" -- this is your default damage intensity
-VAL_WallResist={"-500","-1.00001"} -- same as two above but have multiple methods, thats why its put to tables (i better call it array, btw)
+VAL_WallResist={"-500","-1.00001","-1"} -- same as two above but have multiple methods, thats why its put to tables (i better call it array, btw)
 VAL_BigBody={"3","5.9"}
 --Number Offsets, don't change or the memory search thingy will miss
 SPECIALOFFSET_bigbody={"0.09500002861","0.00000019073"}
@@ -1256,7 +1290,7 @@ revert = {}
 MemoryBuffer = {}
 --not used yet TODO: Add translation
 DEFAULT_LANGUAGE="en"
-VERSION="1.7.9"
+VERSION="1.8.0"
 --memory cleanup
 collectgarbage("collect")
 --loop to open the menu if gg menu is visible (aka. pressing floating gg icon)
