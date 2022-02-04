@@ -81,6 +81,12 @@ newtable     r71     0     0
 	
 	OR AM I? its DECOMPILED, so he thought his encryption works like a charm, eh?
 
+	this one is almost the same as the hydra wallhack ones, but simpler (if u successfully decompile the script and getting rid of nonsense stuff...)
+
+	One thing to point put though, AlphaGG put the string decryption thing on the top
+
+	Thanks again to [tehtmi](https://sourceforge.net/u/tehtmi) for the patched unluac, and [mdp43140](https://github.com/mdp43140) for reverse-engineering to get the password.
+
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
 

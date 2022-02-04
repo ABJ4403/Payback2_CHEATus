@@ -3,17 +3,14 @@
 --find a long array of string, then find a decryptor function that decrypts that input array
 
 function Decryptor(input)
-	local L1_2, L2_2, L3_2, L4_2, L5_2, L6_2, L7_2, L8_2, L9_2
-	Letter = ""
-	for i in ipairs(input) do
-		L7_2 = tonumber(input[i], 16)
-		L7_2 = L7_2 + 1
-		L7_2 = L7_2 % 256
-		Letter = Letter .. string.char(L7_2)
-	end
-	print(Letter)
-	return Letter
+  local result = ""
+  for i in ipairs(input) do
+  --convert hex to byte, do some decrypt magic, convert it to char, and concat em
+    result = result .. string.char(tonumber(input[i], 16) + 1 % 256)
+  end
+  return result
 end
+
 gg.setVisible(false)
 L0_1 = gg.toast
 L1_1 = Decryptor
