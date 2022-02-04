@@ -22,7 +22,7 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 	
 - `PB2_Hydra-WallHack.lua` (`WALL HACK payback2.lua` from [`MediaFire`](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file)), by Hydra.
 
-	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi` `🛡️ Obfuscation (level:3)` `🔐️String Encryption (difficulty:3)` `🔐️ Password: 7o31kql9p0` `📈️ Function argument overflow` `✏️ Bytecode modification` `💣️ Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
+	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🛡️ Obfuscation (level:3)` `🔐️String Encryption (difficulty:3)` `🔐️ Password: 7o31kql9p0` `📈️ Function argument overflow` `✏️ Bytecode modification` `💣️ Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
 
   Finally i had this file decrypted (kindof) , Thank you [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
   Actually what happened that is the file had some nonsense, this will be visible if you dissasemble the file:
@@ -71,9 +71,10 @@ newtable     r71     0     0
 
 	I know this isn't really 'decompiled' because bunch of variables were gone, replaced by A\*_\* and its huge (400kb), so this makes it harder to reverse-engineer.
 
+	Thanks to [mdp43140](https://github.com/mdp43140) for reverse-engineering to get the password
 - `PB2_AlphaGGHackerYT_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
 
-	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, mdp43140` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
+	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
 
 	Ridicilous Arbitrary slow loading embedded on the script with 0 way to bypass that at all.
 
@@ -85,7 +86,7 @@ newtable     r71     0     0
 
 	One thing to point put though, AlphaGG put the string decryption thing on the top
 
-	Thanks again to [tehtmi](https://sourceforge.net/u/tehtmi) for the patched unluac, and [mdp43140](https://github.com/mdp43140) for reverse-engineering to get the password.
+	Thanks again to [tehtmi](https://sourceforge.net/u/tehtmi) for the patched unluac.
 
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
