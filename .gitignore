@@ -1,8 +1,7 @@
 script_collections/decompiler/luadec5.1
 script_collections/decompiler/luadec5.2
 script_collections/decompiler/luadec5.3
-script_collections/decompiler/unluac_1.2.3.489-bw-patch_Custom-ByteCodeOP.jar
-script_collections/decompiler/unluac_2022_01_12.jar
+script_collections/decompiler/unluac_*.jar
 .nonsense
 script_collections/encrypted/PB2_AlphaGGHacker_simplescript-v1_proprietary/PB2_AlphaGGHacker_simplescriptv1_proprietary.Assembly.lua
 script_collections/encrypted/PB2_AlphaGGHacker_simplescript-v1_proprietary/PB2_AlphaGGHacker_simplescriptv1_proprietary.lua
