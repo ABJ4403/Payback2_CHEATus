@@ -11,10 +11,10 @@ function MENU()
 		"5. Client-side cosmetics",
 		"6. Incompatible cheats",
 		"---",
-		"Settings/Pengaturan",
-		"About/Tentang",
-		"Exit/Keluar",
-	}, nil, "Payback2 CHEATus v"..VERSION..", by ABJ4403.")
+		string.format("Settings"),
+		string.format("About"),
+		string.format("Exit"),
+	}, nil, string.format("Title_Version"))
 	if CH == 1 then cheat_pistolknockback() end
 	if CH == 2 then cheat_weaponammo() end
 	if CH == 3 then cheat_wallhack() end
@@ -47,8 +47,8 @@ function MENU_CSD()
 		"9. Colored People's (ESP, ExtraSensoryPerception. i think this is X-Ray Hack. from GKTV)",
 		"10. Delete All Names",
 		"---",
-		"Back/Kembali"
-	}, nil, "Payback2 CHEATus v"..VERSION..", by ABJ4403.")
+		string.format("Back")
+	}, nil, string.format("Title_Version"))
 --Title:CSD...
 --Title:This menu...
 	if CH == 3 then cheat_walkwonkyness() end
@@ -81,8 +81,8 @@ function MENU_incompat()
 		"8. Give C4s (From ICE Menu)",
 		"9. Give Laser (From ICE Menu)",
 		"---",
-		"Back/Kembali"
-	}, nil, "Payback2 CHEATus v"..VERSION..", by ABJ4403.")
+		string.format("Back")
+	}, nil, string.format("Title_Version"))
 --Title:CSD...
 --Title:This menu...
 	if CH == 3 then cheat_togglevoidmode() end
@@ -102,9 +102,66 @@ end
 function MENU_settings()
 --Let the user choose stuff
 	local CH = gg.choice({
-		"Back",
-	}, nil, "Payback2 CHEATus v"..VERSION..", by ABJ4403.")
-	if CH == 1 then exit() end
+	  "Change default player name",
+	  "Change default custom player name",
+	  "Change language (Todo)",
+	  "Save settings",
+	  "Reset settings",
+		string.format("Back")
+	}, nil, string.format("Title_Version"))
+	if CH == 6 then MENU() end
+	if CH == 1 then
+		local CH = gg.prompt({'Put your new default player name'},{cfg['PlayerCurrentName']},{'number'})
+		if (CH ~= nil and CH[1] ~= nil) then
+		
+			cfg['PlayerCurrentName'] = CH[1]
+		end
+		CH = nil
+		MENU_settings()
+	end
+	if CH == 2 then
+		local CH = gg.prompt({'Put your new default custom player name'},{cfg['PlayerCustomName']},{'number'})
+		if (CH ~= nil and CH[1] ~= nil) then
+			cfg['PlayerCustomName'] = CH[1]
+		end
+		CH = nil
+		MENU_settings()
+	end
+	if CH == 3 then
+		local tmp = 0
+		if cfg['Language'] == "en_US" then tmp = 1 end
+		if cfg['Language'] == "in" then tmp = 2 end
+		if cfg['Language'] == "auto" then tmp = 3 end
+		local CH = gg.choice({
+			"🇺🇸️ English",
+			"🇮🇩️ Indonesia",
+			"Auto-detect (default, using GameGuardian API, will use English as fallback)",
+			"Back",
+		}, tmp, string.format("Title_Version"))
+		tmp = nil
+		if CH ~= nil then
+			if CH == 4 then MENU_settings() end
+			if CH == 1 then cfg['Language'] = "en_US" end
+			if CH == 2 then cfg['Language'] = "in" end
+			if CH == 3 then cfg['Language'] = "auto" end
+			CH = nil
+			update_language()
+			MENU_settings()
+		end
+	end
+	if CH == 4 then
+  	gg.saveVariable(cfg,cfg_file)
+  	gg.toast("your current settings is saved, but you dont have to do this, because the setting will be saved if you exit out of the script")
+  	MENU_settings()
+	end
+	if CH == 5 then
+		cfg = {}
+    cfg['PlayerCurrentName']=":Player" -- you can change this to your name
+    cfg['PlayerCustomName']=":CoolFoe" -- you can change this at your likings
+  	gg.saveVariable(cfg,cfg_file)
+  	gg.toast("your current saved settings was reset")
+  	MENU_settings()
+	end
 	HOMEDM = -1
 end
 --[[
@@ -136,7 +193,7 @@ function cheat_weaponammo()
 		"Automatic",
 		"Fallback (Default, modifies the DWORD, works best in offline mode)",
 		"Fallback (v2, modified the WORD, no respawn required, but cant survive respawn)",
-		"Back"
+		string.format("Back")
 	}, nil, "Select method for modifying weapon amount - Modify Weapon Amount\nPS: not tested for multiplayer (while the gameplay running), might not work.")
 	if CH ~= nil then
 		if CH == 3 then MENU() end
@@ -259,7 +316,7 @@ function cheat_pistolknockback()
 		"Change current Knockback variable",
 		"Restore previous value",
 		"Clear memory buffer",
-		"Back"
+		string.format("Back")
 	}, nil, "Pistol/Shotgun knockback modifier\nCurrent: "..VAL_PstlSgKnockback.."\nHint: recommended value is -20 to 20 if you use pistol")
  -- Hint: if you want to search these value below in gui, change . to , :)
 	if CH ~= nil then
@@ -337,7 +394,7 @@ function cheat_wallhack()
 		"Restore previous value",
 		"Use custom value",
 		"Clear memory buffer",
-		"Back"
+		string.format("Back")
 	}, nil, "Wall Hack. Warn:\n- some walls have holes behind them\n- Dont use Wall Hack if you use Helicopter (if you respawn, the helicopter will sunk down due to less power to pull helicopter up),\n- Don't use Wall Hack if you do racing\n- Best use cases are for Capture The Swags, especially in Metropolis, because theres less holes there")
 	if CH ~= nil then
 		if CH == 9 then MENU() end
@@ -463,7 +520,7 @@ function cheat_bigbody()
 		"OFF (Alternative)",
 		"Restore previous value",
 		"Use custom value",
-		"Back"
+		string.format("Back")
 	}, nil, "Big body")
 	if CH ~= nil then
 		if CH == 3 then
@@ -571,7 +628,7 @@ function cheat_strongveichle()
 		"Change current health variable",
 		"Restore previous value",
 		"Clear memory buffer",
-		"Back"
+		string.format("Back")
 	}, nil, "Veichle default health modifier")
 	if CH ~= nil then
 		if CH == 10 then MENU() end
@@ -648,7 +705,7 @@ function cheat_noblastdamage()
 		"Change current damage value",
 		"Restore previous value",
 		"Clear memory buffer",
-		"Back"
+		string.format("Back")
 	}, nil, "No damage\nThis will make you unable to get killed using any explosion blasts (that means you still can get killed by sg,mg,laser,turret,any non explosive weapons)\nPS: this will make your character buggy though")
 	if CH ~= nil then
 		if CH == 10 then MENU() end
@@ -719,7 +776,7 @@ function cheat_destroycar()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		"Back"
+		string.format("Back")
 	}, nil, "Destroy cars")
 	if CH ~= nil then
 		if CH == 3 then
@@ -905,7 +962,7 @@ function cheat_changeplayernamecolor()
 		"---",
 		"None (default)",
 		"---",
-		"Back"
+		string.format("Back")
 	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'number'})
 	if (CH ~= nil or player_name ~= nil) then
 	--Color
@@ -980,7 +1037,7 @@ function cheat_walkwonkyness()
 		"ON (1)",
 		"OFF (0)",
 		"Restore",
-		"Back"
+		string.format("Back")
 	}, nil, "Walk Wonkyness (fancy-cheat)")
 	if CH ~= nil then
 		if CH == 5 then MENU() end
@@ -1013,7 +1070,7 @@ function cheat_coloredtree()
 	local tmp0,CH = {}, gg.choice({
 		"ON",
 		"OFF",
-		"Back"
+		string.format("Back")
 	}, nil, "Colored trees\nThis will change some shader stuff (actually idk wut this does lol) that affects trees")
 	if CH ~= nil then
 		if CH == 3 then MENU() end
@@ -1039,7 +1096,7 @@ function cheat_bigflamethroweritem()
 	local tmp0,CH = {}, gg.choice({
 		"ON",
 		"OFF",
-		"Back"
+		string.format("Back")
 	}, nil, "Big flamethrower (Item)\nInfo: this will not make the flame burst bigger")
 	if CH ~= nil then
 		if CH == 3 then MENU() end
@@ -1065,7 +1122,7 @@ function cheat_shadowfx()
 	local tmp0,CH = {}, gg.choice({
 		"ON",
 		"OFF",
-		"Back"
+		string.format("Back")
 	}, nil, "Shadow effects\nInfo: this wont affect your game performance at all (not making it lag/fast)\ndont use this for performance purpose :)")
 	if CH ~= nil then
 		if CH == 3 then MENU() end
@@ -1091,7 +1148,7 @@ function cheat_clrdpplesp()
 	local tmp0,CH = {}, gg.choice({
 		"ON",
 		"OFF",
-		"Back"
+		string.format("Back")
 	}, nil, "Colored people ESP (idk wut esp mean here)")
 	if CH ~= nil then
 		if CH == 3 then MENU() end
@@ -1237,28 +1294,26 @@ end
 
 function show_about()
 	local CH = gg.choice({
-		"🇺🇸️ English",
-		"🇮🇩️ Indonesia",
+		string.format("About"),
 		"---",
-		"Disclaimmer (Please read)",
-		"License/Lisensi",
-		"Credits/Kredit",
-		"Back/Kembali",
+		string.format("Disclaimmer"),
+		string.format("License"),
+		string.format("Credits"),
+		string.format("Back")
 	}, nil, "Select your language\nPilih bahasa")
 	if CH ~= nil then
-		if CH == 1 then gg.alert("Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes") show_about() end
-		if CH == 2 then gg.alert("Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang") show_about() end
+		if CH == 1 then gg.alert(string.format("About_Text")) show_about() end
 		---
-		if CH == 4 then gg.alert("DISCLAIMMER/DISKLAIMMER:\nPlease DO NOT misuse the script to abuse other players.\nRemember to keep your patience out of other players.\ni recommend ONLY using this script in offline mode.\nI made this because no one would share their cheat script.\n\nJANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\nIngat untuk menjaga kesabaran anda dari pemain lain.\nSaya merekomendasikan menggunakan skrip ini HANYA di mode offline.\nSaya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.") show_about() end
-		if CH == 5 then gg.alert("Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses") show_about() end
-		if CH == 6 then gg.alert("Credit/Kredit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for \"no reload cheat\" tutor that doesn't even work.\n+ Joker - No Blast Damage GameGuardian Values.") show_about() end
-		if CH == 7 then CH = nil MENU() end
+		if CH == 3 then gg.alert(string.format("Disclaimmer_Text")) show_about() end
+		if CH == 4 then gg.alert(string.format("License_Text")) show_about() end
+		if CH == 5 then gg.alert(string.format("Credits_Text")) show_about() end
+		if CH == 6 then CH = nil MENU() end
 		CH = nil
 	end
 end
 
 function exit()
-	print("If you experienced a bug, report it on my GitHub page:https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki")
+	print(string.format("Exit_ThankYouMsg"))
 	gg.saveVariable(cfg,cfg_file)
 	gg.clearResults()
 --gg.clearList() -- this will clear your list not recommend though...
@@ -1266,9 +1321,11 @@ function exit()
 end
 
 -- Initialization
---Configurable values
+
+-- Configurable values
 --for the cfg i recommend running the script, get out, and edit the .conf file (generated in the script location)
 cfg = {}
+cfg['Language']="auto"
 cfg['PlayerCurrentName']=":Player" -- you can change this to your name
 cfg['PlayerCustomName']=":CoolFoe" -- you can change this at your likings
 VAL_PstlSgKnockback="0.25" -- Don't change this, this is the pistol/sg bullet knockback default value when the game starts, changing this will cause the script to fail, until you restore them manually
@@ -1278,19 +1335,105 @@ VAL_WallResist={"-500","-1.00001","-1"} -- same as two above but have multiple m
 VAL_BigBody={"3","5.9"}
 --Number Offsets, don't change or the memory search thingy will miss
 SPECIALOFFSET_bigbody={"0.09500002861","0.00000019073"}
---Load settings
+
+-- Languages table, and string interpreter (TODO)
+function update_language()
+	if cfg['Language'] == "auto" then
+ -- Only English and Indonesian are supported (for now)
+		curr_lang = gg.getLocale()
+		if curr_lang ~= "in" then
+			curr_lang = "en_US"
+		end
+	else
+		curr_lang = cfg['Language']
+	end
+end
+
+
+-- Load settings
 cfg_file = gg.getFile()..'.conf'
 local cfg_load = loadfile(cfg_file)
 if cfg_load ~= nil then
 	cfg = cfg_load()
 end
 VAL_PlayerCurrentName = cfg['PlayerCurrentName']
+
+
+-- Update the currently used language
+update_language()
+
+
+
+
+
 --bunch of global variables
 revert = {}
 MemoryBuffer = {}
---not used yet TODO: Add translation
-DEFAULT_LANGUAGE="en"
-VERSION="1.8.0"
+VERSION="1.8.3"
+
+lang = {}
+lang['en_US'] = {}
+lang['en_US']['Automatic']        = "Automatic"
+lang['en_US']['About']            = "About"
+lang['en_US']['About_Text']       = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes"
+lang['en_US']['Back']             = "Back"
+lang['en_US']['Credits']          = "Credits"
+lang['en_US']['Credits_Text']     = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for \"no reload cheat\" tutor that doesn't even work.\n+ Joker - No Blast Damage GameGuardian Values."
+lang['en_US']['Disclaimmer']      = "Disclaimmer (please read)"
+lang['en_US']['Disclaimmer_Text'] = "DISCLAIMMER:\nPlease DO NOT misuse the script to abuse other players.\nRemember to keep your patience out of other players.\ni recommend ONLY using this script in offline mode.\nI made this because no one would share their cheat script."
+lang['en_US']['Exit']             = "Exit"
+lang['en_US']['Exit_ThankYouMsg'] = "If you experienced a bug, report it on my GitHub page:https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
+lang['en_US']['License']          = "License"
+lang['en_US']['License_Text']     = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
+lang['en_US']['Settings']         = "Settings"
+lang['en_US']['Title_Version']    = "Payback2 CHEATus v"..VERSION..", by ABJ4403."
+lang['in'] = {}
+lang['in']['Automatic']        = "Otomatis"
+lang['in']['About']            = "Tentang"
+lang['in']['About_Text']       = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang"
+lang['in']['Back']             = "Kembali"
+lang['in']['Credits']          = "Kredit"
+lang['in']['Credits_Text']     = "Kredit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for \"no reload cheat\" tutor that doesn't even work.\n+ Joker - No Blast Damage GameGuardian Values."
+lang['in']['Disclaimmer']      = "Disklaimmer (mohon untuk dibaca)"
+lang['in']['Disclaimmer_Text'] = "DISKLAIMMER:\nJANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\nIngat untuk menjaga kesabaran anda dari pemain lain.\nSaya merekomendasikan menggunakan skrip ini HANYA di mode offline.\nSaya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka."
+lang['in']['Exit']             = "Keluar"
+lang['in']['Exit_ThankYouMsg'] = "If you experienced a bug, report it on my GitHub page:https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
+lang['in']['License']          = "Lisensi"
+lang['in']['License_Text']     = "Payback2 CHEATus, Skrip Cheat LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak bebas: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
+lang['in']['Settings']         = "Pengaturan"
+lang['in']['Title_Version']    = "Payback2 CHEATus v"..VERSION..", oleh ABJ4403."
+
+string.format2 = string.format
+function CustomLanguage(input, ...)
+--Load the language
+	local tmp = lang[curr_lang]
+	local args = {...}
+--[[do stuff...
+	if input == "w" then
+		return tmp['w1']..args[1]..tmp['w2']
+	end]]
+--Quick translate without any format
+	if (
+		input == "Automatic" or
+		input == "About" or
+		input == "About_Text" or
+		input == "Back" or
+		input == "Credits" or
+		input == "Credits_Text" or
+		input == "Disclaimmer" or
+		input == "Disclaimmer_Text" or
+		input == "Exit" or
+		input == "License" or
+		input == "License_Text" or
+		input == "Settings" or
+		input == "Title_Version"
+	) then
+		return tmp[input]
+	end
+	string.format2(input,args)
+end
+string.format = CustomLanguage
+
 --memory cleanup
 collectgarbage("collect")
 --loop to open the menu if gg menu is visible (aka. pressing floating gg icon)
