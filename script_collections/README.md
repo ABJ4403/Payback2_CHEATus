@@ -8,44 +8,25 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 - `PB2_ICE-Menu_v1.0.lua` ("{1.0} PB 2.lua", from [`MediaFire`](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)), By Crystal_Mods100x (uploaded by "Toxic Coder")
 - `PB2_VIPTheSmat7Pro27-Mangyu.lua` (from [`MediaFire`](https://www.mediafire.com/file/6t6hy9cdszcezpr/%25E2%259C%25A8SCRIPT_PAYBACK2_VIP_THE_SMAT7_PRO_27%25E2%259C%25A8_.lua.7z/file), fork of Mangyu's script), by VIPTheSmat7Pro27
 
-	`Difficulty: 2` `🔏️ Decryptor: ABJ4403` `🔐️ 7z+AES Encrypted` `⚙️ Decryption tools: none` `⚙️ Requirement: 7z`
+	`Difficulty: 2` `🔏️ Decryptor: ABJ4403` `🦠 None (Safe)` `🔐️ 7z+AES Encrypted` `⚙️ Decryption tools: none` `⚙️ Requirement: 7z`
 
 	Encrypted in 7z format, Password: `LUA V1`. Where do i get this you say? from his video comment, because its in spanish i cant read it until i use Google Translate, everything revealed.
   Unfortunately, this script is just another modified version of Mangyu's cheat Script, didnt have any cheat changes except adding replacing `Mangyu` with his name `THE SMAT7 PRO 27`, adding more bloat and stuff.
 
 - `PB2_GKTV_v1.lua` (`Payback 2 - CHEAT [V1].lua` from [`MediaFire`](https://www.mediafire.com/file/hros99ssjzmkp00/Payback_2_-_CHEAT_%255BV1%255D.lua/file)), by GKTV (now "Pumpkin Hacker")
 
-	`Difficulty: 2` `🔏️ Decryptor: MDP43140` `💾️ Compiled binary` `💧️ Leaks variables` `⚙️ Decryption tools: Custom Patched unluac` `⚙️ Requirement: Java`
+	`Difficulty: 2` `🔏️ Decryptor: MDP43140` `🦠 None (Safe)` `💾️ Compiled binary` `💧️ Leaks variables` `⚙️ Decryption tools: Custom Patched unluac` `⚙️ Requirement: Java`
 
 	Thankfully unlike others, this one is a bit easy. i cant decrypt this using unluac/luadec, i just need the patched custom unluac that has modified non-standard OPCodes.
 	Then it works
 	
 - `PB2_Hydra-WallHack.lua` (`WALL HACK payback2.lua` from [`MediaFire`](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file)), by Hydra.
 
-	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🛡️ Obfuscation (level:3)` `🔐️String Encryption (difficulty:3)` `🔐️ Password: 7o31kql9p0` `📈️ Function argument overflow` `✏️ Bytecode modification` `💣️ Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
+	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 Sus, doing some file modification, even though i see its nonsense (kinda not safe)` `🛡️ Obfuscation (level:3)` `🔐️String Encryption (difficulty:3)` `🔐️ Password: 7o31kql9p0` `📈️ Function argument overflow` `✏️ Bytecode modification` `💣️ Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
 
   Finally i had this file decrypted (kindof) , Thank you [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
   Actually what happened that is the file had some nonsense, this will be visible if you dissasemble the file:
 ```
-settable     r59   r71   r71
-gettable     r71   r59   r71
-gettable     r71   r59   r71
-settable     r71    k7   r74
-call         r71     4     2
-settable     r59   r71   r71
-loadnil      r59     0
-test         r59     0
-move         r74   r59
-test         r59     0
-loadbool     r59     0     0
-settable     r59   r71   r71
-call         r71     1     1
-settable     r71    k8   r74
-test         r59     0
-settable     r74   r77   r79
-gettable     r79   r71   r79
-loadnil      r71     8
-newtable     r71     0     0
 settable     r59   r71   r71
 gettable     r71   r59   r71
 gettable     r71   r59   r71
@@ -74,7 +55,7 @@ newtable     r71     0     0
 	Thanks to [mdp43140](https://github.com/mdp43140) for reverse-engineering to get the password
 - `PB2_AlphaGGHackerYT_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
 
-	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
+	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 from a simple view, it looks like its bad, but after deeper dig, its actually safe` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines, (also some decryption tools, you will get it by patience and knowledge)`
 
 	Ridicilous Arbitrary slow loading embedded on the script with 0 way to bypass that at all.
 
