@@ -1,3 +1,27 @@
+-- Function helpers
+function tbl2hex(bytes)
+	local r = ''
+	for i, b in ipairs(bytes) do
+		r = r .. string.format('%02X ', b)
+	end
+	return r
+end
+
+function str2hex(s)
+	return tbl2hex(gg.bytes(s, encoding))
+end
+
+function hex2bin(s)
+	return string.char(tonumber(s, 16))
+end
+
+function str2tbl(s)
+	local result = {}
+	s:gsub(".",function(c) table.insert(result,c) end)
+	return result
+end
+
+-- Decryptors
 function Decryptor_1(input)
 	local result = ""
 	A2_2 = 22
@@ -63,34 +87,35 @@ function Decryptor_2(input)
 	end
 	return input.gsub(input, "..", nonsense1)
 end
-	function Decryptor_1b(A0_3)
-		A0_3 = A0_3.gsub(A0_3, " ", "")
-		A0_3 = A1_3
-		A2_3 = A0_3
-		A1_3 = A0_3.gsub
-		A3_3 = ".."
-		function A4_3(A0_4)
-			A1_4 = string.char
-			A2_4 = tonumber
-			A3_4 = A0_4
-			A4_4 = 16
-			A2_4 = A2_4(A3_4, A4_4)
-			A2_4 = A2_4 + 500
-			A2_4 = A2_4 % 256
-			return A1_4(A2_4)
-		end
-		A1_3 = A1_3(A2_3, A3_3, A4_3)
-		return A1_3
+function Decryptor_1b(A0_3)
+	A0_3 = A0_3.gsub(A0_3, " ", "")
+	A0_3 = A1_3
+	A2_3 = A0_3
+	A1_3 = A0_3.gsub
+	A3_3 = ".."
+	function A4_3(A0_4)
+		A1_4 = string.char
+		A2_4 = tonumber
+		A3_4 = A0_4
+		A4_4 = 16
+		A2_4 = A2_4(A3_4, A4_4)
+		A2_4 = A2_4 + 500
+		A2_4 = A2_4 % 256
+		return A1_4(A2_4)
 	end
+	A1_3 = A1_3(A2_3, A3_3, A4_3)
+	return A1_3
+end
 -- BETA
 function Encryptor_3(input)
-  local tmp,result = ""
-  for i in ipairs(input) do
-  --convert string to bytes [?????????????????], do some encrypt magic sauce
-    tmp = tonumber(input[i], 256) - 1
+  local tmp,result = {},{}
+--convert string to bytes
+  for i,v in ipairs(str2tbl(input)) do
+  --do some encrypt magic sauce
   --tmp = tmp % 256 unnesecary
-	--and convert it to byte and concat em ?????????????????????????????????
-    result = result .. tonumber(tmp, 16)
+	--and convert it to byte & hex and put them to tables ??????????????????/
+    result[i] = tonumber(v, 16)
+    print(i,v,tonumber(v, 16))
   end
   return result
 end
@@ -142,256 +167,11 @@ end
 
 
 
-A21_2 = {}
-A21_2[1] = 39
-A21_2[2] = 233
-A21_2[3] = 20
-A21_2[4] = -41
-A21_2[5] = -90
-A21_2[6] = 32
-A21_2[7] = -8347149
-A21_2[8] = 102
-A21_2[9] = -8347168
-A21_2[10] = 51
-A21_2[11] = -8347100
-A21_2[12] = 32
-A21_2[13] = -8347145
-A21_2[14] = 55
-A21_2[15] = -8347168
-A21_2[16] = 55
-A21_2[17] = -8347100
-A21_2[18] = 32
-A21_2[19] = -8347145
-A21_2[20] = 56
-A21_2[21] = -8347168
-A21_2[22] = 52
-A21_2[23] = -8347147
-A21_2[24] = 32
-A21_2[25] = -8347145
-A21_2[26] = 99
-A21_2[27] = -8347168
-A21_2[28] = 51
-A21_2[29] = -8347101
-bruh123 = Decryptor_1(A21_2)
-print("Decrypt 1: "..bruh123)
-print("Decrypt 2: "..Decryptor_2(bruh123))
+bruh123 = Decryptor_1()
+print("Decrypt 1,2: \""..bruh123.."\" > \""..Decryptor_2(bruh123).."\"")
 
-	L2_2 = {}
-	L3_2 = "df"
-	L4_2 = "a5"
-	L5_2 = "93"
-	L6_2 = "df"
-	L7_2 = "a6"
-	L8_2 = "a2"
-	L9_2 = "cc"
-	L10_2 = "9b"
-	L11_2 = "cc"
-	L12_2 = "a0"
-	L13_2 = "e1"
-	L14_2 = "9d"
-	L15_2 = "b2"
-	L16_2 = "1f"
-	L17_2 = "1f"
-	L18_2 = "ef"
-	L19_2 = "9c"
-	L20_2 = "8f"
-	L21_2 = "92"
-	L22_2 = "ef"
-	L23_2 = "9c"
-	L24_2 = "8f"
-	L25_2 = "a0"
-	L26_2 = "ef"
-	L27_2 = "9c"
-	L28_2 = "8f"
-	L29_2 = "99"
-	L30_2 = "ef"
-	L31_2 = "9c"
-	L32_2 = "8f"
-	L33_2 = "a6"
-	L34_2 = "ef"
-	L35_2 = "9c"
-	L36_2 = "8f"
-	L37_2 = "a3"
-	L38_2 = "ef"
-	L39_2 = "9c"
-	L40_2 = "8f"
-	L41_2 = "ab"
-	L42_2 = "1f"
-	L43_2 = "ef"
-	L44_2 = "9c"
-	L45_2 = "8f"
-	L46_2 = "9e"
-	L47_2 = "ef"
-	L48_2 = "9c"
-	L49_2 = "8f"
-	L50_2 = "a7"
-	L51_2 = "ef"
-	L52_2 = "9c"
-	L2_2[1] = L3_2
-	L2_2[2] = L4_2
-	L2_2[3] = L5_2
-	L2_2[4] = L6_2
-	L2_2[5] = L7_2
-	L2_2[6] = L8_2
-	L2_2[7] = L9_2
-	L2_2[8] = L10_2
-	L2_2[9] = L11_2
-	L2_2[10] = L12_2
-	L2_2[11] = L13_2
-	L2_2[12] = L14_2
-	L2_2[13] = L15_2
-	L2_2[14] = L16_2
-	L2_2[15] = L17_2
-	L2_2[16] = L18_2
-	L2_2[17] = L19_2
-	L2_2[18] = L20_2
-	L2_2[19] = L21_2
-	L2_2[20] = L22_2
-	L2_2[21] = L23_2
-	L2_2[22] = L24_2
-	L2_2[23] = L25_2
-	L2_2[24] = L26_2
-	L2_2[25] = L27_2
-	L2_2[26] = L28_2
-	L2_2[27] = L29_2
-	L2_2[28] = L30_2
-	L2_2[29] = L31_2
-	L2_2[30] = L32_2
-	L2_2[31] = L33_2
-	L2_2[32] = L34_2
-	L2_2[33] = L35_2
-	L2_2[34] = L36_2
-	L2_2[35] = L37_2
-	L2_2[36] = L38_2
-	L2_2[37] = L39_2
-	L2_2[38] = L40_2
-	L2_2[39] = L41_2
-	L2_2[40] = L42_2
-	L2_2[41] = L43_2
-	L2_2[42] = L44_2
-	L2_2[43] = L45_2
-	L2_2[44] = L46_2
-	L2_2[45] = L47_2
-	L2_2[46] = L48_2
-	L2_2[47] = L49_2
-	L2_2[48] = L50_2
-	L2_2[49] = L51_2
-	L2_2[50] = L52_2
-	L3_2 = "8f"
-	L4_2 = "aa"
-	L5_2 = "1f"
-	L6_2 = "ef"
-	L7_2 = "9c"
-	L8_2 = "8f"
-	L9_2 = "ad"
-	L10_2 = "ef"
-	L11_2 = "9c"
-	L12_2 = "8f"
-	L13_2 = "ab"
-	L14_2 = "ef"
-	L15_2 = "9c"
-	L16_2 = "8f"
-	L17_2 = "a1"
-	L18_2 = "ef"
-	L19_2 = "9c"
-	L20_2 = "8f"
-	L21_2 = "a6"
-	L22_2 = "ef"
-	L23_2 = "9c"
-	L24_2 = "8f"
-	L25_2 = "9f"
-	L26_2 = "1f"
-	L27_2 = "ef"
-	L28_2 = "9c"
-	L29_2 = "8f"
-	L30_2 = "a5"
-	L31_2 = "ef"
-	L32_2 = "9c"
-	L33_2 = "8f"
-	L34_2 = "b1"
-	L35_2 = "1f"
-	L36_2 = "ef"
-	L37_2 = "9c"
-	L38_2 = "8f"
-	L39_2 = "91"
-	L40_2 = "ef"
-	L41_2 = "9c"
-	L42_2 = "8f"
-	L43_2 = "9b"
-	L44_2 = "ef"
-	L45_2 = "9c"
-	L46_2 = "8f"
-	L47_2 = "aa"
-	L48_2 = "ef"
-	L49_2 = "9c"
-	L50_2 = "8f"
-	L51_2 = "a1"
-	L52_2 = "ef"
-	L2_2[51] = L3_2
-	L2_2[52] = L4_2
-	L2_2[53] = L5_2
-	L2_2[54] = L6_2
-	L2_2[55] = L7_2
-	L2_2[56] = L8_2
-	L2_2[57] = L9_2
-	L2_2[58] = L10_2
-	L2_2[59] = L11_2
-	L2_2[60] = L12_2
-	L2_2[61] = L13_2
-	L2_2[62] = L14_2
-	L2_2[63] = L15_2
-	L2_2[64] = L16_2
-	L2_2[65] = L17_2
-	L2_2[66] = L18_2
-	L2_2[67] = L19_2
-	L2_2[68] = L20_2
-	L2_2[69] = L21_2
-	L2_2[70] = L22_2
-	L2_2[71] = L23_2
-	L2_2[72] = L24_2
-	L2_2[73] = L25_2
-	L2_2[74] = L26_2
-	L2_2[75] = L27_2
-	L2_2[76] = L28_2
-	L2_2[77] = L29_2
-	L2_2[78] = L30_2
-	L2_2[79] = L31_2
-	L2_2[80] = L32_2
-	L2_2[81] = L33_2
-	L2_2[82] = L34_2
-	L2_2[83] = L35_2
-	L2_2[84] = L36_2
-	L2_2[85] = L37_2
-	L2_2[86] = L38_2
-	L2_2[87] = L39_2
-	L2_2[88] = L40_2
-	L2_2[89] = L41_2
-	L2_2[90] = L42_2
-	L2_2[91] = L43_2
-	L2_2[92] = L44_2
-	L2_2[93] = L45_2
-	L2_2[94] = L46_2
-	L2_2[95] = L47_2
-	L2_2[96] = L48_2
-	L2_2[97] = L49_2
-	L2_2[98] = L50_2
-	L2_2[99] = L51_2
-	L2_2[100] = L52_2
-	L3_2 = "9c"
-	L4_2 = "8f"
-	L5_2 = "a8"
-	L6_2 = "ef"
-	L7_2 = "9c"
-	L8_2 = "8f"
-	L9_2 = "ac"
-	L2_2[101] = L3_2
-	L2_2[102] = L4_2
-	L2_2[103] = L5_2
-	L2_2[104] = L6_2
-	L2_2[105] = L7_2
-	L2_2[106] = L8_2
-	L2_2[107] = L9_2
-print("Decrypt 3: "..Decryptor_3(L2_2))
+print("Encrypt 3: "..Encryptor_3("YEET")[2])
+--print("Decrypt 3: "..Decryptor_3())
 
 
 
