@@ -1,7 +1,7 @@
 collectgarbage("collect")
 function A3_1()
 	gg.setVisible(false)
---decrypt helper
+--2nd stage decryptor
 	function Decryptor_1b(input)
 		input = input.gsub(input, " ", "")
 		function Bytedecode_1b(i)
@@ -139,10 +139,7 @@ function A3_1()
 		A20_2[36] = 32
 		A20_2[37] = -8347145
 		A20_2[38] = 98
-		A19_2 = A20_2
-		A18_2, A19_2, A20_2, A21_2, A22_2, A23_2, A24_2, A25_2, A26_2, A27_2, A28_2 = A18_2(A19_2)
-		A17_2 = A17_2(A18_2, A19_2, A20_2, A21_2, A22_2, A23_2, A24_2, A25_2, A26_2, A27_2, A28_2)
-		A16_2 = A16_2[A17_2]()
+		A16_2[A17_2(A18_2(A20_2))]()
 		A17_2 = false
 		A18_2 = false
 		if 1 <= A11_2 then
@@ -189,20 +186,12 @@ function A3_1()
 			A21_2, A22_2, A23_2, A24_2, A25_2, A26_2, A27_2, A28_2 = A21_2(A22_2)
 			A20_2 = A20_2(A21_2, A22_2, A23_2, A24_2, A25_2, A26_2, A27_2, A28_2)
 			A19_2 = A19_2[A20_2]
-			A20_2 = "This script for "
-			A21_2 = A12_2
-			A22_2 = " ["
-			A23_2 = A17_2
-			A24_2 = [[
+Now script exit.]]
+			A20_2 = "This script for " .. A12_2 .. " [" .. A17_2 .. [[
 ].
-You select ]]
-			A25_2 = A16_2.label
-			A26_2 = " ["
-			A27_2 = A18_2
-			A28_2 = [[
+You select ]] .. A16_2.label .. " [" .. A18_2 .. [[
 ].
 Now script exit.]]
-			A20_2 = A20_2 .. A21_2 .. A22_2 .. A23_2 .. A24_2 .. A25_2 .. A26_2 .. A27_2 .. A28_2
 			A19_2(A20_2)
 			A19_2 = os
 			A20_2 = Decryptor_1b
