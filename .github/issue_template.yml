@@ -1,0 +1,50 @@
+name: Bug Report
+description: Create a bug report to help me improve the project
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: I am using the latest version of the script
+          required: false
+        - label: There are **no existing posts relating to my problem**
+          required: true
+        - label: There are **existing posts relating to my problem, but the solution given, doesn't work for me.**
+          required: false       
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell me, what did you expect to happen?
+      placeholder: Tell me what you see!
+      value: "I was trying to ... but then ..."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of this script you are using? (can be found in the title when running (eg. "Payback2 CHEATus v1.7.5, by ABJ4403")
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: This will allow me to figure out where the issue originates.
+      placeholder: Step 1, Step 2, Step 3...
+      value: |
+             1. 
+             2. 
+             3. 
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Copy and paste from tracebacks, aka. any error message text that appears during crash
+      render: lua
+
