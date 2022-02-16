@@ -28,7 +28,8 @@ body:
     id: version
     attributes:
       label: Version
-      description: What version of this script you are using? (can be found in the title when running (eg. "Payback2 CHEATus v1.7.5, by ABJ4403")
+      description: What version of this script you are using? (can be found in the title when running (eg. "Payback2 CHEATus v1.7.5, by ABJ4403"))
+      placeholder: Eg. v1.7.5
   - type: textarea
     id: steps-to-reproduce
     attributes:
