@@ -34,8 +34,12 @@ body:
     id: steps-to-reproduce
     attributes:
       label: Steps to reproduce
-      description: This will allow me to figure out where the issue originates.
-      placeholder: Step 1, Step 2, Step 3...
+      description: This will allow me to figure out where the issue comes from.
+      placeholder: |
+             1. Open PB2 & GG, click floating GG icon, find & launch Payback2_CHEATus.lua
+             2. click this
+             3. click that
+             ...
       value: |
              1. 
              2. 
@@ -43,9 +47,15 @@ body:
     validations:
       required: true
   - type: textarea
-    id: logs
+    id: log
     attributes:
       label: Relevant log output
       description: Copy and paste from tracebacks, aka. any error message text that appears during crash
+      placeholder: |
+        example:
+        Error: luaj.o: /sdcard/Payback2_CHEATus.lua:123
+        gg.searchNumber(123)
+        unexpected symbol near '..'
+        at luaj.LuaValue.a(src:997)
       render: lua
 
