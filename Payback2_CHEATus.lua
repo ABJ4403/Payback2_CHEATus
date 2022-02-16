@@ -932,15 +932,17 @@ function cheat_changeplayername()
 		[2]="number"
 	})
 --search old player name
-	gg.searchNumber(player_name[1], gg.TYPE_BYTE)
-	revert['PlayerName'] = gg.getResults(5555)
-	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
-	else
-		gg.editAll(player_name[2], gg.TYPE_BYTE)
-		VAL_PlayerCurrentName = player_name[2]
-		gg.clearResults()
-		gg.toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others')
+	if (player_name ~= nil and player_name[1] ~= nil and player_name[1] ~= ":") then
+		gg.searchNumber(player_name[1], gg.TYPE_BYTE)
+		revert['PlayerName'] = gg.getResults(5555)
+		if gg.getResultCount() == 0 then
+			gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+		else
+			gg.editAll(player_name[2], gg.TYPE_BYTE)
+			VAL_PlayerCurrentName = player_name[2]
+			gg.clearResults()
+			gg.toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others')
+		end
 	end
 end
 
@@ -964,7 +966,7 @@ function cheat_changeplayernamecolor()
 		"---",
 		string.format("Back")
 	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'number'})
-	if (CH ~= nil or player_name ~= nil) then
+	if (CH ~= nil or player_name ~= nil and player_name[1] ~= nil and player_name[1] ~= ":") then
 	--Color
 		if CH == 2 then player_color_choice = 2 end
 		if CH == 3 then player_color_choice = 3 end
@@ -1369,7 +1371,7 @@ update_language()
 --bunch of global variables
 revert = {}
 MemoryBuffer = {}
-VERSION="1.8.3"
+VERSION="1.8.4"
 
 lang = {}
 lang['en_US'] = {}
