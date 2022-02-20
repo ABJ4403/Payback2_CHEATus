@@ -56,6 +56,6 @@ body:
         Error: luaj.o: /sdcard/Payback2_CHEATus.lua:123
         gg.searchNumber(123)
         unexpected symbol near '..'
-        at luaj.LuaValue.a(src:997)
+        at luaj.a(src:123)
       render: lua
 
