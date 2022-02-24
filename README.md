@@ -4,7 +4,7 @@
 Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "fork" of Mangyu's cheat script but better, less-bloated, and easier to read.
 
 # Features:
-```🔫 Pistol/SG Knockback``` ```🔫 Weapon ammo``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware``` ```💰❌ FOSS (Free & Open-source)``` ```etc```
+```🔫 Pistol/SG Knockback``` ```🔫 Weapon ammo``` ```🔫 Rel0ad (N0 Reload)``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware``` ```💰❌ FOSS (Free & Open-source)``` ```etc```
 - Pistol/Shotgun Custom Knockback Value
 - Weapon Ammo Modifier
 - Wall Hack
@@ -45,6 +45,6 @@ Because i see Payback 2 players (notably cheaters) are very rude, and did'nt wan
 - Latic AX and ToxicCoder - for providing the removed script through YouTube and MediaFire.
 - Alpha GG Hacker - for providing "Wall Hack" & "Car Health" GameGuardian Values (no thanks for ridicilous military-encryption script though...)
 - GKTV (Pumpkin Hacker) - Payback2 GG script.
-- Hydra - no thanks for "no reload cheat" tutor that doesn't even work.
-- Joker - for providing "No Blast Damage" GameGuardian Values (good guy that doesnt censor gg values.. idk).
+- Hydra - no thanks for "no reload cheat" tutor and script that doesn't even work, even the values that he encrypt.
+- Joker - for providing "No Blast Damage", and "No Reload" GameGuardian Values.
 

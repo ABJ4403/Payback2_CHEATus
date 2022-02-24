@@ -4,7 +4,7 @@
 Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang dimana ini adalah "fork" dari skrip cheat Mangyu tapi lebih bagus, sedikit-bloated, dan mudah untuk dibaca.
 
 # Fitur:
-```🔫 Pistol/SG Knockback``` ```🔫 Ammo senjata``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware verified``` ```💰❌ FOSS (Gratis & bersumber-terbuka)``` ```dll```
+```🔫 Pistol/SG Knockback``` ```🔫 Ammo senjata``` ```🔫 Rel0ad (Tidak ada isi ulang/no reload)``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware verified``` ```💰❌ FOSS (Gratis & bersumber-terbuka)``` ```dll```
 - Nilai Knockback Pistol/Shotgun Kustom.
 - Modifier Ammo Senjata.
 - Wall Hack.
@@ -45,6 +45,6 @@ Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak m
 - Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui YouTube dan MediaFire.
 - Alpha GG Hacker - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk ```enkripsi level 666 yang sangggggat giilaaa```).
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2.
-- Hydra (tidak terimakasih untuk wall hack yang bisa jalan aja nggak broo).
-- Joker - Untuk menyediakan Value "No Blast Damage" GameGuardian (orang baik yang tidak menyensor value gg.. idk).
+- Hydra (tidak terimakasih untuk tutorial dan skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo).
+- Joker - Untuk menyediakan Value "No Blast Damage", dan "No Reload" GameGuardian.
 
