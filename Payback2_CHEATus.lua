@@ -6,7 +6,7 @@ function MENU()
 		"3. Wall Hack",
 		"4. Strong veichle",
 		"5. No blast damage",
-		"6. No reload",
+		"6. Rel0ad",
 		"---",
 		"Other cheats:",
 		"7. Client-side cosmetics",
@@ -105,11 +105,15 @@ function MENU_settings()
 	  "Change default player name",
 	  "Change default custom player name",
 	  "Change language (Todo)",
+	  "---",
+		"Manually clear results",
+		"Manually clear list items",
+	  "---",
 	  "Save settings",
 	  "Reset settings",
 		string.format("Back")
 	}, nil, string.format("Title_Version"))
-	if CH == 6 then MENU() end
+	if CH == 10 then MENU() end
 	if CH == 1 then
 		local CH = gg.prompt({'Put your new default player name'},{cfg['PlayerCurrentName']},{'number'})
 		if (CH ~= nil and CH[1] ~= nil) then
@@ -149,12 +153,18 @@ function MENU_settings()
 			MENU_settings()
 		end
 	end
-	if CH == 4 then
+	if CH == 5 then
+		gg.clearResults()
+	end
+	if CH == 6 then
+		gg.clearList()
+	end	
+	if CH == 8 then
   	gg.saveVariable(cfg,cfg_file)
   	gg.toast("your current settings is saved, but you dont have to do this, because the setting will be saved if you exit out of the script")
   	MENU_settings()
 	end
-	if CH == 5 then
+	if CH == 9 then
 		cfg = {}
     cfg['PlayerCurrentName']=":Player" -- you can change this to your name
     cfg['PlayerCustomName']=":CoolFoe" -- you can change this at your likings
@@ -848,10 +858,10 @@ end
 function cheat_togglenoreload_exp()
 	local CH = gg.choice({
 		"1. Default (freeze value 0word near/next to weapon clip in range100)",
-		"2. Fallback (Quirky set rocket value to 1)",
+		"2. Fallback (Quirky, set rocket value to 1)",
 		"---",
 		string.format("Back")
-	}, nil, "No Reload\nPS: You cant turn this off using this script\nyou can easily turn this off by get out, ride car, respawn...")
+	}, nil, "Rel0ad\nPS: You can turn this off by get out of match, drive car, respawn...")
 	if CH ~= nil then
 		if CH == 4 then MENU() end
 		if CH == 1 then
@@ -861,21 +871,12 @@ function cheat_togglenoreload_exp()
 				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
 			--[[
-				REAL 0 RELOAD
-
-				Rocket
-
-				+A0-A2 (160-162) => 0 (make sure its going to negative by trying to trigger reload event)
-
-				WARNING: DO NOT DRIVE A CAR !!!!
-				
 				So how this works?
 				- it will search 0 in range100.
-				- then it will scan if one of the values go negative
-					- but i also want to make it track if the value will go up to 0
+					- and in order to do just that, we need any weapon ammo with type WORD as a starting point
+				- then it will continously scan if one of the values go negative
 				- if the value is found, freeze it to 0 (almost same as Hydra and Joker, but you just set it to 0 instead of 500 or 13, because its around -200~0)
 				]]
-				gg.toast('Wait for a hot damn minute, we\'re working on it...')
 			--modify the ammo to 30000
 				local weaponAmmo = t[1]
 				weaponAmmo.value = 30000
@@ -887,7 +888,7 @@ function cheat_togglenoreload_exp()
 				gg.toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)')
 			--...While running some checking to detect some reduced number
 				local bunchOfZeroes = gg.getResults(100)
-				foundTheValue = 0
+				local foundTheValue = 0
 				while foundTheValue == 0 do
 				--Search for values less than 0
 					gg.refineNumber("-200~-1")
@@ -898,9 +899,13 @@ function cheat_togglenoreload_exp()
 						gg.loadResults(bunchOfZeroes)
 					end
 				end
+			--get the reload timer value
 				t = gg.getResults(1)
-				t[1].value = 0
-				t[1].freeze = true
+			--and freeze it to 0
+				for i, v in ipairs(t) do
+					v[i].value = 0
+					v[i].freeze = true
+				end
 			--Set the ammo back to 30000
 				weaponAmmo.value = 30000
 				gg.setValues({weaponAmmo})
@@ -908,7 +913,7 @@ function cheat_togglenoreload_exp()
 				gg.setValues(t)
 				gg.addListItems(t)
 				gg.clearResults()
-				gg.toast('Found! No reload ON\nWARNING: DO NOT DRIVE ANYTHING, RESPAWN, OR GET OUT OF MATCH OR WILL RESET !!')
+				gg.toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
 			end
 		end
 		if CH == 2 then
@@ -1456,7 +1461,7 @@ update_language()
 --bunch of global variables
 revert = {}
 MemoryBuffer = {}
-VERSION="1.8.6"
+VERSION="1.8.7"
 
 lang = {}
 lang['en_US'] = {}
@@ -1465,7 +1470,7 @@ lang['en_US']['About']            = "About"
 lang['en_US']['About_Text']       = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes"
 lang['en_US']['Back']             = "Back"
 lang['en_US']['Credits']          = "Credits"
-lang['en_US']['Credits_Text']     = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for \"no reload cheat\" tutor that doesn't even work.\n+ Joker - No Blast Damage GameGuardian Values."
+lang['en_US']['Credits_Text']     = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for no reload tutor and script that doesn't even work, even the values that he encrypt.\n+ Joker - for providing No Blast Damage and No Reload GameGuardian Values."
 lang['en_US']['Disclaimmer']      = "Disclaimmer (please read)"
 lang['en_US']['Disclaimmer_Text'] = "DISCLAIMMER:\nPlease DO NOT misuse the script to abuse other players.\nRemember to keep your patience out of other players.\ni recommend ONLY using this script in offline mode.\nI made this because no one would share their cheat script."
 lang['en_US']['Exit']             = "Exit"
@@ -1480,7 +1485,7 @@ lang['in']['About']            = "Tentang"
 lang['in']['About_Text']       = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang"
 lang['in']['Back']             = "Kembali"
 lang['in']['Credits']          = "Kredit"
-lang['in']['Credits_Text']     = "Kredit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for \"no reload cheat\" tutor that doesn't even work.\n+ Joker - No Blast Damage GameGuardian Values."
+lang['in']['Credits_Text']     = "Kredit:\n+ Mangyu - Pembuat skrip original.\n+ mdp43140 - Kontributor.\n+ tehtmi - Pembuat unluac (dan helper dekompilasi).\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire.\n+ Alpha GG Hacker - Values Wall Hack & Car Health GameGuardian \n+ GKTV (Pumpkin Hacker) - Skrip GG Payback2.\n+ Hydra - tidak terimakasih untuk tutorial & skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo\n+ Joker - Value No Blast Damage & No Reload GameGuardian."
 lang['in']['Disclaimmer']      = "Disklaimmer (mohon untuk dibaca)"
 lang['in']['Disclaimmer_Text'] = "DISKLAIMMER:\nJANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\nIngat untuk menjaga kesabaran anda dari pemain lain.\nSaya merekomendasikan menggunakan skrip ini HANYA di mode offline.\nSaya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka."
 lang['in']['Exit']             = "Keluar"
