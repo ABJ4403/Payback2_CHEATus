@@ -24,12 +24,12 @@ function MENU()
 	if CH == 6 then cheat_togglenoreload_exp() end
 ---
 --Title:Othercheat..
-	if CH == 8 then MENU_CSD() end
-	if CH == 9 then MENU_incompat() end
+	if CH == 9 then MENU_CSD() end
+	if CH == 10 then MENU_incompat() end
 ---
-	if CH == 11 then MENU_settings() end
-	if CH == 12 then show_about() end
-	if CH == 13 then exit() end
+	if CH == 12 then MENU_settings() end
+	if CH == 13 then show_about() end
+	if CH == 14 then exit() end
 	HOMEDM = -1
 end
 
