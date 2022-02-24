@@ -6,10 +6,11 @@ function MENU()
 		"3. Wall Hack",
 		"4. Strong veichle",
 		"5. No blast damage",
+		"6. No reload",
 		"---",
 		"Other cheats:",
-		"5. Client-side cosmetics",
-		"6. Incompatible cheats",
+		"7. Client-side cosmetics",
+		"8. Incompatible cheats",
 		"---",
 		string.format("Settings"),
 		string.format("About"),
@@ -20,6 +21,7 @@ function MENU()
 	if CH == 3 then cheat_wallhack() end
 	if CH == 4 then cheat_strongveichle() end
 	if CH == 5 then cheat_noblastdamage() end
+	if CH == 6 then cheat_togglenoreload_exp() end
 ---
 --Title:Othercheat..
 	if CH == 8 then MENU_CSD() end
@@ -75,7 +77,6 @@ function MENU_incompat()
 		"2. Weapon",
 		"3. Destroy all cars",
 		"4. Change XP",
-		"5. No reload (From Hydra and other yt channel i forgot...)",
 		"6. Win Level (From ICE Menu)",
 		"7. Give Grenades (From ICE Menu)",
 		"8. Give C4s (From ICE Menu)",
@@ -89,13 +90,12 @@ function MENU_incompat()
 	if CH == 4 then cheat_weapon() end
 	if CH == 5 then cheat_destroycar() end
 	if CH == 6 then cheat_xpmodifier() end
-	if CH == 7 then cheat_togglenoreload_exp() end
-	if CH == 8 then cheat2_win() end
-	if CH == 9 then cheat2_givegrenade() end
-	if CH == 10 then cheat2_givebomb() end
-	if CH == 11 then cheat2_givelaser() end
+	if CH == 7 then cheat2_win() end
+	if CH == 8 then cheat2_givegrenade() end
+	if CH == 9 then cheat2_givebomb() end
+	if CH == 10 then cheat2_givelaser() end
 ---
-	if CH == 13 then MENU() end
+	if CH == 12 then MENU() end
 	HOMEDM = -1
 end
 
@@ -846,38 +846,87 @@ function cheat_togglevoidmode()
 end
 
 function cheat_togglenoreload_exp()
--- This mostly fake, Why?
--- because on old version, this points to Cb (C++ .BSS). which all of us know, (on latest version of PB2/GG) this memory address points to nothing (the game didnt use this. not even near that address).
--- Prepare the table
--- its. a. prank, yep... coz i tried with old version and STILL wont work, nothing even found
---local t = {}
---t[1] = {}
---t[1].address = 0xBA26C5D4
---t[1].flags = gg.TYPE_DWORD
---t[1].value = 555
---t[1].freeze = true
---gg.setValues(t)
---gg.toast('this will change BA26C5D4:Word 0 to 500:Freeze\nNo reload ON')
-	gg.setRanges(gg.REGION_OTHER)
-	local stp = gg.prompt({
-		'Put your weapon ammo\n(works best for rocket, because this affects rocket only)\nResets after respawn',
-		'Put your new weapon ammo'
-	})
-	gg.searchNumber(stp[1],gg.TYPE_WORD)
-	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-	gg.sleep(10000)
-	gg.toast('Timeout, searching for '..stp[2])
-	local t = gg.refineNumber(stp[2], gg.TYPE_WORD)
-	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
-	else
-		for i, v in ipairs(t) do
-			v[i].value = 1
-			v[i].freeze = true
+	local CH = gg.choice({
+		"1. Default (freeze value 0word near/next to weapon clip in range100)",
+		"2. Fallback (Quirky set rocket value to 1)",
+		"---",
+		string.format("Back")
+	}, nil, "No Reload\nPS: You cant turn this off using this script\nyou can easily turn this off by get out, ride car, respawn...")
+	if CH ~= nil then
+		if CH == 4 then MENU() end
+		if CH == 1 then
+			gg.setRanges(gg.REGION_OTHER)
+			local t = loopSearch(1,gg.TYPE_WORD)
+			if gg.getResultCount() == 0 then
+				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			else
+			--[[
+				REAL 0 RELOAD
+
+				Rocket
+
+				+A0-A2 (160-162) => 0 (make sure its going to negative by trying to trigger reload event)
+
+				WARNING: DO NOT DRIVE A CAR !!!!
+				
+				So how this works?
+				- it will search 0 in range100.
+				- then it will scan if one of the values go negative
+					- but i also want to make it track if the value will go up to 0
+				- if the value is found, freeze it to 0 (almost same as Hydra and Joker, but you just set it to 0 instead of 500 or 13, because its around -200~0)
+				]]
+				gg.toast('Wait for a hot damn minute, we\'re working on it...')
+			--modify the ammo to 30000
+				local weaponAmmo = t[1]
+				weaponAmmo.value = 30000
+				gg.setValues({weaponAmmo})
+			--clear and search 0 in range100
+				gg.clearResults()
+				gg.searchNumber("0",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
+			--Tell user to trigger reload event...
+				gg.toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)')
+			--...While running some checking to detect some reduced number
+				local bunchOfZeroes = gg.getResults(100)
+				foundTheValue = 0
+				while foundTheValue == 0 do
+				--Search for values less than 0
+					gg.refineNumber("-200~-1")
+				--if result is 1, pretend its found, else reset result.
+					if gg.getResultCount() == 1 then
+						foundTheValue = 1
+					else
+						gg.loadResults(bunchOfZeroes)
+					end
+				end
+				t = gg.getResults(1)
+				t[1].value = 0
+				t[1].freeze = true
+			--Set the ammo back to 30000
+				weaponAmmo.value = 30000
+				gg.setValues({weaponAmmo})
+			--then do the final thing it should do... apply the cold breezing power of rel0ad
+				gg.setValues(t)
+				gg.addListItems(t)
+				gg.clearResults()
+				gg.toast('Found! No reload ON\nWARNING: DO NOT DRIVE ANYTHING, RESPAWN, OR GET OUT OF MATCH OR WILL RESET !!')
+			end
 		end
-		gg.setValues(t)
-		gg.clearResults()
-		gg.toast('No reload ON')
+		if CH == 2 then
+			gg.setRanges(gg.REGION_OTHER)
+			local t = loopSearch(1,gg.TYPE_WORD)
+			if gg.getResultCount() == 0 then
+				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			else
+				for i, v in ipairs(t) do
+					v[i].value = 1
+					v[i].freeze = true
+				end
+				gg.setValues(t)
+				gg.clearResults()
+				gg.toast('No reload ON')
+			end
+		end
+		CH = nil
 	end
 	HOMEDM = -1
 end
@@ -1302,7 +1351,7 @@ function show_about()
 		string.format("License"),
 		string.format("Credits"),
 		string.format("Back")
-	}, nil, "Select your language\nPilih bahasa")
+	}, nil, string.format("About"))
 	if CH ~= nil then
 		if CH == 1 then gg.alert(string.format("About_Text")) show_about() end
 		---
@@ -1322,6 +1371,42 @@ function exit()
 	os.exit()
 end
 
+-- Helper functions
+--[[
+	LoopSearch
+	loops search just like how gg does
+	gives user popup to search, sleep 10 seconds, loop like that until found the desired result count
+	useful for searching ammo
+	tap background/press cancel, dont press enter/ok, to cancel.
+]]
+function loopSearch(desiredResultCount)
+--for now i will force it to use this
+	desiredResultCount = 1
+--Ask ammo
+	local num1 = gg.prompt({'Put your weapon ammo'})
+--assume user cancel if theres nothing
+	if num1[1] == nil then return end
+--Search
+	gg.searchNumber(num1[1],gg.TYPE_WORD)
+--go if found result
+	if gg.getResultCount() ~= 0 then
+	--loop until it goes to desired count
+		while gg.getResultCount() >= desiredResultCount+1 do
+		--told user to change ammo
+			gg.alert('5 seconds to change ammo value')
+			gg.sleep(5000)
+		--Ask new ammo
+			local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()})
+		--assume user cancel if theres nothing
+			if num1[1] == nil then break end
+		--Search
+			local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
+		--return nil if nothing
+			if gg.getResultCount() == 0 then break end
+		end
+	end
+	return gg.getResults(desiredResultCount)
+end
 -- Initialization
 
 -- Configurable values
@@ -1371,7 +1456,7 @@ update_language()
 --bunch of global variables
 revert = {}
 MemoryBuffer = {}
-VERSION="1.8.4"
+VERSION="1.8.6"
 
 lang = {}
 lang['en_US'] = {}
@@ -1384,7 +1469,7 @@ lang['en_US']['Credits_Text']     = "Credit:\n+ Mangyu - Original script\n+ mdp4
 lang['en_US']['Disclaimmer']      = "Disclaimmer (please read)"
 lang['en_US']['Disclaimmer_Text'] = "DISCLAIMMER:\nPlease DO NOT misuse the script to abuse other players.\nRemember to keep your patience out of other players.\ni recommend ONLY using this script in offline mode.\nI made this because no one would share their cheat script."
 lang['en_US']['Exit']             = "Exit"
-lang['en_US']['Exit_ThankYouMsg'] = "If you experienced a bug, report it on my GitHub page:https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
+lang['en_US']['Exit_ThankYouMsg'] = "If you experienced a bug, report it on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
 lang['en_US']['License']          = "License"
 lang['en_US']['License_Text']     = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
 lang['en_US']['Settings']         = "Settings"
@@ -1399,7 +1484,7 @@ lang['in']['Credits_Text']     = "Kredit:\n+ Mangyu - Original script\n+ mdp4314
 lang['in']['Disclaimmer']      = "Disklaimmer (mohon untuk dibaca)"
 lang['in']['Disclaimmer_Text'] = "DISKLAIMMER:\nJANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\nIngat untuk menjaga kesabaran anda dari pemain lain.\nSaya merekomendasikan menggunakan skrip ini HANYA di mode offline.\nSaya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka."
 lang['in']['Exit']             = "Keluar"
-lang['in']['Exit_ThankYouMsg'] = "If you experienced a bug, report it on my GitHub page:https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
+lang['in']['Exit_ThankYouMsg'] = "Jika Anda mengalami bug, laporkan pada halaman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\nJika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\nJika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki"
 lang['in']['License']          = "Lisensi"
 lang['in']['License_Text']     = "Payback2 CHEATus, Skrip Cheat LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak bebas: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
 lang['in']['Settings']         = "Pengaturan"
@@ -1425,6 +1510,7 @@ function CustomLanguage(input, ...)
 		input == "Disclaimmer" or
 		input == "Disclaimmer_Text" or
 		input == "Exit" or
+		input == "Exit_ThankYouMsg" or
 		input == "License" or
 		input == "License_Text" or
 		input == "Settings" or
