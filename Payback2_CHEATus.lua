@@ -1,12 +1,12 @@
 function MENU()
 --Let the user choose stuff
 	local CH = gg.choice({
-		"1. Pistol/SG Knockback",
-		"2. Weapon ammo",
+		"1. Weapon ammo",
+		"2. Rel0ad",
 		"3. Wall Hack",
 		"4. Strong veichle",
 		"5. No blast damage",
-		"6. Rel0ad",
+		"6. Pistol/SG Knockback",
 		"---",
 		"Other cheats:",
 		"7. Client-side cosmetics",
@@ -16,12 +16,12 @@ function MENU()
 		string.format("About"),
 		string.format("Exit"),
 	}, nil, string.format("Title_Version"))
-	if CH == 1 then cheat_pistolknockback() end
-	if CH == 2 then cheat_weaponammo() end
+	if CH == 1 then cheat_weaponammo() end
+	if CH == 2 then cheat_togglenoreload_exp() end
 	if CH == 3 then cheat_wallhack() end
 	if CH == 4 then cheat_strongveichle() end
 	if CH == 5 then cheat_noblastdamage() end
-	if CH == 6 then cheat_togglenoreload_exp() end
+	if CH == 6 then cheat_pistolknockback() end
 ---
 --Title:Othercheat..
 	if CH == 9 then MENU_CSD() end
@@ -208,8 +208,9 @@ function cheat_weaponammo()
 		string.format("Back")
 	}, nil, "Select method for modifying weapon amount - Modify Weapon Amount\nPS: not tested for multiplayer (while the gameplay running), might not work.")
 	if CH ~= nil then
-		if CH == 3 then MENU() end
-		gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_OTHER)
+		if CH == 4 then MENU() end
+	--gg.REGION_C_ALLOC | 
+		gg.setRanges(gg.REGION_OTHER)
 		if CH == 1 then -- automatic method (wont work due to memory location always change)
 	 -- Prepare the table
 			local e = {}
@@ -269,17 +270,16 @@ function cheat_weaponammo()
 				end
 			end
 		end
-		if CH == 3 then -- Fallback v2 method (requires manually putting values, but will search WORD instead of DWORD, )
-			local WEAPON_AMMO_AMOUNT = gg.prompt({'Put one of your weapon ammo','Freeze'},{},{[2]="checkbox"})
-			if (WEAPON_AMMO_AMOUNT ~= nil and WEAPON_AMMO_AMOUNT[1] ~= nil) then
-				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
-				gg.getResults(16)
-				if gg.getResultCount() == 0 then
-					gg.toast("Can't find the said number, did you put the right number?")
-				else
-					gg.editAll(9999, gg.TYPE_DWORD)
-					gg.toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number")
+		if CH == 3 then -- Fallback v2 method (requires manually putting values, but will search WORD instead of DWORD)
+			t = loopSearch(16)
+			if gg.getResultCount() == 0 then
+				gg.toast("Can't find the said number, did you put the right number?")
+			else
+				for i=1, #t do
+					t[i].value = 9999
 				end
+				gg.setValues(t)
+				gg.toast("🔨️ Weapon value Modified")
 			end
 		end
 		gg.clearResults()
@@ -1386,15 +1386,17 @@ end
 	useful for searching ammo
 	tap background/press cancel, dont press enter/ok, to cancel.
 ]]
-function loopSearch(desiredResultCount)
+function loopSearch(desiredResultCount,valueType,msg1,msg2)
 --for now i will force it to use this
 	desiredResultCount = 1
+	valueType = gg.TYPE_WORD
+	msg1='Put one of your weapon ammo'
 --Ask ammo
-	local num1 = gg.prompt({'Put your weapon ammo'})
+	local num1 = gg.prompt({msg1})
 --assume user cancel if theres nothing
 	if num1[1] == nil then return end
 --Search
-	gg.searchNumber(num1[1],gg.TYPE_WORD)
+	gg.searchNumber(num1[1],valueType)
 --go if found result
 	if gg.getResultCount() ~= 0 then
 	--loop until it goes to desired count
