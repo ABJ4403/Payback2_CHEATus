@@ -178,6 +178,8 @@ end
 	A little note before looking at the cheat mechanics:
 	On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, Annonymous, and CodeApp), not Ca,Ch,Jh,A
 	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
+	some hint for u:
+	#var is length
 ]]
 
 function cheat_weapon()
@@ -187,9 +189,9 @@ function cheat_weapon()
 	if gg.getResultCount() == 0 then
 		gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 	else
-		for i, v in ipairs(t) do
-			v.value = 71131136
-			v.freeze = true
+		for i=1, #t do
+			t[i].value = 71131136
+			t[i].freeze = true
 		end
 		gg.setValues(t)
 		t = nil
@@ -302,9 +304,9 @@ function cheat_firebody()
 		if gg.getResultCount() == 0 then
 			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
-			for i, v in ipairs(t) do
-				v.value = tmp0[1]
-				v.freeze = true
+			for i=1, #t do
+				t[i].value = tmp0[1]
+				t[i].freeze = true
 			end
 			gg.setValues(t)
 			gg.clearResults()
@@ -377,8 +379,8 @@ function cheat_pistolknockback()
 				MemoryBuffer['PistolKnockback'],revert['PistolKnockback'] = nil,nil
 				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
 			else
-				for i, v in ipairs(MemoryBuffer['PistolKnockback']) do
-					v.value = PISTOL_KNOCKBACK_VALUE
+				for i=1, #MemoryBuffer['PistolKnockback'] do
+					MemoryBuffer['PistolKnockback'][i].value = PISTOL_KNOCKBACK_VALUE
 				end
 				VAL_PstlSgKnockback = PISTOL_KNOCKBACK_VALUE
 				PISTOL_KNOCKBACK_VALUE = nil
@@ -464,8 +466,8 @@ function cheat_wallhack()
 			if gg.getResultCount() == 0 then
 				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
-				for i, v in ipairs(MemoryBuffer['wallhack']) do
-					v.value = tmp0[3]
+				for i=1, #MemoryBuffer['wallhack'] do
+					MemoryBuffer['wallhack'][i].value = tmp0[3]
 				end
 				gg.setValues(MemoryBuffer['wallhack'])
 				gg.clearResults()
@@ -486,8 +488,8 @@ function cheat_wallhack()
 			if gg.getResultCount() == 0 then
 				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
-				for i, v in ipairs(MemoryBuffer['wallhack_alternative']) do
-					v.value = tmp0[3]
+				for i=1, #MemoryBuffer['wallhack_alternative'] do
+					MemoryBuffer['wallhack_alternative'][i].value = tmp0[3]
 				end
 				gg.setValues(MemoryBuffer['wallhack_alternative'])
 				gg.clearResults()
@@ -509,8 +511,8 @@ function cheat_wallhack()
 			if gg.getResultCount() == 0 then
 				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
-				for i, v in ipairs(MemoryBuffer['wallhack_hydra']) do
-					v.value = tmp0[3]
+				for i=1, #MemoryBuffer['wallhack_hydra'] do
+					MemoryBuffer['wallhack_hydra'][i].value = tmp0[3]
 				end
 				gg.setValues(MemoryBuffer['wallhack_hydra'])
 				gg.clearResults()
@@ -545,9 +547,9 @@ function cheat_bigbody()
 			if gg.getResultCount() == 0 then
 				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
-				for i, v in ipairs(t) do
-					v.value = VAL_BigBody[1]+SPECIALOFFSET_bigbody[1]
-					v.freeze = true
+				for i=1, #t do
+					t[i].value = VAL_BigBody[1]+SPECIALOFFSET_bigbody[1]
+					t[i].freeze = true
 				end
 				gg.toast("Big Body ON")
 			end
@@ -573,9 +575,9 @@ function cheat_bigbody()
 			if gg.getResultCount() == 0 then
 				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
-				for i, v in ipairs(t) do
-					v.value = "1"+SPECIALOFFSET_bigbody[1]
-					v.freeze = true
+				for i=1, #t do
+					t[i].value = "1"+SPECIALOFFSET_bigbody[1]
+					t[i].freeze = true
 				end
 				gg.toast("Big body OFF")
 			end
@@ -691,8 +693,8 @@ function cheat_strongveichle()
 				MemoryBuffer['CarHealth'],revert['CarHealth'] = nil,nil
 				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current health variable' menu")
 			else
-				for i, v in ipairs(MemoryBuffer['CarHealth']) do
-					v.value = CAR_HEALTH_VALUE
+				for i=1, #MemoryBuffer['CarHealth'] do
+					MemoryBuffer['CarHealth'][i].value = CAR_HEALTH_VALUE
 				end
 		 -- Set current value to, well... current value ofcourse...
 				VAL_CrDfltHlth,CAR_HEALTH_VALUE = CAR_HEALTH_VALUE,nil
@@ -767,8 +769,8 @@ function cheat_noblastdamage()
 				MemoryBuffer['NoBlastDamage'],revert['NoBlastDamage'] = nil,nil
 				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current damage value' menu")
 			else
-				for i, v in ipairs(MemoryBuffer['NoBlastDamage']) do
-					v.value = DAMAGE_INTENSITY_VALUE
+				for i=1, #MemoryBuffer['NoBlastDamage'] do
+					MemoryBuffer['NoBlastDamage'][i].value = DAMAGE_INTENSITY_VALUE
 				end
 		 -- Set current value to, well... current value ofcourse...
 				VAL_DmgIntnsty,DAMAGE_INTENSITY_VALUE = DAMAGE_INTENSITY_VALUE,nil
@@ -902,9 +904,9 @@ function cheat_togglenoreload_exp()
 			--get the reload timer value
 				t = gg.getResults(1)
 			--and freeze it to 0
-				for i, v in ipairs(t) do
-					v[i].value = 0
-					v[i].freeze = true
+				for i=1, #t do
+					t[i].value = 0
+					t[i].freeze = true
 				end
 			--Set the ammo back to 30000
 				weaponAmmo.value = 30000
@@ -922,13 +924,13 @@ function cheat_togglenoreload_exp()
 			if gg.getResultCount() == 0 then
 				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
-				for i, v in ipairs(t) do
-					v[i].value = 1
-					v[i].freeze = true
+				for i=1, #t do
+					t[i].value = 1
+					t[i].freeze = true
 				end
 				gg.setValues(t)
 				gg.clearResults()
-				gg.toast('No reload ON')
+				gg.toast('Rel0ad ON')
 			end
 		end
 		CH = nil
@@ -961,9 +963,9 @@ function cheat_xpmodifier()
 			gg.toast('Can\'t find the player xp, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
 	 -- and put the new XP
-			for i, v in ipairs(t) do
-				v[i].value = player_xp[2]
-				v[i].freeze = player_xp[3]
+			for i=1, #t do
+				t[i].value = player_xp[2]
+				t[i].freeze = player_xp[3]
 			end
 			gg.setValues(t)
 			gg.clearResults()
@@ -1050,11 +1052,11 @@ function cheat_changeplayernamecolor()
 				if player_color_choice ~= 0 then
 				--this is where the problem arises, will this vvv work? probably not, mostly.
 				--1. shift all addreses
-					for i, v in ipairs(t) do
-						tmp0 = v[i].address
-						v[i].address = tmp0 + 0x1
-						v[i].freeze = false
-						v[1].flags = gg.TYPE_BYTE
+					for i=1, #t do
+						tmp0 = t[i].address
+						t[i].address = tmp0 + 0x1
+						t[i].freeze = false
+						t[1].flags = gg.TYPE_BYTE
 					end
 				--2. add value whatever
 					table.insert(t,1,{})
@@ -1063,17 +1065,17 @@ function cheat_changeplayernamecolor()
 					t[1].flags = gg.TYPE_BYTE
 					t[1].value = player_color_choice
 				else
-					for i, v in ipairs(t) do
+					for i=1, #t do
 					--if within the custom color/icon range
 						if (t[i].value > 0 and t[i].value < 20) then
 						--nil it
 							t[i] = nil
 						else
 						--and -1 for the rest
-							tmp0 = v[i].address
-							v[i].address = tmp0 - 0x1
-							v[i].freeze = false
-							v[i].flags = gg.TYPE_BYTE
+							tmp0 = t[i].address
+							t[i].address = tmp0 - 0x1
+							t[i].freeze = false
+							t[i].flags = gg.TYPE_BYTE
 						end
 					end
 				end
