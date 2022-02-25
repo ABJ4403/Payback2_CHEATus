@@ -6,30 +6,32 @@ function MENU()
 		"3. Wall Hack",
 		"4. Strong veichle",
 		"5. No blast damage",
-		"6. Pistol/SG Knockback",
+		"6. Strong Health",
+		"7. Pistol/SG Knockback",
 		"---",
 		"Other cheats:",
-		"7. Client-side cosmetics",
-		"8. Incompatible cheats",
+		"8. Client-side cosmetics",
+		"9. Incompatible cheats",
 		"---",
 		string.format("Settings"),
 		string.format("About"),
 		string.format("Exit"),
 	}, nil, string.format("Title_Version"))
 	if CH == 1 then cheat_weaponammo() end
-	if CH == 2 then cheat_togglenoreload_exp() end
+	if CH == 2 then cheat_noreload() end
 	if CH == 3 then cheat_wallhack() end
 	if CH == 4 then cheat_strongveichle() end
 	if CH == 5 then cheat_noblastdamage() end
-	if CH == 6 then cheat_pistolknockback() end
+	if CH == 6 then cheat_health() end
+	if CH == 7 then cheat_pistolknockback() end
 ---
 --Title:Othercheat..
-	if CH == 9 then MENU_CSD() end
-	if CH == 10 then MENU_incompat() end
+	if CH == 10 then MENU_CSD() end
+	if CH == 11 then MENU_incompat() end
 ---
-	if CH == 12 then MENU_settings() end
-	if CH == 13 then show_about() end
-	if CH == 14 then exit() end
+	if CH == 13 then MENU_settings() end
+	if CH == 14 then show_about() end
+	if CH == 15 then exit() end
 	HOMEDM = -1
 end
 
@@ -73,7 +75,7 @@ function MENU_incompat()
 	local CH = gg.choice({
 		"Incompatible cheats (below PB2 v2.104.12.4/GG v101.0)",
 		"These cheats isn't compatible with the latest version of PB2. searching these will result in values not found, especially those that isnt located in JavaHeap,CAlloc,Annonymous,Other,CodeApp",
-		"1. Toggle void mode (not work for now due to memory address issue)",
+		"1. Toggle void mode",
 		"2. Weapon",
 		"3. Destroy all cars",
 		"4. Change XP",
@@ -176,7 +178,8 @@ function MENU_settings()
 end
 --[[
 	A little note before looking at the cheat mechanics:
-	On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, Annonymous, and CodeApp), not Ca,Ch,Jh,A
+	On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
+	old version uses Ca,Ch,Jh,A (C++Alloc,C++Heap,JavaHeap,Annonymous)
 	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
 	some hint for u:
 	#var is length
@@ -271,7 +274,7 @@ function cheat_weaponammo()
 			end
 		end
 		if CH == 3 then -- Fallback v2 method (requires manually putting values, but will search WORD instead of DWORD)
-			t = loopSearch(16)
+			t = loopSearch(16,gg.TYPE_WORD,'Put your weapon ammo')
 			if gg.getResultCount() == 0 then
 				gg.toast("Can't find the said number, did you put the right number?")
 			else
@@ -720,7 +723,7 @@ function cheat_noblastdamage()
 		string.format("Back")
 	}, nil, "No damage\nThis will make you unable to get killed using any explosion blasts (that means you still can get killed by sg,mg,laser,turret,any non explosive weapons)\nPS: this will make your character buggy though")
 	if CH ~= nil then
-		if CH == 10 then MENU() end
+		if CH == 7 then MENU() end
 		if CH == 1 then DAMAGE_INTENSITY_VALUE = "0" end
 		if CH == 2 then DAMAGE_INTENSITY_VALUE = "300" end
 		if CH == 5 then
@@ -824,51 +827,52 @@ function cheat_destroycar()
 end
 
 function cheat_togglevoidmode()
-	gg.toast('This option will set mode, time limit, vehicle, and ai difficulty to 99, which voids them')
---Prepare the table
-	local t = {}
-	t[1] = {}
-	t[2] = {}
-	t[3] = {}
-	t[4] = {}
-	t[5] = {}
-	t[1].flags = gg.TYPE_DWORD
-	t[2].flags = gg.TYPE_DWORD
-	t[3].flags = gg.TYPE_DWORD
-	t[4].flags = gg.TYPE_DWORD
-	t[5].flags = gg.TYPE_DWORD
-	t[1].value = 99
-	t[2].value = 99
-	t[3].value = 99
-	t[4].value = 99
-	t[5].value = 99
---Mode - Singleplayer
-	t[1].address = 0xC20FC36C
---Mode - Multiplayer
-	t[2].address = 0xC1EBB47C
---AI Difficulty
-	t[3].address = 0xC20FC3A0
---Cops intensity
-	t[4].address = 0xC20FC38C
---Time limit
-	t[5].address = 0xC132A8B8
-	gg.setValues(t)
-	gg.toast('void mode has been set. to restore back, simply change to any mode you desire')
+	local CH = gg.choice({
+		"Default (not work for now due to memory address issue)",
+		"Joker method (only works on older version)",
+		string.format("Back")
+	}, nil, "Void mode, select method")
+	if CH ~= nil then
+		if CH == 3 then MENU() end
+		if CH == 1 then
+		--Prepare the table
+			gg.setValues({
+		 -- Mode - Singleplayer
+				{flags=gg.TYPE_DWORD,value=99,address=0xC20FC36C},
+		 -- Mode - Multiplayer
+				{flags=gg.TYPE_DWORD,value=99,address=0xC1EBB47C},
+		 -- AI Difficulty
+				{flags=gg.TYPE_DWORD,value=99,address=0xC20FC3A0},
+		 -- Cops intensity
+				{flags=gg.TYPE_DWORD,value=99,address=0xC20FC38C},
+		 -- Time limit
+				{flags=gg.TYPE_DWORD,value=99,address=0xC132A8B8}
+			})
+			gg.toast('void mode is set. to restore, simply change to any mode you desire')
+		end
+		if CH == 2 then
+			gg.setRanges(gg.REGION_ANONYMOUS)
+			gg.searchNumber("38654705671",gg.TYPE_QWORD)
+			gg.getResults(100)
+			gg.editAll("38654705673")
+			gg.toast('void mode is set. to restore, simply change to any mode you desire\nnote again that this only works on old version')
+		end
+	end
+	CH = nil
 	HOMEDM = -1
 end
 
-function cheat_togglenoreload_exp()
-	local CH = gg.choice({
-		"1. Default (freeze value 0word near/next to weapon clip in range100)",
-		"2. Fallback (Quirky, set rocket value to 1)",
-		"---",
+function cheat_noreload()
+	local CH,t,num1 = gg.choice({
+		"1. Default",
+		"2. Fallback (freeze rocket value to 1 to imitate Rel0ad)",
 		string.format("Back")
-	}, nil, "Rel0ad\nPS: You can turn this off by get out of match, drive car, respawn...")
+	}, nil, "Rel0ad\nPS: dont get out of match, drive car, respawn. or the cheat will fail\nDISCLAIMMER: DO NOT USE THIS TO ABUSE OTHER PLAYER !!!!")
 	if CH ~= nil then
-		if CH == 4 then MENU() end
+		if CH == 3 then MENU() end
 		if CH == 1 then
 			gg.setRanges(gg.REGION_OTHER)
-			local t = loopSearch(1,gg.TYPE_WORD)
+			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo')
 			if gg.getResultCount() == 0 then
 				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
@@ -920,7 +924,7 @@ function cheat_togglenoreload_exp()
 		end
 		if CH == 2 then
 			gg.setRanges(gg.REGION_OTHER)
-			local t = loopSearch(1,gg.TYPE_WORD)
+			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo')
 			if gg.getResultCount() == 0 then
 				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
@@ -936,6 +940,31 @@ function cheat_togglenoreload_exp()
 		CH = nil
 	end
 	HOMEDM = -1
+end
+
+function cheat_health()
+--this cheat is based on rel0ad cheat
+	gg.setRanges(gg.REGION_OTHER)
+	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the health is located near there)')
+	if gg.getResultCount() == 0 then
+		gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+	else
+		local weaponAmmo = t[1]
+		gg.clearResults()
+		gg.toast('Dont hurt youself, try to regain health, searching maximum health (800)')
+		gg.searchNumber("800",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0xA0,weaponAmmo.address)
+		t = gg.getResults(1)
+		for i=1, #t do
+			t[i].value = 800
+			t[i].freeze = true
+		end
+		weaponAmmo.value = 30000
+		gg.setValues({weaponAmmo})
+		gg.setValues(t)
+		gg.addListItems(t)
+		gg.clearResults()
+		gg.toast('Health ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
+	end
 end
 
 function cheat_xpmodifier()
@@ -1018,7 +1047,7 @@ function cheat_changeplayernamecolor()
 		"White people (8h)",
 		"Corrupted (10h)",
 		"---",
-		"None (default)",
+		"None (remove every color and icon)",
 		"---",
 		string.format("Back")
 	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'number'})
@@ -1043,14 +1072,32 @@ function cheat_changeplayernamecolor()
 
 		--search old player name
 			gg.searchNumber(player_name[1], gg.TYPE_BYTE)
-			local t,tmp0 = gg.getResults(5555)
+		--fetch result,make backup result,make some temporary stuff
+			local t,tmp0,removeOffset = gg.getResults(5555),0,0x0
 			revert['PlayerName'] = gg.getResults(5555)
 		--generic found stuff
 			if gg.getResultCount() == 0 then
 				gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
-				if player_color_choice ~= 0 then
-				--this is where the problem arises, will this vvv work? probably not, mostly.
+			--if player color chioce was 0 (none), interpret that as request remove colors
+				if player_color_choice == 0 then
+					for i=1, #t do
+					--if within the custom color/icon range
+						if (t[i].value >= 0 and t[i].value < 20) then
+						--remove it
+							t[i] = nil
+							removeOffset = removeOffset + 0x1
+						else
+						--and -removeOffset for the rest
+							tmp0 = t[i].address
+							t[i].address = tmp0 - removeOffset
+							t[i].freeze = false
+							t[i].flags = gg.TYPE_BYTE
+						end
+					end
+			--else (colors ranging from 2-9)
+				else
+				--this is where the problem arises, you know that the player names might me more than 1?, will this vvv work? probably not, mostly.
 				--1. shift all addreses
 					for i=1, #t do
 						tmp0 = t[i].address
@@ -1060,30 +1107,15 @@ function cheat_changeplayernamecolor()
 					end
 				--2. add value whatever
 					table.insert(t,1,{})
-				--t[1].address = t[2].address - 0x1
+					t[1].address = t[2].address - 0x1
 					t[1].freeze = false
 					t[1].flags = gg.TYPE_BYTE
 					t[1].value = player_color_choice
-				else
-					for i=1, #t do
-					--if within the custom color/icon range
-						if (t[i].value > 0 and t[i].value < 20) then
-						--nil it
-							t[i] = nil
-						else
-						--and -1 for the rest
-							tmp0 = t[i].address
-							t[i].address = tmp0 - 0x1
-							t[i].freeze = false
-							t[i].flags = gg.TYPE_BYTE
-						end
-					end
 				end
 				gg.setValues(t)
 				gg.toast('Color set to '..player_color_choice..'. PS: still in experimental phase, might not work')
 			end
 			tmp0 = nil
-
 		end
 	end
 end
@@ -1387,34 +1419,21 @@ end
 	tap background/press cancel, dont press enter/ok, to cancel.
 ]]
 function loopSearch(desiredResultCount,valueType,msg1,msg2)
---for now i will force it to use this
-	desiredResultCount = 1
-	valueType = gg.TYPE_WORD
-	msg1='Put one of your weapon ammo'
---Ask ammo
 	local num1 = gg.prompt({msg1})
---assume user cancel if theres nothing
-	if num1[1] == nil then return end
---Search
-	gg.searchNumber(num1[1],valueType)
---go if found result
-	if gg.getResultCount() ~= 0 then
-	--loop until it goes to desired count
-		while gg.getResultCount() >= desiredResultCount+1 do
-		--told user to change ammo
-			gg.alert('5 seconds to change ammo value')
-			gg.sleep(5000)
-		--Ask new ammo
-			local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()})
-		--assume user cancel if theres nothing
-			if num1[1] == nil then break end
-		--Search
-			local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
-		--return nil if nothing
-			if gg.getResultCount() == 0 then break end
+	if num1[1] ~= nil then
+		gg.searchNumber(num1[1],valueType)
+		if gg.getResultCount() ~= 0 then
+			while gg.getResultCount() >= desiredResultCount+1 do
+				gg.alert('5 seconds to change ammo value')
+				gg.sleep(5000)
+				local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()})
+				if num1[1] == nil then break end
+				local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
+				if gg.getResultCount() == 0 then break end
+			end
+			return gg.getResults(desiredResultCount)
 		end
 	end
-	return gg.getResults(desiredResultCount)
 end
 -- Initialization
 
@@ -1465,7 +1484,7 @@ update_language()
 --bunch of global variables
 revert = {}
 MemoryBuffer = {}
-VERSION="1.8.7"
+VERSION="1.8.9"
 
 lang = {}
 lang['en_US'] = {}
@@ -1476,9 +1495,9 @@ lang['en_US']['Back']             = "Back"
 lang['en_US']['Credits']          = "Credits"
 lang['en_US']['Credits_Text']     = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for no reload tutor and script that doesn't even work, even the values that he encrypt.\n+ Joker - for providing No Blast Damage and No Reload GameGuardian Values."
 lang['en_US']['Disclaimmer']      = "Disclaimmer (please read)"
-lang['en_US']['Disclaimmer_Text'] = "DISCLAIMMER:\nPlease DO NOT misuse the script to abuse other players.\nRemember to keep your patience out of other players.\ni recommend ONLY using this script in offline mode.\nI made this because no one would share their cheat script."
+lang['en_US']['Disclaimmer_Text'] = "DISCLAIMMER:\n	Please DO NOT misuse the script to abuse other players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script."
 lang['en_US']['Exit']             = "Exit"
-lang['en_US']['Exit_ThankYouMsg'] = "If you experienced a bug, report it on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues\nIf you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\nIf you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
+lang['en_US']['Exit_ThankYouMsg'] = "	If you experienced a bug, report it on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	If you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	If you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
 lang['en_US']['License']          = "License"
 lang['en_US']['License_Text']     = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
 lang['en_US']['Settings']         = "Settings"
@@ -1491,11 +1510,11 @@ lang['in']['Back']             = "Kembali"
 lang['in']['Credits']          = "Kredit"
 lang['in']['Credits_Text']     = "Kredit:\n+ Mangyu - Pembuat skrip original.\n+ mdp43140 - Kontributor.\n+ tehtmi - Pembuat unluac (dan helper dekompilasi).\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire.\n+ Alpha GG Hacker - Values Wall Hack & Car Health GameGuardian \n+ GKTV (Pumpkin Hacker) - Skrip GG Payback2.\n+ Hydra - tidak terimakasih untuk tutorial & skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo\n+ Joker - Value No Blast Damage & No Reload GameGuardian."
 lang['in']['Disclaimmer']      = "Disklaimmer (mohon untuk dibaca)"
-lang['in']['Disclaimmer_Text'] = "DISKLAIMMER:\nJANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\nIngat untuk menjaga kesabaran anda dari pemain lain.\nSaya merekomendasikan menggunakan skrip ini HANYA di mode offline.\nSaya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka."
+lang['in']['Disclaimmer_Text'] = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka."
 lang['in']['Exit']             = "Keluar"
-lang['in']['Exit_ThankYouMsg'] = "Jika Anda mengalami bug, laporkan pada halaman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\nJika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\nJika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki"
+lang['in']['Exit_ThankYouMsg'] = "	Jika Anda mengalami bug, laporkan pada halaman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Jika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Jika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki"
 lang['in']['License']          = "Lisensi"
-lang['in']['License_Text']     = "Payback2 CHEATus, Skrip Cheat LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak bebas: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
+lang['in']['License_Text']     = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA GARANSI; bahkan tanpa garansi tersirat dari\nMERCHANTABILITY atau FITNESS untuk tujuan tertentu.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses"
 lang['in']['Settings']         = "Pengaturan"
 lang['in']['Title_Version']    = "Payback2 CHEATus v"..VERSION..", oleh ABJ4403."
 
