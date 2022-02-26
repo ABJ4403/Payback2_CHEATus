@@ -53,9 +53,9 @@ newtable     r71     0     0
 	I know this isn't really 'decompiled' because bunch of variables were gone, replaced by A\*_\* and its huge (400kb), so this makes it harder to reverse-engineer.
 
 	Thanks to [mdp43140](https://github.com/mdp43140) for reverse-engineering to get the password
-- `PB2_AlphaGGHackerYT_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
+- `PB2_AlphaGGHackerYT_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱.lua` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
 
-	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 from a simple view, it looks like its bad, but after deeper dig, its actually safe` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines, (also some decryption tools, you will get it by patience and knowledge)`
+	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 from a simple view, it looks like its bad, but after deeper dig, its actually safe` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st level:1` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines, (also some decryption tools, you will get it by patience and knowledge)`
 
 	Ridicilous Arbitrary slow loading embedded on the script with 0 way to bypass that at all.
 
@@ -68,6 +68,16 @@ newtable     r71     0     0
 	One thing to point put though, AlphaGG put the string decryption thing on the top
 
 	Thanks again to [tehtmi](https://sourceforge.net/u/tehtmi) for the patched unluac.
+
+- `PB2_AlphaGGHackerYT_pb2mod1.lua` (`『Alpha_ENC』Payback 2 Mod.lua` from [`MediaFire`](https://www.mediafire.com/file/py0v2idvgo35qi3/%25E3%2580%258EAlpha_ENC%25E3%2580%258FPayback_2_Mod.lua/file)), by "Alpha GG Hacker YT".
+
+	`Difficulty: 20` `🛡️ Obfuscation (level:17)` `🔒️ String Encryption (difficulty:29)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-all-decompiler` `🤬️ R*c*st level:2` `❌️ Anti-unluac` `❌️ Anti-LuaASM` `❌️ Different file encoding` `❌️ Impossible to decompile` `❌️ Impossible to log what the script calls gameguardian api` `🦠 GameGuardian Log Pollution` `🦠⚠️ Too much that this is considered malware (UNTRUSTED, NOT SAFE !!!)`
+
+	WAY RIDICILOUS AND WAY WAY TOO MUCH IMPOSSIBLE!!!!!
+	if you decompile this lua script with unluac or any other decompiler, it gives you almost nothing.
+
+	I will dare you a challenge to ever, ever decrypt this stupid thing. This one i will give someone a VERY HUGE credit if they can LITERALLY DECRYPT this file (YES LITERALLY DECRYPTING, NOT EVEN DECOMPILING ANYMORE !!)
+	No i wont decrypt this, so do tehtmi?
 
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
