@@ -1349,8 +1349,8 @@ function cheat2_givegrenade()
 	local stp = gg.prompt({'Put grenade current ammo','Put new grenade ammo'})
 	gg.toast('Don\'t change the ammo just yet')
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-	gg.sleep(10000)
+	gg.alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	sleep(3000)
 	gg.toast('Timeout, searching for '..stp[2])
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
@@ -1373,8 +1373,8 @@ function cheat2_givebomb()
 	local stp = gg.prompt({'Put Sticky bomb current ammo','Put new Sticky bomb ammo'})
 	gg.toast('Don\'t change the ammo just yet')
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-	gg.sleep(10000)
+	gg.alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	sleep(30000)
 	gg.toast('Timeout, searching for '..stp[2])
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
@@ -1397,8 +1397,8 @@ function cheat2_givelaser()
 	local stp = gg.prompt({'Put laser current ammo','Put laser new ammo'})
 	gg.toast('Don\'t change the ammo just yet')
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-	gg.sleep(10000)
+	gg.alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	sleep(30000)
 	gg.toast('Timeout, searching for '..stp[2])
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
@@ -1422,8 +1422,8 @@ function cheat2_win()
 	local stp = gg.prompt({'Enter ammo (the original ICE Menu dev told that all ammo can work, this might wrong)','Enter new ammo value'})
 	gg.toast('Don\'t change the ammo just yet')
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	gg.alert('10 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-	gg.sleep(10000)
+	gg.alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	sleep(30000)
 	gg.toast('Timeout, searching for '..stp[2])
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
@@ -1473,7 +1473,7 @@ end
 --[[
 	LoopSearch
 	loops search just like how gg does
-	gives user popup to search, sleep 10 seconds, loop like that until found the desired result count
+	gives user popup to search, sleep 3 seconds, loop like that until found the desired result count
 	useful for searching ammo
 	tap background/press cancel, dont press enter/ok, to cancel.
 ]]
@@ -1483,8 +1483,8 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 		gg.searchNumber(num1[1],valueType)
 		if gg.getResultCount() ~= 0 then
 			while gg.getResultCount() >= desiredResultCount+1 do
-				gg.alert('5 seconds to change ammo value')
-				gg.sleep(5000)
+				gg.alert('3 seconds to change ammo value')
+				sleep(3000)
 				local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()})
 				if num1[1] == nil then break end
 				local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
