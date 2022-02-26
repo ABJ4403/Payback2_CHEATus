@@ -8,6 +8,7 @@ function MENU()
 		"5. No blast damage",
 		"6. Strong Health",
 		"7. Pistol/SG Knockback",
+		"8. C4 Painting",
 		"---",
 		"Other cheats:",
 		"8. Client-side cosmetics",
@@ -24,14 +25,15 @@ function MENU()
 	if CH == 5 then cheat_noblastdamage() end
 	if CH == 6 then cheat_health() end
 	if CH == 7 then cheat_pistolknockback() end
+	if CH == 8 then cheat_c4paint() end
 ---
 --Title:Othercheat..
-	if CH == 10 then MENU_CSD() end
-	if CH == 11 then MENU_incompat() end
+	if CH == 11 then MENU_CSD() end
+	if CH == 12 then MENU_incompat() end
 ---
-	if CH == 13 then MENU_settings() end
-	if CH == 14 then show_about() end
-	if CH == 15 then exit() end
+	if CH == 14 then MENU_settings() end
+	if CH == 15 then show_about() end
+	if CH == 16 then exit() end
 	HOMEDM = -1
 end
 
@@ -863,6 +865,20 @@ function cheat_togglevoidmode()
 end
 
 function cheat_noreload()
+	--[[
+		here some random value hehehe
+		20W; -- starting point always ended with 00
+		0W;
+		4.063.232D; -- now is 393.216D
+		62W; -- now is 6W
+		800W; -- health
+		0W;
+		5W;
+		0W;
+		[AnyWeaponClip]W
+		[NoReloadTimer]W
+		:27
+	]]
 	local CH,t,num1 = gg.choice({
 		"1. Default",
 		"2. Fallback (freeze rocket value to 1 to imitate Rel0ad)",
@@ -964,6 +980,49 @@ function cheat_health()
 		gg.addListItems(t)
 		gg.clearResults()
 		gg.toast('Health ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
+	end
+end
+
+function cheat_c4paint()
+--this cheat is based on rel0ad cheat
+	gg.setRanges(gg.REGION_OTHER)
+	gg.toast('Dont put any explosives, if any explode it\nAnd make sure no reload is turned off to place annd detonate C4')
+	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the c4 placement position is located near there)')
+	if gg.getResultCount() == 0 then
+		gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+	else
+		local weaponAmmo = t[1]
+		gg.clearResults()
+	--Tell user to trigger C4 Placement...
+		gg.toast('Now detonate any C4s you hold (make sure Rel0ad is off to do it), 5 seconds before proceed')
+		sleep(5000)
+		gg.toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)')
+	--...While running some checking to detect some reduced number
+		gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
+		local bunchOfZeroes = gg.getResults(2)
+		local foundTheValue = 0
+		while foundTheValue == 0 do
+		--Search for values less than 0
+		--Fun Fact: C4s is -1 if not placed, but any number above that means its placed, by freezing it to -1, you essentially creating C4 painting :D
+			gg.refineNumber("0",gg.TYPE_WORD,false,gg.SIGN_GREATER_OR_EQUAL)
+		--if result is 1, pretend its found, else reset result.
+			if gg.getResultCount() == 2 then
+				foundTheValue = 1
+			else
+				gg.loadResults(bunchOfZeroes)
+			end
+		end
+		t = gg.getResults(2)
+		for i=1, #t do
+			t[i].value = -1
+			t[i].freeze = true
+		end
+		weaponAmmo.value = 30000
+		gg.setValues({weaponAmmo})
+		gg.setValues(t)
+		gg.addListItems(t)
+		gg.clearResults()
+		gg.toast('Found! C4 Painting ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\nDetonate it by respawn')
 	end
 end
 
@@ -1482,9 +1541,10 @@ update_language()
 
 
 --bunch of global variables
+VERSION = "1.9.0"
 revert = {}
 MemoryBuffer = {}
-VERSION="1.8.9"
+sleep = gg.sleep
 
 lang = {}
 lang['en_US'] = {}
