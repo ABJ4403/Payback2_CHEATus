@@ -17,6 +17,7 @@ function MENU()
 		string.format("Settings"),
 		string.format("About"),
 		string.format("Exit"),
+		string.format("Suspend")
 	}, nil, string.format("Title_Version"))
 	if CH == 1 then cheat_weaponammo() end
 	if CH == 2 then cheat_noreload() end
@@ -34,6 +35,11 @@ function MENU()
 	if CH == 14 then MENU_settings() end
 	if CH == 15 then show_about() end
 	if CH == 16 then exit() end
+	if CH == 17 then suspend_program() end
+	if CH ~= nil then
+		CH = nil
+		collectgarbage("collect")
+	end
 	HOMEDM = -1
 end
 
@@ -69,7 +75,6 @@ function MENU_CSD()
 	if CH == 12 then cheat_delete_ingameplaytext() end
 ---
 	if CH == 14 then MENU() end
-	HOMEDM = -1
 end
 
 function MENU_incompat()
@@ -100,46 +105,42 @@ function MENU_incompat()
 	if CH == 10 then cheat2_givelaser() end
 ---
 	if CH == 12 then MENU() end
-	HOMEDM = -1
 end
 
 function MENU_settings()
 --Let the user choose stuff
 	local CH = gg.choice({
-	  "Change default player name",
-	  "Change default custom player name",
-	  "Change language (Todo)",
-	  "---",
-		"Manually clear results",
-		"Manually clear list items",
-	  "---",
-	  "Save settings",
-	  "Reset settings",
+		"Change default player name",
+		"Change default custom player name",
+		"Change language (Todo)",
+		"---",
+		"Clear results",
+		"Clear list items",
+		"Clear results & list items",
+		"Remove suspend file",
+		"---",
+		"Save settings",
+		"Reset settings",
 		string.format("Back")
 	}, nil, string.format("Title_Version"))
-	if CH == 10 then MENU() end
+	if CH == 12 then MENU() end
 	if CH == 1 then
-		local CH = gg.prompt({'Put your new default player name'},{cfg['PlayerCurrentName']},{'number'})
-		if (CH ~= nil and CH[1] ~= nil) then
-		
-			cfg['PlayerCurrentName'] = CH[1]
-		end
+		local CH = gg.prompt({'Put your new default player name'},{cfg.PlayerCurrentName},{'text'})
+		if (CH ~= nil and CH[1] ~= nil) then cfg.PlayerCurrentName = CH[1] end
 		CH = nil
 		MENU_settings()
 	end
 	if CH == 2 then
-		local CH = gg.prompt({'Put your new default custom player name'},{cfg['PlayerCustomName']},{'number'})
-		if (CH ~= nil and CH[1] ~= nil) then
-			cfg['PlayerCustomName'] = CH[1]
-		end
+		local CH = gg.prompt({'Put your new default custom player name'},{cfg.PlayerCustomName},{'text'})
+		if (CH ~= nil and CH[1] ~= nil) then cfg.PlayerCustomName = CH[1] end
 		CH = nil
 		MENU_settings()
 	end
 	if CH == 3 then
 		local tmp = 0
-		if cfg['Language'] == "en_US" then tmp = 1 end
-		if cfg['Language'] == "in" then tmp = 2 end
-		if cfg['Language'] == "auto" then tmp = 3 end
+		if cfg.Language == "en_US" then tmp = 1 end
+		if cfg.Language == "in" then tmp = 2 end
+		if cfg.Language == "auto" then tmp = 3 end
 		local CH = gg.choice({
 			"🇺🇸️ English",
 			"🇮🇩️ Indonesia",
@@ -149,34 +150,33 @@ function MENU_settings()
 		tmp = nil
 		if CH ~= nil then
 			if CH == 4 then MENU_settings() end
-			if CH == 1 then cfg['Language'] = "en_US" end
-			if CH == 2 then cfg['Language'] = "in" end
-			if CH == 3 then cfg['Language'] = "auto" end
+			if CH == 1 then cfg.Language = "en_US" end
+			if CH == 2 then cfg.Language = "in" end
+			if CH == 3 then cfg.Language = "auto" end
 			CH = nil
 			update_language()
 			MENU_settings()
 		end
 	end
-	if CH == 5 then
-		gg.clearResults()
+	---
+	if CH == 5 then gg.clearResults() end
+	if CH == 6 then gg.clearList() end	
+	if CH == 7 then gg.clearResults() gg.clearList() end
+	if CH == 8 then os.remove(susp_file) end
+	---
+	if CH == 10 then
+		gg.saveVariable(cfg,cfg_file)
+		toast("your current settings is saved, but you dont have to do this, because the setting will be saved if you exit out of the script",true)
+		MENU_settings()
 	end
-	if CH == 6 then
-		gg.clearList()
-	end	
-	if CH == 8 then
-  	gg.saveVariable(cfg,cfg_file)
-  	gg.toast("your current settings is saved, but you dont have to do this, because the setting will be saved if you exit out of the script")
-  	MENU_settings()
-	end
-	if CH == 9 then
+	if CH == 11 then
 		cfg = {}
-    cfg['PlayerCurrentName']=":Player" -- you can change this to your name
-    cfg['PlayerCustomName']=":CoolFoe" -- you can change this at your likings
-  	gg.saveVariable(cfg,cfg_file)
-  	gg.toast("your current saved settings was reset")
-  	MENU_settings()
+		cfg.PlayerCurrentName=":Player" -- you can change this to your name
+		cfg.PlayerCustomName=":CoolFoe" -- you can change this at your likings
+		gg.saveVariable(cfg,cfg_file)
+		toast("your current saved settings was reset",true)
+		MENU_settings()
 	end
-	HOMEDM = -1
 end
 --[[
 	A little note before looking at the cheat mechanics:
@@ -192,7 +192,7 @@ function cheat_weapon()
 	gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61", gg.TYPE_DWORD)
 	local t = gg.getResults(5000, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+		toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 	else
 		for i=1, #t do
 			t[i].value = 71131136
@@ -201,7 +201,7 @@ function cheat_weapon()
 		gg.setValues(t)
 		t = nil
 		gg.clearResults()
-		gg.toast("Weapon ON")
+		toast("Weapon ON",true)
 	end
 end
 
@@ -268,29 +268,28 @@ function cheat_weaponammo()
 				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
 				gg.getResults(16)
 				if gg.getResultCount() == 0 then
-					gg.toast("Can't find the said number, did you put the right number?")
+					toast("Can't find the said number, did you put the right number?",true)
 				else
 					gg.editAll(9999, gg.TYPE_DWORD)
-					gg.toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number")
+					toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number",true)
 				end
 			end
 		end
 		if CH == 3 then -- Fallback v2 method (requires manually putting values, but will search WORD instead of DWORD)
 			t = loopSearch(16,gg.TYPE_WORD,'Put your weapon ammo')
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the said number, did you put the right number?")
+				toast("Can't find the said number, did you put the right number?",true)
 			else
 				for i=1, #t do
 					t[i].value = 9999
 				end
 				gg.setValues(t)
-				gg.toast("🔨️ Weapon value Modified")
+				toast("🔨️ Weapon value Modified",true)
 			end
 		end
 		gg.clearResults()
 		CH = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_firebody()
@@ -307,7 +306,7 @@ function cheat_firebody()
 		gg.searchNumber("1.68155816e-43F;0D~9999D;2.80259693e-44F;1.12103877e-42F;1.821688e-44F::45", gg.TYPE_DWORD)
 		local t = gg.getResults(555, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 		else
 			for i=1, #t do
 				t[i].value = tmp0[1]
@@ -315,11 +314,10 @@ function cheat_firebody()
 			end
 			gg.setValues(t)
 			gg.clearResults()
-			gg.toast("Burning body "..tmp0[2])
+			toast("Burning body "..tmp0[2],true)
 		end
 		tmp0 = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_pistolknockback()
@@ -360,43 +358,42 @@ function cheat_pistolknockback()
 			cheat_pistolknockback()
 		end
 		if CH == 8 then
-			CH,revert['PistolKnockback'] = nil,nil
+			CH,revert.PistolKnockback = nil,nil
 			cheat_pistolknockback()
 		end
 		if CH == 9 then
-			CH,MemoryBuffer['PistolKnockback'] = nil,nil
+			CH,MemoryBuffer.PistolKnockback = nil,nil
 			cheat_pistolknockback()
 		end		
 		if PISTOL_KNOCKBACK_VALUE ~= nil then
 			gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS)
-			if MemoryBuffer['PistolKnockback'] == nil then
-				gg.toast('No buffer found, creating new buffer')
+			if MemoryBuffer.PistolKnockback == nil then
+				toast('No buffer found, creating new buffer',true)
 		 -- Find specific value
 				gg.searchNumber(VAL_PstlSgKnockback.."F;1067869798D;1067869798D;1065353216D;1080326881D;1065353216D::37", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL)
 		 -- Get float-type-only result, and make a backup.
-				MemoryBuffer['PistolKnockback'],revert['PistolKnockback'] = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_FLOAT),gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_FLOAT)
+				MemoryBuffer.PistolKnockback,revert.PistolKnockback = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_FLOAT),gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_FLOAT)
 			else
-				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
-				gg.loadResults(MemoryBuffer['PistolKnockback'])
+				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+				gg.loadResults(MemoryBuffer.PistolKnockback)
 			end
 	 -- Check if found any result
 			if gg.getResultCount() == 0 then
-				MemoryBuffer['PistolKnockback'],revert['PistolKnockback'] = nil,nil
-				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
+				MemoryBuffer.PistolKnockback,revert.PistolKnockback = nil,nil
+				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu",true)
 			else
-				for i=1, #MemoryBuffer['PistolKnockback'] do
-					MemoryBuffer['PistolKnockback'][i].value = PISTOL_KNOCKBACK_VALUE
+				for i=1, #MemoryBuffer.PistolKnockback do
+					MemoryBuffer.PistolKnockback[i].value = PISTOL_KNOCKBACK_VALUE
 				end
 				VAL_PstlSgKnockback = PISTOL_KNOCKBACK_VALUE
 				PISTOL_KNOCKBACK_VALUE = nil
-				gg.toast("Pistol/SG Knockback "..VAL_PstlSgKnockback)
-				gg.setValues(MemoryBuffer['PistolKnockback'])
+				toast("Pistol/SG Knockback "..VAL_PstlSgKnockback,true)
+				gg.setValues(MemoryBuffer.PistolKnockback)
 			end
 			gg.clearResults()
 		end
 		CH = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_wallhack()
@@ -416,19 +413,19 @@ function cheat_wallhack()
 	if CH ~= nil then
 		if CH == 9 then MENU() end
  -- Set ranges
- 		if CH == 1 then tmp0[1]="default"		  tmp0[2]="1140457472D;500F::" tmp0[3]=VAL_WallResist[1] tmp0[4]="ON" end
- 		if CH == 2 then tmp0[1]="alternative" tmp0[2]="0.001"							tmp0[3]=VAL_WallResist[2] tmp0[4]="ON" end
- 		if CH == 3 then tmp0[1]="hydra"       tmp0[2]="1078618499;1094412911;1;1034868570;1050796852::493" tmp0[3]=VAL_WallResist[3] tmp0[4]="ON" end
- 		if CH == 4 then tmp0[1]="default"		  tmp0[2]=VAL_WallResist[1]		tmp0[3]="1140457472"			tmp0[4]="OFF" end
- 		if CH == 5 then tmp0[1]="alternative" tmp0[2]=VAL_WallResist[2]		tmp0[3]="0.001"					 tmp0[4]="OFF" end
- 		if CH == 6 then tmp0[1]="hydra"       tmp0[2]="1078618499;1094412911;"..VAL_WallResist[3]..";1034868570;1050796852::493" tmp0[3]="1" tmp0[4]="OFF" end
+ 		if CH == 1 then tmp0[1]="default"			tmp0[2]="1140457472D;500F::" tmp0[3]=VAL_WallResist[1] tmp0[4]="ON" end
+ 		if CH == 2 then tmp0[1]="alternative" tmp0[2]="0.001"							 tmp0[3]=VAL_WallResist[2] tmp0[4]="ON" end
+ 		if CH == 3 then tmp0[1]="hydra"			  tmp0[2]="1078618499;1094412911;1;1034868570;1050796852::493" tmp0[3]=VAL_WallResist[3] tmp0[4]="ON" end
+ 		if CH == 4 then tmp0[1]="default"			tmp0[2]=VAL_WallResist[1]		 tmp0[3]="1140457472"			 tmp0[4]="OFF" end
+ 		if CH == 5 then tmp0[1]="alternative" tmp0[2]=VAL_WallResist[2]		 tmp0[3]="0.001"					 tmp0[4]="OFF" end
+ 		if CH == 6 then tmp0[1]="hydra"			  tmp0[2]="1078618499;1094412911;"..VAL_WallResist[3]..";1034868570;1050796852::493" tmp0[3]="1" tmp0[4]="OFF" end
 		---
 		if CH == 6 then
-			gg.setValues(revert['wallhack'])
-			gg.setValues(revert['wallhack_alternative'])
-			gg.setValues(revert['wallhack_hydra'])
-			revert['wallhack'],revert['wallhack_alternative'],revert['wallhack_hydra'] = nil,nil,nil
-			gg.toast("Previous value restored, be warned though this will cause instability")
+			gg.setValues(revert.wallhack)
+			gg.setValues(revert.wallhack_alternative)
+			gg.setValues(revert.wallhack_hydra)
+			revert.wallhack,revert.wallhack_alternative,revert.wallhack_hydra = nil,nil,nil
+			toast("Previous value restored, be warned though this will cause instability",true)
 		end
 		if CH == 7 then
 			local CH = gg.prompt({
@@ -453,80 +450,79 @@ function cheat_wallhack()
 			cheat_wallhack()
 		end
 		if CH == 8 then
-			CH,MemoryBuffer['wallhack'],MemoryBuffer['wallhack_alternative'] = nil,nil,nil
-			gg.toast("Memory buffer cleared")
+			CH,MemoryBuffer.wallhack,MemoryBuffer.wallhack_alternative = nil,nil,nil
+			toast("Memory buffer cleared",true)
 		end
 		
 		if tmp0[1] == "default" then -- This default method is slow, and only survives single match, but physics works best here, especially when you hit a wall corner, or using tank to phase walls.
 			gg.setRanges(gg.REGION_C_ALLOC)
---			if MemoryBuffer['wallhack'] == nil then
---				gg.toast('No previous memory buffer found, creating new buffer.')
+--			if MemoryBuffer.wallhack == nil then
+--				toast('No previous memory buffer found, creating new buffer.',true)
 				gg.searchNumber(tmp0[2])
-				MemoryBuffer['wallhack'],revert['wallhack'] = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD),gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
+				MemoryBuffer.wallhack,revert.wallhack = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD),gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 --			else
---				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
---				gg.loadResults(MemoryBuffer['wallhack'])
+--				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+--				gg.loadResults(MemoryBuffer.wallhack)
 --				gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 --			end
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
-				for i=1, #MemoryBuffer['wallhack'] do
-					MemoryBuffer['wallhack'][i].value = tmp0[3]
+				for i=1, #MemoryBuffer.wallhack do
+					MemoryBuffer.wallhack[i].value = tmp0[3]
 				end
-				gg.setValues(MemoryBuffer['wallhack'])
+				gg.setValues(MemoryBuffer.wallhack)
 				gg.clearResults()
-				gg.toast("Wall Hack "..tmp0[4])
+				toast("Wall Hack "..tmp0[4],true)
 			end
 		end
 		if tmp0[1] == "alternative" then -- This altervative method can survive multiple matches, and the value can be found very fast (because it only scans CodeApp), but the physics is wonky
 			gg.setRanges(gg.REGION_CODE_APP)
---			if MemoryBuffer['wallhack_alternative'] == nil then
---				gg.toast('No previous memory buffer found, creating new buffer.')
+--			if MemoryBuffer.wallhack_alternative == nil then
+--				toast('No previous memory buffer found, creating new buffer.',true)
 				gg.searchNumber(tmp0[2], gg.TYPE_FLOAT)
-				MemoryBuffer['wallhack_alternative'],revert['wallhack_alternative'] = gg.getResults(50),gg.getResults(50)
+				MemoryBuffer.wallhack_alternative,revert.wallhack_alternative = gg.getResults(50),gg.getResults(50)
 --			else
---				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
---				gg.loadResults(MemoryBuffer['wallhack_alternative'])
+--				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+--				gg.loadResults(MemoryBuffer.wallhack_alternative)
 --				gg.getResults(50)
 --			end
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
-				for i=1, #MemoryBuffer['wallhack_alternative'] do
-					MemoryBuffer['wallhack_alternative'][i].value = tmp0[3]
+				for i=1, #MemoryBuffer.wallhack_alternative do
+					MemoryBuffer.wallhack_alternative[i].value = tmp0[3]
 				end
-				gg.setValues(MemoryBuffer['wallhack_alternative'])
+				gg.setValues(MemoryBuffer.wallhack_alternative)
 				gg.clearResults()
-				gg.toast("Wall Hack "..tmp0[4])
+				toast("Wall Hack "..tmp0[4],true)
 			end
 		end
 		if tmp0[1] == "hydra" then -- Hydra method had no (dis)advantages... coz it isnt affecting latest version...
 			gg.setRanges(gg.REGION_OTHER)
-			if MemoryBuffer['wallhack_hydra'] == nil then
-				gg.toast('No previous memory buffer found, creating new buffer.')
+			if MemoryBuffer.wallhack_hydra == nil then
+				toast('No previous memory buffer found, creating new buffer.',true)
 				gg.searchNumber(tmp0[2], gg.TYPE_DWORD)
 				gg.refineNumber(1)
-				MemoryBuffer['wallhack_hydra'],revert['wallhack_hydra'] = gg.getResults(40),gg.getResults(40)
+				MemoryBuffer.wallhack_hydra,revert.wallhack_hydra = gg.getResults(40),gg.getResults(40)
 			else
-				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
-				gg.loadResults(MemoryBuffer['wallhack_hydra'])
+				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+				gg.loadResults(MemoryBuffer.wallhack_hydra)
 				gg.getResults(40)
 			end
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
-				for i=1, #MemoryBuffer['wallhack_hydra'] do
-					MemoryBuffer['wallhack_hydra'][i].value = tmp0[3]
+				for i=1, #MemoryBuffer.wallhack_hydra do
+					MemoryBuffer.wallhack_hydra[i].value = tmp0[3]
 				end
-				gg.setValues(MemoryBuffer['wallhack_hydra'])
+				gg.setValues(MemoryBuffer.wallhack_hydra)
 				gg.clearResults()
-				gg.toast("Wall Hack "..tmp0[4])
+				toast("Wall Hack "..tmp0[4],true)
 			end
 		end
 	end
 	tmp0 = nil
-	HOMEDM = -1
 end
 
 function cheat_bigbody()
@@ -546,74 +542,74 @@ function cheat_bigbody()
 		local t
 		if CH == 1 then
 			gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
-			gg.searchNumber("1"+SPECIALOFFSET_bigbody[1], gg.TYPE_FLOAT)
+			gg.searchNumber("1"+memOffsets_bigbody[1], gg.TYPE_FLOAT)
 			t = gg.getResults(555)
-			revert['bigbody'] = gg.getResults(555)
+			revert.bigbody = gg.getResults(555)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
 				for i=1, #t do
-					t[i].value = VAL_BigBody[1]+SPECIALOFFSET_bigbody[1]
+					t[i].value = VAL_BigBody[1]+memOffsets_bigbody[1]
 					t[i].freeze = true
 				end
-				gg.toast("Big Body ON")
+				toast("Big Body ON",true)
 			end
 			gg.setValues(t)
 		end
 		if CH == 2 then
 			gg.setRanges(gg.REGION_CODE_APP)
-			gg.searchNumber("4.3"+SPECIALOFFSET_bigbody[2], gg.TYPE_FLOAT)
+			gg.searchNumber("4.3"+memOffsets_bigbody[2], gg.TYPE_FLOAT)
 			t = gg.getResults(22)
-			revert['bigbody'] = gg.getResults(22)
+			revert.bigbody = gg.getResults(22)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
-				gg.editAll(VAL_BigBody[2]+SPECIALOFFSET_bigbody[2], gg.TYPE_FLOAT)
-				gg.toast("Big Body ON")
+				gg.editAll(VAL_BigBody[2]+memOffsets_bigbody[2], gg.TYPE_FLOAT)
+				toast("Big Body ON",true)
 			end
 		end
 		if CH == 3 then
 			gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
-			gg.searchNumber(VAL_BigBody[1]+SPECIALOFFSET_bigbody[1], gg.TYPE_FLOAT)
+			gg.searchNumber(VAL_BigBody[1]+memOffsets_bigbody[1], gg.TYPE_FLOAT)
 			t = gg.getResults(555)
-			revert['bigbody'] = gg.getResults(555)
+			revert.bigbody = gg.getResults(555)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
 				for i=1, #t do
-					t[i].value = "1"+SPECIALOFFSET_bigbody[1]
+					t[i].value = "1"+memOffsets_bigbody[1]
 					t[i].freeze = true
 				end
-				gg.toast("Big body OFF")
+				toast("Big body OFF",true)
 			end
 			gg.setValues(t)
 		end
 		if CH == 4 then
 			gg.setRanges(gg.REGION_CODE_APP)
-			gg.searchNumber(VAL_BigBody[2]+SPECIALOFFSET_bigbody[2], gg.TYPE_FLOAT)
+			gg.searchNumber(VAL_BigBody[2]+memOffsets_bigbody[2], gg.TYPE_FLOAT)
 			t = gg.getResults(22)
-			revert['bigbody'] = gg.getResults(22)
+			revert.bigbody = gg.getResults(22)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
-				gg.editAll("4.3"+SPECIALOFFSET_bigbody[2], gg.TYPE_FLOAT)
-				gg.toast("Big body OFF")
+				gg.editAll("4.3"+memOffsets_bigbody[2], gg.TYPE_FLOAT)
+				toast("Big body OFF",true)
 			end
 		end
 		if CH == 5 then
-			if revert['bigbody'] == nil then
-				gg.toast("No values to restore, this might be a bug. if you think so, report bug on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			if revert.bigbody == nil then
+				toast("No values to restore, this might be a bug. if you think so, report bug on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
-				gg.setValues(revert['bigbody'])
-				revert['bigbody'] = nil
+				gg.setValues(revert.bigbody)
+				revert.bigbody = nil
 				gg.clearResults()
-				gg.toast("Wall hack previous value restored, be warned though this will cause instability")
+				toast("Wall hack previous value restored, be warned though this will cause instability",true)
 			end
 		end
 		if CH == 6 then
 			local CH = gg.prompt({
-				'Put your custom value for Default method (Game default: 1,Cheatus default: 3, offset: '..SPECIALOFFSET_bigbody[1]..')',
-				'Put your custom value for Alternative method (Game default: 4.3,Cheatus default: 5.9, offset: '..SPECIALOFFSET_bigbody[2]..')'
+				'Put your custom value for Default method (Game default: 1,Cheatus default: 3, offset: '..memOffsets_bigbody[1]..')',
+				'Put your custom value for Alternative method (Game default: 4.3,Cheatus default: 5.9, offset: '..memOffsets_bigbody[2]..')'
 			},{
 				[1] = VAL_BigBody[1],
 				[2] = VAL_BigBody[2]
@@ -632,7 +628,6 @@ function cheat_bigbody()
 		gg.clearResults()
 		CH = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_strongveichle()
@@ -670,47 +665,38 @@ function cheat_strongveichle()
 			cheat_strongveichle()
 		end
 		if CH == 8 then
-			CH,revert['CarHealth'] = nil,nil
+			CH,revert.CarHealth = nil,nil
 			cheat_strongveichle()
 		end
 		if CH == 9 then
-			CH,MemoryBuffer['CarHealth'] = nil,nil
+			CH,MemoryBuffer.CarHealth = nil,nil
 			cheat_strongveichle()
 		end		
- -- Main carhealth code
 		if CAR_HEALTH_VALUE ~= nil then
-	 -- Set ranges
 			gg.setRanges(gg.REGION_CODE_APP)
-	 -- Memory buffer
-			if MemoryBuffer['CarHealth'] == nil then
-				gg.toast('No buffer found, creating new buffer')
-		 -- Find specific value
+			if MemoryBuffer.CarHealth == nil then
+				toast('No buffer found, creating new buffer',true)
 				gg.searchNumber(VAL_CrDfltHlth, gg.TYPE_DWORD)
-		 -- Get float-type-only result, and make a backup.
-				MemoryBuffer['CarHealth'],revert['CarHealth'] = gg.getResults(50),gg.getResults(50)
+				MemoryBuffer.CarHealth,revert.CarHealth = gg.getResults(50),gg.getResults(50)
 			else
-				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
-				gg.loadResults(MemoryBuffer['CarHealth'])
+				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+				gg.loadResults(MemoryBuffer.CarHealth)
 			end
-	 -- Check if found any result
 			if gg.getResultCount() == 0 then
-		 -- Set memory buffer and backup
-				MemoryBuffer['CarHealth'],revert['CarHealth'] = nil,nil
-				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current health variable' menu")
+				MemoryBuffer.CarHealth,revert.CarHealth = nil,nil
+				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current health variable' menu",true)
 			else
-				for i=1, #MemoryBuffer['CarHealth'] do
-					MemoryBuffer['CarHealth'][i].value = CAR_HEALTH_VALUE
+				for i=1, #MemoryBuffer.CarHealth do
+					MemoryBuffer.CarHealth[i].value = CAR_HEALTH_VALUE
 				end
-		 -- Set current value to, well... current value ofcourse...
 				VAL_CrDfltHlth,CAR_HEALTH_VALUE = CAR_HEALTH_VALUE,nil
-				gg.toast("Veichles default health "..VAL_CrDfltHlth)
-				gg.setValues(MemoryBuffer['CarHealth'])
+				toast("Veichles default health "..VAL_CrDfltHlth,true)
+				gg.setValues(MemoryBuffer.CarHealth)
 			end
 			gg.clearResults()
 		end
 		CH = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_noblastdamage()
@@ -746,47 +732,38 @@ function cheat_noblastdamage()
 			cheat_noblastdamage()
 		end
 		if CH == 8 then
-			CH,revert['NoBlastDamage'] = nil,nil
+			CH,revert.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
 		end
 		if CH == 9 then
-			CH,MemoryBuffer['NoBlastDamage'] = nil,nil
+			CH,MemoryBuffer.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
 		end		
- -- Main NoBlastDamage code
 		if DAMAGE_INTENSITY_VALUE ~= nil then
-	 -- Set ranges
 			gg.setRanges(gg.REGION_CODE_APP)
-	 -- Memory buffer
-			if MemoryBuffer['NoBlastDamage'] == nil then
-				gg.toast('No buffer found, creating new buffer')
-		 -- Find specific value
+			if MemoryBuffer.NoBlastDamage == nil then
+				toast('No buffer found, creating new buffer',true)
 				gg.searchNumber(VAL_DmgIntnsty, gg.TYPE_FLOAT)
-		 -- Get float-type-only result, and make a backup.
-				MemoryBuffer['NoBlastDamage'],revert['NoBlastDamage'] = gg.getResults(10),gg.getResults(10)
+				MemoryBuffer.NoBlastDamage,revert.NoBlastDamage = gg.getResults(10),gg.getResults(10)
 			else
-				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
-				gg.loadResults(MemoryBuffer['NoBlastDamage'])
+				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+				gg.loadResults(MemoryBuffer.NoBlastDamage)
 			end
-	 -- Check if found any result
 			if gg.getResultCount() == 0 then
-		 -- Set memory buffer and backup
-				MemoryBuffer['NoBlastDamage'],revert['NoBlastDamage'] = nil,nil
-				gg.toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current damage value' menu")
+				MemoryBuffer.NoBlastDamage,revert.NoBlastDamage = nil,nil
+				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current damage value' menu",true)
 			else
-				for i=1, #MemoryBuffer['NoBlastDamage'] do
-					MemoryBuffer['NoBlastDamage'][i].value = DAMAGE_INTENSITY_VALUE
+				for i=1, #MemoryBuffer.NoBlastDamage do
+					MemoryBuffer.NoBlastDamage[i].value = DAMAGE_INTENSITY_VALUE
 				end
-		 -- Set current value to, well... current value ofcourse...
 				VAL_DmgIntnsty,DAMAGE_INTENSITY_VALUE = DAMAGE_INTENSITY_VALUE,nil
-				gg.toast("Blast damage intensity "..VAL_DmgIntnsty)
-				gg.setValues(MemoryBuffer['NoBlastDamage'])
+				toast("Blast damage intensity "..VAL_DmgIntnsty,true)
+				gg.setValues(MemoryBuffer.NoBlastDamage)
 			end
 			gg.clearResults()
 		end
 		CH = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_destroycar()
@@ -805,10 +782,10 @@ function cheat_destroycar()
 			gg.refineNumber("1.0")
 			gg.getResults(50)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
 				gg.editAll("-500", gg.TYPE_FLOAT)
-				gg.toast("Destroy all cars ON")
+				toast("Destroy all cars ON",true)
 			end
 		end
 		if CH == 2 then
@@ -816,16 +793,15 @@ function cheat_destroycar()
 			gg.refineNumber("-500")
 			gg.getResults(50)
 			if gg.getResultCount() == 0 then
-				gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
 				gg.editAll("1.0", gg.TYPE_FLOAT)
-				gg.toast("Destroy all cars OFF")
+				toast("Destroy all cars OFF",true)
 			end
 		end
 		gg.clearResults()
 		CH = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_togglevoidmode()
@@ -837,7 +813,6 @@ function cheat_togglevoidmode()
 	if CH ~= nil then
 		if CH == 3 then MENU() end
 		if CH == 1 then
-		--Prepare the table
 			gg.setValues({
 		 -- Mode - Singleplayer
 				{flags=gg.TYPE_DWORD,value=99,address=0xC20FC36C},
@@ -850,18 +825,17 @@ function cheat_togglevoidmode()
 		 -- Time limit
 				{flags=gg.TYPE_DWORD,value=99,address=0xC132A8B8}
 			})
-			gg.toast('void mode is set. to restore, simply change to any mode you desire')
+			toast('void mode is set. to restore, simply change to any mode you desire',true)
 		end
 		if CH == 2 then
 			gg.setRanges(gg.REGION_ANONYMOUS)
 			gg.searchNumber("38654705671",gg.TYPE_QWORD)
 			gg.getResults(100)
 			gg.editAll("38654705673")
-			gg.toast('void mode is set. to restore, simply change to any mode you desire\nnote again that this only works on old version')
+			toast('void mode is set. to restore, simply change to any mode you desire\nnote again that this only works on old version',true)
 		end
 	end
 	CH = nil
-	HOMEDM = -1
 end
 
 function cheat_noreload()
@@ -869,8 +843,6 @@ function cheat_noreload()
 		here some random value hehehe
 		20W; -- starting point always ended with 00
 		0W;
-		4.063.232D; -- now is 393.216D
-		62W; -- now is 6W
 		800W; -- health
 		0W;
 		5W;
@@ -890,7 +862,7 @@ function cheat_noreload()
 			gg.setRanges(gg.REGION_OTHER)
 			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo')
 			if gg.getResultCount() == 0 then
-				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
 			else
 			--[[
 				So how this works?
@@ -907,7 +879,7 @@ function cheat_noreload()
 				gg.clearResults()
 				gg.searchNumber("0",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x5A,weaponAmmo.address + 0x68)
 			--Tell user to trigger reload event...
-				gg.toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)')
+				toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)',true)
 			--...While running some checking to detect some reduced number (Reload timing located at xxxxxx84)
 				local bunchOfZeroes = gg.getResults(100)
 				local foundTheValue = 0
@@ -920,6 +892,8 @@ function cheat_noreload()
 					else
 						gg.loadResults(bunchOfZeroes)
 					end
+				--sleep for a very short time to prevent lag
+					sleep(100)
 				end
 			--get the reload timer value
 				t = gg.getResults(1)
@@ -933,14 +907,14 @@ function cheat_noreload()
 				weaponAmmo.value = 30000
 				gg.setValues({weaponAmmo})
 				gg.clearResults()
-				gg.toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
+				toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!',true)
 			end
 		end
 		if CH == 2 then
 			gg.setRanges(gg.REGION_OTHER)
 			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo')
 			if gg.getResultCount() == 0 then
-				gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
 			else
 				for i=1, #t do
 					t[i].value = 1
@@ -948,12 +922,11 @@ function cheat_noreload()
 				end
 				gg.setValues(t)
 				gg.clearResults()
-				gg.toast('Rel0ad ON')
+				toast('Rel0ad ON',true)
 			end
 		end
 		CH = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_health()
@@ -961,7 +934,30 @@ function cheat_health()
 	gg.setRanges(gg.REGION_OTHER)
 	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the health is located near there)\nAlso, make sure you have maximum health or will fail')
 	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+		t = alert('Can\'t find the specific set of number, but no problem! we do have fallback. do you want to do fallback method?',string.format2("__yes__"),string.format2("__no__"))
+		if t == 1 then
+			toast('reclaim your health first. wait 5 seconds before proceed',true)
+			sleep(5000)
+			gg.clearResults()
+			gg.searchNumber("800",gg.TYPE_WORD)
+			toast('Now hurt yourself using laser, or enemy autoturret, or getting shot by enemy or AI',true)
+			local bunchOfZeroes = gg.getResults(100)
+			local foundTheValue = 0
+			while foundTheValue == 0 do
+				gg.refineNumber("0~799")
+				if gg.getResultCount() == 1 then
+					foundTheValue = 1
+				else
+					gg.loadResults(bunchOfZeroes)
+				end
+				sleep(100)
+			end
+			t = gg.getResults(1)
+			t[1].value = 800
+			t[1].freeze = true
+			gg.setValues(t)
+			gg.addListItems(t)
+		end
 	else
 	--why not eh?
 		local weaponAmmo = t[1]
@@ -976,7 +972,7 @@ function cheat_health()
 		gg.setValues(t)
 		gg.addListItems(t)
 		gg.clearResults()
-		gg.toast('Health ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
+		toast('Health ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!',true)
 	end
 end
 
@@ -984,27 +980,27 @@ function cheat_c4paint()
 --this cheat is based on rel0ad cheat
 	gg.setRanges(gg.REGION_OTHER)
 --Warn user to not having any c4s placed, and detonate them if so.
-	gg.toast('Dont put any explosives. if any, explode it\nAnd make sure no reload is turned off because you will place and detonate C4')
+	toast('Dont put any explosives. if any, explode it\nAnd make sure no reload is turned off because you will place and detonate C4',true)
 --ask user any ammo
 	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the c4 placement position is located near there)')
 --glorioss thingizz
 	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+		toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
 	else
 	--just for the ezznezz
 		local weaponAmmo = t[1]
 	--clear result to make sure 0 errors
 		gg.clearResults()
 	--Tell user to Detonate any C4s it currently connected to, and wait 5sec...
-		gg.toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 5 seconds before proceed')
+		toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 5 seconds before proceed',true)
 		sleep(5000)
 	--Tell user to trigger C4 Placement...
-		gg.toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)')
+		toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)',true)
 	--...While running some checking to detect some reduced number
 		gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x04,weaponAmmo.address + 0x10)
 		--Experiment2Begin
 		if gg.getResultCount() == 0 then
-			gg.toast("Oh, this is weird 🤔️... We don't find the value we're searching for 🔍️. We will try hard, promise 😃️")
+			toast("Oh, this is weird 🤔️... We don't find the value we're searching for 🔍️. We will try hard, promise 😃️",true)
 			gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
 		end
 		--Experiment2End
@@ -1020,6 +1016,8 @@ function cheat_c4paint()
 			else
 				gg.loadResults(bunchOfZeroes)
 			end
+			--sleep for a very short time to prevent lag
+				sleep(100)
 		end
 		t = gg.getResults(2)
 		for i=1, #t do
@@ -1031,7 +1029,7 @@ function cheat_c4paint()
 		gg.setValues(t)
 		gg.addListItems(t)
 		gg.clearResults()
-		gg.toast('Found! C4 Painting ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\nDetonate it by respawn')
+		toast('Found! C4 Painting ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\nDetonate it by respawn',true)
 	end
 end
 
@@ -1046,7 +1044,7 @@ function cheat_xpmodifier()
 		'Put your current XP (make sure that your XP value is differentiateable, because there\'s no looping thingy method yet.)',
 		'Put new XP (Google Play Game limit is 999999, while the DWORD limit is 1.999.999.998)',
 		'Freeze'
-	},{
+	},{},{
 		[1]="number",
 		[2]="number",
 		[3]="checkbox"
@@ -1054,10 +1052,10 @@ function cheat_xpmodifier()
 	if CH ~= nil then
  -- Search current player xp
 		gg.searchNumber(player_xp[1], gg.TYPE_DWORD)
-		t,revert['PlayerXP'] = gg.getResults(10),gg.getResults(10)
+		t,revert.PlayerXP = gg.getResults(10),gg.getResults(10)
  -- Check if found or not
 		if gg.getResultCount() == 0 then
-			gg.toast('Can\'t find the player xp, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			toast('Can\'t find the player xp, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
 		else
 	 -- and put the new XP
 			for i=1, #t do
@@ -1066,7 +1064,7 @@ function cheat_xpmodifier()
 			end
 			gg.setValues(t)
 			gg.clearResults()
-			gg.toast('"'..player_xp[1]..'" changed to "'..player_xp[2]..'"\nWarn: this is still in experimentation phase, the xp wont applied permanently, it will get reset to original. to chnage it permanently, you have to modify the .sav data, which is impossible because its encrypted')
+			toast('"'..player_xp[1]..'" changed to "'..player_xp[2]..'"\nWarn: this is still in experimentation phase, the xp wont applied permanently, it will get reset to original. to chnage it permanently, you have to modify the .sav data, which is impossible because its encrypted',true)
 		end
 	end
 end
@@ -1079,22 +1077,22 @@ function cheat_changeplayername()
 		'Put new player name (cannot be longer than current name, you can change color/add icon by converting to hex and use hex 1-9 for color)'
 	},{
 		[1]=VAL_PlayerCurrentName,
-		[2]=cfg['PlayerCustomName']
+		[2]=cfg.PlayerCustomName
 	},{
-		[1]="number",
-		[2]="number"
+		[1]="text",
+		[2]="text"
 	})
 --search old player name
 	if (player_name ~= nil and player_name[1] ~= nil and player_name[1] ~= ":") then
 		gg.searchNumber(player_name[1], gg.TYPE_BYTE)
-		revert['PlayerName'] = gg.getResults(5555)
+		revert.PlayerName = gg.getResults(5555)
 		if gg.getResultCount() == 0 then
-			gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
 		else
 			gg.editAll(player_name[2], gg.TYPE_BYTE)
 			VAL_PlayerCurrentName = player_name[2]
 			gg.clearResults()
-			gg.toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others')
+			toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others',true)
 		end
 	end
 end
@@ -1118,7 +1116,7 @@ function cheat_changeplayernamecolor()
 		"None (remove every color and icon)",
 		"---",
 		string.format("Back")
-	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'number'})
+	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'text'})
 	if (CH ~= nil or player_name ~= nil and player_name[1] ~= nil and player_name[1] ~= ":") then
 	--Color
 		if CH == 2 then player_color_choice = 2 end
@@ -1142,10 +1140,10 @@ function cheat_changeplayernamecolor()
 			gg.searchNumber(player_name[1], gg.TYPE_BYTE)
 		--fetch result,make backup result,make some temporary stuff
 			local t,tmp0,removeOffset = gg.getResults(5555),0,0x0
-			revert['PlayerName'] = gg.getResults(5555)
+			revert.PlayerName = gg.getResults(5555)
 		--generic found stuff
 			if gg.getResultCount() == 0 then
-				gg.toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+				toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
 			else
 			--if player color chioce was 0 (none), interpret that as request remove colors
 				if player_color_choice == 0 then
@@ -1181,7 +1179,7 @@ function cheat_changeplayernamecolor()
 					t[1].value = player_color_choice
 				end
 				gg.setValues(t)
-				gg.toast('Color set to '..player_color_choice..'. PS: still in experimental phase, might not work')
+				toast('Color set to '..player_color_choice..'. PS: still in experimental phase, might not work',true)
 			end
 			tmp0 = nil
 		end
@@ -1202,26 +1200,25 @@ function cheat_walkwonkyness()
 		gg.setRanges(gg.REGION_CODE_APP)
 		if CH == 1 then
 			gg.searchNumber("0~1", gg.TYPE_FLOAT)
-			revert['walkwonkyness'] = gg.getResults(10)
+			revert.walkwonkyness = gg.getResults(10)
 			gg.editAll("0.004", gg.TYPE_FLOAT)
-			gg.toast("Walk Wonkyness Default")
+			toast("Walk Wonkyness Default",true)
 		end
 		if CH == 2 then
 			gg.searchNumber("0.004", gg.TYPE_FLOAT)
-			revert['walkwonkyness'] = gg.getResults(10)
+			revert.walkwonkyness = gg.getResults(10)
 			gg.editAll("1", gg.TYPE_FLOAT)
-			gg.toast("Walk Wonkyness ON")
+			toast("Walk Wonkyness ON",true)
 		end
 		if CH == 3 then
 			gg.searchNumber("1", gg.TYPE_FLOAT)
-			revert['walkwonkyness'] = gg.getResults(10)
+			revert.walkwonkyness = gg.getResults(10)
 			gg.editAll("0.004", gg.TYPE_FLOAT)
-			gg.toast("Walk Wonkyness OFF")
+			toast("Walk Wonkyness OFF",true)
 		end
 		gg.clearResults()
 		CH = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_coloredtree()
@@ -1239,15 +1236,14 @@ function cheat_coloredtree()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 			gg.clearResults()
-			gg.toast("Colored trees "..tmp0[3])
+			toast("Colored trees "..tmp0[3],true)
 		end
 		tmp0 = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_bigflamethroweritem()
@@ -1265,15 +1261,14 @@ function cheat_bigflamethroweritem()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 			gg.clearResults()
-			gg.toast("Big flamethrower "..tmp0[3])
+			toast("Big flamethrower "..tmp0[3],true)
 		end
 		tmp0 = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_shadowfx()
@@ -1291,15 +1286,14 @@ function cheat_shadowfx()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 			gg.clearResults()
-			gg.toast("Shadow "..tmp0[3])
+			toast("Shadow "..tmp0[3],true)
 		end
 		tmp0 = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_clrdpplesp()
@@ -1317,15 +1311,14 @@ function cheat_clrdpplesp()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			gg.toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 			gg.clearResults()
-			gg.toast("Colored people ESP "..tmp0[3])
+			toast("Colored people ESP "..tmp0[3],true)
 		end
 		tmp0 = nil
 	end
-	HOMEDM = -1
 end
 
 function cheat_deleteingameplaytext()
@@ -1348,22 +1341,21 @@ function cheat_deleteingameplaytext()
 	gg.searchNumber(":CAPTURE", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
 	gg.searchNumber(":KILL", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
 	gg.clearResults()
-	gg.toast("In-gameplay-text cleared, to restore, you have to restart the game")
-	HOMEDM = -1
+	toast("In-gameplay-text cleared, to restore, you have to restart the game",true)
 end
 
 
 function cheat2_givegrenade()
 	gg.setRanges(gg.REGION_C_BSS)
 	local stp = gg.prompt({'Put grenade current ammo','Put new grenade ammo'})
-	gg.toast('Don\'t change the ammo just yet')
+	toast('Don\'t change the ammo just yet',true)
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	gg.alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	sleep(3000)
-	gg.toast('Timeout, searching for '..stp[2])
+	toast('Timeout, searching for '..stp[2],true)
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
+		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version',true)
 	else
 		local t = {}
 		t[1] = {}
@@ -1372,22 +1364,21 @@ function cheat2_givegrenade()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		gg.toast('Grenade ammo ON')
+		toast('Grenade ammo ON',true)
 	end
-	HOMEDM = -1
 end
 
 function cheat2_givebomb()
 	gg.setRanges(gg.REGION_C_BSS)
 	local stp = gg.prompt({'Put Sticky bomb current ammo','Put new Sticky bomb ammo'})
-	gg.toast('Don\'t change the ammo just yet')
+	toast('Don\'t change the ammo just yet',true)
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	gg.alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	sleep(30000)
-	gg.toast('Timeout, searching for '..stp[2])
+	toast('Timeout, searching for '..stp[2],true)
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
+		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version',true)
 	else
 		local t = {}
 		t[1] = {}
@@ -1396,22 +1387,21 @@ function cheat2_givebomb()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		gg.toast('C4 ammo ON')
+		toast('C4 ammo ON',true)
 	end
-	HOMEDM = -1
 end
 
 function cheat2_givelaser()
 	gg.setRanges(gg.REGION_C_BSS)
 	local stp = gg.prompt({'Put laser current ammo','Put laser new ammo'})
-	gg.toast('Don\'t change the ammo just yet')
+	toast('Don\'t change the ammo just yet',true)
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	gg.alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	sleep(30000)
-	gg.toast('Timeout, searching for '..stp[2])
+	toast('Timeout, searching for '..stp[2],true)
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
+		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version',true)
 	else
 		local t = {}
 		t[1] = {}
@@ -1420,23 +1410,22 @@ function cheat2_givelaser()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		gg.toast('Laser ammo ON')
+		toast('Laser ammo ON',true)
 	end
 	tmp = nil
-	HOMEDM = -1
 end
 
 function cheat2_win()
 	gg.setRanges(gg.REGION_ANONYMOUS)
 	local stp = gg.prompt({'Enter ammo (the original ICE Menu dev told that all ammo can work, this might wrong)','Enter new ammo value'})
-	gg.toast('Don\'t change the ammo just yet')
+	toast('Don\'t change the ammo just yet',true)
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	gg.alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	sleep(30000)
-	gg.toast('Timeout, searching for '..stp[2])
+	toast('Timeout, searching for '..stp[2],true)
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		gg.toast('Can\'t find the specific set of number')
+		toast('Can\'t find the specific set of number',true)
 	else
 		local t = {}
 		t[1] = {}
@@ -1445,9 +1434,8 @@ function cheat2_win()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		gg.toast('Level Win ON')
+		toast('Level Win ON',true)
 	end
-	HOMEDM = -1
 end
 
 function show_about()
@@ -1460,11 +1448,11 @@ function show_about()
 		string.format("Back")
 	}, nil, string.format("About"))
 	if CH ~= nil then
-		if CH == 1 then gg.alert(string.format("About_Text")) show_about() end
+		if CH == 1 then alert(string.format("About_Text")) show_about() end
 		---
-		if CH == 3 then gg.alert(string.format("Disclaimmer_Text")) show_about() end
-		if CH == 4 then gg.alert(string.format("License_Text")) show_about() end
-		if CH == 5 then gg.alert(string.format("Credits_Text")) show_about() end
+		if CH == 3 then alert(string.format("Disclaimmer_Text")) show_about() end
+		if CH == 4 then alert(string.format("License_Text")) show_about() end
+		if CH == 5 then alert(string.format("Credits_Text")) show_about() end
 		if CH == 6 then CH = nil MENU() end
 		CH = nil
 	end
@@ -1478,28 +1466,37 @@ function exit()
 	os.exit()
 end
 
+function suspend_program()
+	print(string.format("Suspend_Text"))
+	gg.saveVariable({
+		["revert"]=revert,
+		["MemoryBuffer"]=MemoryBuffer,
+		["cfg"]=cfg
+	},susp_file)
+	os.exit()
+end
+
 -- Helper functions
---[[
-	LoopSearch
-	loops search just like how gg does
-	gives user popup to search, sleep 3 seconds, loop like that until found the desired result count
-	useful for searching ammo
-	tap background/press cancel, dont press enter/ok, to cancel.
-]]
 function loopSearch(desiredResultCount,valueType,msg1,msg2)
+	--[[
+		loops search just like how gg does
+		gives user popup to search, sleep 3 seconds, loop like that until found the desired result count
+		useful for searching ammo
+		tap background/press cancel, dont press enter/ok, to cancel.
+	]]
 	local num1 = gg.prompt({msg1})
 	if num1[1] ~= nil then
 	--Experiment1
 		gg.searchNumber(num1[1],valueType,nil,nil,0xB7B00000,0xB7EFFF84)
 	--Experiment1Begin
 		if gg.getResultCount() == 0 then
-			gg.toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try hard, promise 😃️")
+			toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try hard, promise 😃️",true)
 			gg.searchNumber(num1[1],valueType,nil,nil)
 		end
 	--Experiment1End
 		if gg.getResultCount() ~= 0 then
 			while gg.getResultCount() >= desiredResultCount+1 do
-				gg.alert('3 seconds to change ammo value')
+				alert('3 seconds to change ammo value')
 				sleep(3000)
 				local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()},{num1[1]})
 				if num1[1] == nil then break end
@@ -1510,100 +1507,139 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 		end
 	end
 end
--- Initialization
-
--- Configurable values
---for the cfg i recommend running the script, get out, and edit the .conf file (generated in the script location)
-cfg = {}
-cfg['Language']="auto"
-cfg['PlayerCurrentName']=":Player" -- you can change this to your name
-cfg['PlayerCustomName']=":CoolFoe" -- you can change this at your likings
-VAL_PstlSgKnockback="0.25" -- Don't change this, this is the pistol/sg bullet knockback default value when the game starts, changing this will cause the script to fail, until you restore them manually
-VAL_CrDfltHlth="125" -- this is veichles default health
-VAL_DmgIntnsty="300" -- this is your default damage intensity
-VAL_WallResist={"-500","-1.00001","-1"} -- same as two above but have multiple methods, thats why its put to tables (i better call it array, btw)
-VAL_BigBody={"3","5.9"}
---Number Offsets, don't change or the memory search thingy will miss
-SPECIALOFFSET_bigbody={"0.09500002861","0.00000019073"}
-
--- Languages table, and string interpreter (TODO)
+function MergeTables(...)
+	--[[
+		merge 2 tables, just like Object.assign
+		first table will be replaced by new table...
+	]]
+	local r = {}
+		for _,t in ipairs{...} do
+			for k, v in pairs(t) do
+				r[k] = v
+			end
+		end
+	return r
+end
 function update_language()
-	if cfg['Language'] == "auto" then
+	--[[
+		Parse language strings...
+	]]
+	if cfg.Language == "auto" then
  -- Only English and Indonesian are supported (for now)
 		curr_lang = gg.getLocale()
 		if curr_lang ~= "in" then
 			curr_lang = "en_US"
 		end
 	else
-		curr_lang = cfg['Language']
+		curr_lang = cfg.Language
 	end
 end
+function loadConfig()
+	--[[
+		Loads configuration file.
+	]]
+	cfg = {
+		["enableLogging"]=false,
+		["Language"]="auto",
+		["PlayerCurrentName"]=":Player",
+		["PlayerCustomName"]=":CoolFoe",
+		["removeSuspendAfterRestoredSession"]=true,
+		["VERSION"]="1.9.3"
+	}
+	cfg_file = gg.getFile()..'.conf'
+	local cfg_load = loadfile(cfg_file)
+	if cfg_load ~= nil then
+		cfg_load = cfg_load()
+		cfg = MergeTables(cfg,cfg_load)
+		cfg_load.VERSION = cfg.VERSION
+	else
+		toast("No configuration files detected, Creating new one... 💾️\nHi There! 👋️ Looks like You're new here.",true)
+		gg.saveVariable(cfg,cfg_file)
+	end
+	VAL_PlayerCurrentName = cfg.PlayerCurrentName
+end
+function restoreSuspend()
+	--[[
+		Restore current session from suspend file and remove it afterwards
+	]]
+	susp_file = gg.getFile()..'.suspend'
+	local susp = loadfile(susp_file)
+	if susp ~= nil then
+		toast(string.format("Suspend_Detected"),true)
+		susp = susp()
+		cfg = susp.cfg
+		revert = susp.revert
+		MemoryBuffer = susp.MemoryBuffer
+		if cfg.removeSuspendAfterRestoredSession == true then
+			os.remove(susp_file)
+		end
+	end
+	susp = nil
+end
 
+-- Initialization --
+--bunch of global variables
+revert = {}
+MemoryBuffer = {}
+alert = gg.alert
+toast = gg.toast
+sleep = gg.sleep
+
+VAL_PstlSgKnockback="0.25"
+VAL_CrDfltHlth="125"
+VAL_DmgIntnsty="300"
+VAL_WallResist={"-500","-1.00001","-1"}
+VAL_BigBody={"3","5.9"}
+memOffsets_bigbody={"0.09500002861","0.00000019073"}
 
 -- Load settings
-cfg_file = gg.getFile()..'.conf'
-local cfg_load = loadfile(cfg_file)
-if cfg_load ~= nil then
-	cfg = cfg_load()
-end
-VAL_PlayerCurrentName = cfg['PlayerCurrentName']
-
+loadConfig()
 
 -- Update the currently used language
 update_language()
 
+-- Initialize language
+local lang = {
+	['en_US']={},
+	['in']={}
+}
+lang.en_US.Automatic				= "Automatic"
+lang.en_US.About						= "About"
+lang.en_US.About_Text			  = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes"
+lang.en_US.Back						  = "Back"
+lang.en_US.Credits					= "Credits"
+lang.en_US.Credits_Text		  = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for no reload tutor and script that doesn't even work, even the values that he encrypt.\n+ Joker - for providing No Blast Damage and No Reload GameGuardian Values."
+lang.en_US.Disclaimmer			= "Disclaimmer (please read)"
+lang.en_US.Disclaimmer_Text = "DISCLAIMMER:\n	Please DO NOT misuse the script to abuse other players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script."
+lang.en_US.Exit						  = "Exit"
+lang.en_US.Exit_ThankYouMsg = "	If you experienced a bug, report it on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	If you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	If you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
+lang.en_US.License					= "License"
+lang.en_US.License_Text		  = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
+lang.en_US.Settings				  = "Settings"
+lang.en_US.Suspend					= "Suspend"
+lang.en_US.Suspend_Detected = "Suspend file detected, continuing from suspend..."
+lang.en_US.Suspend_Text		  = "You quit the program through suspend option. you can continue your current session by relaunching the script, If you restart the game, previous session wont be useful (Launch script and select exit, or remove the suspend file to purge suspended session)"
+lang.en_US.Title_Version		= "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403."
+lang['in'].Automatic				= "Otomatis"
+lang['in'].About						= "Tentang"
+lang['in'].About_Text			  = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang"
+lang['in'].Back						  = "Kembali"
+lang['in'].Credits					= "Kredit"
+lang['in'].Credits_Text		  = "Kredit:\n+ Mangyu - Pembuat skrip original.\n+ mdp43140 - Kontributor.\n+ tehtmi - Pembuat unluac (dan helper dekompilasi).\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire.\n+ Alpha GG Hacker - Values Wall Hack & Car Health GameGuardian \n+ GKTV (Pumpkin Hacker) - Skrip GG Payback2.\n+ Hydra - tidak terimakasih untuk tutorial & skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo\n+ Joker - Value No Blast Damage & No Reload GameGuardian."
+lang['in'].Disclaimmer			= "Disklaimmer (mohon untuk dibaca)"
+lang['in'].Disclaimmer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka."
+lang['in'].Exit						  = "Keluar"
+lang['in'].Exit_ThankYouMsg = "	Jika Anda mengalami bug, laporkan pada halaman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Jika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Jika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki"
+lang['in'].License					= "Lisensi"
+lang['in'].License_Text		  = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA GARANSI; bahkan tanpa garansi tersirat dari\nMERCHANTABILITY atau FITNESS untuk tujuan tertentu.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses"
+lang['in'].Settings				  = "Pengaturan"
+lang['in'].Suspend					= "Suspensi"
+lang['in'].Suspend_Detected = "File suspensi terdeteksi, melanjutkan dari suspensi..."
+lang['in'].Suspend_Text		  = "Anda keluar dari program melalui opsi suspensi. Anda bisa melanjutkan sesi saat ini dengan meluncurkan skrip ini, Jika anda memulai ulang game, sesi sebelumya tidak akan berguna (Luncurkan skrip dan pilih keluar, atau hapus file suspensi untuk membuang sesi suspensi)"
+lang['in'].Title_Version		= "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403."
 
-
-
-
---bunch of global variables
-VERSION = "1.9.2"
-revert = {}
-MemoryBuffer = {}
-sleep = gg.sleep
-
-lang = {}
-lang['en_US'] = {}
-lang['en_US']['Automatic']        = "Automatic"
-lang['en_US']['About']            = "About"
-lang['en_US']['About_Text']       = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes"
-lang['en_US']['Back']             = "Back"
-lang['en_US']['Credits']          = "Credits"
-lang['en_US']['Credits_Text']     = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for no reload tutor and script that doesn't even work, even the values that he encrypt.\n+ Joker - for providing No Blast Damage and No Reload GameGuardian Values."
-lang['en_US']['Disclaimmer']      = "Disclaimmer (please read)"
-lang['en_US']['Disclaimmer_Text'] = "DISCLAIMMER:\n	Please DO NOT misuse the script to abuse other players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script."
-lang['en_US']['Exit']             = "Exit"
-lang['en_US']['Exit_ThankYouMsg'] = "	If you experienced a bug, report it on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	If you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	If you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
-lang['en_US']['License']          = "License"
-lang['en_US']['License_Text']     = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
-lang['en_US']['Settings']         = "Settings"
-lang['en_US']['Title_Version']    = "Payback2 CHEATus v"..VERSION..", by ABJ4403."
-lang['in'] = {}
-lang['in']['Automatic']        = "Otomatis"
-lang['in']['About']            = "Tentang"
-lang['in']['About_Text']       = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang"
-lang['in']['Back']             = "Kembali"
-lang['in']['Credits']          = "Kredit"
-lang['in']['Credits_Text']     = "Kredit:\n+ Mangyu - Pembuat skrip original.\n+ mdp43140 - Kontributor.\n+ tehtmi - Pembuat unluac (dan helper dekompilasi).\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire.\n+ Alpha GG Hacker - Values Wall Hack & Car Health GameGuardian \n+ GKTV (Pumpkin Hacker) - Skrip GG Payback2.\n+ Hydra - tidak terimakasih untuk tutorial & skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo\n+ Joker - Value No Blast Damage & No Reload GameGuardian."
-lang['in']['Disclaimmer']      = "Disklaimmer (mohon untuk dibaca)"
-lang['in']['Disclaimmer_Text'] = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka."
-lang['in']['Exit']             = "Keluar"
-lang['in']['Exit_ThankYouMsg'] = "	Jika Anda mengalami bug, laporkan pada halaman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Jika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Jika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki"
-lang['in']['License']          = "Lisensi"
-lang['in']['License_Text']     = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA GARANSI; bahkan tanpa garansi tersirat dari\nMERCHANTABILITY atau FITNESS untuk tujuan tertentu.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses"
-lang['in']['Settings']         = "Pengaturan"
-lang['in']['Title_Version']    = "Payback2 CHEATus v"..VERSION..", oleh ABJ4403."
-
-string.format2 = string.format
-function CustomLanguage(input, ...)
---Load the language
-	local tmp = lang[curr_lang]
-	local args = {...}
---[[do stuff...
-	if input == "w" then
-		return tmp['w1']..args[1]..tmp['w2']
-	end]]
---Quick translate without any format
+string.format2=string.format
+string.format=function(input,...)
 	if (
 		input == "Automatic" or
 		input == "About" or
@@ -1618,19 +1654,20 @@ function CustomLanguage(input, ...)
 		input == "License" or
 		input == "License_Text" or
 		input == "Settings" or
+		input == "Suspend" or
+		input == "Suspend_Detected" or
+		input == "Suspend_Text" or
 		input == "Title_Version"
-	) then
-		return tmp[input]
-	end
-	string.format2(input,args)
+	) then return lang[curr_lang][input] end
+	return string.format2(input,{...})
 end
-string.format = CustomLanguage
 
---memory cleanup
-collectgarbage("collect")
+-- Restore suspend file if any
+restoreSuspend()
+
 --loop to open the menu if gg menu is visible (aka. pressing floating gg icon)
 while true do
---open home if gg icon is clicked (aka. if its visible, hide the gg menu and show our menu)
+--open home if floating gg icon is clicked (aka. if its visible, hide the gg menu and show our menu)
 	if gg.isVisible() then
 		gg.setVisible(false)
 		HOMEDM = 1
