@@ -905,10 +905,10 @@ function cheat_noreload()
 				gg.setValues({weaponAmmo})
 			--clear and search 0 in range100
 				gg.clearResults()
-				gg.searchNumber("0",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
+				gg.searchNumber("0",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x5A,weaponAmmo.address + 0x68)
 			--Tell user to trigger reload event...
 				gg.toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)')
-			--...While running some checking to detect some reduced number
+			--...While running some checking to detect some reduced number (Reload timing located at xxxxxx84)
 				local bunchOfZeroes = gg.getResults(100)
 				local foundTheValue = 0
 				while foundTheValue == 0 do
@@ -924,16 +924,14 @@ function cheat_noreload()
 			--get the reload timer value
 				t = gg.getResults(1)
 			--and freeze it to 0
-				for i=1, #t do
-					t[i].value = 0
-					t[i].freeze = true
-				end
-			--Set the ammo back to 30000
-				weaponAmmo.value = 30000
-				gg.setValues({weaponAmmo})
-			--then do the final thing it should do... apply the cold breezing power of rel0ad
+				t[1].value = "0"
+				t[1].freeze = true
+			--Apply the cold breezing power of rel0ad
 				gg.setValues(t)
 				gg.addListItems(t)
+			--and Set the ammo back to 30000 (coz why not)
+				weaponAmmo.value = 30000
+				gg.setValues({weaponAmmo})
 				gg.clearResults()
 				gg.toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
 			end
@@ -961,21 +959,20 @@ end
 function cheat_health()
 --this cheat is based on rel0ad cheat
 	gg.setRanges(gg.REGION_OTHER)
-	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the health is located near there)')
+	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the health is located near there)\nAlso, make sure you have maximum health or will fail')
 	if gg.getResultCount() == 0 then
 		gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 	else
+	--why not eh?
 		local weaponAmmo = t[1]
-		gg.clearResults()
-		gg.toast('Dont hurt youself, try to regain health, searching maximum health (800)')
-		gg.searchNumber("800",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0xA0,weaponAmmo.address)
-		t = gg.getResults(1)
-		for i=1, #t do
-			t[i].value = 800
-			t[i].freeze = true
-		end
 		weaponAmmo.value = 30000
 		gg.setValues({weaponAmmo})
+		gg.clearResults()
+	--the core, search the health value (Located at xxxxxx08)
+		gg.searchNumber("800",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x22,weaponAmmo.address - 0x14)
+		t = gg.getResults(1)
+		t[1].value = 800
+		t[1].freeze = true
 		gg.setValues(t)
 		gg.addListItems(t)
 		gg.clearResults()
@@ -986,25 +983,37 @@ end
 function cheat_c4paint()
 --this cheat is based on rel0ad cheat
 	gg.setRanges(gg.REGION_OTHER)
-	gg.toast('Dont put any explosives, if any explode it\nAnd make sure no reload is turned off to place annd detonate C4')
+--Warn user to not having any c4s placed, and detonate them if so.
+	gg.toast('Dont put any explosives. if any, explode it\nAnd make sure no reload is turned off because you will place and detonate C4')
+--ask user any ammo
 	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the c4 placement position is located near there)')
+--glorioss thingizz
 	if gg.getResultCount() == 0 then
 		gg.toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 	else
+	--just for the ezznezz
 		local weaponAmmo = t[1]
+	--clear result to make sure 0 errors
 		gg.clearResults()
-	--Tell user to trigger C4 Placement...
-		gg.toast('Now detonate any C4s you hold (make sure Rel0ad is off to do it), 5 seconds before proceed')
+	--Tell user to Detonate any C4s it currently connected to, and wait 5sec...
+		gg.toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 5 seconds before proceed')
 		sleep(5000)
+	--Tell user to trigger C4 Placement...
 		gg.toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)')
 	--...While running some checking to detect some reduced number
-		gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
+		gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x04,weaponAmmo.address + 0x10)
+		--Experiment2Begin
+		if gg.getResultCount() == 0 then
+			gg.toast("Oh, this is weird 🤔️... We don't find the value we're searching for 🔍️. We will try hard, promise 😃️")
+			gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
+		end
+		--Experiment2End
 		local bunchOfZeroes = gg.getResults(2)
 		local foundTheValue = 0
 		while foundTheValue == 0 do
 		--Search for values less than 0
 		--Fun Fact: C4s is -1 if not placed, but any number above that means its placed, by freezing it to -1, you essentially creating C4 painting :D
-			gg.refineNumber("0",gg.TYPE_WORD,false,gg.SIGN_GREATER_OR_EQUAL)
+			gg.refineNumber("-1",gg.TYPE_WORD,false,gg.SIGN_NOT_EQUAL)
 		--if result is 1, pretend its found, else reset result.
 			if gg.getResultCount() == 2 then
 				foundTheValue = 1
@@ -1480,12 +1489,19 @@ end
 function loopSearch(desiredResultCount,valueType,msg1,msg2)
 	local num1 = gg.prompt({msg1})
 	if num1[1] ~= nil then
-		gg.searchNumber(num1[1],valueType)
+	--Experiment1
+		gg.searchNumber(num1[1],valueType,nil,nil,0xB7B00000,0xB7EFFF84)
+	--Experiment1Begin
+		if gg.getResultCount() == 0 then
+			gg.toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try hard, promise 😃️")
+			gg.searchNumber(num1[1],valueType,nil,nil)
+		end
+	--Experiment1End
 		if gg.getResultCount() ~= 0 then
 			while gg.getResultCount() >= desiredResultCount+1 do
 				gg.alert('3 seconds to change ammo value')
 				sleep(3000)
-				local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()})
+				local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()},{num1[1]})
 				if num1[1] == nil then break end
 				local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
 				if gg.getResultCount() == 0 then break end
@@ -1541,7 +1557,7 @@ update_language()
 
 
 --bunch of global variables
-VERSION = "1.9.0"
+VERSION = "1.9.2"
 revert = {}
 MemoryBuffer = {}
 sleep = gg.sleep
