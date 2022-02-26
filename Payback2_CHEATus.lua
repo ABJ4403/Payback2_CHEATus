@@ -1487,7 +1487,7 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 	local num1 = gg.prompt({msg1})
 	if num1[1] ~= nil then
 	--Experiment1
-		gg.searchNumber(num1[1],valueType,nil,nil,0xB7B00000,0xB7EFFF84)
+		gg.searchNumber(num1[1],valueType,nil,nil,0xB7B0001C,0xB8EFFF2A)
 	--Experiment1Begin
 		if gg.getResultCount() == 0 then
 			toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try hard, promise 😃️",true)
@@ -1503,6 +1503,20 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 				local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
 				if gg.getResultCount() == 0 then break end
 			end
+		--Experiment3Begin
+			if gg.getResultCount() == 0 then
+				toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try again w/o memory restrictions. Buckle up, this will take a time...",true)
+				gg.searchNumber(num1[1],valueType,nil,nil)
+				while gg.getResultCount() >= desiredResultCount+1 do
+					alert('3 seconds to change ammo value')
+					sleep(3000)
+					local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()},{num1[1]})
+					if num1[1] == nil then break end
+					local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
+					if gg.getResultCount() == 0 then break end
+				end
+			end
+		--Experiment3End
 			return gg.getResults(desiredResultCount)
 		end
 	end
@@ -1544,7 +1558,7 @@ function loadConfig()
 		["PlayerCurrentName"]=":Player",
 		["PlayerCustomName"]=":CoolFoe",
 		["removeSuspendAfterRestoredSession"]=true,
-		["VERSION"]="1.9.3"
+		["VERSION"]="1.9.3b"
 	}
 	cfg_file = gg.getFile()..'.conf'
 	local cfg_load = loadfile(cfg_file)
