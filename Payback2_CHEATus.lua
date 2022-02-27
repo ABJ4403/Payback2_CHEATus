@@ -415,10 +415,10 @@ function cheat_wallhack()
  -- Set ranges
  		if CH == 1 then tmp0[1]="default"			tmp0[2]="1140457472D;500F::" tmp0[3]=VAL_WallResist[1] tmp0[4]="ON" end
  		if CH == 2 then tmp0[1]="alternative" tmp0[2]="0.001"							 tmp0[3]=VAL_WallResist[2] tmp0[4]="ON" end
- 		if CH == 3 then tmp0[1]="hydra"			  tmp0[2]="1078618499;1094412911;1;1034868570;1050796852::493" tmp0[3]=VAL_WallResist[3] tmp0[4]="ON" end
+ 		if CH == 3 then tmp0[1]="hydra"				tmp0[2]="1078618499;1094412911;1;1034868570;1050796852::493" tmp0[3]=VAL_WallResist[3] tmp0[4]="ON" end
  		if CH == 4 then tmp0[1]="default"			tmp0[2]=VAL_WallResist[1]		 tmp0[3]="1140457472"			 tmp0[4]="OFF" end
  		if CH == 5 then tmp0[1]="alternative" tmp0[2]=VAL_WallResist[2]		 tmp0[3]="0.001"					 tmp0[4]="OFF" end
- 		if CH == 6 then tmp0[1]="hydra"			  tmp0[2]="1078618499;1094412911;"..VAL_WallResist[3]..";1034868570;1050796852::493" tmp0[3]="1" tmp0[4]="OFF" end
+ 		if CH == 6 then tmp0[1]="hydra"				tmp0[2]="1078618499;1094412911;"..VAL_WallResist[3]..";1034868570;1050796852::493" tmp0[3]="1" tmp0[4]="OFF" end
 		---
 		if CH == 6 then
 			gg.setValues(revert.wallhack)
@@ -676,7 +676,8 @@ function cheat_strongveichle()
 			gg.setRanges(gg.REGION_CODE_APP)
 			if MemoryBuffer.CarHealth == nil then
 				toast('No buffer found, creating new buffer',true)
-				gg.searchNumber(VAL_CrDfltHlth, gg.TYPE_DWORD)
+				gg.searchNumber(VAL_CrDfltHlth.."D;4D;1F::21")
+				gg.refineNumber(VAL_CrDfltHlth,gg.TYPE_DWORD)
 				MemoryBuffer.CarHealth,revert.CarHealth = gg.getResults(50),gg.getResults(50)
 			else
 				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
@@ -743,8 +744,9 @@ function cheat_noblastdamage()
 			gg.setRanges(gg.REGION_CODE_APP)
 			if MemoryBuffer.NoBlastDamage == nil then
 				toast('No buffer found, creating new buffer',true)
-				gg.searchNumber(VAL_DmgIntnsty, gg.TYPE_FLOAT)
-				MemoryBuffer.NoBlastDamage,revert.NoBlastDamage = gg.getResults(10),gg.getResults(10)
+				gg.searchNumber("-7264W;10W;-5632W;"..VAL_DmgIntnsty.."F;17302W::9")
+				gg.refineNumber(VAL_DmgIntnsty,gg.TYPE_FLOAT)
+				MemoryBuffer.NoBlastDamage,revert.NoBlastDamage = gg.getResults(9),gg.getResults(9)
 			else
 				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
 				gg.loadResults(MemoryBuffer.NoBlastDamage)
@@ -852,8 +854,8 @@ function cheat_noreload()
 		:27
 	]]
 	local CH,t,num1 = gg.choice({
-		"1. Default",
-		"2. Fallback (freeze rocket value to 1 to imitate Rel0ad)",
+		"1. Default (Real Rel0ad)",
+		"2. Fallback (imitate Rel0ad)",
 		string.format("Back")
 	}, nil, "Rel0ad\nPS: dont get out of match, drive car, respawn. or the cheat will fail\nDISCLAIMMER: DO NOT USE THIS TO ABUSE OTHER PLAYER !!!!")
 	if CH ~= nil then
@@ -870,6 +872,7 @@ function cheat_noreload()
 					- and in order to do just that, we need any weapon ammo with type WORD as a starting point
 				- then it will continously scan if one of the values go negative
 				- if the value is found, freeze it to 0 (almost same as Hydra and Joker, but you just set it to 0 instead of 500 or 13, because its around -200~0)
+				- The value that were about to modify is a reload timer/reload animation keyframe. By freezing it to 0 instead of playing the animation, it skipped it to ready state. and thats the real Rel0ad.
 				]]
 			--modify the ammo to 30000
 				local weaponAmmo = t[1]
@@ -1205,15 +1208,15 @@ function cheat_walkwonkyness()
 			toast("Walk Wonkyness Default",true)
 		end
 		if CH == 2 then
-			gg.searchNumber("0.004", gg.TYPE_FLOAT)
-			revert.walkwonkyness = gg.getResults(10)
-			gg.editAll("1", gg.TYPE_FLOAT)
+			gg.searchNumber("0.004;0.00999999978::5", gg.TYPE_FLOAT)
+			revert.walkwonkyness = gg.getResults(1)
+			gg.editAll("1.004", gg.TYPE_FLOAT)
 			toast("Walk Wonkyness ON",true)
 		end
 		if CH == 3 then
-			gg.searchNumber("1", gg.TYPE_FLOAT)
-			revert.walkwonkyness = gg.getResults(10)
-			gg.editAll("0.004", gg.TYPE_FLOAT)
+			gg.searchNumber("1.004;0.00999999978::5", gg.TYPE_FLOAT)
+			revert.walkwonkyness = gg.getResults(1)
+			gg.editAll("0", gg.TYPE_FLOAT)
 			toast("Walk Wonkyness OFF",true)
 		end
 		gg.clearResults()
@@ -1233,8 +1236,9 @@ function cheat_coloredtree()
 		if CH == 2 then tmp0[1] = "-999" tmp0[2] = "0.04" tmp0[3] = "OFF" end
 	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
-		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
-		local t = gg.getResults(100)
+		gg.searchNumber("4.06176449e-39;0.06;"..tmp0[1]..";-0.04;-0.02::17", gg.TYPE_FLOAT)
+		gg.refineNumber(tmp0[1])
+		local t = gg.getResults(1)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 		else
@@ -1254,11 +1258,12 @@ function cheat_bigflamethroweritem()
 	}, nil, "Big flamethrower (Item)\nInfo: this will not make the flame burst bigger")
 	if CH ~= nil then
 		if CH == 3 then MENU() end
-		if CH == 1 then tmp0[1] = "0.9" tmp0[2] = "999" tmp0[3] = "ON" end
-		if CH == 2 then tmp0[1] = "999" tmp0[2] = "0.9" tmp0[3] = "OFF" end
+		if CH == 1 then tmp0[1] = "0.9" tmp0[2] = "5.1403" tmp0[3] = "ON" end
+		if CH == 2 then tmp0[1] = "5.1403" tmp0[2] = "0.9" tmp0[3] = "OFF" end
 	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
-		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
+		gg.searchNumber("0.4;0.2;"..tmp0[1]..";24000::13",gg.TYPE_FLOAT)
+		gg.refineNumber(tmp0[1])
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
@@ -1273,8 +1278,8 @@ end
 
 function cheat_shadowfx()
 	local tmp0,CH = {}, gg.choice({
-		"ON",
 		"OFF",
+		"ON",
 		string.format("Back")
 	}, nil, "Shadow effects\nInfo: this wont affect your game performance at all (not making it lag/fast)\ndont use this for performance purpose :)")
 	if CH ~= nil then
@@ -1283,7 +1288,8 @@ function cheat_shadowfx()
 		if CH == 2 then tmp0[1] = "-1.0012" tmp0[2] = "0.0001" tmp0[3] = "Enabled" end
 	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
-		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
+		gg.searchNumber(tmp0[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17", gg.TYPE_FLOAT)
+		gg.refineNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
@@ -1301,7 +1307,7 @@ function cheat_clrdpplesp()
 		"ON",
 		"OFF",
 		string.format("Back")
-	}, nil, "Colored people ESP (idk wut esp mean here)")
+	}, nil, "Colored people ESP (idk wut esp mean here)\nPS: Not work on latest version")
 	if CH ~= nil then
 		if CH == 3 then MENU() end
 		if CH == 1 then tmp0[1] = "0.08" tmp0[2] = "436" tmp0[3] = "ON" end
@@ -1322,7 +1328,7 @@ function cheat_clrdpplesp()
 end
 
 function cheat_deleteingameplaytext()
-	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_CODE_APP)
+	gg.setRanges(gg.REGION_C_ALLOC)
 	gg.searchNumber(":Toasted", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
 	gg.searchNumber(":Wasted", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
 	gg.searchNumber(":Nuked", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
@@ -1341,7 +1347,7 @@ function cheat_deleteingameplaytext()
 	gg.searchNumber(":CAPTURE", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
 	gg.searchNumber(":KILL", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
 	gg.clearResults()
-	toast("In-gameplay-text cleared, to restore, you have to restart the game",true)
+	toast("In-gameplay-text cleared, to restore, you have to restart the game\nPS: This might not work, idk why though..",true)
 end
 
 
@@ -1558,7 +1564,7 @@ function loadConfig()
 		["PlayerCurrentName"]=":Player",
 		["PlayerCustomName"]=":CoolFoe",
 		["removeSuspendAfterRestoredSession"]=true,
-		["VERSION"]="1.9.3b"
+		["VERSION"]="1.9.4"
 	}
 	cfg_file = gg.getFile()..'.conf'
 	local cfg_load = loadfile(cfg_file)
@@ -1595,6 +1601,7 @@ end
 --bunch of global variables
 revert = {}
 MemoryBuffer = {}
+--generic functions
 alert = gg.alert
 toast = gg.toast
 sleep = gg.sleep
@@ -1614,43 +1621,45 @@ update_language()
 
 -- Initialize language
 local lang = {
-	['en_US']={},
-	['in']={}
+en_US={
+Automatic				 = "Automatic",
+About						 = "About",
+About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes",
+Back						 = "Back",
+Credits					 = "Credits",
+Credits_Text		 = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for no reload tutor and script that doesn't even work, even the values that he encrypt.\n+ Joker - for providing No Blast Damage and No Reload GameGuardian Values.",
+Disclaimmer			 = "Disclaimmer (please read)",
+Disclaimmer_Text = "DISCLAIMMER:\n	Please DO NOT misuse the script to abuse other players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
+Exit						 = "Exit",
+Exit_ThankYouMsg = "	If you experienced a bug, report it on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	If you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	If you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki",
+License					 = "License",
+License_Text		 = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses",
+Settings				 = "Settings",
+Suspend					 = "Suspend",
+Suspend_Detected = "Suspend file detected, continuing from suspend...",
+Suspend_Text		 = "You quit the program through suspend option. you can continue your current session by relaunching the script, If you restart the game, previous session wont be useful (Launch script and select exit, or remove the suspend file to purge suspended session)",
+Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403."
+},
+['in']={
+Automatic				 = "Otomatis",
+About						 = "Tentang",
+About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang",
+Back						 = "Kembali",
+Credits					 = "Kredit",
+Credits_Text		 = "Kredit:\n+ Mangyu - Pembuat skrip original.\n+ mdp43140 - Kontributor.\n+ tehtmi - Pembuat unluac (dan helper dekompilasi).\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire.\n+ Alpha GG Hacker - Values Wall Hack & Car Health GameGuardian \n+ GKTV (Pumpkin Hacker) - Skrip GG Payback2.\n+ Hydra - tidak terimakasih untuk tutorial & skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo\n+ Joker - Value No Blast Damage & No Reload GameGuardian.",
+Disclaimmer			 = "Disklaimmer (mohon untuk dibaca)",
+Disclaimmer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
+Exit						 = "Keluar",
+Exit_ThankYouMsg = "	Jika Anda mengalami bug, laporkan pada halaman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Jika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Jika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki",
+License					 = "Lisensi",
+License_Text		 = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA GARANSI; bahkan tanpa garansi tersirat dari\nMERCHANTABILITY atau FITNESS untuk tujuan tertentu.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses",
+Settings				 = "Pengaturan",
+Suspend					 = "Suspensi",
+Suspend_Detected = "File suspensi terdeteksi, melanjutkan dari suspensi...",
+Suspend_Text		 = "Anda keluar dari program melalui opsi suspensi. Anda bisa melanjutkan sesi saat ini dengan meluncurkan skrip ini, Jika anda memulai ulang game, sesi sebelumya tidak akan berguna (Luncurkan skrip dan pilih keluar, atau hapus file suspensi untuk membuang sesi suspensi)",
+Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403."
 }
-lang.en_US.Automatic				= "Automatic"
-lang.en_US.About						= "About"
-lang.en_US.About_Text			  = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes"
-lang.en_US.Back						  = "Back"
-lang.en_US.Credits					= "Credits"
-lang.en_US.Credits_Text		  = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Hydra - no thanks for no reload tutor and script that doesn't even work, even the values that he encrypt.\n+ Joker - for providing No Blast Damage and No Reload GameGuardian Values."
-lang.en_US.Disclaimmer			= "Disclaimmer (please read)"
-lang.en_US.Disclaimmer_Text = "DISCLAIMMER:\n	Please DO NOT misuse the script to abuse other players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script."
-lang.en_US.Exit						  = "Exit"
-lang.en_US.Exit_ThankYouMsg = "	If you experienced a bug, report it on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	If you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	If you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki"
-lang.en_US.License					= "License"
-lang.en_US.License_Text		  = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\nCopyright (C) 2021-2022 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses"
-lang.en_US.Settings				  = "Settings"
-lang.en_US.Suspend					= "Suspend"
-lang.en_US.Suspend_Detected = "Suspend file detected, continuing from suspend..."
-lang.en_US.Suspend_Text		  = "You quit the program through suspend option. you can continue your current session by relaunching the script, If you restart the game, previous session wont be useful (Launch script and select exit, or remove the suspend file to purge suspended session)"
-lang.en_US.Title_Version		= "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403."
-lang['in'].Automatic				= "Otomatis"
-lang['in'].About						= "Tentang"
-lang['in'].About_Text			  = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang"
-lang['in'].Back						  = "Kembali"
-lang['in'].Credits					= "Kredit"
-lang['in'].Credits_Text		  = "Kredit:\n+ Mangyu - Pembuat skrip original.\n+ mdp43140 - Kontributor.\n+ tehtmi - Pembuat unluac (dan helper dekompilasi).\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire.\n+ Alpha GG Hacker - Values Wall Hack & Car Health GameGuardian \n+ GKTV (Pumpkin Hacker) - Skrip GG Payback2.\n+ Hydra - tidak terimakasih untuk tutorial & skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo\n+ Joker - Value No Blast Damage & No Reload GameGuardian."
-lang['in'].Disclaimmer			= "Disklaimmer (mohon untuk dibaca)"
-lang['in'].Disclaimmer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka."
-lang['in'].Exit						  = "Keluar"
-lang['in'].Exit_ThankYouMsg = "	Jika Anda mengalami bug, laporkan pada halaman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Jika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Jika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki"
-lang['in'].License					= "Lisensi"
-lang['in'].License_Text		  = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA GARANSI; bahkan tanpa garansi tersirat dari\nMERCHANTABILITY atau FITNESS untuk tujuan tertentu.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses"
-lang['in'].Settings				  = "Pengaturan"
-lang['in'].Suspend					= "Suspensi"
-lang['in'].Suspend_Detected = "File suspensi terdeteksi, melanjutkan dari suspensi..."
-lang['in'].Suspend_Text		  = "Anda keluar dari program melalui opsi suspensi. Anda bisa melanjutkan sesi saat ini dengan meluncurkan skrip ini, Jika anda memulai ulang game, sesi sebelumya tidak akan berguna (Luncurkan skrip dan pilih keluar, atau hapus file suspensi untuk membuang sesi suspensi)"
-lang['in'].Title_Version		= "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403."
+}
 
 string.format2=string.format
 string.format=function(input,...)
