@@ -141,13 +141,12 @@ function MENU_settings()
 		if cfg.Language == "en_US" then tmp = 1 end
 		if cfg.Language == "in" then tmp = 2 end
 		if cfg.Language == "auto" then tmp = 3 end
-		local CH = gg.choice({
+		local CH,tmp = gg.choice({
 			"🇺🇸️ English",
 			"🇮🇩️ Indonesia",
-			"Auto-detect (default, using GameGuardian API, will use English as fallback)",
+			"Auto-detect (uses GameGuardian API, will use English as fallback if your language didn't exist)",
 			"Back",
-		}, tmp, string.format("Title_Version"))
-		tmp = nil
+		}, tmp, string.format("Title_Version")),nil
 		if CH ~= nil then
 			if CH == 4 then MENU_settings() end
 			if CH == 1 then cfg.Language = "en_US" end
@@ -159,10 +158,10 @@ function MENU_settings()
 		end
 	end
 	---
-	if CH == 5 then gg.clearResults() end
-	if CH == 6 then gg.clearList() end	
-	if CH == 7 then gg.clearResults() gg.clearList() end
-	if CH == 8 then os.remove(susp_file) end
+	if CH == 5 then gg.clearResults() MENU_settings() end
+	if CH == 6 then gg.clearList() MENU_settings() end
+	if CH == 7 then gg.clearResults() gg.clearList() MENU_settings() end
+	if CH == 8 then os.remove(susp_file) MENU_settings() end
 	---
 	if CH == 10 then
 		gg.saveVariable(cfg,cfg_file)
@@ -170,9 +169,14 @@ function MENU_settings()
 		MENU_settings()
 	end
 	if CH == 11 then
-		cfg = {}
-		cfg.PlayerCurrentName=":Player" -- you can change this to your name
-		cfg.PlayerCustomName=":CoolFoe" -- you can change this at your likings
+		cfg = {
+			enableLogging=false,
+			Language="auto",
+			PlayerCurrentName=":Player",
+			PlayerCustomName=":CoolFoe",
+			removeSuspendAfterRestoredSession=true,
+			VERSION="1.9.4"
+		}
 		gg.saveVariable(cfg,cfg_file)
 		toast("your current saved settings was reset",true)
 		MENU_settings()
@@ -400,10 +404,10 @@ function cheat_wallhack()
 	local tmp0,CH = {},gg.choice({
 		"ON (Default, physics works best. need to reapplied every match, takes some time)",
 		"ON (Alternative, wonky physics. but fast to enable, survives multiple match, and can wallhack a veichle & peoples too not just a wall)",
-		"ON (Hydra method, not work for latest version, unknown (dis)abilities)",
+		"ON (Hydra, not work for latest version, unknown (dis)abilities)",
 		"OFF (Default, Not recommended if buffer is empty)",
 		"OFF (Alternative)",
-		"OFF (Hydra method)",
+		"OFF (Hydra)",
 		"---",
 		"Restore previous value",
 		"Use custom value",
@@ -432,15 +436,7 @@ function cheat_wallhack()
 				'Put your custom value for Default method (Game default:1140457472,Cheatus default:-500)',
 				'Put your custom value for Alternative method (Game default:0.001,Cheatus default:-1.00001)',
 				'Put your custom value for Hydra method (Game default:1,known cheatus default:-1)'
-			},{
-				[1] = VAL_WallResist[1],
-				[2] = VAL_WallResist[2],
-				[3] = VAL_WallResist[3]
-			},{
-				[1] = 'number',
-				[2] = 'number',
-				[3] = 'number'
-			})
+			},{VAL_WallResist[1],VAL_WallResist[2],VAL_WallResist[3]},{'number','number','number'})
 			if CH ~= nil then
 				if CH[1] ~= "" then VAL_WallResist[1] = CH[1] end
 				if CH[2] ~= "" then VAL_WallResist[2] = CH[2] end
@@ -866,47 +862,56 @@ function cheat_noreload()
 			if gg.getResultCount() == 0 then
 				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
 			else
-			--[[
-				So how this works?
-				- it will search 0 in range100.
-					- and in order to do just that, we need any weapon ammo with type WORD as a starting point
-				- then it will continously scan if one of the values go negative
-				- if the value is found, freeze it to 0 (almost same as Hydra and Joker, but you just set it to 0 instead of 500 or 13, because its around -200~0)
-				- The value that were about to modify is a reload timer/reload animation keyframe. By freezing it to 0 instead of playing the animation, it skipped it to ready state. and thats the real Rel0ad.
-				]]
-			--modify the ammo to 30000
 				local weaponAmmo = t[1]
 				weaponAmmo.value = 30000
 				gg.setValues({weaponAmmo})
-			--clear and search 0 in range100
 				gg.clearResults()
-				gg.searchNumber("0",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x5A,weaponAmmo.address + 0x68)
-			--Tell user to trigger reload event...
-				toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)',true)
-			--...While running some checking to detect some reduced number (Reload timing located at xxxxxx84)
-				local bunchOfZeroes = gg.getResults(100)
-				local foundTheValue = 0
-				while foundTheValue == 0 do
-				--Search for values less than 0
-					gg.refineNumber("-200~-1")
-				--if result is 1, pretend its found, else reset result.
-					if gg.getResultCount() == 1 then
-						foundTheValue = 1
-					else
-						gg.loadResults(bunchOfZeroes)
+				if cfg.cheatSettings.noreload.useSearch20 == true then
+				--[[
+					So how this (new method) works?
+					- intead of search 0 in range100, it will search for value 20 at position 0xXXXXXX00, this is an anchor point, it will not change the end 00 position at all.
+					- instead of relying on user triggering reload event, the logic below already know the position of specific reload timer thingy.
+						- just apply it. Done!
+					]]
+					gg.searchNumber("20;800",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
+					local anchorAddress = gg.getResults(1)
+					anchorAddress = anchorAddress[1].address
+					t = {
+					{
+					address=anchorAddress+0x84,
+					flags=gg.TYPE_WORD,
+					freeze=true,
+					value="0"
+					}
+					}
+				else
+				--[[
+					So how this (old method) works?
+					- it will search 0 in range100.
+						- and in order to do just that, we need any weapon ammo with type WORD as a starting point
+					- then it will continously scan if one of the values go negative
+					- if the value is found, freeze it to 0 (almost same as Hydra and Joker, but you just set it to 0 instead of 500 or 13, because its around -200~0)
+					- The value that were about to modify is a reload timer/reload animation keyframe. By freezing it to 0 instead of playing the animation, it skipped it to ready state. and thats the real Rel0ad.
+					]]
+					gg.searchNumber("0",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x5A,weaponAmmo.address + 0x68)
+					toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)',true)
+					local bunchOfZeroes = gg.getResults(100)
+					local foundTheValue = 0
+					while foundTheValue == 0 do
+						gg.refineNumber("-200~-1")
+						if gg.getResultCount() == 1 then
+							foundTheValue = 1
+						else
+							gg.loadResults(bunchOfZeroes)
+						end
+						sleep(100)
 					end
-				--sleep for a very short time to prevent lag
-					sleep(100)
+					t = gg.getResults(1)
+					t[1].value = "0"
+					t[1].freeze = true
 				end
-			--get the reload timer value
-				t = gg.getResults(1)
-			--and freeze it to 0
-				t[1].value = "0"
-				t[1].freeze = true
-			--Apply the cold breezing power of rel0ad
 				gg.setValues(t)
-				gg.addListItems(t)
-			--and Set the ammo back to 30000 (coz why not)
+				gg.addListItems(t)				
 				weaponAmmo.value = 30000
 				gg.setValues({weaponAmmo})
 				gg.clearResults()
@@ -940,7 +945,15 @@ function cheat_health()
 		t = alert('Can\'t find the specific set of number, but no problem! we do have fallback. do you want to do fallback method?',string.format2("__yes__"),string.format2("__no__"))
 		if t == 1 then
 			toast('reclaim your health first. wait 5 seconds before proceed',true)
-			sleep(5000)
+			sleep(1000)
+			toast('reclaim your health first. wait 4 seconds before proceed',true)
+			sleep(1000)
+			toast('reclaim your health first. wait 3 seconds before proceed',true)
+			sleep(1000)
+			toast('reclaim your health first. wait 2 seconds before proceed',true)
+			sleep(1000)
+			toast('reclaim your health first. wait 1 seconds before proceed',true)
+			sleep(1000)
 			gg.clearResults()
 			gg.searchNumber("800",gg.TYPE_WORD)
 			toast('Now hurt yourself using laser, or enemy autoturret, or getting shot by enemy or AI',true)
@@ -994,38 +1007,68 @@ function cheat_c4paint()
 		local weaponAmmo = t[1]
 	--clear result to make sure 0 errors
 		gg.clearResults()
-	--Tell user to Detonate any C4s it currently connected to, and wait 5sec...
-		toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 5 seconds before proceed',true)
-		sleep(5000)
-	--Tell user to trigger C4 Placement...
-		toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)',true)
-	--...While running some checking to detect some reduced number
-		gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x04,weaponAmmo.address + 0x10)
-		--Experiment2Begin
-		if gg.getResultCount() == 0 then
-			toast("Oh, this is weird 🤔️... We don't find the value we're searching for 🔍️. We will try hard, promise 😃️",true)
-			gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
-		end
-		--Experiment2End
-		local bunchOfZeroes = gg.getResults(2)
-		local foundTheValue = 0
-		while foundTheValue == 0 do
-		--Search for values less than 0
-		--Fun Fact: C4s is -1 if not placed, but any number above that means its placed, by freezing it to -1, you essentially creating C4 painting :D
-			gg.refineNumber("-1",gg.TYPE_WORD,false,gg.SIGN_NOT_EQUAL)
-		--if result is 1, pretend its found, else reset result.
-			if gg.getResultCount() == 2 then
-				foundTheValue = 1
-			else
-				gg.loadResults(bunchOfZeroes)
+	--optional stuff
+		if cfg.cheatSettings.c4paint.useSearch20 == true then
+		--search for anchor
+			gg.searchNumber("20;800",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
+			local anchorAddress = gg.getResults(1)
+			anchorAddress = anchorAddress[1].address
+			t = {
+				{
+					address=anchorAddress+0x2C,
+					flags=gg.TYPE_WORD,
+					freeze=true,
+					value="-1"
+				},
+				{
+					address=anchorAddress+0x2E,
+					flags=gg.TYPE_WORD,
+					freeze=true,
+					value="-1"
+				}
+			}
+		else
+		--Tell user to Detonate any C4s it currently connected to, and wait 5sec...
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 5 seconds before proceed',true)
+			sleep(1000)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 4 seconds before proceed',true)
+			sleep(1000)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 3 seconds before proceed',true)
+			sleep(1000)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 2 seconds before proceed',true)
+			sleep(1000)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 1 seconds before proceed',true)
+			sleep(1000)
+		--Tell user to trigger C4 Placement...
+			toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)',true)
+		--...While running some checking to detect some reduced number
+			gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x04,weaponAmmo.address + 0x10)
+			--Experiment2Begin
+			if gg.getResultCount() == 0 then
+				toast("Oh, this is weird 🤔️... We don't find the value we're searching for 🔍️. We will try hard, promise 😃️",true)
+				gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
 			end
-			--sleep for a very short time to prevent lag
-				sleep(100)
-		end
-		t = gg.getResults(2)
-		for i=1, #t do
-			t[i].value = -1
-			t[i].freeze = true
+			--Experiment2End
+			local bunchOfZeroes = gg.getResults(2)
+			local foundTheValue = 0
+			while foundTheValue == 0 do
+			--Search for values less than 0
+			--Fun Fact: C4s is -1 if not placed, but any number above that means its placed, by freezing it to -1, you essentially creating C4 painting :D
+				gg.refineNumber("-1",gg.TYPE_WORD,false,gg.SIGN_NOT_EQUAL)
+			--if result is 1, pretend its found, else reset result.
+				if gg.getResultCount() == 2 then
+					foundTheValue = 1
+				else
+					gg.loadResults(bunchOfZeroes)
+				end
+				--sleep for a very short time to prevent lag
+					sleep(100)
+			end
+			t = gg.getResults(2)
+			for i=1, #t do
+				t[i].value = -1
+				t[i].freeze = true
+			end
 		end
 		weaponAmmo.value = 30000
 		gg.setValues({weaponAmmo})
@@ -1203,7 +1246,7 @@ function cheat_walkwonkyness()
 		gg.setRanges(gg.REGION_CODE_APP)
 		if CH == 1 then
 			gg.searchNumber("0~1", gg.TYPE_FLOAT)
-			revert.walkwonkyness = gg.getResults(10)
+			revert.walkwonkyness = gg.getResults(1)
 			gg.editAll("0.004", gg.TYPE_FLOAT)
 			toast("Walk Wonkyness Default",true)
 		end
@@ -1356,7 +1399,7 @@ function cheat2_givegrenade()
 	local stp = gg.prompt({'Put grenade current ammo','Put new grenade ammo'})
 	toast('Don\'t change the ammo just yet',true)
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
+	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2],true)
 	sleep(3000)
 	toast('Timeout, searching for '..stp[2],true)
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
@@ -1379,8 +1422,8 @@ function cheat2_givebomb()
 	local stp = gg.prompt({'Put Sticky bomb current ammo','Put new Sticky bomb ammo'})
 	toast('Don\'t change the ammo just yet',true)
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-	sleep(30000)
+	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2],true)
+	sleep(3000)
 	toast('Timeout, searching for '..stp[2],true)
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
@@ -1402,8 +1445,8 @@ function cheat2_givelaser()
 	local stp = gg.prompt({'Put laser current ammo','Put laser new ammo'})
 	toast('Don\'t change the ammo just yet',true)
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-	sleep(30000)
+	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2],true)
+	sleep(3000)
 	toast('Timeout, searching for '..stp[2],true)
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
@@ -1426,8 +1469,8 @@ function cheat2_win()
 	local stp = gg.prompt({'Enter ammo (the original ICE Menu dev told that all ammo can work, this might wrong)','Enter new ammo value'})
 	toast('Don\'t change the ammo just yet',true)
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	alert('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
-	sleep(30000)
+	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2],true)
+	sleep(3000)
 	toast('Timeout, searching for '..stp[2],true)
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
@@ -1475,25 +1518,19 @@ end
 function suspend_program()
 	print(string.format("Suspend_Text"))
 	gg.saveVariable({
-		["revert"]=revert,
-		["MemoryBuffer"]=MemoryBuffer,
-		["cfg"]=cfg
+		revert=revert,
+		MemoryBuffer=MemoryBuffer,
+		cfg=cfg
 	},susp_file)
 	os.exit()
 end
 
 -- Helper functions
 function loopSearch(desiredResultCount,valueType,msg1,msg2)
-	--[[
-		loops search just like how gg does
-		gives user popup to search, sleep 3 seconds, loop like that until found the desired result count
-		useful for searching ammo
-		tap background/press cancel, dont press enter/ok, to cancel.
-	]]
 	local num1 = gg.prompt({msg1})
 	if num1[1] ~= nil then
-	--Experiment1
-		gg.searchNumber(num1[1],valueType,nil,nil,0xB7B0001C,0xB8EFFF2A)
+	--Experiment1: search within restricted memory address, which will give more performance
+		gg.searchNumber(num1[1],valueType,nil,nil,0xB6B0001C,0xB8FFFF2A)
 	--Experiment1Begin
 		if gg.getResultCount() == 0 then
 			toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try hard, promise 😃️",true)
@@ -1502,34 +1539,38 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 	--Experiment1End
 		if gg.getResultCount() ~= 0 then
 			while gg.getResultCount() >= desiredResultCount+1 do
-				alert('3 seconds to change ammo value')
-				sleep(3000)
-				local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()},{num1[1]})
-				if num1[1] == nil then break end
-				local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
-				if gg.getResultCount() == 0 then break end
-			end
-		--Experiment3Begin
-			if gg.getResultCount() == 0 then
-				toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try again w/o memory restrictions. Buckle up, this will take a time...",true)
-				gg.searchNumber(num1[1],valueType,nil,nil)
-				while gg.getResultCount() >= desiredResultCount+1 do
-					alert('3 seconds to change ammo value')
-					sleep(3000)
+				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease == true and tonumber(num1[1]) >= 20) then
+				--new method: ask user to reduce ammo value by -1
+					toast('3 seconds to reduce ammo value',true)
+					sleep(1000)
+					toast('2 seconds to reduce ammo value',true)
+					sleep(1000)
+					toast('1 seconds to reduce ammo value',true)
+					sleep(1000)
+					toast('Timeout, searching...',true)
+					gg.searchFuzzy('0',gg.SIGN_FUZZY_LESS)
+				else
+				--old method:ask user their current ammo
+				--because mostly the ammo will go down, we should use fuzzy and dont ask user about ammo anymore
+					toast('3 seconds to change ammo value',true)
+					sleep(1000)
+					toast('2 seconds to change ammo value',true)
+					sleep(1000)
+					toast('1 seconds to change ammo value',true)
+					sleep(1000)
 					local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()},{num1[1]})
 					if num1[1] == nil then break end
-					local t = gg.refineNumber(num1[1], gg.TYPE_WORD)			
-					if gg.getResultCount() == 0 then break end
+					local t = gg.refineNumber(num1[1], gg.TYPE_WORD)
 				end
+				if gg.getResultCount() == 0 then break end
 			end
-		--Experiment3End
 			return gg.getResults(desiredResultCount)
 		end
 	end
 end
 function MergeTables(...)
 	--[[
-		merge 2 tables, just like Object.assign
+		merge 2 tables, just like Object.assign on JS
 		first table will be replaced by new table...
 	]]
 	local r = {}
@@ -1559,12 +1600,24 @@ function loadConfig()
 		Loads configuration file.
 	]]
 	cfg = {
-		["enableLogging"]=false,
-		["Language"]="auto",
-		["PlayerCurrentName"]=":Player",
-		["PlayerCustomName"]=":CoolFoe",
-		["removeSuspendAfterRestoredSession"]=true,
-		["VERSION"]="1.9.4"
+		cheatSettings={
+			noreload={
+				displayFallback=false,
+				useSearch20=false
+			},
+			c4paint={
+				useSearch20=false
+			},
+			loopSearch={
+				useFuzzyDecrease=false
+			}
+		},
+		enableLogging=false,
+		Language="auto",
+		PlayerCurrentName=":Player",
+		PlayerCustomName=":CoolFoe",
+		removeSuspendAfterRestoredSession=true,
+		VERSION="1.9.5"
 	}
 	cfg_file = gg.getFile()..'.conf'
 	local cfg_load = loadfile(cfg_file)
