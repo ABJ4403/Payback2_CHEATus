@@ -1,5 +1,5 @@
 function MENU()
---Let the user choose stuff
+--Let the user choose stuff                      theres blank space here to prevent #unluck                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 	local CH = gg.choice({
 		"1. Weapon ammo",
 		"2. Rel0ad",
@@ -370,13 +370,14 @@ function cheat_pistolknockback()
 			cheat_pistolknockback()
 		end		
 		if PISTOL_KNOCKBACK_VALUE ~= nil then
-			gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS)
+		-- | gg.REGION_ANONYMOUS
+			gg.setRanges(gg.REGION_C_ALLOC)
 			if MemoryBuffer.PistolKnockback == nil then
 				toast('No buffer found, creating new buffer',true)
 		 -- Find specific value
-				gg.searchNumber(VAL_PstlSgKnockback.."F;1067869798D;1067869798D;1065353216D;1080326881D;1065353216D::37", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL)
+				gg.searchNumber(VAL_PstlSgKnockback.."F;1067869798D::13", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL)
 		 -- Get float-type-only result, and make a backup.
-				MemoryBuffer.PistolKnockback,revert.PistolKnockback = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_FLOAT),gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_FLOAT)
+				MemoryBuffer.PistolKnockback,revert.PistolKnockback = gg.getResults(1, nil, nil, nil, nil, nil, gg.TYPE_FLOAT),gg.getResults(1, nil, nil, nil, nil, nil, gg.TYPE_FLOAT)
 			else
 				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
 				gg.loadResults(MemoryBuffer.PistolKnockback)
@@ -1245,7 +1246,7 @@ function cheat_walkwonkyness()
 		if CH == 5 then MENU() end
 		gg.setRanges(gg.REGION_CODE_APP)
 		if CH == 1 then
-			gg.searchNumber("0~1", gg.TYPE_FLOAT)
+			gg.searchNumber("0~1;0.00999999978::5", gg.TYPE_FLOAT)
 			revert.walkwonkyness = gg.getResults(1)
 			gg.editAll("0.004", gg.TYPE_FLOAT)
 			toast("Walk Wonkyness Default",true)
