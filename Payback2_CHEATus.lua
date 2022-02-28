@@ -11,8 +11,8 @@ function MENU()
 		"8. C4 Painting",
 		"---",
 		"Other cheats:",
-		"8. Client-side cosmetics",
-		"9. Incompatible cheats",
+		"9. Client-side cosmetics",
+		"10. Incompatible cheats",
 		"---",
 		string.format("Settings"),
 		string.format("About"),
@@ -136,9 +136,9 @@ function MENU_settings()
 		MENU_settings()
 	elseif CH == 3 then
 		local tmp = 0
-		if cfg.Language == "en_US" then tmp = 1 end
+		if cfg.Language == "en_US" then tmp = 1
 		elseif cfg.Language == "in" then tmp = 2
-		elseif cfg.Language == "auto" then tmp = 3
+		elseif cfg.Language == "auto" then tmp = 3 end
 		local CH,tmp = gg.choice({
 			"🇺🇸️ English",
 			"🇮🇩️ Indonesia",
@@ -171,7 +171,7 @@ function MENU_settings()
 			PlayerCurrentName=":Player",
 			PlayerCustomName=":CoolFoe",
 			removeSuspendAfterRestoredSession=true,
-			VERSION="1.9.6"
+			VERSION=cfg.VERSION
 		}
 		gg.saveVariable(cfg,cfg_file)
 		toast("your current saved settings was reset",true)
@@ -882,8 +882,8 @@ function cheat_noreload()
 		:27
 	]]
 	local CH,t,num1 = gg.choice({
-		"1. Default (Real Rel0ad)",
-		"2. Fallback (imitate Rel0ad)",
+		"1. Default (Real Rel0ad, for pistol,shotgun,rocket,C4s if painting is enabled)",
+		"2. Grenade (for grenades)",
 		string.format("Back")
 	}, nil, "Rel0ad\nPS: dont get out of match, drive car, respawn. or the cheat will fail\nDISCLAIMMER: DO NOT USE THIS TO ABUSE OTHER PLAYER !!!!")
 	if CH ~= nil then
@@ -899,12 +899,7 @@ function cheat_noreload()
 				gg.setValues({weaponAmmo})
 				gg.clearResults()
 				if cfg.cheatSettings.noreload.useSearch20 == true then
-				--[[
-					So how this (new method) works?
-					- intead of search 0 in range100, it will search for value 20 at position 0xXXXXXX00, this is an anchor point, it will not change the end 00 position at all.
-					- instead of relying on user triggering reload event, the logic below already know the position of specific reload timer thingy.
-						- just apply it. Done!
-					]]
+				--The new method searches an anchor (which will not change position), and define bunch of values there
 					gg.searchNumber("20;800::9",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
 					local anchorAddress = gg.getResults(1)
 					anchorAddress = anchorAddress[1].address
@@ -917,14 +912,7 @@ function cheat_noreload()
 					}
 					}
 				else
-				--[[
-					So how this (old method) works?
-					- it will search 0 in range100.
-						- and in order to do just that, we need any weapon ammo with type WORD as a starting point
-					- then it will continously scan if one of the values go negative
-					- if the value is found, freeze it to 0 (almost same as Hydra and Joker, but you just set it to 0 instead of 500 or 13, because its around -200~0)
-					- The value that were about to modify is a reload timer/reload animation keyframe. By freezing it to 0 instead of playing the animation, it skipped it to ready state. and thats the real Rel0ad.
-					]]
+				--the old method searches the reload timing manually
 					gg.searchNumber("0",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x5A,weaponAmmo.address + 0x68)
 					toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)',true)
 					local bunchOfZeroes = gg.getResults(100)
@@ -952,17 +940,29 @@ function cheat_noreload()
 		end
 		if CH == 2 then
 			gg.setRanges(gg.REGION_OTHER)
-			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo')
+			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i recommend grenade though)')
 			if gg.getResultCount() == 0 then
 				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
 			else
-				for i=1, #t do
-					t[i].value = 1
-					t[i].freeze = true
-				end
-				gg.setValues(t)
+				local weaponAmmo = t[1]
+				weaponAmmo.value = 32767
+				gg.setValues({weaponAmmo})
 				gg.clearResults()
-				toast('Rel0ad ON',true)
+				gg.searchNumber("20;800::9",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
+				local anchorAddress = gg.getResults(1)
+				anchorAddress = anchorAddress[1].address
+				t = {
+				{
+				address=anchorAddress+0x84,
+				flags=gg.TYPE_WORD,
+				freeze=true,
+				value="-63"
+				}
+				}
+				gg.setValues(t)
+				gg.addListItems(t)				
+				gg.clearResults()
+				toast('Found! Rel0ad (Grenade) On. WARNING:\n- DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\n- You need to disable Rel0ad grenade before using Other Reload (for shotgun, pistol).\n- You cant shoot pistol,shotgun,etc when using Rel0ad Grenade.',true)
 			end
 		end
 		CH = nil
@@ -1647,7 +1647,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="1.9.6"
+		VERSION="1.9.7"
 	}
 	cfg_file = gg.getFile()..'.conf'
 	local cfg_load = loadfile(cfg_file)
