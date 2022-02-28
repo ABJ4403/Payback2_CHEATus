@@ -1,21 +1,24 @@
 # Payback2 CHEATus, created by ABJ4403.
-[```🇮🇩️ README Bahasa Indonesia```](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
+[`🇮🇩️ README Bahasa Indonesia`](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 
 Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "fork" of Mangyu's cheat script but better, less-bloated, and easier to read.
 
 # Features:
-```🔫 Pistol/SG Knockback``` ```🔫 Weapon ammo``` ```🔫 Rel0ad (N0 Reload)``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware``` ```💰❌ FOSS (Free & Open-source)``` ```etc```
-- Pistol/Shotgun Custom Knockback Value
-- Weapon Ammo Modifier
-- Wall Hack
+`🔫 Pistol/SG Knockback` `🔫 Weapon ammo` `🔫 Rel0ad (No Reload delay)` `🧱 Wall Hack` `🦠❌ 0-Malware` `💰❌ FOSS (Free & Open-source)` `etc`
+- No Reload (RARE too get cheats like these).
+- Pistol/Shotgun Custom Knockback Value.
+- Weapon Ammo Modifier.
+- Wall Hack.
+- Performance experiment (optional).
+- Memory restricted search (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB)))
 - Memory Buffer (technical feature that accelerates searches on area that won't change alot).
 - And more that i didnt mention here (because some of them wont work).
 
-If you still confused about these stuff, go to [```Wiki```](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
+If you still confused about these stuff, go to [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
 
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
 
-[```Report issues here```](https://github.com/ABJ4403/Payback2_CHEATus)
+[`Report issues here`](https://github.com/ABJ4403/Payback2_CHEATus)
 
 License: [GPLv3](https://gnu.org/licenses)
 

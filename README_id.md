@@ -1,21 +1,24 @@
 # Payback2 CHEATus, dibuat oleh ABJ4403.
-[```🇺🇸️ README English```](https://github.com/ABJ4403/Payback2_CHEATus)
+[`🇺🇸️ README English`](https://github.com/ABJ4403/Payback2_CHEATus)
 
 Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang dimana ini adalah "fork" dari skrip cheat Mangyu tapi lebih bagus, sedikit-bloated, dan mudah untuk dibaca.
 
 # Fitur:
-```🔫 Pistol/SG Knockback``` ```🔫 Ammo senjata``` ```🔫 Rel0ad (Tidak ada isi ulang/no reload)``` ```🧱 Wall Hack``` ```🦠❌ 0-Malware verified``` ```💰❌ FOSS (Gratis & bersumber-terbuka)``` ```dll```
+`🔫 Pistol/SG Knockback` `🔫 Ammo senjata` `🔫 Rel0ad (Tidak ada jeda isi ulang/no reload)` `🧱 Wall Hack` `🦠❌ 0-Malware verified` `💰❌ FOSS (Gratis & bersumber-terbuka)` `dll`
+- No Reload (LANGKA untuk mendapatkan cheat seperti ini).
 - Nilai Knockback Pistol/Shotgun Kustom.
 - Modifier Ammo Senjata.
 - Wall Hack.
+- Eksperimen performa (opsional).
+- Pencarian memori terbatas (hanya cari di beberapa area memory (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB)))
 - Buffer Memori (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
 - Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
 
-Masih bingung? menuju ke [```Wiki```](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
+Masih bingung? menuju ke [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
 
 Cheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)
 
-[```Laporkan isu disini```](https://github.com/ABJ4403/Payback2_CHEATus)
+[`Laporkan isu disini`](https://github.com/ABJ4403/Payback2_CHEATus)
 
 Lisensi: [GPLv3](https://gnu.org/licenses)
 
@@ -43,7 +46,7 @@ Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak m
 - tehtmi - Pembuat unluac (dan helper dekompilasi).
 - Crystal_Mods100x - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui YouTube dan MediaFire.
-- Alpha GG Hacker - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk ```enkripsi level 666 yang sangggggat giilaaa```).
+- Alpha GG Hacker - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk `enkripsi level 666 yang sangggggat giilaaa`).
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2.
 - Hydra (tidak terimakasih untuk tutorial dan skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo).
 - Joker - Untuk menyediakan Value "No Blast Damage", dan "No Reload" GameGuardian.
