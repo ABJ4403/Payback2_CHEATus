@@ -123,8 +123,8 @@ function MENU_settings()
 		"Reset settings",
 		string.format("Back")
 	}, nil, string.format("Title_Version"))
-	if CH == 12 then MENU() end
-	if CH == 1 then
+	if CH == 12 then MENU()
+	elseif CH == 1 then
 		local CH = gg.prompt({'Put your new default player name'},{cfg.PlayerCurrentName},{'text'})
 		if (CH ~= nil and CH[1] ~= nil) then cfg.PlayerCurrentName = CH[1] end
 		CH = nil
@@ -137,8 +137,8 @@ function MENU_settings()
 	elseif CH == 3 then
 		local tmp = 0
 		if cfg.Language == "en_US" then tmp = 1 end
-		if cfg.Language == "in" then tmp = 2 end
-		if cfg.Language == "auto" then tmp = 3 end
+		elseif cfg.Language == "in" then tmp = 2
+		elseif cfg.Language == "auto" then tmp = 3
 		local CH,tmp = gg.choice({
 			"🇺🇸️ English",
 			"🇮🇩️ Indonesia",
@@ -146,27 +146,25 @@ function MENU_settings()
 			"Back",
 		}, tmp, string.format("Title_Version")),nil
 		if CH ~= nil then
-			if CH == 4 then MENU_settings() end
-			if CH == 1 then cfg.Language = "en_US" end
-			if CH == 2 then cfg.Language = "in" end
-			if CH == 3 then cfg.Language = "auto" end
+			if CH == 4 then MENU_settings()
+			elseif CH == 1 then cfg.Language = "en_US"
+			elseif CH == 2 then cfg.Language = "in"
+			elseif CH == 3 then cfg.Language = "auto" end
 			CH = nil
 			update_language()
 			MENU_settings()
 		end
-	end
 	---
-	if CH == 5 then gg.clearResults() MENU_settings() end
-	if CH == 6 then gg.clearList() MENU_settings() end
-	if CH == 7 then gg.clearResults() gg.clearList() MENU_settings() end
-	if CH == 8 then os.remove(susp_file) MENU_settings() end
+	elseif CH == 5 then gg.clearResults() MENU_settings()
+	elseif CH == 6 then gg.clearList() MENU_settings()
+	elseif CH == 7 then gg.clearResults() gg.clearList() MENU_settings()
+	elseif CH == 8 then os.remove(susp_file) MENU_settings()
 	---
-	if CH == 10 then
+	elseif CH == 10 then
 		gg.saveVariable(cfg,cfg_file)
 		toast("your current settings is saved, but you dont have to do this, because the setting will be saved if you exit out of the script",true)
 		MENU_settings()
-	end
-	if CH == 11 then
+	elseif CH == 11 then
 		cfg = {
 			enableLogging=false,
 			Language="auto",
