@@ -1,5 +1,5 @@
 function MENU()
---Let the user choose stuff                      theres blank space here to prevent #unluck                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+--Let the user choose stuff
 	local CH = gg.choice({
 		"1. Weapon ammo",
 		"2. Rel0ad",
@@ -35,7 +35,7 @@ function MENU()
 	if CH == 14 then MENU_settings() end
 	if CH == 15 then show_about() end
 	if CH == 16 then exit() end
-	if CH == 17 then suspend_program() end
+	if CH == 17 then suspend() end
 	if CH ~= nil then
 		CH = nil
 		collectgarbage("collect")
@@ -129,14 +129,12 @@ function MENU_settings()
 		if (CH ~= nil and CH[1] ~= nil) then cfg.PlayerCurrentName = CH[1] end
 		CH = nil
 		MENU_settings()
-	end
-	if CH == 2 then
+	elseif CH == 2 then
 		local CH = gg.prompt({'Put your new default custom player name'},{cfg.PlayerCustomName},{'text'})
 		if (CH ~= nil and CH[1] ~= nil) then cfg.PlayerCustomName = CH[1] end
 		CH = nil
 		MENU_settings()
-	end
-	if CH == 3 then
+	elseif CH == 3 then
 		local tmp = 0
 		if cfg.Language == "en_US" then tmp = 1 end
 		if cfg.Language == "in" then tmp = 2 end
@@ -175,7 +173,7 @@ function MENU_settings()
 			PlayerCurrentName=":Player",
 			PlayerCustomName=":CoolFoe",
 			removeSuspendAfterRestoredSession=true,
-			VERSION="1.9.4"
+			VERSION="1.9.6"
 		}
 		gg.saveVariable(cfg,cfg_file)
 		toast("your current saved settings was reset",true)
@@ -212,15 +210,16 @@ end
 function cheat_weaponammo()
 	local CH = gg.choice({
 		"Automatic",
-		"Fallback (Default, modifies the DWORD, works best in offline mode)",
-		"Fallback (v2, modified the WORD, no respawn required, but cant survive respawn)",
+		"DWORD (Default, modifies the DWORD, works best in offline mode)",
+		"WORD (modifies WORD, no respawn required, but cant survive respawn)",
+		"WORD (v2, uses 20 anchor)",
 		string.format("Back")
 	}, nil, "Select method for modifying weapon amount - Modify Weapon Amount\nPS: not tested for multiplayer (while the gameplay running), might not work.")
 	if CH ~= nil then
-		if CH == 4 then MENU() end
 	--gg.REGION_C_ALLOC | 
 		gg.setRanges(gg.REGION_OTHER)
-		if CH == 1 then -- automatic method (wont work due to memory location always change)
+		if CH == 5 then MENU()
+		elseif CH == 1 then -- automatic method (wont work due to memory location always change)
 	 -- Prepare the table
 			local e = {}
 			e[1] = {}
@@ -265,8 +264,7 @@ function cheat_weaponammo()
 			e[8].address = 0xC22743E0
 	 -- And set the value
 			gg.setValues(e)
-		end
-		if CH == 2 then -- Fallback method (requires manually putting values, but will work in most cases)
+		elseif CH == 2 then -- DWORD method (requires manually putting values, but will work in most cases (requires respawn))
 			local WEAPON_AMMO_AMOUNT = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;150;60;45'})
 			if (WEAPON_AMMO_AMOUNT ~= nil and WEAPON_AMMO_AMOUNT[1] ~= nil) then
 				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
@@ -278,8 +276,7 @@ function cheat_weaponammo()
 					toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number",true)
 				end
 			end
-		end
-		if CH == 3 then -- Fallback v2 method (requires manually putting values, but will search WORD instead of DWORD)
+		elseif CH == 3 then -- WORD method (requires manually putting values, but will search WORD instead of DWORD (didnt require respawn, but didnt survive a respawn))
 			t = loopSearch(16,gg.TYPE_WORD,'Put your weapon ammo')
 			if gg.getResultCount() == 0 then
 				toast("Can't find the said number, did you put the right number?",true)
@@ -290,9 +287,66 @@ function cheat_weaponammo()
 				gg.setValues(t)
 				toast("🔨️ Weapon value Modified",true)
 			end
+		elseif CH == 4 then -- WORD v2 method (same as WORD v1, but uses 20 anchor to find the right values)
+			t = loopSearch(1,gg.TYPE_WORD,'Put (just) one of your weapon ammo')
+			if gg.getResultCount() == 0 then
+				toast("Can't find the said number, did you put the right number?",true)
+			else
+				local weaponAmmo = t[1].address
+			--search for anchor
+				gg.clearResults()
+				gg.searchNumber("20;800::9",gg.TYPE_WORD,nil,nil,weaponAmmo - 0x2A,weaponAmmo)
+				local anchorAddress = gg.getResults(1)
+				anchorAddress = anchorAddress[1].address
+			--prepare the cheated weapon table
+				t = {
+					{
+						address=anchorAddress+0x1C,
+						flags=gg.TYPE_WORD,
+						value="30000"
+					},
+					{
+						address=anchorAddress+0x1E,
+						flags=gg.TYPE_WORD,
+						value="30000"
+					},
+					{
+						address=anchorAddress+0x20,
+						flags=gg.TYPE_WORD,
+						value="30000"
+					},
+					{
+						address=anchorAddress+0x22,
+						flags=gg.TYPE_WORD,
+						value="30000"
+					},
+					{
+						address=anchorAddress+0x24,
+						flags=gg.TYPE_WORD,
+						value="30000"
+					},
+					{
+						address=anchorAddress+0x26,
+						flags=gg.TYPE_WORD,
+						value="30000"
+					},
+					{
+						address=anchorAddress+0x28,
+						flags=gg.TYPE_WORD,
+						value="30000"
+					},
+					{
+						address=anchorAddress+0x2A,
+						flags=gg.TYPE_WORD,
+						value="30000"
+					},
+				}
+				gg.setValues(t)
+				toast("🔨️ Weapon value Modified",true)
+			end
 		end
-		gg.clearResults()
-		CH = nil
+	gg.clearResults()
+	CH = nil
 	end
 end
 
@@ -360,12 +414,10 @@ function cheat_pistolknockback()
 			end
 			CH = nil
 			cheat_pistolknockback()
-		end
-		if CH == 8 then
+		elseif CH == 8 then
 			CH,revert.PistolKnockback = nil,nil
 			cheat_pistolknockback()
-		end
-		if CH == 9 then
+		elseif CH == 9 then
 			CH,MemoryBuffer.PistolKnockback = nil,nil
 			cheat_pistolknockback()
 		end		
@@ -416,37 +468,35 @@ function cheat_wallhack()
 		string.format("Back")
 	}, nil, "Wall Hack. Warn:\n- some walls have holes behind them\n- Dont use Wall Hack if you use Helicopter (if you respawn, the helicopter will sunk down due to less power to pull helicopter up),\n- Don't use Wall Hack if you do racing\n- Best use cases are for Capture The Swags, especially in Metropolis, because theres less holes there")
 	if CH ~= nil then
-		if CH == 9 then MENU() end
+		if CH == 11 then MENU()
  -- Set ranges
- 		if CH == 1 then tmp0[1]="default"			tmp0[2]="1140457472D;500F::" tmp0[3]=VAL_WallResist[1] tmp0[4]="ON" end
- 		if CH == 2 then tmp0[1]="alternative" tmp0[2]="0.001"							 tmp0[3]=VAL_WallResist[2] tmp0[4]="ON" end
- 		if CH == 3 then tmp0[1]="hydra"				tmp0[2]="1078618499;1094412911;1;1034868570;1050796852::493" tmp0[3]=VAL_WallResist[3] tmp0[4]="ON" end
- 		if CH == 4 then tmp0[1]="default"			tmp0[2]=VAL_WallResist[1]		 tmp0[3]="1140457472"			 tmp0[4]="OFF" end
- 		if CH == 5 then tmp0[1]="alternative" tmp0[2]=VAL_WallResist[2]		 tmp0[3]="0.001"					 tmp0[4]="OFF" end
- 		if CH == 6 then tmp0[1]="hydra"				tmp0[2]="1078618499;1094412911;"..VAL_WallResist[3]..";1034868570;1050796852::493" tmp0[3]="1" tmp0[4]="OFF" end
+ 		elseif CH == 1 then tmp0[1]="default"			tmp0[2]="1140457472D;500F::" tmp0[3]=VAL_WallResist[1] tmp0[4]="ON"
+ 		elseif CH == 2 then tmp0[1]="alternative" tmp0[2]="0.001"							 tmp0[3]=VAL_WallResist[2] tmp0[4]="ON"
+ 		elseif CH == 3 then tmp0[1]="hydra"				tmp0[2]="1078618499;1094412911;1;1034868570;1050796852::493" tmp0[3]=VAL_WallResist[3] tmp0[4]="ON"
+ 		elseif CH == 4 then tmp0[1]="default"			tmp0[2]=VAL_WallResist[1]		 tmp0[3]="1140457472"			 tmp0[4]="OFF"
+ 		elseif CH == 5 then tmp0[1]="alternative" tmp0[2]=VAL_WallResist[2]		 tmp0[3]="0.001"					 tmp0[4]="OFF"
+ 		elseif CH == 6 then tmp0[1]="hydra"				tmp0[2]="1078618499;1094412911;"..VAL_WallResist[3]..";1034868570;1050796852::493" tmp0[3]="1" tmp0[4]="OFF"
 		---
-		if CH == 6 then
+		elseif CH == 8 then
 			gg.setValues(revert.wallhack)
 			gg.setValues(revert.wallhack_alternative)
 			gg.setValues(revert.wallhack_hydra)
 			revert.wallhack,revert.wallhack_alternative,revert.wallhack_hydra = nil,nil,nil
 			toast("Previous value restored, be warned though this will cause instability",true)
-		end
-		if CH == 7 then
+		elseif CH == 9 then
 			local CH = gg.prompt({
 				'Put your custom value for Default method (Game default:1140457472,Cheatus default:-500)',
 				'Put your custom value for Alternative method (Game default:0.001,Cheatus default:-1.00001)',
 				'Put your custom value for Hydra method (Game default:1,known cheatus default:-1)'
 			},{VAL_WallResist[1],VAL_WallResist[2],VAL_WallResist[3]},{'number','number','number'})
 			if CH ~= nil then
-				if CH[1] ~= "" then VAL_WallResist[1] = CH[1] end
-				if CH[2] ~= "" then VAL_WallResist[2] = CH[2] end
-				if CH[3] ~= "" then VAL_WallResist[3] = CH[3] end
+				if CH[1] ~= "" then VAL_WallResist[1] = CH[1]
+				elseif CH[2] ~= "" then VAL_WallResist[2] = CH[2]
+				elseif CH[3] ~= "" then VAL_WallResist[3] = CH[3] end
 			end
 			CH = nil
 			cheat_wallhack()
-		end
-		if CH == 8 then
+		elseif CH == 10 then
 			CH,MemoryBuffer.wallhack,MemoryBuffer.wallhack_alternative = nil,nil,nil
 			toast("Memory buffer cleared",true)
 		end
@@ -533,11 +583,9 @@ function cheat_bigbody()
 		string.format("Back")
 	}, nil, "Big body")
 	if CH ~= nil then
-		if CH == 3 then
-			MENU()
-		end
 		local t
-		if CH == 1 then
+		if CH == 3 then MENU()
+		elseif CH == 1 then
 			gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
 			gg.searchNumber("1"+memOffsets_bigbody[1], gg.TYPE_FLOAT)
 			t = gg.getResults(555)
@@ -552,8 +600,7 @@ function cheat_bigbody()
 				toast("Big Body ON",true)
 			end
 			gg.setValues(t)
-		end
-		if CH == 2 then
+		elseif CH == 2 then
 			gg.setRanges(gg.REGION_CODE_APP)
 			gg.searchNumber("4.3"+memOffsets_bigbody[2], gg.TYPE_FLOAT)
 			t = gg.getResults(22)
@@ -564,8 +611,7 @@ function cheat_bigbody()
 				gg.editAll(VAL_BigBody[2]+memOffsets_bigbody[2], gg.TYPE_FLOAT)
 				toast("Big Body ON",true)
 			end
-		end
-		if CH == 3 then
+		elseif CH == 3 then
 			gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
 			gg.searchNumber(VAL_BigBody[1]+memOffsets_bigbody[1], gg.TYPE_FLOAT)
 			t = gg.getResults(555)
@@ -580,8 +626,7 @@ function cheat_bigbody()
 				toast("Big body OFF",true)
 			end
 			gg.setValues(t)
-		end
-		if CH == 4 then
+		elseif CH == 4 then
 			gg.setRanges(gg.REGION_CODE_APP)
 			gg.searchNumber(VAL_BigBody[2]+memOffsets_bigbody[2], gg.TYPE_FLOAT)
 			t = gg.getResults(22)
@@ -592,8 +637,7 @@ function cheat_bigbody()
 				gg.editAll("4.3"+memOffsets_bigbody[2], gg.TYPE_FLOAT)
 				toast("Big body OFF",true)
 			end
-		end
-		if CH == 5 then
+		elseif CH == 5 then
 			if revert.bigbody == nil then
 				toast("No values to restore, this might be a bug. if you think so, report bug on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
 			else
@@ -602,8 +646,7 @@ function cheat_bigbody()
 				gg.clearResults()
 				toast("Wall hack previous value restored, be warned though this will cause instability",true)
 			end
-		end
-		if CH == 6 then
+		elseif CH == 6 then
 			local CH = gg.prompt({
 				'Put your custom value for Default method (Game default: 1,Cheatus default: 3, offset: '..memOffsets_bigbody[1]..')',
 				'Put your custom value for Alternative method (Game default: 4.3,Cheatus default: 5.9, offset: '..memOffsets_bigbody[2]..')'
@@ -640,32 +683,29 @@ function cheat_strongveichle()
 		string.format("Back")
 	}, nil, "Veichle default health modifier")
 	if CH ~= nil then
-		if CH == 10 then MENU() end
-		if CH == 1 then CAR_HEALTH_VALUE = "85000" end
-		if CH == 2 then CAR_HEALTH_VALUE = "125" end
-		if CH == 3 then CAR_HEALTH_VALUE = "-1" end
-		if CH == 5 then
+		if CH == 10 then MENU()
+		elseif CH == 1 then CAR_HEALTH_VALUE = "85000"
+		elseif CH == 2 then CAR_HEALTH_VALUE = "125"
+		elseif CH == 3 then CAR_HEALTH_VALUE = "-1"
+		elseif CH == 5 then
 			local CH = gg.prompt({'Input your custom Veichle default health value'})
 			if (CH == nil and CH[1] == nil) then
 				cheat_strongveichle()
 			else
 				CAR_HEALTH_VALUE,CH = CH[1],nil
 			end
-		end
 		---
-		if CH == 7 then
+		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current Veichle default health value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Veichle default health value'},{[1] = VAL_CrDfltHlth},{[1] = 'number'})
 			if (CH == nil and CH[1] == nil) then
 				VAL_CrDfltHlth = CH[1]
 			end
 			CH = nil
 			cheat_strongveichle()
-		end
-		if CH == 8 then
+		elseif CH == 8 then
 			CH,revert.CarHealth = nil,nil
 			cheat_strongveichle()
-		end
-		if CH == 9 then
+		elseif CH == 9 then
 			CH,MemoryBuffer.CarHealth = nil,nil
 			cheat_strongveichle()
 		end		
@@ -709,34 +749,31 @@ function cheat_noblastdamage()
 		string.format("Back")
 	}, nil, "No damage\nThis will make you unable to get killed using any explosion blasts (that means you still can get killed by sg,mg,laser,turret,any non explosive weapons)\nPS: this will make your character buggy though")
 	if CH ~= nil then
-		if CH == 7 then MENU() end
-		if CH == 1 then DAMAGE_INTENSITY_VALUE = "0" end
-		if CH == 2 then DAMAGE_INTENSITY_VALUE = "300" end
-		if CH == 5 then
+		if CH == 7 then MENU()
+		elseif CH == 1 then DAMAGE_INTENSITY_VALUE = "0"
+		elseif CH == 2 then DAMAGE_INTENSITY_VALUE = "300"
+		elseif CH == 5 then
 			local CH = gg.prompt({'Input your custom damage intensity'})
 			if (CH == nil and CH[1] == nil) then
 				cheat_noblastdamage()
 			else
 				DAMAGE_INTENSITY_VALUE,CH = CH[1],nil
 			end
-		end
 		---
-		if CH == 7 then
+		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{[1] = VAL_DmgIntnsty},{[1] = 'number'})
 			if (CH == nil and CH[1] == nil) then
 				VAL_DmgIntnsty = CH[1]
 			end
 			CH = nil
 			cheat_noblastdamage()
-		end
-		if CH == 8 then
+		elseif CH == 8 then
 			CH,revert.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
-		end
-		if CH == 9 then
+		elseif CH == 9 then
 			CH,MemoryBuffer.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
-		end		
+		end
 		if DAMAGE_INTENSITY_VALUE ~= nil then
 			gg.setRanges(gg.REGION_CODE_APP)
 			if MemoryBuffer.NoBlastDamage == nil then
@@ -772,11 +809,9 @@ function cheat_destroycar()
 		string.format("Back")
 	}, nil, "Destroy cars")
 	if CH ~= nil then
-		if CH == 3 then
-			MENU()
-		end
 		gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
-		if CH == 1 then
+		if CH == 3 then MENU()
+		elseif CH == 1 then
 			gg.searchNumber("0.89868283272;0.91149836779;0.92426908016;0.93699574471;0.9496794343;0.9623208046;0.97492086887;0.98748034239;1.0;1.01248061657;1.02492284775;1.03732740879;1.04969501495;1.06202638149;1.07432198524;1.08658242226;1.09880852699;1.11100065708;1.12315940857;1.1352853775;1.14737904072;1.15944087505;1.17147147655;1.18347120285;1.19544064999;1.20738017559;1.2192902565;1.23117136955::109", gg.TYPE_FLOAT)
 			gg.refineNumber("1.0")
 			gg.getResults(50)
@@ -786,8 +821,7 @@ function cheat_destroycar()
 				gg.editAll("-500", gg.TYPE_FLOAT)
 				toast("Destroy all cars ON",true)
 			end
-		end
-		if CH == 2 then
+		elseif CH == 2 then
 			gg.searchNumber("0.89868283272;-500.0;1.14737904072;1.15944087505;1.17147147655;1.18347120285;1.19544064999;1.20738017559;1.2192902565;1.23117136955::109", gg.TYPE_FLOAT)
 			gg.refineNumber("-500")
 			gg.getResults(50)
@@ -810,8 +844,8 @@ function cheat_togglevoidmode()
 		string.format("Back")
 	}, nil, "Void mode, select method")
 	if CH ~= nil then
-		if CH == 3 then MENU() end
-		if CH == 1 then
+		if CH == 3 then MENU()
+		elseif CH == 1 then
 			gg.setValues({
 		 -- Mode - Singleplayer
 				{flags=gg.TYPE_DWORD,value=99,address=0xC20FC36C},
@@ -825,8 +859,7 @@ function cheat_togglevoidmode()
 				{flags=gg.TYPE_DWORD,value=99,address=0xC132A8B8}
 			})
 			toast('void mode is set. to restore, simply change to any mode you desire',true)
-		end
-		if CH == 2 then
+		elseif CH == 2 then
 			gg.setRanges(gg.REGION_ANONYMOUS)
 			gg.searchNumber("38654705671",gg.TYPE_QWORD)
 			gg.getResults(100)
@@ -856,8 +889,8 @@ function cheat_noreload()
 		string.format("Back")
 	}, nil, "Rel0ad\nPS: dont get out of match, drive car, respawn. or the cheat will fail\nDISCLAIMMER: DO NOT USE THIS TO ABUSE OTHER PLAYER !!!!")
 	if CH ~= nil then
-		if CH == 3 then MENU() end
-		if CH == 1 then
+		if CH == 3 then MENU()
+		elseif CH == 1 then
 			gg.setRanges(gg.REGION_OTHER)
 			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo')
 			if gg.getResultCount() == 0 then
@@ -874,7 +907,7 @@ function cheat_noreload()
 					- instead of relying on user triggering reload event, the logic below already know the position of specific reload timer thingy.
 						- just apply it. Done!
 					]]
-					gg.searchNumber("20;800",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
+					gg.searchNumber("20;800::9",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
 					local anchorAddress = gg.getResults(1)
 					anchorAddress = anchorAddress[1].address
 					t = {
@@ -1011,7 +1044,7 @@ function cheat_c4paint()
 	--optional stuff
 		if cfg.cheatSettings.c4paint.useSearch20 == true then
 		--search for anchor
-			gg.searchNumber("20;800",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
+			gg.searchNumber("20;800::9",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
 			local anchorAddress = gg.getResults(1)
 			anchorAddress = anchorAddress[1].address
 			t = {
@@ -1149,6 +1182,7 @@ function cheat_changeplayernamecolor()
 --request user to give player name
 	local CH,player_name,player_color_choice = gg.choice({
 		"Color:",
+		"Invisible name (all values 1 byte, Experimental)",
 		"Red (2)",
 		"Blue (3)",
 		"White (4)",
@@ -1166,20 +1200,21 @@ function cheat_changeplayernamecolor()
 	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'text'})
 	if (CH ~= nil or player_name ~= nil and player_name[1] ~= nil and player_name[1] ~= ":") then
 	--Color
-		if CH == 2 then player_color_choice = 2 end
-		if CH == 3 then player_color_choice = 3 end
-		if CH == 4 then player_color_choice = 4 end
-		if CH == 5 then player_color_choice = 5 end
-		if CH == 6 then player_color_choice = 6 end
+		if CH == 2 then player_color_choice = 1
+		elseif CH == 3 then player_color_choice = 2
+		elseif CH == 4 then player_color_choice = 3
+		elseif CH == 5 then player_color_choice = 4
+		elseif CH == 6 then player_color_choice = 5
+		elseif CH == 7 then player_color_choice = 6
 	---
 	--Icon
-		if CH == 9 then player_color_choice = 7 end
-		if CH == 10 then player_color_choice = 8 end
-		if CH == 11 then player_color_choice = 10 end
+		elseif CH == 10 then player_color_choice = 7
+		elseif CH == 11 then player_color_choice = 8
+		elseif CH == 12 then player_color_choice = 10
 	---
-		if CH == 13 then player_color_choice = 0 end
+		elseif CH == 14 then player_color_choice = 0
 	---
-		if CH == 15 then MENU() end
+		elseif CH == 16 then MENU() end
 
 		if player_color_choice ~= nil then
 
@@ -1243,21 +1278,19 @@ function cheat_walkwonkyness()
 		string.format("Back")
 	}, nil, "Walk Wonkyness (fancy-cheat)")
 	if CH ~= nil then
-		if CH == 5 then MENU() end
 		gg.setRanges(gg.REGION_CODE_APP)
-		if CH == 1 then
+		if CH == 5 then MENU()
+		elseif CH == 1 then
 			gg.searchNumber("0~1;0.00999999978::5", gg.TYPE_FLOAT)
 			revert.walkwonkyness = gg.getResults(1)
 			gg.editAll("0.004", gg.TYPE_FLOAT)
 			toast("Walk Wonkyness Default",true)
-		end
-		if CH == 2 then
+		elseif CH == 2 then
 			gg.searchNumber("0.004;0.00999999978::5", gg.TYPE_FLOAT)
 			revert.walkwonkyness = gg.getResults(1)
 			gg.editAll("1.004", gg.TYPE_FLOAT)
 			toast("Walk Wonkyness ON",true)
-		end
-		if CH == 3 then
+		elseif CH == 3 then
 			gg.searchNumber("1.004;0.00999999978::5", gg.TYPE_FLOAT)
 			revert.walkwonkyness = gg.getResults(1)
 			gg.editAll("0", gg.TYPE_FLOAT)
@@ -1275,9 +1308,9 @@ function cheat_coloredtree()
 		string.format("Back")
 	}, nil, "Colored trees\nThis will change some shader stuff (actually idk wut this does lol) that affects trees")
 	if CH ~= nil then
-		if CH == 3 then MENU() end
-		if CH == 1 then tmp0[1] = "0.04" tmp0[2] = "-999" tmp0[3] = "ON" end
-		if CH == 2 then tmp0[1] = "-999" tmp0[2] = "0.04" tmp0[3] = "OFF" end
+		if CH == 3 then MENU()
+		elseif CH == 1 then tmp0[1] = "0.04" tmp0[2] = "-999" tmp0[3] = "ON"
+		elseif CH == 2 then tmp0[1] = "-999" tmp0[2] = "0.04" tmp0[3] = "OFF" end
 	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber("4.06176449e-39;0.06;"..tmp0[1]..";-0.04;-0.02::17", gg.TYPE_FLOAT)
@@ -1301,9 +1334,9 @@ function cheat_bigflamethroweritem()
 		string.format("Back")
 	}, nil, "Big flamethrower (Item)\nInfo: this will not make the flame burst bigger")
 	if CH ~= nil then
-		if CH == 3 then MENU() end
-		if CH == 1 then tmp0[1] = "0.9" tmp0[2] = "5.1403" tmp0[3] = "ON" end
-		if CH == 2 then tmp0[1] = "5.1403" tmp0[2] = "0.9" tmp0[3] = "OFF" end
+		if CH == 3 then MENU()
+		elseif CH == 1 then tmp0[1] = "0.9" tmp0[2] = "5.1403" tmp0[3] = "ON"
+		elseif CH == 2 then tmp0[1] = "5.1403" tmp0[2] = "0.9" tmp0[3] = "OFF" end
 	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber("0.4;0.2;"..tmp0[1]..";24000::13",gg.TYPE_FLOAT)
@@ -1327,9 +1360,9 @@ function cheat_shadowfx()
 		string.format("Back")
 	}, nil, "Shadow effects\nInfo: this wont affect your game performance at all (not making it lag/fast)\ndont use this for performance purpose :)")
 	if CH ~= nil then
-		if CH == 3 then MENU() end
-		if CH == 1 then tmp0[1] = "0.0001" tmp0[2] = "-1.0012" tmp0[3] = "Disabled" end
-		if CH == 2 then tmp0[1] = "-1.0012" tmp0[2] = "0.0001" tmp0[3] = "Enabled" end
+		if CH == 3 then MENU()
+		elseif CH == 1 then tmp0[1] = "0.0001" tmp0[2] = "-1.0012" tmp0[3] = "Disabled"
+		elseif CH == 2 then tmp0[1] = "-1.0012" tmp0[2] = "0.0001" tmp0[3] = "Enabled" end
 	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber(tmp0[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17", gg.TYPE_FLOAT)
@@ -1353,9 +1386,9 @@ function cheat_clrdpplesp()
 		string.format("Back")
 	}, nil, "Colored people ESP (idk wut esp mean here)\nPS: Not work on latest version")
 	if CH ~= nil then
-		if CH == 3 then MENU() end
-		if CH == 1 then tmp0[1] = "0.08" tmp0[2] = "436" tmp0[3] = "ON" end
-		if CH == 2 then tmp0[1] = "436" tmp0[2] = "0.08" tmp0[3] = "OFF" end
+		if CH == 3 then MENU()
+		elseif CH == 1 then tmp0[1] = "0.08" tmp0[2] = "436" tmp0[3] = "ON"
+		elseif CH == 2 then tmp0[1] = "436" tmp0[2] = "0.08" tmp0[3] = "OFF" end
 	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
@@ -1497,15 +1530,13 @@ function show_about()
 		string.format("Credits"),
 		string.format("Back")
 	}, nil, string.format("About"))
-	if CH ~= nil then
-		if CH == 1 then alert(string.format("About_Text")) show_about() end
-		---
-		if CH == 3 then alert(string.format("Disclaimmer_Text")) show_about() end
-		if CH == 4 then alert(string.format("License_Text")) show_about() end
-		if CH == 5 then alert(string.format("Credits_Text")) show_about() end
-		if CH == 6 then CH = nil MENU() end
-		CH = nil
-	end
+	if CH == 1 then alert(string.format("About_Text")) show_about()
+	---
+	elseif CH == 3 then alert(string.format("Disclaimmer_Text")) show_about()
+	elseif CH == 4 then alert(string.format("License_Text")) show_about()
+	elseif CH == 5 then alert(string.format("Credits_Text")) show_about()
+	elseif CH == 6 then CH = nil MENU() end
+	CH = nil
 end
 
 function exit()
@@ -1516,7 +1547,7 @@ function exit()
 	os.exit()
 end
 
-function suspend_program()
+function suspend()
 	print(string.format("Suspend_Text"))
 	gg.saveVariable({
 		revert=revert,
@@ -1542,11 +1573,11 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 			while gg.getResultCount() >= desiredResultCount+1 do
 				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease == true and tonumber(num1[1]) >= 20) then
 				--new method: ask user to reduce ammo value by -1
-					toast('3 seconds to reduce ammo value',true)
+					toast('Got '..gg.getResultCount()..' results\n3 seconds to reduce ammo value',true)
 					sleep(1000)
-					toast('2 seconds to reduce ammo value',true)
+					toast('Got '..gg.getResultCount()..' results\n2 seconds to reduce ammo value',true)
 					sleep(1000)
-					toast('1 seconds to reduce ammo value',true)
+					toast('Got '..gg.getResultCount()..' results\n1 seconds to reduce ammo value',true)
 					sleep(1000)
 					toast('Timeout, searching...',true)
 					gg.searchFuzzy('0',gg.SIGN_FUZZY_LESS)
@@ -1618,14 +1649,14 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="1.9.5"
+		VERSION="1.9.6"
 	}
 	cfg_file = gg.getFile()..'.conf'
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load ~= nil then
 		cfg_load = cfg_load()
-		cfg = MergeTables(cfg,cfg_load)
 		cfg_load.VERSION = cfg.VERSION
+		cfg = MergeTables(cfg,cfg_load)
 	else
 		toast("No configuration files detected, Creating new one... 💾️\nHi There! 👋️ Looks like You're new here.",true)
 		gg.saveVariable(cfg,cfg_file)
@@ -1704,7 +1735,7 @@ Credits_Text		 = "Kredit:\n+ Mangyu - Pembuat skrip original.\n+ mdp43140 - Kont
 Disclaimmer			 = "Disklaimmer (mohon untuk dibaca)",
 Disclaimmer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
 Exit						 = "Keluar",
-Exit_ThankYouMsg = "	Jika Anda mengalami bug, laporkan pada halaman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Jika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Jika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki",
+Exit_ThankYouMsg = "	Jika Anda mengalami bug, laporkan pada laman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Jika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Jika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki",
 License					 = "Lisensi",
 License_Text		 = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\nHak Cipta (C) 2021-2022 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA GARANSI; bahkan tanpa garansi tersirat dari\nMERCHANTABILITY atau FITNESS untuk tujuan tertentu.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses",
 Settings				 = "Pengaturan",
