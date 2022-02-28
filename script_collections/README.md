@@ -69,15 +69,20 @@ newtable     r71     0     0
 
 	Thanks again to [tehtmi](https://sourceforge.net/u/tehtmi) for the patched unluac.
 
-- `PB2_AlphaGGHackerYT_pb2mod1.lua` (`『Alpha_ENC』Payback 2 Mod.lua` from [`MediaFire`](https://www.mediafire.com/file/py0v2idvgo35qi3/%25E3%2580%258EAlpha_ENC%25E3%2580%258FPayback_2_Mod.lua/file)), by "Alpha GG Hacker YT".
+- `PB2_AlphaGGHackerYT_pb2mod1.lua` (or should i say `PB2_AlphaGGHackerYT_Mod1-unsanitized.lua`) (`『Alpha_ENC』Payback 2 Mod.lua` from [`MediaFire`](https://www.mediafire.com/file/py0v2idvgo35qi3/%25E3%2580%258EAlpha_ENC%25E3%2580%258FPayback_2_Mod.lua/file)), by "Alpha GG Hacker YT".
 
-	`Difficulty: 20` `🛡️ Obfuscation (level:17)` `🔒️ String Encryption (difficulty:29)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-all-decompiler` `🤬️ R*c*st level:2` `❌️ Anti-unluac` `❌️ Anti-LuaASM` `❌️ Different file encoding` `❌️ Impossible to decompile` `❌️ Impossible to log what the script calls gameguardian api` `🦠 GameGuardian Log Pollution` `🦠⚠️ Too much that this is considered malware (UNTRUSTED, NOT SAFE !!!)`
+	`Difficulty: 20` `🔏️ Decryptor: tehtmi, ABJ4403` `🦠⚠️ Too much that this is considered malware (UNTRUSTED, NOT SAFE !!!)` `🛡️ Obfuscation (level:17)` `🔒️ String Encryption (difficulty:29)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using "Serrang Gaming" lua encryption tool` `🤬️ R*c*st level:3` `❌️ Anti-decompiler` `❌️ Anti-LuaASM` `❌️ Different file encoding` `📝️ LUA Header modification` `🦠 GG Log Pollution & detection` `❌️ LUA Environment variable detection` `❌️ Debug variable detection` `⚙️ Decryption tools: unluac-patched, ghex, mousepad` `⚙️ Requirement: Java (to run unluac), text-editor that supports replacing newlines (eg. Mousepad), Hex editor (eg. Ghex)`
 
 	WAY RIDICILOUS AND WAY WAY TOO MUCH IMPOSSIBLE!!!!!
 	if you decompile this lua script with unluac or any other decompiler, it gives you almost nothing.
 
-	I will dare you a challenge to ever, ever decrypt this stupid thing. This one i will give someone a VERY HUGE credit if they can LITERALLY DECRYPT this file (YES LITERALLY DECRYPTING, NOT EVEN DECOMPILING ANYMORE !!)
-	No i wont decrypt this, so do tehtmi?
+	BUT IS IT?
+	[I asked tehtmi for help with this ridicilous nonsense](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42/#723e), and he gave a very good solution.
+	The one. and the only. Edit Header with Hex editor, disassemble, remove op41,op42,op43,op44,op45, reassemble and decompile.
+	no i wont reverse engineer this thing, because it will took a lot of time.
+	BUT... HEY, atleast its decompiled :D
+	and "my malware analysis research" says... its kinda in the red zone... because it does almost what usual gg script not doing and usual lua malware doing.
+	so dont use it, atleast the encrypted ones...
 
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
