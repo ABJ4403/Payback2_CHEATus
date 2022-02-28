@@ -78,9 +78,11 @@ newtable     r71     0     0
 
 	BUT IS IT?
 	[I asked tehtmi for help with this ridicilous nonsense](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42/#723e), and he gave a very good solution.
+
 	The one. and the only. Edit Header with Hex editor, disassemble, remove op41,op42,op43,op44,op45, reassemble and decompile.
 	no i wont reverse engineer this thing, because it will took a lot of time.
 	BUT... HEY, atleast its decompiled :D
+
 	and "my malware analysis research" says... its kinda in the red zone... because it does almost what usual gg script not doing and usual lua malware doing.
 	so dont use it, atleast the encrypted ones...
 
