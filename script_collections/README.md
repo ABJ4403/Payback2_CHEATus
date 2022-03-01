@@ -136,6 +136,7 @@ newtable     r71     0     0
 	Don't worry. It's already decrypted (this time without tehtmi help), because its still the same "AlphaGG" encryption tool, that can be decrypted.
 	thankfully, AlphaGG didnt see this and didnt learn his failures.
 	i know, there is still some confusion stuff whatever, but hey atleast i can put the "Safe" label there, because yes its actually safe like the previous script (no, not the one with SerrangGaming encryption tool).
+	btw, script password (just in case you didnt watch AlphaGG's video description): alphaencmodz100yt
 
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
