@@ -55,7 +55,7 @@ newtable     r71     0     0
 	Thanks to [mdp43140](https://github.com/mdp43140) for reverse-engineering to get the password
 - `PB2_AlphaGGHackerYT_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱.lua` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
 
-	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 from a simple view, it looks like its bad, but after deeper dig, its actually safe` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `❌️ Anti-decompiler` `🤬️ R*c*st level:1` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines, (also some decryption tools, you will get it by patience and knowledge)`
+	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 Safe` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using "AlphaGG" lua encryption tool` `❌️ Anti-decompiler` `🤬️ R*c*st level:1` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines, (also some decryption tools, you will get it by patience and knowledge)`
 
 	Ridicilous Arbitrary slow loading embedded on the script with 0 way to bypass that at all.
 
@@ -71,7 +71,7 @@ newtable     r71     0     0
 
 - `PB2_AlphaGGHackerYT_pb2mod1.lua` (or should i say `PB2_AlphaGGHackerYT_Mod1-unsanitized.lua`) (`『Alpha_ENC』Payback 2 Mod.lua` from [`MediaFire`](https://www.mediafire.com/file/py0v2idvgo35qi3/%25E3%2580%258EAlpha_ENC%25E3%2580%258FPayback_2_Mod.lua/file)), by "Alpha GG Hacker YT".
 
-	`Difficulty: 20` `🔏️ Decryptor: tehtmi, ABJ4403` `🦠⚠️ Too much that this is considered malware (UNTRUSTED, NOT SAFE !!!)` `🛡️ Obfuscation (level:17)` `🔒️ String Encryption (difficulty:29)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using "Serrang Gaming" lua encryption tool` `🤬️ R*c*st level:3` `❌️ Anti-decompiler` `❌️ Anti-LuaASM` `❌️ Different file encoding` `📝️ LUA Header modification` `🦠 GG Log Pollution & detection` `❌️ LUA Environment variable detection` `❌️ Debug variable detection` `⚙️ Decryption tools: unluac-patched, ghex, mousepad` `⚙️ Requirement: Java (to run unluac), text-editor that supports replacing newlines (eg. Mousepad), Hex editor (eg. Ghex)`
+	`Difficulty: 20` `🔏️ Decryptor: tehtmi, ABJ4403` `🦠⚠️ Too much that this is considered UNTRUSTED & NOT SAFE!!` `🛡️ Obfuscation (level:17)` `🔒️ String Encryption (difficulty:29)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using "Serrang Gaming" lua encryption tool` `🤬️ R*c*st level:3` `❌️ Anti-decompiler` `❌️ Anti-LuaASM` `❌️ Different file encoding` `📝️ LUA Header modification` `🦠 GG Log Pollution & detection` `❌️ LUA Environment variable detection` `❌️ Debug variable detection` `⚙️ Decryption tools: unluac-patched, ghex, mousepad` `⚙️ Requirement: Java (to run unluac), text-editor that supports replacing newlines (eg. Mousepad), Hex editor (eg. Ghex)`
 
 	WAY RIDICILOUS AND WAY WAY TOO MUCH IMPOSSIBLE!!!!!
 	if you decompile this lua script with unluac or any other decompiler, it gives you almost nothing.
@@ -85,6 +85,57 @@ newtable     r71     0     0
 
 	and "my malware analysis research" says... its kinda in the red zone... because it does almost what usual gg script not doing and usual lua malware doing.
 	so dont use it, atleast the encrypted ones...
+
+- `PB2_AGH_CarSpeed_(C_BSS,A,O).lua` (`.lua` from [`MediaFire1`](https://www.mediafire.com/file/k2ne3i36wr6ovca/Car_Hack__%255B%255B_EncAGH_%255D%255D.lua/file),[`MediaFire2`](https://www.mediafire.com/file/de8idnxf9zm221f/Car_Hack_ANO__%255B%255B_EncAGH_%255D%255D.lua/file),[`MediaFire3`](https://www.mediafire.com/file/viuaklm73v1cbu9/Car_Hack_OTH__%255B%255B_EncAGH_%255D%255D.lua/file)), by AlphaGGHacker.
+
+	`Difficulty: 4` `🔏️ Decryptor: ABJ4403` `🦠 Safe` `🛡️ Obfuscation (level:2)` `🔐️String Encryption (difficulty:2)` `📈️ Function argument overflow` `🛡️ Using "AlphaGG" lua encryption tool` `✏️ Bytecode modification` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, Unluac-patched`
+
+	Theres's 3 files to decompile
+	Atleast it was easier than the Serrang Gaming encryption ones.
+	Also, you see whats inside of these files? here i tell you:
+	```
+-- 🛡️ Script Protected By Alpha GG Hacker YT
+-- 🛡️ Visit my Youtube Channel for more updates
+-- This Encryption is 50 times more harder to decrypt
+-- Subscribe to My YouTube ( Alpha GG Hacker YT )
+-- © This is Non-Copyright Script
+-- © Serial No. ENC 38639932503
+
+
+
+
+
+🛡️🛡️🛡️ Protected By   🇵🇭 P H I L I P P I N E S 🇵🇭   GameGuardian Official Encrypt Tool 🛡️🛡️🛡️
+
+                       Script ProtectoR : ALPHA GG HACKER
+
+   Proudly Protected by  P H I L I P  P I N E S  Encrypt Tool
+
+[=[=[===========================================================================================================================================================================================>
+ $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
+[=[=[===========================================================================================================================================================================================>
+ $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
+[=[=[===========================================================================================================================================================================================>
+ $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
+[=[=[===========================================================================================================================================================================================>
+ $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
+[=[=[===========================================================================================================================================================================================>
+ $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
+[=[=[===========================================================================================================================================================================================>
+
+
+-- © Published in 07_Feb_22
+-- © Tools Encrypt By [ 🛡️ Alpha GG Hacker YT 🛡️]
+-- © This is Non-Copyright Script
+-- © Serial No. ENC 38639932503
+
+
+ ==========================================================================================================
+	```
+	Ahh YES, The `666 🇵🇭 P H I L I P P I N E S 🇵🇭 Satan 👺️ Encryption tool 🛡️🛡️🛡️`, very very gloooorious.
+	Don't worry. It's already decrypted (this time without tehtmi help), because its still the same "AlphaGG" encryption tool, that can be decrypted.
+	thankfully, AlphaGG didnt see this and didnt learn his failures.
+	i know, there is still some confusion stuff whatever, but hey atleast i can put the "Safe" label there, because yes its actually safe like the previous script (no, not the one with SerrangGaming encryption tool).
 
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
