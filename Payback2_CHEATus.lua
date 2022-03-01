@@ -869,18 +869,6 @@ function cheat_togglevoidmode()
 end
 
 function cheat_noreload()
-	--[[
-		here some random value hehehe
-		20W; -- starting point always ended with 00
-		0W;
-		800W; -- health
-		0W;
-		5W;
-		0W;
-		[AnyWeaponClip]W
-		[NoReloadTimer]W
-		:27
-	]]
 	local CH,t,num1 = gg.choice({
 		"1. Default (Real Rel0ad, for pistol,shotgun,rocket,C4s if painting is enabled)",
 		"2. Grenade (for grenades)",
@@ -937,8 +925,7 @@ function cheat_noreload()
 				gg.clearResults()
 				toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!',true)
 			end
-		end
-		if CH == 2 then
+		elseif CH == 2 then
 			gg.setRanges(gg.REGION_OTHER)
 			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i recommend grenade though)')
 			if gg.getResultCount() == 0 then
@@ -962,7 +949,7 @@ function cheat_noreload()
 				gg.setValues(t)
 				gg.addListItems(t)				
 				gg.clearResults()
-				toast('Found! Rel0ad (Grenade) On. WARNING:\n- DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\n- You need to disable Rel0ad grenade before using Other Reload (for shotgun, pistol).\n- You cant shoot pistol,shotgun,etc when using Rel0ad Grenade.',true)
+				toast('Rel0ad (Grenade) On. WARNING:\n- DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\n- You need to disable Rel0ad grenade before using Other Reload (for shotgun, pistol).\n- You cant shoot pistol,shotgun,etc when using Rel0ad Grenade.',true)
 			end
 		end
 		CH = nil
@@ -1560,7 +1547,7 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 	local num1 = gg.prompt({msg1})
 	if num1[1] ~= nil then
 	--Experiment1: search within restricted memory address, which will give more performance
-		gg.searchNumber(num1[1],valueType,nil,nil,0xB6B0001C,0xB8FFFF2A)
+		gg.searchNumber(num1[1],valueType,nil,nil,0xB100001C,0xB8FFFF2A)
 	--Experiment1Begin
 		if gg.getResultCount() == 0 then
 			toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try hard, promise 😃️",true)
@@ -1570,7 +1557,7 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 		if gg.getResultCount() ~= 0 then
 			while gg.getResultCount() >= desiredResultCount+1 do
 				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease == true and tonumber(num1[1]) >= 20) then
-				--new method: ask user to reduce ammo value by -1
+				--new method: ask user to reduce ammo value, but only do this if the ammo was more than 20, just in case that user didnt have enough ammo, and it drops to 0
 					toast('Got '..gg.getResultCount()..' results\n3 seconds to reduce ammo value',true)
 					sleep(1000)
 					toast('Got '..gg.getResultCount()..' results\n2 seconds to reduce ammo value',true)
@@ -1578,7 +1565,12 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 					toast('Got '..gg.getResultCount()..' results\n1 seconds to reduce ammo value',true)
 					sleep(1000)
 					toast('Timeout, searching...',true)
-					gg.searchFuzzy('0',gg.SIGN_FUZZY_LESS)
+				--Make sure we dont search for negatives
+					gg.refineNumber("0~32767")
+				--Workaround to searchFuzzy bug
+					gg.getResults(gg.getResultCount())
+				--Search reduced ammo (THIS HAD PROBLEM)
+					gg.searchFuzzy(0,gg.SIGN_FUZZY_LESS)
 				else
 				--old method:ask user their current ammo
 				--because mostly the ammo will go down, we should use fuzzy and dont ask user about ammo anymore
@@ -1590,9 +1582,25 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 					sleep(1000)
 					local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()},{num1[1]})
 					if num1[1] == nil then break end
-					local t = gg.refineNumber(num1[1], gg.TYPE_WORD)
+				--Make sure we dont search for negatives
+					gg.refineNumber("0~32767")
+				--Search updated ammo
+					gg.refineNumber(num1[1])
 				end
-				if gg.getResultCount() == 0 then break end
+			--If found 2 result, check if 2 numbers are same, and return 1st value if so (this means user is on a veichle)
+				if gg.getResultCount() == 2 then
+					local t = gg.getResults(2)
+					if (t[1].value == t[2].value) then
+						if CH == 1 then
+						--TODO: use the search anchor to make sure that is the actual value
+							return {t[1]}
+						end
+					end
+					t = nil
+			--If nothing found, break and return nothing, and let the 0 handler did its job
+				elseif gg.getResultCount() == 0 then
+					break
+				end
 			end
 			return gg.getResults(desiredResultCount)
 		end
@@ -1647,7 +1655,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="1.9.7"
+		VERSION="1.9.7b"
 	}
 	cfg_file = gg.getFile()..'.conf'
 	local cfg_load = loadfile(cfg_file)
