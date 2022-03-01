@@ -1015,19 +1015,24 @@ function cheat_health()
 		anchorAddress = anchorAddress[1].address
 		t = {
 		{
-		address=anchorAddress+0x08,
-		flags=gg.TYPE_WORD,
-		freeze=true,
-		value=800
-		},
-		{}}
-	--u dont hav 2 no... itz a surprize for v2.0.0 update, and enabled by default on that version, just dont enable it yet until v2.0.0 or ull regret the suprize lmao.
-		if cfg.cheatSettings.strongHealth.easterEgg_imitateImmortal == true then
-			t[2]={address=anchorAddress+0x98,
+			address=anchorAddress+0x08,
 			flags=gg.TYPE_WORD,
 			freeze=true,
-			value=30000}
-		end
+			value=800
+		},
+		{
+			address=anchorAddress+0x98,
+			flags=gg.TYPE_WORD,
+			freeze=true,
+			value=30000
+		},
+		{
+			address=anchorAddress+0x158,
+			flags=gg.TYPE_FLOAT,
+			freeze=true,
+			value=500
+		}
+		}
 		gg.setValues(t)
 		gg.addListItems(t)
 		gg.clearResults()
@@ -1657,9 +1662,6 @@ function loadConfig()
 			},
 			loopSearch={
 				useFuzzyDecrease=false
-			},
-			strongHealth={
-				easterEgg_imitateImmortal=false
 			}
 		},
 		enableLogging=false,
@@ -1667,7 +1669,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="1.9.7b"
+		VERSION="2.0.0"
 	}
 	cfg_file = gg.getFile()..'.conf'
 	local cfg_load = loadfile(cfg_file)
