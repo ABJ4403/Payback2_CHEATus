@@ -1544,61 +1544,46 @@ end
 
 -- Helper functions
 function loopSearch(desiredResultCount,valueType,msg1,msg2)
-	local num1 = gg.prompt({msg1})
-	if num1[1] ~= nil then
-	--Experiment1: search within restricted memory address, which will give more performance
-		gg.searchNumber(num1[1],valueType,nil,nil,0xB100001C,0xB8FFFF2A)
-	--Experiment1Begin
-		if gg.getResultCount() == 0 then
-			toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try hard, promise 😃️",true)
-			gg.searchNumber(num1[1],valueType,nil,nil)
-		end
-	--Experiment1End
+	local num1,tmpResultCount,t = gg.prompt({msg1})
+	if (num1 ~= nil and num1[1] ~= nil) then
+	--Search within restricted memory address, which will give more performance
+		gg.searchNumber(num1[1],valueType,nil,nil,0xB120051C,0xB80FFD2A)
 		if gg.getResultCount() ~= 0 then
 			while gg.getResultCount() >= desiredResultCount+1 do
+				tmpResultCount = gg.getResultCount()
 				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease == true and tonumber(num1[1]) >= 20) then
-				--new method: ask user to reduce ammo value, but only do this if the ammo was more than 20, just in case that user didnt have enough ammo, and it drops to 0
-					toast('Got '..gg.getResultCount()..' results\n3 seconds to reduce ammo value',true)
+					toast('Got '..tmpResultCount..' results\n3 seconds to reduce ammo value',true)
 					sleep(1000)
-					toast('Got '..gg.getResultCount()..' results\n2 seconds to reduce ammo value',true)
+					toast('Got '..tmpResultCount..' results\n2 seconds to reduce ammo value',true)
 					sleep(1000)
-					toast('Got '..gg.getResultCount()..' results\n1 seconds to reduce ammo value',true)
+					toast('Got '..tmpResultCount..' results\n1 seconds to reduce ammo value',true)
 					sleep(1000)
 					toast('Timeout, searching...',true)
-				--Make sure we dont search for negatives
 					gg.refineNumber("0~32767")
-				--Workaround to searchFuzzy bug
-					gg.getResults(gg.getResultCount())
-				--Search reduced ammo (THIS HAD PROBLEM)
 					gg.searchFuzzy(0,gg.SIGN_FUZZY_LESS)
 				else
 				--old method:ask user their current ammo
-				--because mostly the ammo will go down, we should use fuzzy and dont ask user about ammo anymore
+				--because mostly the ammo will go down, we should use fuzzy and dont ask user about ammo anymore (but theres a bug with searchFuzzy itself, it wouldnt found anything AT ALL COST IF USED IN SCRIPT!!!)
 					toast('3 seconds to change ammo value',true)
 					sleep(1000)
 					toast('2 seconds to change ammo value',true)
 					sleep(1000)
 					toast('1 seconds to change ammo value',true)
 					sleep(1000)
-					local num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..gg.getResultCount()},{num1[1]})
-					if num1[1] == nil then break end
-				--Make sure we dont search for negatives
+					num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..tmpResultCount},{num1[1]})
 					gg.refineNumber("0~32767")
-				--Search updated ammo
+					if (num1 == nil or num1[1] == nil) then break end
 					gg.refineNumber(num1[1])
 				end
 			--If found 2 result, check if 2 numbers are same, and return 1st value if so (this means user is on a veichle)
-				if gg.getResultCount() == 2 then
-					local t = gg.getResults(2)
-					if (t[1].value == t[2].value) then
-						if CH == 1 then
-						--TODO: use the search anchor to make sure that is the actual value
-							return {t[1]}
-						end
+				tmpResultCount = gg.getResultCount()
+				if tmpResultCount == 2 then
+					t = gg.getResults(2)
+					if t[1].value == t[2].value then
+						return {t[1]}
 					end
-					t = nil
 			--If nothing found, break and return nothing, and let the 0 handler did its job
-				elseif gg.getResultCount() == 0 then
+				elseif tmpResultCount == 0 then
 					break
 				end
 			end
