@@ -6,7 +6,7 @@ function Decryptor(input)
   local result = ""
   for i in ipairs(input) do
   --convert hex to byte, do some decrypt magic, convert it to char, and concat em
-    result = result .. string.char(tonumber(input[i], 16) + 1 % 256)
+    result = result .. string.char(tonumber(input[i],16) + 1 % 256)
   end
   return result
 end
