@@ -943,13 +943,23 @@ function cheat_noreload()
 				address=anchorAddress+0x84,
 				flags=gg.TYPE_WORD,
 				freeze=true,
-				value="-63"
 				}
 				}
+				local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0; 200]"},{0},{"number"})
+				if (grenadeRange ~= nil and tonumber(grenadeRange[1]) ~= 0) then
+					toast("Wait for it, dont forget to hold your grenade")
+					sleep(999)
+					t[1].value = grenadeRange[1]
+					gg.setValues(t)
+					gg.addListItems(t)
+					grenadeRange = nil
+					sleep(999)
+				end
+				t[1].value = "-63"
 				gg.setValues(t)
-				gg.addListItems(t)				
-				gg.clearResults()
+				gg.addListItems(t)
 				toast('Rel0ad (Grenade) On. WARNING:\n- DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\n- You need to disable Rel0ad grenade before using Other Reload (for shotgun, pistol).\n- You cant shoot pistol,shotgun,etc when using Rel0ad Grenade.',true)
+				gg.clearResults()
 			end
 		end
 		CH = nil
@@ -959,7 +969,7 @@ end
 function cheat_health()
 --this cheat is based on rel0ad cheat
 	gg.setRanges(gg.REGION_OTHER)
-	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the health is located near there)\nAlso, make sure you have maximum health or will fail')
+	local t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the health is located near there)\nAlso, make sure you have maximum health or will fail')
 	if gg.getResultCount() == 0 then
 		t = alert('Can\'t find the specific set of number, but no problem! we do have fallback. do you want to do fallback method?',string.format2("__yes__"),string.format2("__no__"))
 		if t == 1 then
@@ -1000,10 +1010,24 @@ function cheat_health()
 		gg.setValues({weaponAmmo})
 		gg.clearResults()
 	--the core, search the health value (Located at xxxxxx08)
-		gg.searchNumber("800",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x22,weaponAmmo.address - 0x14)
-		t = gg.getResults(1)
-		t[1].value = 800
-		t[1].freeze = true
+		gg.searchNumber("20;800::9",gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
+		local anchorAddress = gg.getResults(1)
+		anchorAddress = anchorAddress[1].address
+		t = {
+		{
+		address=anchorAddress+0x08,
+		flags=gg.TYPE_WORD,
+		freeze=true,
+		value=800
+		},
+		{}}
+	--u dont hav 2 no... itz a surprize for v2.0.0 update, and enabled by default on that version, just dont enable it yet until v2.0.0 or ull regret the suprize lmao.
+		if cfg.cheatSettings.strongHealth.easterEgg_imitateImmortal == true then
+			t[2]={address=anchorAddress+0x98,
+			flags=gg.TYPE_WORD,
+			freeze=true,
+			value=30000}
+		end
 		gg.setValues(t)
 		gg.addListItems(t)
 		gg.clearResults()
@@ -1093,8 +1117,8 @@ function cheat_c4paint()
 		gg.setValues({weaponAmmo})
 		gg.setValues(t)
 		gg.addListItems(t)
-		gg.clearResults()
 		toast('Found! C4 Painting ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\nDetonate it by respawn',true)
+		gg.clearResults()
 	end
 end
 
@@ -1633,6 +1657,9 @@ function loadConfig()
 			},
 			loopSearch={
 				useFuzzyDecrease=false
+			},
+			strongHealth={
+				easterEgg_imitateImmortal=false
 			}
 		},
 		enableLogging=false,
