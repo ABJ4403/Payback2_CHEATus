@@ -162,7 +162,7 @@ function MENU_settings()
 	---
 	elseif CH == 10 then
 		gg.saveVariable(cfg,cfg_file)
-		toast("your current settings is saved, but you dont have to do this, because the setting will be saved if you exit out of the script",true)
+		toast("your current settings is saved, but you dont have to do this, because the setting will be saved if you exit out of the script")
 		MENU_settings()
 	elseif CH == 11 then
 		cfg = {
@@ -174,7 +174,7 @@ function MENU_settings()
 			VERSION=cfg.VERSION
 		}
 		gg.saveVariable(cfg,cfg_file)
-		toast("your current saved settings was reset",true)
+		toast("your current saved settings was reset")
 		MENU_settings()
 	end
 end
@@ -192,7 +192,7 @@ function cheat_weapon()
 	gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61", gg.TYPE_DWORD)
 	local t = gg.getResults(5000, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+		toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 	else
 		for i=1, #t do
 			t[i].value = 71131136
@@ -201,7 +201,7 @@ function cheat_weapon()
 		gg.setValues(t)
 		t = nil
 		gg.clearResults()
-		toast("Weapon ON",true)
+		toast("Weapon ON")
 	end
 end
 
@@ -268,27 +268,27 @@ function cheat_weaponammo()
 				gg.searchNumber(WEAPON_AMMO_AMOUNT[1], gg.TYPE_DWORD) -- TODO: Search only in 0xC22743C4-0x6FBEA7A4 range
 				gg.getResults(16)
 				if gg.getResultCount() == 0 then
-					toast("Can't find the said number, did you put the right number?",true)
+					toast("Can't find the said number, did you put the right number?")
 				else
 					gg.editAll(9999, gg.TYPE_DWORD)
-					toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number",true)
+					toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number")
 				end
 			end
 		elseif CH == 3 then -- WORD method (requires manually putting values, but will search WORD instead of DWORD (didnt require respawn, but didnt survive a respawn))
 			t = loopSearch(16,gg.TYPE_WORD,'Put your weapon ammo')
 			if gg.getResultCount() == 0 then
-				toast("Can't find the said number, did you put the right number?",true)
+				toast("Can't find the said number, did you put the right number?")
 			else
 				for i=1, #t do
 					t[i].value = 9999
 				end
 				gg.setValues(t)
-				toast("🔨️ Weapon value Modified",true)
+				toast("🔨️ Weapon value Modified")
 			end
 		elseif CH == 4 then -- WORD v2 method (same as WORD v1, but uses 20 anchor to find the right values)
 			t = loopSearch(1,gg.TYPE_WORD,'Put (just) one of your weapon ammo')
 			if gg.getResultCount() == 0 then
-				toast("Can't find the said number, did you put the right number?",true)
+				toast("Can't find the said number, did you put the right number?")
 			else
 				local weaponAmmo = t[1].address
 			--search for anchor
@@ -340,7 +340,7 @@ function cheat_weaponammo()
 					},
 				}
 				gg.setValues(t)
-				toast("🔨️ Weapon value Modified",true)
+				toast("🔨️ Weapon value Modified")
 			end
 		end
 	gg.clearResults()
@@ -362,7 +362,7 @@ function cheat_firebody()
 		gg.searchNumber("1.68155816e-43F;0D~9999D;2.80259693e-44F;1.12103877e-42F;1.821688e-44F::45", gg.TYPE_DWORD)
 		local t = gg.getResults(555, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			for i=1, #t do
 				t[i].value = tmp0[1]
@@ -370,7 +370,7 @@ function cheat_firebody()
 			end
 			gg.setValues(t)
 			gg.clearResults()
-			toast("Burning body "..tmp0[2],true)
+			toast("Burning body "..tmp0[2])
 		end
 		tmp0 = nil
 	end
@@ -391,25 +391,22 @@ function cheat_pistolknockback()
 	}, nil, "Pistol/Shotgun knockback modifier\nCurrent: "..VAL_PstlSgKnockback.."\nHint: recommended value is -20 to 20 if you use pistol")
  -- Hint: if you want to search these value below in gui, change . to , :)
 	if CH ~= nil then
-		if CH == 10 then MENU() end
-		if CH == 1 then PISTOL_KNOCKBACK_VALUE = "-20" end
-		if CH == 2 then PISTOL_KNOCKBACK_VALUE = "20" end
-		if CH == 3 then PISTOL_KNOCKBACK_VALUE = "0.25" end
-		if CH == 4 then PISTOL_KNOCKBACK_VALUE = "0" end
-		if CH == 5 then
+		if CH == 10 then MENU()
+		elseif CH == 1 then PISTOL_KNOCKBACK_VALUE = "-20"
+		elseif CH == 2 then PISTOL_KNOCKBACK_VALUE = "20"
+		elseif CH == 3 then PISTOL_KNOCKBACK_VALUE = "0.25"
+		elseif CH == 4 then PISTOL_KNOCKBACK_VALUE = "0"
+		elseif CH == 5 then
 			local CH = gg.prompt({'Input your custom knockback value'})
-			if (CH == nil and CH[1] == nil) then
+			if (CH == nil or CH[1] == nil) then
 				cheat_pistolknockback()
 			else
 				PISTOL_KNOCKBACK_VALUE,CH = CH[1],nil
 			end
-		end
 		---
-		if CH == 7 then
+		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current knockback value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current pistol/shotgun knockback value'},{[1] = VAL_PstlSgKnockback},{[1] = 'number'})
-			if (CH == nil and CH[1] == nil) then
-				VAL_PstlSgKnockback = CH[1]
-			end
+			if (CH == nil or CH[1] == nil) then VAL_PstlSgKnockback = CH[1] end
 			CH = nil
 			cheat_pistolknockback()
 		elseif CH == 8 then
@@ -423,26 +420,26 @@ function cheat_pistolknockback()
 		-- | gg.REGION_ANONYMOUS
 			gg.setRanges(gg.REGION_C_ALLOC)
 			if MemoryBuffer.PistolKnockback == nil then
-				toast('No buffer found, creating new buffer',true)
+				toast('No buffer found, creating new buffer')
 		 -- Find specific value
 				gg.searchNumber(VAL_PstlSgKnockback.."F;1067869798D::13", gg.TYPE_FLOAT, false, gg.SIGN_EQUAL)
 		 -- Get float-type-only result, and make a backup.
 				MemoryBuffer.PistolKnockback,revert.PistolKnockback = gg.getResults(1, nil, nil, nil, nil, nil, gg.TYPE_FLOAT),gg.getResults(1, nil, nil, nil, nil, nil, gg.TYPE_FLOAT)
 			else
-				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
 				gg.loadResults(MemoryBuffer.PistolKnockback)
 			end
 	 -- Check if found any result
 			if gg.getResultCount() == 0 then
 				MemoryBuffer.PistolKnockback,revert.PistolKnockback = nil,nil
-				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu",true)
+				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
 			else
 				for i=1, #MemoryBuffer.PistolKnockback do
 					MemoryBuffer.PistolKnockback[i].value = PISTOL_KNOCKBACK_VALUE
 				end
 				VAL_PstlSgKnockback = PISTOL_KNOCKBACK_VALUE
 				PISTOL_KNOCKBACK_VALUE = nil
-				toast("Pistol/SG Knockback "..VAL_PstlSgKnockback,true)
+				toast("Pistol/SG Knockback "..VAL_PstlSgKnockback)
 				gg.setValues(MemoryBuffer.PistolKnockback)
 			end
 			gg.clearResults()
@@ -480,7 +477,7 @@ function cheat_wallhack()
 			gg.setValues(revert.wallhack_alternative)
 			gg.setValues(revert.wallhack_hydra)
 			revert.wallhack,revert.wallhack_alternative,revert.wallhack_hydra = nil,nil,nil
-			toast("Previous value restored, be warned though this will cause instability",true)
+			toast("Previous value restored, be warned though this will cause instability")
 		elseif CH == 9 then
 			local CH = gg.prompt({
 				'Put your custom value for Default method (Game default:1140457472,Cheatus default:-500)',
@@ -496,74 +493,74 @@ function cheat_wallhack()
 			cheat_wallhack()
 		elseif CH == 10 then
 			CH,MemoryBuffer.wallhack,MemoryBuffer.wallhack_alternative = nil,nil,nil
-			toast("Memory buffer cleared",true)
+			toast("Memory buffer cleared")
 		end
 		
 		if tmp0[1] == "default" then -- This default method is slow, and only survives single match, but physics works best here, especially when you hit a wall corner, or using tank to phase walls.
 			gg.setRanges(gg.REGION_C_ALLOC)
 --			if MemoryBuffer.wallhack == nil then
---				toast('No previous memory buffer found, creating new buffer.',true)
+--				toast('No previous memory buffer found, creating new buffer.')
 				gg.searchNumber(tmp0[2])
 				MemoryBuffer.wallhack,revert.wallhack = gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD),gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 --			else
---				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+--				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
 --				gg.loadResults(MemoryBuffer.wallhack)
 --				gg.getResults(50, nil, nil, nil, nil, nil, gg.TYPE_DWORD)
 --			end
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i=1, #MemoryBuffer.wallhack do
 					MemoryBuffer.wallhack[i].value = tmp0[3]
 				end
 				gg.setValues(MemoryBuffer.wallhack)
 				gg.clearResults()
-				toast("Wall Hack "..tmp0[4],true)
+				toast("Wall Hack "..tmp0[4])
 			end
 		end
 		if tmp0[1] == "alternative" then -- This altervative method can survive multiple matches, and the value can be found very fast (because it only scans CodeApp), but the physics is wonky
 			gg.setRanges(gg.REGION_CODE_APP)
 --			if MemoryBuffer.wallhack_alternative == nil then
---				toast('No previous memory buffer found, creating new buffer.',true)
+--				toast('No previous memory buffer found, creating new buffer.')
 				gg.searchNumber(tmp0[2], gg.TYPE_FLOAT)
 				MemoryBuffer.wallhack_alternative,revert.wallhack_alternative = gg.getResults(50),gg.getResults(50)
 --			else
---				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+--				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
 --				gg.loadResults(MemoryBuffer.wallhack_alternative)
 --				gg.getResults(50)
 --			end
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i=1, #MemoryBuffer.wallhack_alternative do
 					MemoryBuffer.wallhack_alternative[i].value = tmp0[3]
 				end
 				gg.setValues(MemoryBuffer.wallhack_alternative)
 				gg.clearResults()
-				toast("Wall Hack "..tmp0[4],true)
+				toast("Wall Hack "..tmp0[4])
 			end
 		end
 		if tmp0[1] == "hydra" then -- Hydra method had no (dis)advantages... coz it isnt affecting latest version...
 			gg.setRanges(gg.REGION_OTHER)
 			if MemoryBuffer.wallhack_hydra == nil then
-				toast('No previous memory buffer found, creating new buffer.',true)
+				toast('No previous memory buffer found, creating new buffer.')
 				gg.searchNumber(tmp0[2], gg.TYPE_DWORD)
 				gg.refineNumber(1)
 				MemoryBuffer.wallhack_hydra,revert.wallhack_hydra = gg.getResults(40),gg.getResults(40)
 			else
-				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
 				gg.loadResults(MemoryBuffer.wallhack_hydra)
 				gg.getResults(40)
 			end
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i=1, #MemoryBuffer.wallhack_hydra do
 					MemoryBuffer.wallhack_hydra[i].value = tmp0[3]
 				end
 				gg.setValues(MemoryBuffer.wallhack_hydra)
 				gg.clearResults()
-				toast("Wall Hack "..tmp0[4],true)
+				toast("Wall Hack "..tmp0[4])
 			end
 		end
 	end
@@ -589,13 +586,13 @@ function cheat_bigbody()
 			t = gg.getResults(555)
 			revert.bigbody = gg.getResults(555)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i=1, #t do
 					t[i].value = VAL_BigBody[1]+memOffsets_bigbody[1]
 					t[i].freeze = true
 				end
-				toast("Big Body ON",true)
+				toast("Big Body ON")
 			end
 			gg.setValues(t)
 		elseif CH == 2 then
@@ -604,10 +601,10 @@ function cheat_bigbody()
 			t = gg.getResults(22)
 			revert.bigbody = gg.getResults(22)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.editAll(VAL_BigBody[2]+memOffsets_bigbody[2], gg.TYPE_FLOAT)
-				toast("Big Body ON",true)
+				toast("Big Body ON")
 			end
 		elseif CH == 3 then
 			gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
@@ -615,13 +612,13 @@ function cheat_bigbody()
 			t = gg.getResults(555)
 			revert.bigbody = gg.getResults(555)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				for i=1, #t do
 					t[i].value = "1"+memOffsets_bigbody[1]
 					t[i].freeze = true
 				end
-				toast("Big body OFF",true)
+				toast("Big body OFF")
 			end
 			gg.setValues(t)
 		elseif CH == 4 then
@@ -630,19 +627,19 @@ function cheat_bigbody()
 			t = gg.getResults(22)
 			revert.bigbody = gg.getResults(22)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.editAll("4.3"+memOffsets_bigbody[2], gg.TYPE_FLOAT)
-				toast("Big body OFF",true)
+				toast("Big body OFF")
 			end
 		elseif CH == 5 then
 			if revert.bigbody == nil then
-				toast("No values to restore, this might be a bug. if you think so, report bug on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("No values to restore, this might be a bug. if you think so, report bug on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.setValues(revert.bigbody)
 				revert.bigbody = nil
 				gg.clearResults()
-				toast("Wall hack previous value restored, be warned though this will cause instability",true)
+				toast("Wall hack previous value restored, be warned though this will cause instability")
 			end
 		elseif CH == 6 then
 			local CH = gg.prompt({
@@ -687,7 +684,7 @@ function cheat_strongveichle()
 		elseif CH == 3 then CAR_HEALTH_VALUE = "-1"
 		elseif CH == 5 then
 			local CH = gg.prompt({'Input your custom Veichle default health value'})
-			if (CH == nil and CH[1] == nil) then
+			if (CH == nil or CH[1] == nil) then
 				cheat_strongveichle()
 			else
 				CAR_HEALTH_VALUE,CH = CH[1],nil
@@ -695,7 +692,7 @@ function cheat_strongveichle()
 		---
 		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current Veichle default health value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Veichle default health value'},{[1] = VAL_CrDfltHlth},{[1] = 'number'})
-			if (CH == nil and CH[1] == nil) then
+			if (CH == nil or CH[1] == nil) then
 				VAL_CrDfltHlth = CH[1]
 			end
 			CH = nil
@@ -710,23 +707,23 @@ function cheat_strongveichle()
 		if CAR_HEALTH_VALUE ~= nil then
 			gg.setRanges(gg.REGION_CODE_APP)
 			if MemoryBuffer.CarHealth == nil then
-				toast('No buffer found, creating new buffer',true)
+				toast('No buffer found, creating new buffer')
 				gg.searchNumber(VAL_CrDfltHlth.."D;4D;1F::21")
 				gg.refineNumber(VAL_CrDfltHlth,gg.TYPE_DWORD)
 				MemoryBuffer.CarHealth,revert.CarHealth = gg.getResults(50),gg.getResults(50)
 			else
-				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
 				gg.loadResults(MemoryBuffer.CarHealth)
 			end
 			if gg.getResultCount() == 0 then
 				MemoryBuffer.CarHealth,revert.CarHealth = nil,nil
-				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current health variable' menu",true)
+				toast("Can't find the specific set of number. if you changed the veichle health value, and reopened the script, restore the actual current number using 'Change current health variable' menu")
 			else
 				for i=1, #MemoryBuffer.CarHealth do
 					MemoryBuffer.CarHealth[i].value = CAR_HEALTH_VALUE
 				end
 				VAL_CrDfltHlth,CAR_HEALTH_VALUE = CAR_HEALTH_VALUE,nil
-				toast("Veichles default health "..VAL_CrDfltHlth,true)
+				toast("Veichles default health "..VAL_CrDfltHlth)
 				gg.setValues(MemoryBuffer.CarHealth)
 			end
 			gg.clearResults()
@@ -752,7 +749,7 @@ function cheat_noblastdamage()
 		elseif CH == 2 then DAMAGE_INTENSITY_VALUE = "300"
 		elseif CH == 5 then
 			local CH = gg.prompt({'Input your custom damage intensity'})
-			if (CH == nil and CH[1] == nil) then
+			if (CH == nil or CH[1] == nil) then
 				cheat_noblastdamage()
 			else
 				DAMAGE_INTENSITY_VALUE,CH = CH[1],nil
@@ -760,7 +757,7 @@ function cheat_noblastdamage()
 		---
 		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{[1] = VAL_DmgIntnsty},{[1] = 'number'})
-			if (CH == nil and CH[1] == nil) then
+			if (CH == nil or CH[1] == nil) then
 				VAL_DmgIntnsty = CH[1]
 			end
 			CH = nil
@@ -775,23 +772,23 @@ function cheat_noblastdamage()
 		if DAMAGE_INTENSITY_VALUE ~= nil then
 			gg.setRanges(gg.REGION_CODE_APP)
 			if MemoryBuffer.NoBlastDamage == nil then
-				toast('No buffer found, creating new buffer',true)
+				toast('No buffer found, creating new buffer')
 				gg.searchNumber("-7264W;10W;-5632W;"..VAL_DmgIntnsty.."F;17302W::9")
 				gg.refineNumber(VAL_DmgIntnsty,gg.TYPE_FLOAT)
 				MemoryBuffer.NoBlastDamage,revert.NoBlastDamage = gg.getResults(9),gg.getResults(9)
 			else
-				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option',true)
+				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
 				gg.loadResults(MemoryBuffer.NoBlastDamage)
 			end
 			if gg.getResultCount() == 0 then
 				MemoryBuffer.NoBlastDamage,revert.NoBlastDamage = nil,nil
-				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current damage value' menu",true)
+				toast("Can't find the specific set of number. if you changed the blast intensity value and reopened the script, restore the actual current number using 'Change current damage value' menu")
 			else
 				for i=1, #MemoryBuffer.NoBlastDamage do
 					MemoryBuffer.NoBlastDamage[i].value = DAMAGE_INTENSITY_VALUE
 				end
 				VAL_DmgIntnsty,DAMAGE_INTENSITY_VALUE = DAMAGE_INTENSITY_VALUE,nil
-				toast("Blast damage intensity "..VAL_DmgIntnsty,true)
+				toast("Blast damage intensity "..VAL_DmgIntnsty)
 				gg.setValues(MemoryBuffer.NoBlastDamage)
 			end
 			gg.clearResults()
@@ -814,20 +811,20 @@ function cheat_destroycar()
 			gg.refineNumber("1.0")
 			gg.getResults(50)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.editAll("-500", gg.TYPE_FLOAT)
-				toast("Destroy all cars ON",true)
+				toast("Destroy all cars ON")
 			end
 		elseif CH == 2 then
 			gg.searchNumber("0.89868283272;-500.0;1.14737904072;1.15944087505;1.17147147655;1.18347120285;1.19544064999;1.20738017559;1.2192902565;1.23117136955::109", gg.TYPE_FLOAT)
 			gg.refineNumber("-500")
 			gg.getResults(50)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.editAll("1.0", gg.TYPE_FLOAT)
-				toast("Destroy all cars OFF",true)
+				toast("Destroy all cars OFF")
 			end
 		end
 		gg.clearResults()
@@ -856,13 +853,13 @@ function cheat_togglevoidmode()
 		 -- Time limit
 				{flags=gg.TYPE_DWORD,value=99,address=0xC132A8B8}
 			})
-			toast('void mode is set. to restore, simply change to any mode you desire',true)
+			toast('void mode is set. to restore, simply change to any mode you desire')
 		elseif CH == 2 then
 			gg.setRanges(gg.REGION_ANONYMOUS)
 			gg.searchNumber("38654705671",gg.TYPE_QWORD)
 			gg.getResults(100)
 			gg.editAll("38654705673")
-			toast('void mode is set. to restore, simply change to any mode you desire\nnote again that this only works on old version',true)
+			toast('void mode is set. to restore, simply change to any mode you desire\nnote again that this only works on old version')
 		end
 	end
 	CH = nil
@@ -880,7 +877,7 @@ function cheat_noreload()
 			gg.setRanges(gg.REGION_OTHER)
 			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo')
 			if gg.getResultCount() == 0 then
-				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
+				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
 				local weaponAmmo = t[1]
 				weaponAmmo.value = 30000
@@ -902,7 +899,7 @@ function cheat_noreload()
 				else
 				--the old method searches the reload timing manually
 					gg.searchNumber("0",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x5A,weaponAmmo.address + 0x68)
-					toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)',true)
+					toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)')
 					local bunchOfZeroes = gg.getResults(100)
 					local foundTheValue = 0
 					while foundTheValue == 0 do
@@ -923,13 +920,13 @@ function cheat_noreload()
 				weaponAmmo.value = 30000
 				gg.setValues({weaponAmmo})
 				gg.clearResults()
-				toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!',true)
+				toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
 			end
 		elseif CH == 2 then
 			gg.setRanges(gg.REGION_OTHER)
 			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i recommend grenade though)')
 			if gg.getResultCount() == 0 then
-				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
+				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
 				local weaponAmmo = t[1]
 				weaponAmmo.value = 32767
@@ -958,7 +955,7 @@ function cheat_noreload()
 				t[1].value = "-63"
 				gg.setValues(t)
 				gg.addListItems(t)
-				toast('Rel0ad (Grenade) On. WARNING:\n- DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\n- You need to disable Rel0ad grenade before using Other Reload (for shotgun, pistol).\n- You cant shoot pistol,shotgun,etc when using Rel0ad Grenade.',true)
+				toast('Rel0ad (Grenade) On. WARNING:\n- DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\n- You need to disable Rel0ad grenade before using Other Reload (for shotgun, pistol).\n- You cant shoot pistol,shotgun,etc when using Rel0ad Grenade.')
 				gg.clearResults()
 			end
 		end
@@ -973,19 +970,19 @@ function cheat_health()
 	if gg.getResultCount() == 0 then
 		t = alert('Can\'t find the specific set of number, but no problem! we do have fallback. do you want to do fallback method?',string.format2("__yes__"),string.format2("__no__"))
 		if t == 1 then
-			toast('reclaim your health first. wait 5 seconds before proceed',true)
+			toast('reclaim your health first. wait 5 seconds before proceed')
 			sleep(1000)
-			toast('reclaim your health first. wait 4 seconds before proceed',true)
+			toast('reclaim your health first. wait 4 seconds before proceed')
 			sleep(1000)
-			toast('reclaim your health first. wait 3 seconds before proceed',true)
+			toast('reclaim your health first. wait 3 seconds before proceed')
 			sleep(1000)
-			toast('reclaim your health first. wait 2 seconds before proceed',true)
+			toast('reclaim your health first. wait 2 seconds before proceed')
 			sleep(1000)
-			toast('reclaim your health first. wait 1 seconds before proceed',true)
+			toast('reclaim your health first. wait 1 seconds before proceed')
 			sleep(1000)
 			gg.clearResults()
 			gg.searchNumber("800",gg.TYPE_WORD)
-			toast('Now hurt yourself using laser, or enemy autoturret, or getting shot by enemy or AI',true)
+			toast('Now hurt yourself using laser, or enemy autoturret, or getting shot by enemy or AI')
 			local bunchOfZeroes = gg.getResults(100)
 			local foundTheValue = 0
 			while foundTheValue == 0 do
@@ -1021,22 +1018,22 @@ function cheat_health()
 			value=800
 		},
 		{
+			address=anchorAddress+0x158,
+			flags=gg.TYPE_FLOAT,
+			freeze=true,
+			value=1
+		}
+		}
+		--[[this isnt required: {
 			address=anchorAddress+0x98,
 			flags=gg.TYPE_WORD,
 			freeze=true,
 			value=30000
-		},
-		{
-			address=anchorAddress+0x158,
-			flags=gg.TYPE_FLOAT,
-			freeze=true,
-			value=500
-		}
-		}
+		},]]
 		gg.setValues(t)
 		gg.addListItems(t)
 		gg.clearResults()
-		toast('Health ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!',true)
+		toast('Health ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
 	end
 end
 
@@ -1044,12 +1041,12 @@ function cheat_c4paint()
 --this cheat is based on rel0ad cheat
 	gg.setRanges(gg.REGION_OTHER)
 --Warn user to not having any c4s placed, and detonate them if so.
-	toast('Dont put any explosives. if any, explode it\nAnd make sure no reload is turned off because you will place and detonate C4',true)
+	toast('Dont put any explosives. if any, explode it\nAnd make sure no reload is turned off because you will place and detonate C4')
 --ask user any ammo
 	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the c4 placement position is located near there)')
 --glorioss thingizz
 	if gg.getResultCount() == 0 then
-		toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
+		toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 	else
 	--just for the ezznezz
 		local weaponAmmo = t[1]
@@ -1077,23 +1074,23 @@ function cheat_c4paint()
 			}
 		else
 		--Tell user to Detonate any C4s it currently connected to, and wait 5sec...
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 5 seconds before proceed',true)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 5 seconds before proceed')
 			sleep(1000)
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 4 seconds before proceed',true)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 4 seconds before proceed')
 			sleep(1000)
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 3 seconds before proceed',true)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 3 seconds before proceed')
 			sleep(1000)
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 2 seconds before proceed',true)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 2 seconds before proceed')
 			sleep(1000)
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 1 seconds before proceed',true)
+			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 1 seconds before proceed')
 			sleep(1000)
 		--Tell user to trigger C4 Placement...
-			toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)',true)
+			toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)')
 		--...While running some checking to detect some reduced number
 			gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x04,weaponAmmo.address + 0x10)
 			--Experiment2Begin
 			if gg.getResultCount() == 0 then
-				toast("Oh, this is weird 🤔️... We don't find the value we're searching for 🔍️. We will try hard, promise 😃️",true)
+				toast("Oh, this is weird 🤔️... We don't find the value we're searching for 🔍️. We will try hard, promise 😃️")
 				gg.searchNumber("-1",gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
 			end
 			--Experiment2End
@@ -1122,7 +1119,7 @@ function cheat_c4paint()
 		gg.setValues({weaponAmmo})
 		gg.setValues(t)
 		gg.addListItems(t)
-		toast('Found! C4 Painting ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\nDetonate it by respawn',true)
+		toast('Found! C4 Painting ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\nDetonate it by respawn')
 		gg.clearResults()
 	end
 end
@@ -1149,7 +1146,7 @@ function cheat_xpmodifier()
 		t,revert.PlayerXP = gg.getResults(10),gg.getResults(10)
  -- Check if found or not
 		if gg.getResultCount() == 0 then
-			toast('Can\'t find the player xp, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
+			toast('Can\'t find the player xp, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
 	 -- and put the new XP
 			for i=1, #t do
@@ -1158,7 +1155,7 @@ function cheat_xpmodifier()
 			end
 			gg.setValues(t)
 			gg.clearResults()
-			toast('"'..player_xp[1]..'" changed to "'..player_xp[2]..'"\nWarn: this is still in experimentation phase, the xp wont applied permanently, it will get reset to original. to chnage it permanently, you have to modify the .sav data, which is impossible because its encrypted',true)
+			toast('"'..player_xp[1]..'" changed to "'..player_xp[2]..'"\nWarn: this is still in experimentation phase, the xp wont applied permanently, it will get reset to original. to chnage it permanently, you have to modify the .sav data, which is impossible because its encrypted')
 		end
 	end
 end
@@ -1181,12 +1178,12 @@ function cheat_changeplayername()
 		gg.searchNumber(player_name[1], gg.TYPE_BYTE)
 		revert.PlayerName = gg.getResults(5555)
 		if gg.getResultCount() == 0 then
-			toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
+			toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
 			gg.editAll(player_name[2], gg.TYPE_BYTE)
 			VAL_PlayerCurrentName = player_name[2]
 			gg.clearResults()
-			toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others',true)
+			toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others')
 		end
 	end
 end
@@ -1239,7 +1236,7 @@ function cheat_changeplayernamecolor()
 			revert.PlayerName = gg.getResults(5555)
 		--generic found stuff
 			if gg.getResultCount() == 0 then
-				toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues',true)
+				toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
 			--if player color chioce was 0 (none), interpret that as request remove colors
 				if player_color_choice == 0 then
@@ -1275,7 +1272,7 @@ function cheat_changeplayernamecolor()
 					t[1].value = player_color_choice
 				end
 				gg.setValues(t)
-				toast('Color set to '..player_color_choice..'. PS: still in experimental phase, might not work',true)
+				toast('Color set to '..player_color_choice..'. PS: still in experimental phase, might not work')
 			end
 			tmp0 = nil
 		end
@@ -1298,17 +1295,17 @@ function cheat_walkwonkyness()
 			gg.searchNumber("0~1;0.00999999978::5", gg.TYPE_FLOAT)
 			revert.walkwonkyness = gg.getResults(1)
 			gg.editAll("0.004", gg.TYPE_FLOAT)
-			toast("Walk Wonkyness Default",true)
+			toast("Walk Wonkyness Default")
 		elseif CH == 2 then
 			gg.searchNumber("0.004;0.00999999978::5", gg.TYPE_FLOAT)
 			revert.walkwonkyness = gg.getResults(1)
 			gg.editAll("1.004", gg.TYPE_FLOAT)
-			toast("Walk Wonkyness ON",true)
+			toast("Walk Wonkyness ON")
 		elseif CH == 3 then
 			gg.searchNumber("1.004;0.00999999978::5", gg.TYPE_FLOAT)
 			revert.walkwonkyness = gg.getResults(1)
 			gg.editAll("0", gg.TYPE_FLOAT)
-			toast("Walk Wonkyness OFF",true)
+			toast("Walk Wonkyness OFF")
 		end
 		gg.clearResults()
 		CH = nil
@@ -1331,11 +1328,11 @@ function cheat_coloredtree()
 		gg.refineNumber(tmp0[1])
 		local t = gg.getResults(1)
 		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 			gg.clearResults()
-			toast("Colored trees "..tmp0[3],true)
+			toast("Colored trees "..tmp0[3])
 		end
 		tmp0 = nil
 	end
@@ -1357,11 +1354,11 @@ function cheat_bigflamethroweritem()
 		gg.refineNumber(tmp0[1])
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 			gg.clearResults()
-			toast("Big flamethrower "..tmp0[3],true)
+			toast("Big flamethrower "..tmp0[3])
 		end
 		tmp0 = nil
 	end
@@ -1383,11 +1380,11 @@ function cheat_shadowfx()
 		gg.refineNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 			gg.clearResults()
-			toast("Shadow "..tmp0[3],true)
+			toast("Shadow "..tmp0[3])
 		end
 		tmp0 = nil
 	end
@@ -1408,11 +1405,11 @@ function cheat_clrdpplesp()
 		gg.searchNumber(tmp0[1], gg.TYPE_FLOAT)
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",true)
+			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp0[2], gg.TYPE_FLOAT)
 			gg.clearResults()
-			toast("Colored people ESP "..tmp0[3],true)
+			toast("Colored people ESP "..tmp0[3])
 		end
 		tmp0 = nil
 	end
@@ -1438,21 +1435,21 @@ function cheat_deleteingameplaytext()
 	gg.searchNumber(":CAPTURE", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
 	gg.searchNumber(":KILL", gg.TYPE_BYTE) gg.getResults(100) gg.editAll(":", gg.TYPE_BYTE)
 	gg.clearResults()
-	toast("In-gameplay-text cleared, to restore, you have to restart the game\nPS: This might not work, idk why though..",true)
+	toast("In-gameplay-text cleared, to restore, you have to restart the game\nPS: This might not work, idk why though..")
 end
 
 
 function cheat2_givegrenade()
 	gg.setRanges(gg.REGION_C_BSS)
 	local stp = gg.prompt({'Put grenade current ammo','Put new grenade ammo'})
-	toast('Don\'t change the ammo just yet',true)
+	toast('Don\'t change the ammo just yet')
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2],true)
+	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	sleep(3000)
-	toast('Timeout, searching for '..stp[2],true)
+	toast('Timeout, searching for '..stp[2])
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version',true)
+		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
 	else
 		local t = {}
 		t[1] = {}
@@ -1461,21 +1458,21 @@ function cheat2_givegrenade()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		toast('Grenade ammo ON',true)
+		toast('Grenade ammo ON')
 	end
 end
 
 function cheat2_givebomb()
 	gg.setRanges(gg.REGION_C_BSS)
 	local stp = gg.prompt({'Put Sticky bomb current ammo','Put new Sticky bomb ammo'})
-	toast('Don\'t change the ammo just yet',true)
+	toast('Don\'t change the ammo just yet')
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2],true)
+	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	sleep(3000)
-	toast('Timeout, searching for '..stp[2],true)
+	toast('Timeout, searching for '..stp[2])
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version',true)
+		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
 	else
 		local t = {}
 		t[1] = {}
@@ -1484,21 +1481,21 @@ function cheat2_givebomb()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		toast('C4 ammo ON',true)
+		toast('C4 ammo ON')
 	end
 end
 
 function cheat2_givelaser()
 	gg.setRanges(gg.REGION_C_BSS)
 	local stp = gg.prompt({'Put laser current ammo','Put laser new ammo'})
-	toast('Don\'t change the ammo just yet',true)
+	toast('Don\'t change the ammo just yet')
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2],true)
+	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	sleep(3000)
-	toast('Timeout, searching for '..stp[2],true)
+	toast('Timeout, searching for '..stp[2])
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version',true)
+		toast('Can\'t find the specific set of number, i recommend using "Weapon ammo" menu, since it will work for latest version')
 	else
 		local t = {}
 		t[1] = {}
@@ -1507,7 +1504,7 @@ function cheat2_givelaser()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		toast('Laser ammo ON',true)
+		toast('Laser ammo ON')
 	end
 	tmp = nil
 end
@@ -1515,14 +1512,14 @@ end
 function cheat2_win()
 	gg.setRanges(gg.REGION_ANONYMOUS)
 	local stp = gg.prompt({'Enter ammo (the original ICE Menu dev told that all ammo can work, this might wrong)','Enter new ammo value'})
-	toast('Don\'t change the ammo just yet',true)
+	toast('Don\'t change the ammo just yet')
 	gg.searchNumber(stp[1], gg.TYPE_DWORD)
-	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2],true)
+	toast('3 seconds to change ammo value from '..stp[1]..' to '..stp[2])
 	sleep(3000)
-	toast('Timeout, searching for '..stp[2],true)
+	toast('Timeout, searching for '..stp[2])
 	local v = gg.refineNumber(stp[2], gg.TYPE_DWORD)
 	if gg.getResultCount() == 0 then
-		toast('Can\'t find the specific set of number',true)
+		toast('Can\'t find the specific set of number')
 	else
 		local t = {}
 		t[1] = {}
@@ -1531,7 +1528,7 @@ function cheat2_win()
 		t[1].value = 1
 		gg.setValues(t)
 		gg.clearResults()
-		toast('Level Win ON',true)
+		toast('Level Win ON')
 	end
 end
 
@@ -1581,23 +1578,23 @@ function loopSearch(desiredResultCount,valueType,msg1,msg2)
 			while gg.getResultCount() >= desiredResultCount+1 do
 				tmpResultCount = gg.getResultCount()
 				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease == true and tonumber(num1[1]) >= 20) then
-					toast('Got '..tmpResultCount..' results\n3 seconds to reduce ammo value',true)
+					toast('Got '..tmpResultCount..' results\n3 seconds to reduce ammo value')
 					sleep(1000)
-					toast('Got '..tmpResultCount..' results\n2 seconds to reduce ammo value',true)
+					toast('Got '..tmpResultCount..' results\n2 seconds to reduce ammo value')
 					sleep(1000)
-					toast('Got '..tmpResultCount..' results\n1 seconds to reduce ammo value',true)
+					toast('Got '..tmpResultCount..' results\n1 seconds to reduce ammo value')
 					sleep(1000)
-					toast('Timeout, searching...',true)
+					toast('Timeout, searching...')
 					gg.refineNumber("0~32767")
 					gg.searchFuzzy(0,gg.SIGN_FUZZY_LESS)
 				else
 				--old method:ask user their current ammo
 				--because mostly the ammo will go down, we should use fuzzy and dont ask user about ammo anymore (but theres a bug with searchFuzzy itself, it wouldnt found anything AT ALL COST IF USED IN SCRIPT!!!)
-					toast('3 seconds to change ammo value',true)
+					toast('3 seconds to change ammo value')
 					sleep(1000)
-					toast('2 seconds to change ammo value',true)
+					toast('2 seconds to change ammo value')
 					sleep(1000)
-					toast('1 seconds to change ammo value',true)
+					toast('1 seconds to change ammo value')
 					sleep(1000)
 					num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..tmpResultCount},{num1[1]})
 					gg.refineNumber("0~32767")
@@ -1669,7 +1666,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="2.0.0"
+		VERSION="2.0.0b"
 	}
 	cfg_file = gg.getFile()..'.conf'
 	local cfg_load = loadfile(cfg_file)
@@ -1678,7 +1675,7 @@ function loadConfig()
 		cfg_load.VERSION = cfg.VERSION
 		cfg = MergeTables(cfg,cfg_load)
 	else
-		toast("No configuration files detected, Creating new one... 💾️\nHi There! 👋️ Looks like You're new here.",true)
+		toast("No configuration files detected, Creating new one... 💾️\nHi There! 👋️ Looks like You're new here.")
 		gg.saveVariable(cfg,cfg_file)
 	end
 	VAL_PlayerCurrentName = cfg.PlayerCurrentName
@@ -1690,7 +1687,7 @@ function restoreSuspend()
 	susp_file = gg.getFile()..'.suspend'
 	local susp = loadfile(susp_file)
 	if susp ~= nil then
-		toast(string.format("Suspend_Detected"),true)
+		toast(string.format("Suspend_Detected"))
 		susp = susp()
 		cfg = susp.cfg
 		revert = susp.revert
@@ -1707,8 +1704,13 @@ end
 revert = {}
 MemoryBuffer = {}
 --generic functions
-alert = gg.alert
-toast = gg.toast
+alert = function(str,...)
+	gg.alert(string.format(str),...)
+end
+toast = function(str,fastmode)
+	if fastmode == nil then fastmode = true end
+	gg.toast(str,fastmode)
+end
 sleep = gg.sleep
 
 VAL_PstlSgKnockback="0.25"
