@@ -1,17 +1,19 @@
 # Payback2 CHEATus, dibuat oleh ABJ4403.
-[`🇺🇸️ README English`](https://github.com/ABJ4403/Payback2_CHEATus)
+[`🇺🇸️ ReadMe English`](https://github.com/ABJ4403/Payback2_CHEATus)
 
 Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang dimana ini adalah "fork" dari skrip cheat Mangyu tapi lebih bagus, sedikit-bloated, dan mudah untuk dibaca.
 
 # Fitur:
-`🔫 Pistol/SG Knockback` `🔫 Ammo senjata` `🔫 Rel0ad (Tidak ada jeda isi ulang/no reload)` `🧱 Wall Hack` `🦠❌ 0-Malware verified` `💰❌ FOSS (Gratis & bersumber-terbuka)` `dll`
-- No Reload (LANGKA untuk mendapatkan cheat seperti ini).
-- Nilai Knockback Pistol/Shotgun Kustom.
-- Modifier Ammo Senjata.
-- Wall Hack.
-- Eksperimen performa (opsional).
-- Pencarian memori terbatas (hanya cari di beberapa area memory (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB)))
-- Buffer Memori (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
+- `🔫 No Reload` (Tidak ada jeda isi ulang/no reload. LANGKA untuk mendapatkan cheat seperti ini).
+- `🛡️➕️ Immortalitas` (LANGKA untuk mendapatkan cheat seperti ini).
+- `🔫 Knockback Pistol/SG`.
+- `🔫 Ammo Senjata`.
+- `🧱 Wall Hack`.
+- `📈️ Eksperimen performa` (opsional).
+- `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memory (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB)))
+- `📈️ Buffer Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
+- `🦠❌ 0-Malware`
+- `💰❌ FOSS (Gratis & bersumber-terbuka)`
 - Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
 
 Masih bingung? menuju ke [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
