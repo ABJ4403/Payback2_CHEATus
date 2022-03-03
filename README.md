@@ -12,11 +12,11 @@ Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "f
 - `📈️ Performance experiment` (optional).
 - `📈️ Memory restricted search` (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB)))
 - `📈️ Memory Buffer` (technical feature that accelerates searches on area that won't change alot).
-- `🦠❌ 0-Malware`
-- `💰❌ FOSS (Free & Open-source)`
+- `🦠❌ 0-Malware` its because...
+- `💰❌ FOSS (Free & Open-source)` this cheat source code is not compiled (or even encrypted) so people can make sure this isnt malware.
 - And more that i didnt mention here (because some of them wont work).
 
-If you still confused about these stuff, go to [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
+still confused about these stuff? go to [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
 
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
 
@@ -44,12 +44,11 @@ Because i see Payback 2 players (notably cheaters) are very rude, and did'nt wan
 
 # Credit
 - Mangyu - Original script author.
-- mdp43140 - Contributor.
+- mdp43140 - Main Contributor.
 - tehtmi - unluac Creator (and decompile helper).
 - Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX and ToxicCoder - for providing the removed script through YouTube and MediaFire.
-- Alpha GG Hacker - for providing "Wall Hack" & "Car Health" GameGuardian Values (no thanks for ridicilous military-encryption script though...)
+- AlphaGGHacker - for providing "Wall Hack" & "Car Health" GameGuardian Values (no thanks for ridicilous military-encryption script though...)
 - GKTV (Pumpkin Hacker) - Payback2 GG script.
-- Hydra - no thanks for "no reload cheat" tutor and script that doesn't even work, even the values that he encrypt.
-- Joker - for providing "No Blast Damage", and "No Reload" GameGuardian Values.
+- Joker? - for providing "No Blast Damage", and "No Reload" GameGuardian Values.
 

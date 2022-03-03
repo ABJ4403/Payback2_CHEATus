@@ -12,8 +12,8 @@ Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang diman
 - `📈️ Eksperimen performa` (opsional).
 - `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memory (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB)))
 - `📈️ Buffer Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
-- `🦠❌ 0-Malware`
-- `💰❌ FOSS (Gratis & bersumber-terbuka)`
+- `🦠❌ 0-Malware` itu karena...
+- `💰❌ FOSS (Gratis & bersumber-terbuka)` sumber kode cheat ini tidak dicompile (atau bahkan dienkripsi) jadi orang lain bisa memastikan bahwa ini bukan malware.
 - Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
 
 Masih bingung? menuju ke [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
@@ -44,12 +44,11 @@ Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak m
 
 # Kredit
 - Mangyu - Pembuat skrip original.
-- mdp43140 - Kontributor.
+- mdp43140 - Kontributor Utama.
 - tehtmi - Pembuat unluac (dan helper dekompilasi).
 - Crystal_Mods100x - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui YouTube dan MediaFire.
-- Alpha GG Hacker - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk `enkripsi level 666 yang sangggggat giilaaa`).
+- AlphaGGHacker - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk `enkripsi level 666 yang sangggggat giilaaa`).
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2.
-- Hydra (tidak terimakasih untuk tutorial dan skrip wall hack yang bisa jalan aja nggak, bahkan valuenya (yang dia enkripsi) tidak bisa jalan broo).
-- Joker - Untuk menyediakan Value "No Blast Damage", dan "No Reload" GameGuardian.
+- Joker? - Untuk menyediakan Value "No Blast Damage", dan "No Reload" GameGuardian.
 
