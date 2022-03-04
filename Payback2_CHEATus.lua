@@ -388,7 +388,7 @@ function cheat_pistolknockback()
 		elseif CH == 9 then
 			CH,memBuffer.PistolKnockback = nil,nil
 			cheat_pistolknockback()
-		end		
+		end
 		if PISTOL_KNOCKBACK_VALUE ~= nil then
 		-- | gg.REGION_ANONYMOUS
 			gg.setRanges(gg.REGION_C_ALLOC)
@@ -680,7 +680,7 @@ function cheat_strongveichle()
 		elseif CH == 8 then
 			CH,memBuffer.CarHealth = nil,nil
 			cheat_strongveichle()
-		end		
+		end
 		if CAR_HEALTH_VALUE ~= nil then
 			gg.setRanges(gg.REGION_CODE_APP)
 			if memBuffer.CarHealth == nil then
@@ -883,7 +883,7 @@ function cheat_noreload()
 				t[1].freeze = true
 				t[1].name = "Pb2Chts [Rel0adTimer]"
 				gg.setValues(t)
-				gg.addListItems(t)				
+				gg.addListItems(t)
 				weaponAmmo.value = 30000
 				gg.setValues({weaponAmmo})
 				gg.clearResults()
