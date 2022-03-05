@@ -1,5 +1,5 @@
-gg.getFile=gg.getFile()
-local gg,tmp,revert,memBuffer,memOffset,memRange,susp_file,cfg_file,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,{},{},{},{},{},gg.getFile..'.suspend',gg.getFile..'.conf'
+--Predefine local variables (can improve performance according to lua-users.org wiki)
+local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,memRange,HOMEDM,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{}
 
 function MENU()
 --Let the user choose stuff
@@ -40,9 +40,11 @@ function MENU()
 	elseif CH == 16 then exit()
 	elseif CH == 17 then suspend() end
 	CH = nil
-	tmp = {}
+--This will clear tmp without creating memory garbage (doing tmp={} adds more memory garbage, try print({}) in Lua interpreter, you will see "table: 0xXXXXXXXXXXXX", that will be always different address)
+	for i in pairs(tmp) do tmp[i] = nil end
+--Now collectgarbage can have an easy time to clear all that crap
 	collectgarbage("collect")
-	HOMEDM=0
+	HOMEDM=nil
 end
 
 function MENU_CSD()
@@ -126,12 +128,12 @@ function MENU_settings()
 	if CH == 12 then MENU()
 	elseif CH == 1 then
 		local CH = gg.prompt({'Put your new default player name'},{cfg.PlayerCurrentName},{'text'})
-		if (CH ~= nil and CH[1] ~= nil) then cfg.PlayerCurrentName = CH[1] end
+		if (CH and CH[1]) then cfg.PlayerCurrentName = CH[1] end
 		CH = nil
 		MENU_settings()
 	elseif CH == 2 then
 		local CH = gg.prompt({'Put your new default custom player name'},{cfg.PlayerCustomName},{'text'})
-		if (CH ~= nil and CH[1] ~= nil) then cfg.PlayerCustomName = CH[1] end
+		if (CH and CH[1]) then cfg.PlayerCustomName = CH[1] end
 		CH = nil
 		MENU_settings()
 	elseif CH == 3 then
@@ -181,9 +183,6 @@ end
 	On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
 	old version uses Ca,Ch,Jh,A (C++Alloc,C++Heap,JavaHeap,Annonymous)
 	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
-	some hint for u:
-	don't forget to clear result before searching new ones if it fails
-	#var is length
 ]]
 
 function cheat_weaponammo()
@@ -266,7 +265,7 @@ function cheat_weaponammo()
 		end
 	elseif CH == 2 then
 		CH = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;..whatever\nbut i recommend diving each with ";0W;" instead (for more accuracy)'})
-		if (CH ~= nil and CH[1] ~= nil) then
+		if (CH and CH[1]) then
 			tmp = 0xB6730000
 			gg.searchNumber(CH[1]..":29",gg.TYPE_DWORD,nil,nil,tmp+0x3C4,tmp+0x4E0)
 			gg.getResults(16)
@@ -371,16 +370,15 @@ function cheat_pistolknockback()
 		elseif CH == 4 then PISTOL_KNOCKBACK_VALUE = 1e-5
 		elseif CH == 5 then
 			local CH = gg.prompt({'Input your custom knockback value'})
-			if (CH == nil or CH[1] == nil) then
-				cheat_pistolknockback()
+			if (CH and CH[1]) then
+				PISTOL_KNOCKBACK_VALUE = CH[1]
 			else
-				PISTOL_KNOCKBACK_VALUE,CH = CH[1],nil
+				cheat_pistolknockback()
 			end
 		---
 		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current knockback value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current pistol/shotgun knockback value'},{[1] = VAL_PstlSgKnckbck},{[1] = 'number'})
-			if (CH == nil or CH[1] == nil) then VAL_PstlSgKnckbck = CH[1] end
-			CH = nil
+			if (CH and CH[1]) then VAL_PstlSgKnckbck = CH[1] end
 			cheat_pistolknockback()
 		elseif CH == 8 then
 			CH,revert.PistolKnockback = nil,nil
@@ -392,7 +390,7 @@ function cheat_pistolknockback()
 		if PISTOL_KNOCKBACK_VALUE ~= nil then
 		-- | gg.REGION_ANONYMOUS
 			gg.setRanges(gg.REGION_C_ALLOC)
-			if memBuffer.PistolKnockback == nil then
+			if not memBuffer.PistolKnockback then
 				toast('No buffer found, creating new buffer')
 		 -- Find specific value
 				gg.searchNumber(VAL_PstlSgKnckbck.."F;1067869798D::13",gg.TYPE_FLOAT,false,gg.SIGN_EQUAL)
@@ -472,7 +470,7 @@ function cheat_wallhack()
 		if tmp ~= nil then
 			if tmp[1] == 1 then
 				gg.setRanges(gg.REGION_CODE_APP)
-				if memBuffer.wallhack_gktv == nil then
+				if not memBuffer.wallhack_gktv then
 					toast('No previous memory buffer found, creating new buffer.')
 					gg.searchNumber(tmp[2][1])
 					gg.refineNumber(tmp[2][3],gg.TYPE_FLOAT)
@@ -499,7 +497,7 @@ function cheat_wallhack()
 				end
 			elseif tmp[1] == 2 then
 				gg.setRanges(gg.REGION_C_ALLOC)
-				if memBuffer.wallhack == nil then
+				if not memBuffer.wallhack then
 					toast('No previous memory buffer found, creating new buffer.')
 					gg.searchNumber(tmp[2])
 					memBuffer.wallhack,revert.wallhack = gg.getResults(50,nil,nil,nil,nil,nil,gg.TYPE_DWORD),gg.getResults(50,nil,nil,nil,nil,nil,gg.TYPE_DWORD)
@@ -520,7 +518,7 @@ function cheat_wallhack()
 				end
 			elseif tmp[1] == 3 then
 				gg.setRanges(gg.REGION_OTHER)
-				if memBuffer.wallhack_hydra == nil then
+				if not memBuffer.wallhack_hydra then
 					toast('No previous memory buffer found, creating new buffer.')
 					gg.searchNumber(tmp[2],gg.TYPE_DWORD)
 					gg.refineNumber(1)
@@ -611,7 +609,7 @@ function cheat_bigbody()
 				toast("Big body OFF")
 			end
 		elseif CH == 5 then
-			if revert.bigbody == nil then
+			if not revert.bigbody then
 				toast("No values to restore, this might be a bug. if you think so, report bug on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
 				gg.setValues(revert.bigbody)
@@ -661,18 +659,15 @@ function cheat_strongveichle()
 		elseif CH == 3 then CAR_HEALTH_VALUE = -1
 		elseif CH == 4 then
 			local CH = gg.prompt({'Input your custom Veichle default health value'})
-			if (CH == nil or CH[1] == nil) then
-				cheat_strongveichle()
+			if (CH and CH[1]) then
+				CAR_HEALTH_VALUE = CH[1]
 			else
-				CAR_HEALTH_VALUE,CH = CH[1],nil
+				cheat_strongveichle()
 			end
 		---
 		elseif CH == 6 then
 			local CH = gg.prompt({'If you think the current Veichle default health value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Veichle default health value'},{[1] = VAL_CrDfltHlth},{[1] = 'number'})
-			if (CH == nil or CH[1] == nil) then
-				VAL_CrDfltHlth = CH[1]
-			end
-			CH = nil
+			if (CH and CH[1]) then VAL_CrDfltHlth = CH[1] end
 			cheat_strongveichle()
 		elseif CH == 7 then
 			CH,revert.CarHealth = nil,nil
@@ -683,7 +678,7 @@ function cheat_strongveichle()
 		end
 		if CAR_HEALTH_VALUE ~= nil then
 			gg.setRanges(gg.REGION_CODE_APP)
-			if memBuffer.CarHealth == nil then
+			if not memBuffer.CarHealth then
 				toast('No buffer found, creating new buffer')
 				gg.searchNumber(VAL_CrDfltHlth.."D;4D;1F::21")
 				gg.refineNumber(VAL_CrDfltHlth,gg.TYPE_DWORD)
@@ -725,18 +720,15 @@ function cheat_noblastdamage()
 		elseif CH == 2 then DAMAGE_INTENSITY_VALUE = 300
 		elseif CH == 3 then
 			local CH = gg.prompt({'Input your custom damage intensity'})
-			if (CH == nil or CH[1] == nil) then
-				cheat_noblastdamage()
+			if (CH and CH[1]) then
+				DAMAGE_INTENSITY_VALUE = CH[1]
 			else
-				DAMAGE_INTENSITY_VALUE,CH = CH[1],nil
+				cheat_noblastdamage()
 			end
 		---
 		elseif CH == 5 then
 			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{[1] = VAL_DmgIntnsty},{[1] = 'number'})
-			if (CH == nil or CH[1] == nil) then
-				VAL_DmgIntnsty = CH[1]
-			end
-			CH = nil
+			if (CH and CH[1]) then VAL_DmgIntnsty = CH[1] end
 			cheat_noblastdamage()
 		elseif CH == 6 then
 			CH,revert.NoBlastDamage = nil,nil
@@ -747,7 +739,7 @@ function cheat_noblastdamage()
 		end
 		if DAMAGE_INTENSITY_VALUE ~= nil then
 			gg.setRanges(gg.REGION_CODE_APP)
-			if memBuffer.NoBlastDamage == nil then
+			if not memBuffer.NoBlastDamage then
 				toast('No buffer found, creating new buffer')
 				gg.searchNumber("-7264W;10W;-5632W;"..VAL_DmgIntnsty.."F;17302W::9")
 				gg.refineNumber(VAL_DmgIntnsty,gg.TYPE_FLOAT)
@@ -851,7 +843,7 @@ function cheat_noreload()
 				weaponAmmo.value = 30000
 				gg.setValues({weaponAmmo})
 				gg.clearResults()
-				if cfg.cheatSettings.noreload.useSearch20 == true then
+				if cfg.cheatSettings.noreload.useSearch20 then
 				--The new method searches an anchor (which will not change position), and define bunch of values there
 					gg.searchNumber(20,gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
 					local anchorAddress = gg.getResults(1)
@@ -911,19 +903,19 @@ function cheat_noreload()
 				}
 				}
 				local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0;100]"},{0},{"number"})
-				if (grenadeRange ~= nil and tonumber(grenadeRange[1]) ~= 0) then
+				if (grenadeRange and grenadeRange[1] ~= "0") then
 					toast("Wait for it, dont forget to hold your grenade")
 					sleep(999)
 					t[1].value = grenadeRange[1]
 					gg.setValues(t)
 					gg.addListItems(t)
-					grenadeRange = nil
 					sleep(999)
 				end
 				t[1].value = -63
 				gg.setValues(t)
 				gg.addListItems(t)
 				toast('Rel0ad (Grenade) On. WARNING:\n- DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\n- You need to disable Rel0ad grenade before using Other Reload (for shotgun, pistol).\n- You cant shoot pistol,shotgun,etc when using Rel0ad Grenade.')
+				grenadeRange = nil
 				gg.clearResults()
 			end
 		end
@@ -992,7 +984,7 @@ function cheat_c4paint()
 	--clear result to make sure 0 errors
 		gg.clearResults()
 	--optional stuff
-		if cfg.cheatSettings.c4paint.useSearch20 == true then
+		if cfg.cheatSettings.c4paint.useSearch20 then
 		--search for anchor
 			gg.searchNumber(20,gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
 			local anchorAddress = gg.getResults(1)
@@ -1102,17 +1094,17 @@ function cheat_changeplayername()
 	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_OTHER)
 --request user to give player name
 	local player_name = gg.prompt({
-		'Put your current player name (case-sensitive, ":" is required at the beginning because how GameGuardian search works)',
+		'Put your current player name (case-sensitive, ":" or ";" is required at the beginning, because how GameGuardian search works)',
 		'Put new player name (cannot be longer than current name, you can change color/add icon by converting to hex and use hex 1-9 for color)'
 	},{
-		[1]=VAL_PlayerCurrentName,
-		[2]=cfg.PlayerCustomName
+		VAL_PlayerCurrentName,
+		cfg.PlayerCustomName
 	},{
-		[1]="text",
-		[2]="text"
+		"number",
+		"number"
 	})
 --search old player name
-	if (player_name ~= nil and player_name[1] ~= nil and player_name[1] ~= ":") then
+	if (player_name and player_name[1] and player_name[1] ~= ":") then
 		gg.searchNumber(player_name[1],gg.TYPE_BYTE)
 		revert.PlayerName = gg.getResults(5555)
 		if gg.getResultCount() == 0 then
@@ -1147,7 +1139,7 @@ function cheat_changeplayernamecolor()
 		"---",
 		string.format("Back")
 	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'text'})
-	if (CH ~= nil or player_name ~= nil and player_name[1] ~= nil and player_name[1] ~= ":") then
+	if (CH or player_name and player_name[1] and player_name[1] ~= ":") then
 	--Color
 		if CH == 2 then player_color_choice = 1
 		elseif CH == 3 then player_color_choice = 2
@@ -1482,13 +1474,13 @@ end
 function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	local num1,t = gg.prompt({msg1})
 	restrictedMemArea = restrictedMemArea or {}
-	if (num1 ~= nil and num1[1] ~= nil) then
+	if (num1 and num1[1]) then
 	--Search within restricted memory address, which will give more performance
 		gg.searchNumber(num1[1],valueType,nil,nil,restrictedMemArea[1],restrictedMemArea[2])
 		if gg.getResultCount() ~= 0 then
 			while gg.getResultCount() >= desiredResultCount+1 do
 				tmp = gg.getResultCount()
-				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease == true and tonumber(num1[1]) >= 20) then
+				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease and tonumber(num1[1]) >= 20) then
 					toast('Got '..tmp..' results\n3 seconds to reduce ammo value')
 					sleep(999)
 					toast('Got '..tmp..' results\n2 seconds to reduce ammo value')
@@ -1508,7 +1500,7 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 					toast('1 seconds to change ammo value')
 					sleep(999)
 					num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..tmp},{num1[1]})
-					if (num1 == nil or num1[1] == nil) then break end
+					if not (num1 and num1[1]) then break end
 					gg.refineNumber("0~32767")
 					gg.refineNumber(num1[1])
 				end
@@ -1517,12 +1509,11 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 				if tmp == 2 then
 					t = gg.getResults(2)
 					if t[1].value == t[2].value then
-						tmp = {}
 						return {t[1]}
 					end
 			--If nothing found...
 				elseif tmp == 0 then
-					if restrictedMemArea[1] == nil then
+					if not restrictedMemArea[1] then
 					--If fail but have restricted memory, try again with no restriction
 						break
 					else
@@ -1533,7 +1524,6 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 					end
 				end
 			end
-			tmp = {}
 			return gg.getResults(desiredResultCount)
 		end
 	end
@@ -1553,15 +1543,18 @@ function MergeTables(...)
 		end
 	return r
 end
-function ConcatTables(t1,t2)
+function ConcatTables(...)
 	--[[
 		Creates new table then
 		add table 1 and table 2
 	]]
-	for i=1,#t2 do
-		t1[#t1+i] = t2[i]
+	local r = {}
+	for _,t in ipairs{...} do
+		for i=1,#t do
+			r[#r+i] = t[i]
+		end
 	end
-	return t1
+	return r
 end
 function update_language()
 	--[[
@@ -1599,7 +1592,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="2.0.2"
+		VERSION="2.0.2b"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load ~= nil then
@@ -1624,7 +1617,7 @@ function restoreSuspend()
 		cfg = susp.cfg
 		revert = susp.revert
 		memBuffer = susp.memBuffer
-		if cfg.removeSuspendAfterRestoredSession == true then
+		if cfg.removeSuspendAfterRestoredSession then
 			os.remove(susp_file)
 		end
 	end
@@ -1641,7 +1634,6 @@ toast = function(str,fastmode)
 	gg.toast(str,fastmode)
 end
 sleep = gg.sleep
-
 VAL_PstlSgKnckbck=0.25
 VAL_CrDfltHlth=125
 VAL_DmgIntnsty=300
@@ -1698,28 +1690,32 @@ Suspend_Text		 = "Anda keluar dari program melalui opsi suspensi. Anda bisa mela
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403."
 }
 }
-
 string.format2=string.format
 string.format=function(input,...)
-	if (
-		input == "Automatic" or
-		input == "About" or
-		input == "About_Text" or
-		input == "Back" or
-		input == "Credits" or
-		input == "Credits_Text" or
-		input == "Disclaimmer" or
-		input == "Disclaimmer_Text" or
-		input == "Exit" or
-		input == "Exit_ThankYouMsg" or
-		input == "License" or
-		input == "License_Text" or
-		input == "Settings" or
-		input == "Suspend" or
-		input == "Suspend_Detected" or
-		input == "Suspend_Text" or
-		input == "Title_Version"
-	) then return lang[curr_lang][input] end
+	local predefinedLanguages = {
+		"Automatic",
+		"About",
+		"About_Text",
+		"Back",
+		"Credits",
+		"Credits_Text",
+		"Disclaimmer",
+		"Disclaimmer_Text",
+		"Exit",
+		"Exit_ThankYouMsg",
+		"License",
+		"License_Text",
+		"Settings",
+		"Suspend",
+		"Suspend_Detected",
+		"Suspend_Text",
+		"Title_Version"	
+	}
+	for i=1,#predefinedLanguages do
+		if input == predefinedLanguages[i] then
+			return lang[curr_lang][input]
+		end
+	end
 	return string.format2(input,...)
 end
 
@@ -1731,9 +1727,9 @@ ShowMenu = MENU
 while true do
 	if gg.isVisible() then
 		gg.setVisible(false)
-		HOMEDM = 1
+		HOMEDM=true
 	end
-	if HOMEDM == 1 then
+	if HOMEDM then
 		ShowMenu()
 	end
 end
