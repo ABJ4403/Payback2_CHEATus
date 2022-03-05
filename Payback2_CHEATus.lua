@@ -1,5 +1,5 @@
 --Predefine local variables (can improve performance according to lua-users.org wiki)
-local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,memRange,HOMEDM,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{}
+local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,memRange,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{}
 
 function MENU()
 --Let the user choose stuff
@@ -49,7 +49,6 @@ function MENU()
 	end
 --Now collectgarbage can have an easy time to clear all that crap
 	collectgarbage("collect")
-	HOMEDM=nil
 end
 
 function MENU_CSD()
@@ -65,8 +64,9 @@ function MENU_CSD()
 		"6. Colored trees",
 		"7. Big Flamethrower (Item)",
 		"8. Shadows",
-		"9. Colored People's (ESP, ExtraSensoryPerception. i think this is X-Ray Hack)",
-		"10. Delete All Names",
+		"9. Colored People's (ESP)",
+		"10. Reflection Graphics",
+		"11. Delete All Names",
 		"---",
 		string.format("__back__")
 	},nil,string.format("Title_Version"))
@@ -80,10 +80,11 @@ function MENU_CSD()
 	elseif CH == 8 then cheat_coloredtree()
 	elseif CH == 9 then cheat_bigflamethroweritem()
 	elseif CH == 10 then cheat_shadowfx()
-	elseif CH == 11 then cheat_clrdpplesp()
-	elseif CH == 12 then cheat_delete_ingameplaytext()
+	elseif CH == 11 then cheat_clrdpplsp()
+	elseif CH == 12 then cheat_reflectiongraphics()
+	elseif CH == 13 then cheat_delete_ingameplaytext()
 ---
-	elseif CH == 14 then MENU() end
+	elseif CH == 15 then MENU() end
 end
 
 function MENU_incompat()
@@ -385,10 +386,10 @@ function cheat_pistolknockback()
 			if (CH and CH[1]) then VAL_PstlSgKnckbck = CH[1] end
 			cheat_pistolknockback()
 		elseif CH == 8 then
-			CH,revert.PistolKnockback = nil,nil
+			revert.PistolKnockback = nil
 			cheat_pistolknockback()
 		elseif CH == 9 then
-			CH,memBuffer.PistolKnockback = nil,nil
+			memBuffer.PistolKnockback = nil
 			cheat_pistolknockback()
 		end
 		if PISTOL_KNOCKBACK_VALUE then
@@ -1211,7 +1212,6 @@ function cheat_changeplayernamecolor()
 	end
 end
 
-
 function cheat_walkwonkyness()
 	local CH = gg.choice({
 		"Default (0.004)",
@@ -1280,7 +1280,7 @@ function cheat_bigflamethroweritem()
 		elseif CH == 2 then tmp={5.1403,0.9,"OFF"} end
 	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
-		gg.searchNumber("0.4;0.2;"..tm0[1]..";24000::13",gg.TYPE_FLOAT)
+		gg.searchNumber("0.4;0.2;"..tmp[1]..";24000::13",gg.TYPE_FLOAT)
 		gg.refineNumber(tmp[1])
 		local t = gg.getResults(100)
 		if gg.getResultCount() == 0 then
@@ -1301,13 +1301,12 @@ function cheat_shadowfx()
 	},nil,"Shadow effects\nInfo: this wont affect your game performance at all (not making it lag/fast)\ndont use this for performance purpose :)")
 	if CH then
 		if CH == 3 then MENU()
-		elseif CH == 1 then tmp{1e-4,-1.0012,"Disabled"}
-		elseif CH == 2 then tmp{-1.0012,1e-4,"Enabled"} end
-	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
+		elseif CH == 1 then tmp={1e-4,-1.0012,"Disabled"}
+		elseif CH == 2 then tmp={-1.0012,1e-4,"Enabled"} end
 		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber(tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",gg.TYPE_FLOAT)
 		gg.refineNumber(tmp[1],gg.TYPE_FLOAT)
-		local t = gg.getResults(1)
+		revert.shadow = gg.getResults(1)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
@@ -1318,24 +1317,24 @@ function cheat_shadowfx()
 	end
 end
 
-function cheat_clrdpplesp()
+function cheat_clrdpplsp()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
 		string.format("__back__")
-	},nil,"Colored people ESP (idk wut esp mean here)\nPS: Not work on latest version")
+	},nil,"Colored people ESP (ExtraSensoryPerception. i guess this is X-Ray Hack)\nPS: Not work on latest version")
 	if CH then
 		if CH == 3 then MENU()
 		elseif CH == 1 then tmp={0.08,436,"ON"}
 		elseif CH == 2 then tmp={436,0.08,"OFF"} end
-	--gg.REGION_C_ALLOC | gg.REGION_C_BSS | gg.REGION_ANONYMOUS
 		gg.setRanges(gg.REGION_CODE_APP)
 		gg.searchNumber(tmp[1],gg.TYPE_FLOAT)
-		local t = gg.getResults(100)
+		revert.clrdpplsp = gg.getResults(9)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp[2],gg.TYPE_FLOAT)
+			gg.addListItems(revert.clrdpplsp)
 			gg.clearResults()
 			toast("Colored people ESP "..tmp[3])
 		end
@@ -1370,6 +1369,50 @@ function cheat_deleteingameplaytext()
 		gg.clearResults()
 	end
 	toast("In-gameplay-text cleared, to restore, you have to restart the game\nPS: This might not work, idk why though..")
+end
+
+function cheat_reflectiongraphics()
+	local CH = gg.choice({
+		"ON (1)",
+		"OFF (49)",
+		"Restore previous value",
+		string.format("__back__")
+	},nil,"Reflection graphics\nWARNING: this can cause rendering issue that is irreversible and requires restart to fix it\nDont forget to disable this before you get out of match\ni only recommend using this in offline mode so you can easily disable the reflection graphics before getting out of match")
+	if CH then
+		gg.setRanges(gg.REGION_OTHER)
+		if CH == 4 then MENU()
+		elseif CH == 1 then tmp={49,1,"ON"}
+		elseif CH == 2 then tmp={1,49,"OFF"} end
+		if tmp[3] then
+			if not memBuffer.rtxgraphics then
+				gg.toast('No previous memory buffer found, creating new buffer.')
+				gg.searchNumber("144;"..tmp[1]..";50::9",gg.TYPE_DWORD)
+				gg.refineNumber(tmp[1])
+				memBuffer.rtxgraphics,revert.rtxgraphics = gg.getResults(1),gg.getResults(1)
+			else
+				gg.toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
+				gg.loadResults(memBuffer.rtxgraphics)
+			end
+			if gg.getResultCount() == 0 then
+				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			else
+				memBuffer.rtxgraphics[1].value = tmp[2]
+				toast("Reflection Graphics "..tmp[3])
+				gg.setValues(memBuffer.rtxgraphics)
+			end
+		elseif CH == 3 then
+			if not revert.rtxgraphics then
+				toast("No values to restore, this might be a bug. if you think so, report bug on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			else
+				gg.setValues(revert.rtxgraphics)
+				revert.rtxgraphics = nil
+				gg.clearResults()
+				toast("Reflection Graphics previous value restored")
+			end
+		end
+		t = nil
+		gg.clearResults()
+	end
 end
 
 
@@ -1656,7 +1699,6 @@ loadConfig()
 local lang = {
 en_US={
 Automatic				 = "Automatic",
-About						 = "About",
 About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes",
 Credits					 = "Credits",
 Credits_Text		 = "Credit:\n+ Mangyu - Original script\n+ mdp43140 - Contributor\n+ tehtmi - unluac Creator (and decompile helper).\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX and ToxicCoder - for providing removed script through YT & MediaFire.\n+ Alpha GG Hacker - Wall Hack & Car Health GameGuardian Values\n+ GKTV (Pumpkin Hacker) - Payback2 GG script.\n+ Joker - for providing No Blast Damage and No Reload GameGuardian Values.",
@@ -1673,7 +1715,6 @@ Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403."
 },
 ['in']={
 Automatic				 = "Otomatis",
-About						 = "Tentang",
 About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang",
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n+ Mangyu - Pembuat skrip original.\n+ mdp43140 - Kontributor.\n+ tehtmi - Pembuat unluac (dan helper dekompilasi).\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire.\n+ Alpha GG Hacker - Values Wall Hack & Car Health GameGuardian \n+ GKTV (Pumpkin Hacker) - Skrip GG Payback2.\n+ Joker - Value No Blast Damage & No Reload GameGuardian.",
@@ -1693,14 +1734,11 @@ string.format2=string.format
 string.format=function(input,...)
 	local predefinedLanguages = {
 		"Automatic",
-		"About",
 		"About_Text",
-		"Back",
 		"Credits",
 		"Credits_Text",
 		"Disclaimmer",
 		"Disclaimmer_Text",
-		"Exit",
 		"Exit_ThankYouMsg",
 		"License",
 		"License_Text",
@@ -1726,9 +1764,6 @@ ShowMenu = MENU
 while true do
 	if gg.isVisible() then
 		gg.setVisible(false)
-		HOMEDM=true
-	end
-	if HOMEDM then
 		ShowMenu()
 	end
 end
