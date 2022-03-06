@@ -1,5 +1,5 @@
 --Predefine local variables (can improve performance according to lua-users.org wiki)
-local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,memRange,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{}
+local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,memRange,isStillOpen,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{},true
 
 function MENU()
 --Let the user choose stuff
@@ -203,16 +203,10 @@ function cheat_weaponammo()
 	gg.setRanges(gg.REGION_OTHER)
 	if CH == 6 then MENU()
 	elseif CH == 1 then
-		t = loopSearch(1,gg.TYPE_WORD,'Put (just) one of your weapon ammo',memRange.WpnAmmWrd)
-		if gg.getResultCount() == 0 then
+		local anchorAddress = findAnchor20('Put (just) one of your weapon ammo')
+		if not anchorAddress then
 			toast("Can't find the said number, did you put the right number?")
 		else
-			local weaponAmmo = t[1].address
-		--search for anchor
-			gg.clearResults()
-			gg.searchNumber(20,gg.TYPE_WORD,nil,nil,weaponAmmo - 0x2A,weaponAmmo)
-			local anchorAddress = gg.getResults(1)
-			anchorAddress = anchorAddress[1].address
 		--prepare the cheated weapon table
 			t = {
 				{
@@ -254,13 +248,13 @@ function cheat_weaponammo()
 				{
 					address=anchorAddress+0x28,
 					flags=gg.TYPE_WORD,
-					value=30000,
+					value=32222,
 					name="Pb2Chts [Weapon]: Turret"
 				},
 				{
 					address=anchorAddress+0x2A,
 					flags=gg.TYPE_WORD,
-					value=30000,
+					value=32222,
 					name="Pb2Chts [Weapon]: Laser"
 				},
 			}
@@ -839,65 +833,30 @@ function cheat_noreload()
 		if CH == 3 then MENU()
 		elseif CH == 1 then
 			gg.setRanges(gg.REGION_OTHER)
-			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo',memRange.WpnAmmWrd)
-			if gg.getResultCount() == 0 then
+			local anchorAddress = findAnchor20('Put one of your weapon ammo')
+			if not anchorAddress then
 				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
-				local weaponAmmo = t[1]
-				weaponAmmo.value = 30000
-				gg.setValues({weaponAmmo})
-				gg.clearResults()
-				if cfg.cheatSettings.noreload.useSearch20 then
-				--The new method searches an anchor (which will not change position), and define bunch of values there
-					gg.searchNumber(20,gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
-					local anchorAddress = gg.getResults(1)
-					anchorAddress = anchorAddress[1].address
-					t = {
-					{
-					address=anchorAddress+0x84,
-					flags=gg.TYPE_WORD,
-					}
-					}
-				else
-				--the old method searches the reload timing manually
-					gg.searchNumber(0,gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x5A,weaponAmmo.address + 0x68)
-					toast('Now shoot Pistol/Rocket/Shotgun (to trigger reload event timer. NOT machine gun, because it had different timing)')
-					local bunchOfZeroes = gg.getResults(100)
-					local foundTheValue = 0
-					while foundTheValue == 0 do
-						gg.refineNumber("-200~-1")
-						if gg.getResultCount() == 1 then
-							foundTheValue = 1
-						else
-							gg.loadResults(bunchOfZeroes)
-						end
-						sleep(100)
-					end
-					t = gg.getResults(1)
-				end
-				t[1].value = 0
-				t[1].freeze = true
-				t[1].name = "Pb2Chts [Rel0adTimer]"
+				t = {
+				{
+				address=anchorAddress+0x84,
+				flags=gg.TYPE_WORD,
+				value=0,
+				freeze=true,
+				name="Pb2Chts [Rel0adTimer]"
+				}
+				}
 				gg.setValues(t)
 				gg.addListItems(t)
-				weaponAmmo.value = 30000
-				gg.setValues({weaponAmmo})
 				gg.clearResults()
 				toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
 			end
 		elseif CH == 2 then
 			gg.setRanges(gg.REGION_OTHER)
-			t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i recommend grenade though)',memRange.WpnAmmWrd)
-			if gg.getResultCount() == 0 then
+			local anchorAddress = findAnchor20('Put one of your weapon ammo (i recommend grenade though)')
+			if not anchorAddress then
 				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 			else
-				local weaponAmmo = t[1]
-				weaponAmmo.value = 32767
-				gg.setValues({weaponAmmo})
-				gg.clearResults()
-				gg.searchNumber(20,gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
-				local anchorAddress = gg.getResults(1)
-				anchorAddress = anchorAddress[1].address
 				t = {
 				{
 				address=anchorAddress+0x84,
@@ -929,19 +888,10 @@ end
 function cheat_immortal()
 --this cheat is based on rel0ad cheat
 	gg.setRanges(gg.REGION_OTHER)
-	local t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the respawn stage interval is located near there)\nDISCLAIMMER:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!!!\n- DO NOT PvP with non-cheater with this cheat!!',memRange.WpnAmmWrd)
-	if gg.getResultCount() == 0 then
+	local anchorAddress = findAnchor20('Put one of your weapon ammo (i know its weird, because the respawn stage interval is located near there)\nDISCLAIMMER:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!!!\n- DO NOT PvP with non-cheater with this cheat!!')
+	if not anchorAddress then
 		toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 	else
-	--why not eh?
-		local weaponAmmo = t[1]
-		weaponAmmo.value = 30000
-		gg.setValues({weaponAmmo})
-		gg.clearResults()
-	--the core, search the health value (Located at xxxxxx08)
-		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
-		local anchorAddress = gg.getResults(1)
-		anchorAddress = anchorAddress[1].address
 		t = {
 		{
 			address=anchorAddress+0x08,
@@ -975,81 +925,27 @@ end
 function cheat_c4paint()
 --this cheat is based on rel0ad cheat
 	gg.setRanges(gg.REGION_OTHER)
---Warn user to not having any c4s placed, and detonate them if so (only if search20 is disabled).
-	if not cfg.cheatSettings.c4paint.useSearch20 then toast('Dont put any explosives. if any, explode it\nAnd make sure no reload is turned off because you will place and detonate C4') end
---ask user any ammo
-	t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo (i know its weird, because the c4 placement position is located near there)\nto make c4 painting possible, c4 current placed position must freezed to -1',memRange.WpnAmmWrd)
---glorioss thingizz
-	if gg.getResultCount() == 0 then
+--search for anchor 20
+	local anchorAddress = findAnchor20('Put one of your weapon ammo (i know its weird, because the c4 placement position is located near there)\nto make c4 painting possible, c4 current placed position must freezed to -1')
+	if not anchorAddress then
 		toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 	else
-	--just for the ezznezz
-		local weaponAmmo = t[1]
-	--clear result to make sure 0 errors
-		gg.clearResults()
-	--optional stuff
-		if cfg.cheatSettings.c4paint.useSearch20 then
-		--search for anchor
-			gg.searchNumber(20,gg.TYPE_WORD,nil,nil,weaponAmmo.address - 0x2A,weaponAmmo.address)
-			local anchorAddress = gg.getResults(1)
-			anchorAddress = anchorAddress[1].address
-			t = {
-				{
-					address=anchorAddress+0x2C,
-					flags=gg.TYPE_WORD,
-				},
-				{
-					address=anchorAddress+0x2E,
-					flags=gg.TYPE_WORD,
-				}
+		t = {
+			{
+				address=anchorAddress+0x2C,
+				flags=gg.TYPE_WORD,
+				value=-1,
+				freeze=true,
+				name="Pb2Chts [C4Position]: X"
+			},
+			{
+				address=anchorAddress+0x2E,
+				flags=gg.TYPE_WORD,
+				value=-1,
+				freeze=true,
+				name="Pb2Chts [C4Position]: Y"
 			}
-		else
-		--Tell user to Detonate any C4s it currently connected to, and wait 5sec...
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 5 seconds before proceed')
-			sleep(999)
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 4 seconds before proceed')
-			sleep(999)
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 3 seconds before proceed')
-			sleep(999)
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 2 seconds before proceed')
-			sleep(999)
-			toast('Now detonate any C4s you put (make sure Rel0ad is off to do it), 1 seconds before proceed')
-			sleep(999)
-		--Tell user to trigger C4 Placement...
-			toast('Now place the explosives anywhere you want (essentialy you can start painting now, but i recommend the use of Rel0ad, yes you can enable it now after you done this)')
-		--...While running some checking to detect some reduced number
-			gg.searchNumber(-1,gg.TYPE_WORD,nil,nil,weaponAmmo.address + 0x04,weaponAmmo.address + 0x10)
-			--Experiment2Begin
-			if gg.getResultCount() == 0 then
-				toast("Oh, this is weird 🤔️... We don't find the value we're searching for 🔍️. We will try hard, promise 😃️")
-				gg.searchNumber(-1,gg.TYPE_WORD,nil,nil,weaponAmmo.address,weaponAmmo.address + 0xA0)
-			end
-			--Experiment2End
-			local bunchOfZeroes = gg.getResults(2)
-			local foundTheValue = 0
-			while foundTheValue == 0 do
-			--Search for values less than 0
-			--Fun Fact: C4s is -1 if not placed, but any number above that means its placed, by freezing it to -1, you essentially creating C4 painting :D
-				gg.refineNumber(-1,gg.TYPE_WORD,false,gg.SIGN_NOT_EQUAL)
-			--if result is 1, pretend its found, else reset result.
-				if gg.getResultCount() == 2 then
-					foundTheValue = 1
-				else
-					gg.loadResults(bunchOfZeroes)
-				end
-				--sleep for a very short time to prevent lag
-					sleep(100)
-			end
-			t = gg.getResults(2)
-		end
-		t[1].value = -1
-		t[1].freeze = true
-		t[1].name="Pb2Chts [C4Position]: X"
-		t[2].value = -1
-		t[2].freeze = true
-		t[2].name="Pb2Chts [C4Position]: Y"
-		weaponAmmo.value = 30000
-		gg.setValues({weaponAmmo})
+		}
 		gg.setValues(t)
 		gg.addListItems(t)
 		toast('Found! C4 Painting ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\nDetonate it by respawn')
@@ -1499,20 +1395,22 @@ function show_about()
 end
 
 function exit()
-	print(string.format("Exit_ThankYouMsg"))
+	isStillOpen=false
 	gg.saveVariable(cfg,cfg_file)
 	gg.clearResults()
 --gg.clearList() -- this will clear your list not recommend though...
+	print(string.format("Exit_ThankYouMsg"))
 	os.exit()
 end
 
 function suspend()
-	print(string.format("Suspend_Text"))
+	isStillOpen=false
 	gg.saveVariable({
 		revert=revert,
 		memBuffer=memBuffer,
 		cfg=cfg
 	},susp_file)
+	print(string.format("Suspend_Text"))
 	os.exit()
 end
 
@@ -1523,10 +1421,10 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	if (num1 and num1[1]) then
 	--Search within restricted memory address, which will give more performance
 		gg.searchNumber(num1[1],valueType,nil,nil,restrictedMemArea[1],restrictedMemArea[2])
-		if gg.getResultCount() ~= 0 then
-			while gg.getResultCount() >= desiredResultCount+1 do
+		if gg.getResultCount() > 0 then
+			while gg.getResultCount() > desiredResultCount do
 				tmp = gg.getResultCount()
-				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease and tonumber(num1[1]) >= 20) then
+				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease and tonumber(num1[1]) > 20) then
 					toast('Got '..tmp..' results\n3 seconds to reduce ammo value')
 					sleep(999)
 					toast('Got '..tmp..' results\n2 seconds to reduce ammo value')
@@ -1572,6 +1470,45 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 			end
 			return gg.getResults(desiredResultCount)
 		end
+	end
+end
+function findAnchor20(msg)
+	gg.setRanges(gg.REGION_OTHER) print(cfg)
+	if cfg.cheatSettings.findAnchor20.searchMethod == "useWordWeaponAmmo" then
+		t = loopSearch(1,gg.TYPE_WORD,msg,memRange.WpnAmmWrd)
+		if gg.getResultCount() == 0 then return end
+		t = t[1]
+		t.value = 30000
+		gg.setValues({t})
+		gg.clearResults()
+		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t.address - 0x2A,t.address)
+		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
+	elseif cfg.cheatSettings.findAnchor20.searchMethod == "holdWeapon" then
+		toast("Hold your knife")
+		sleep(777)
+		gg.searchNumber("20;0::25",gg.TYPE_WORD,nil,nil,memRange.HldWpn[1],memRange.HldWpn[2])
+		gg.refineNumber(0)
+		t = gg.getResults(200)
+		while gg.getResultCount() > 1 do
+			toast("Hold your pistol")
+			sleep(777)
+			gg.refineNumber(13)
+			t = gg.getResults(200)
+			if gg.getResultCount() == 1 then break elseif gg.getResultCount() == 0 then return end
+			toast("Hold your knife")
+			sleep(777)
+			gg.refineNumber(0)
+			t = gg.getResults(200)
+			if gg.getResultCount() == 0 then return end
+		end
+		t = t[1].address
+		gg.clearResults()
+		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t - 0x18,t - 0x18)
+		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
+	else
+		toast("An error occured: Exit out of script for more details.")
+		print("[Error]: Configuration \"cfg.cheatSettings.findAnchor20.searchMethod\" is invalid.\n         Please set it to right value\n         Possible values: useWordWeaponAmmo, holdWeapon")
+		return
 	end
 end
 function MergeTables(...)
@@ -1631,6 +1568,9 @@ function loadConfig()
 			},
 			loopSearch={
 				useFuzzyDecrease=false
+			},
+			findAnchor20={
+				searchMethod="useWordWeaponAmmo"
 			}
 		},
 		enableLogging=false,
@@ -1638,7 +1578,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="2.0.2c"
+		VERSION="2.0.3"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
@@ -1689,7 +1629,8 @@ memOffset={
 	BigBody={0.09500002861,0.00000019073}
 }
 memRange={
-	WpnAmmWrd={0xB000051C,0xBD0FFD2A}
+	WpnAmmWrd={0xB000051C,0xBD0FFD2A},
+	HldWpn={0xB0000518,0xBD0FFD18}
 }
 
 -- Load settings and languages
@@ -1761,7 +1702,7 @@ restoreSuspend()
 
 --detect if gg gui was open/floating gg icon clicked. if so, close that and run OpenMenu (which will open our menu) instead (dont worry, we have suspend feature now).
 ShowMenu = MENU
-while true do
+while isStillOpen do
 	if gg.isVisible() then
 		gg.setVisible(false)
 		ShowMenu()
