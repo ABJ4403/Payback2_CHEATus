@@ -1555,7 +1555,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="2.0.3"
+		VERSION="2.0.4"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
