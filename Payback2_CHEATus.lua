@@ -5,17 +5,15 @@ function MENU()
 --Let the user choose stuff
 	local CH = gg.choice({
 		"1. Weapon ammo",
-		"2. Rel0ad",
-		"3. Wall Hack",
-		"4. Strong veichle",
-		"5. No blast damage",
-		"6. Immortality",
-		"7. Pistol/SG Knockback",
-		"8. C4 Painting",
+		"2. Wall Hack",
+		"3. Strong veichle",
+		"4. No blast damage",
+		"5. Pistol/SG Knockback",
 		"---",
 		"Other cheats:",
-		"9. Client-side cosmetics",
-		"10. Incompatible cheats",
+		"6. God modes",
+		"7. Client-side cosmetics",
+		"8. Incompatible cheats",
 		"---",
 		string.format("Settings"),
 		string.format("__about__"),
@@ -23,22 +21,20 @@ function MENU()
 		string.format("Suspend")
 	},nil,string.format("Title_Version"))
 	if CH == 1 then cheat_weaponammo()
-	elseif CH == 2 then cheat_noreload()
-	elseif CH == 3 then cheat_wallhack()
-	elseif CH == 4 then cheat_strongveichle()
-	elseif CH == 5 then cheat_noblastdamage()
-	elseif CH == 6 then cheat_immortal()
-	elseif CH == 7 then cheat_pistolknockback()
-	elseif CH == 8 then cheat_c4paint()
+	elseif CH == 2 then cheat_wallhack()
+	elseif CH == 3 then cheat_strongveichle()
+	elseif CH == 4 then cheat_noblastdamage()
+	elseif CH == 5 then cheat_pistolknockback()
 ---
 --Title:Othercheat..
-	elseif CH == 11 then MENU_CSD()
-	elseif CH == 12 then MENU_incompat()
+	elseif CH == 8 then cheat_godmode()
+	elseif CH == 9 then MENU_CSD()
+	elseif CH == 10 then MENU_incompat()
 ---
-	elseif CH == 14 then MENU_settings()
-	elseif CH == 15 then show_about()
-	elseif CH == 16 then exit()
-	elseif CH == 17 then suspend() end
+	elseif CH == 12 then MENU_settings()
+	elseif CH == 13 then show_about()
+	elseif CH == 14 then exit()
+	elseif CH == 15 then suspend() end
 	CH = nil
 	if type(tmp) == "table" then
 	--This will clear tmp without creating memory garbage (doing tmp={} adds more memory garbage, try print({}) in Lua interpreter, you will see "table: 0xXXXXXXXXXXXX", that will be always different address)
@@ -190,79 +186,191 @@ end
 	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
 ]]
 
+function cheat_godmode()
+--Let the user choose stuff
+	local CH = gg.multiChoice({
+		"1. Weapon Ammo (No Freeze)",
+		"2. Weapon Ammo (Freeze)",
+		"3. Rel0ad Pistol,SG,Rocket,C4s",
+		"4. Rel0ad Grenade",
+		"5. Immortality ON",
+		"6. Immortality (Self-explode)",
+		"7. C4 Drawing ON",
+		"8. Speed Slide ON",
+		"9. Float Hack ON",
+		"10. Ragdoll Hack ON",
+		"11. Anti-Burn body",
+		"12. Burned body",
+		"13. Burning body",
+		"---",
+		"14. Clone player",
+		"---",
+		"15. Rel0ad OFF",
+		"16. Immortality OFF",
+		"17. C4 Drawing OFF",
+		"18. Speed Slide OFF",
+		"19. Float Hack OFF",
+		"20. Ragdoll Hack OFF",
+		"21. Normal body",
+		"---",
+		string.format("__back__")
+	},nil,"God modes (idk wut to call this)\n\nWARNING:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!! (eg. killing them continously)\n- DO NOT PvP with non-cheater!!\n- If you play 2P, only do it in isolated area")
+	if CH then
+	--last option 21 + separator 3 + shift 1
+		if CH[25] then MENU() end
+		gg.setRanges(gg.REGION_OTHER)
+		local anchorAddress = findAnchor20('Put one of your weapon ammo')
+		if not anchorAddress then
+			toast('Can\'t find the weapon you\'re holding, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+		else
+			t = {}
+			tmp.nca = anchorAddress
+			if (CH[1] or CH[2]) then
+				tmp.a = {
+					{address=tmp.nca+0x1C,name="Pb2Chts [Weapon]: Shotgun"},
+					{address=tmp.nca+0x1E,name="Pb2Chts [Weapon]: Rocket"},
+					{address=tmp.nca+0x20,name="Pb2Chts [Weapon]: Flamethrower"},
+					{address=tmp.nca+0x22,name="Pb2Chts [Weapon]: Grenade"},
+					{address=tmp.nca+0x24,name="Pb2Chts [Weapon]: Minigun"},
+					{address=tmp.nca+0x26,name="Pb2Chts [Weapon]: Explosives"},
+					{address=tmp.nca+0x28,name="Pb2Chts [Weapon]: Turret"},
+					{address=tmp.nca+0x2A,name="Pb2Chts [Weapon]: Laser"},
+				}
+				for i=1,#tmp.a do
+					tmp.a[i].flags = gg.TYPE_WORD
+					tmp.a[i].freeze = CH[2]
+					tmp.a[i].value = 3e4
+				end
+			--Todo: add the word flag using forloop, if ch2 loop freeze, if ch3 loop unfreeze
+				t = ConcatTables(t,tmp.a)
+			end
+			if CH[3] then t = ConcatTables(t,{
+				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [Rel0adTimer]: Default"}
+			})
+			end
+			if CH[4] then
+				tmp.a = {{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=true,name="Pb2Chts [Rel0adTimer]: Grenade"}}
+				local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0;100]"},{0},{"number"})
+				if (grenadeRange and grenadeRange[1] ~= "0") then
+					toast("Wait for it, dont forget to hold your grenade")
+					sleep(999)
+					tmp.a[1].value = grenadeRange[1]
+					gg.setValues(t)
+					gg.addListItems(t)
+					sleep(999)
+				end
+				tmp.a[1].value = -63
+				t = ConcatTables(t,tmp.a)
+			end
+			if CH[5] then t = ConcatTables(t,{
+				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=800,name="Pb2Chts [Health]"},
+				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=9,name="Pb2Chts [RespawnInterval] (Immortal)"}
+			})
+			end
+			if CH[6] then t = ConcatTables(t,{
+				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=3e4,name="Pb2Chts [Health]"},
+				{address=tmp.nca+0x158,flags=gg.TYPE_WORD,freeze=true,value=1,name="Pb2Chts [RespawnInterval] (Immortal Self-explode)"}
+			})
+			end
+			if CH[7] then t = ConcatTables(t,{
+				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: X"},
+				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: Y"}
+			})
+			end
+			if CH[8] then t = ConcatTables(t,{
+				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,value=300,freeze=true,name="Pb2Chts [SpeedSlide]"}
+			})
+			end
+			if CH[9] then t = ConcatTables(t,{
+				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Float]"}
+			})
+			end
+			if CH[10] then t = ConcatTables(t,{
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Ragdoll]"},
+				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=0,freeze=true,freezeType=gg.FREEZE_IN_RANGE,freezeFrom=0,freezeTo=120,name="Pb2Chts [Ragdoll]"}
+			})
+			end
+			if CH[11] then t = ConcatTables(t,{
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
+			})
+			end
+			if CH[12] then t = ConcatTables(t,{
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Firebody"},
+			})
+			end
+			if CH[13] then t = ConcatTables(t,{
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Burning"},
+			})
+			end
+			---
+			if CH[15] then
+		--This will clone the player (you). How this is done?
+		--First told user (you) to change the weapon to your loved weapon before the user cant do it anymore
+			toast("[Clone Player] Change your weapon to your wanted weapon before you can\'t change it anymore")
+			sleep(3e3)
+		--Then, make the game think you are dead by changing 0xXXXXXXDA to 2000 (Wasted)
+			tmp.a = {
+				{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=2e3}
+			}
+			gg.setValues(tmp.a)
+			gg.addListItems(tmp.a)
+			sleep(2e3)
+		--And change it back to 512 so you can control it too :D
+			t = ConcatTables(t,{
+				{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=512,freeze=true,name="Pb2Chts [ControlState]"}
+			})
+			end
+			---
+			if CH[17] then t = ConcatTables(t,{
+				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [Rel0adTimer]"}
+			})
+			end
+			if CH[18] then t = ConcatTables(t,{
+				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=false,value=999,name="Pb2Chts [Health]"},
+				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,name="Pb2Chts [RespawnInterval] (Immortal)"}
+			})
+			end
+			if CH[19] then t = ConcatTables(t,{
+				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: X"},
+				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: Y"}
+			})
+			end
+			if CH[20] then t = ConcatTables(t,{
+				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [SpeedSlide]"}
+			})
+			end
+			if CH[21] then t = ConcatTables(t,{
+				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Float]"}
+			})
+			end
+			if CH[22] then t = ConcatTables(t,{
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Ragdoll]"},
+				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=65536,freeze=false,name="Pb2Chts [Ragdoll]"}
+			})
+			end
+			if CH[23] then t = ConcatTables(t,{
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
+			})
+			end
+			gg.setValues(t)
+			gg.addListItems(t)
+			gg.clearResults()
+			toast('Selected options opreation done\nWARN: Don\'t Drive/getoutof car, respawn, or get out of match')
+		end
+	end
+end
+
 function cheat_weaponammo()
 	local CH = gg.choice({
-		"1. Semi-automatic (WORD. uses new anchor20, works on latest version)",
-		"2. DWORD (works by changing match settings. Requires respawn, works best in offline mode)",
-		"3. WORD (works by changing player properties. no respawn required, but can't survive respawn)",
-		"4. Automatic (Mangyu method, old version)",
-		"5. Automatic (v2, not work because dynamic memory stuff)",
+		"1. DWORD (works by changing match settings. Requires respawn, works best in offline mode)",
+		"2. Automatic (Mangyu method, old version)",
+		"3. Automatic (v2, not work because dynamic memory stuff)",
 		string.format("__back__")
 	},nil,"Select method for modifying Weapon Ammo")
 --gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS
 	gg.setRanges(gg.REGION_OTHER)
 	if CH == 6 then MENU()
 	elseif CH == 1 then
-		local anchorAddress = findAnchor20('Put (just) one of your weapon ammo')
-		if not anchorAddress then
-			toast("Can't find the said number, did you put the right number?")
-		else
-		--prepare the cheated weapon table
-			t = {
-				{
-					address=anchorAddress+0x1C,
-					flags=gg.TYPE_WORD,
-					value=30000,
-					name="Pb2Chts [Weapon]: Shotgun"
-				},
-				{
-					address=anchorAddress+0x1E,
-					flags=gg.TYPE_WORD,
-					value=30000,
-					name="Pb2Chts [Weapon]: Rocket"
-				},
-				{
-					address=anchorAddress+0x20,
-					flags=gg.TYPE_WORD,
-					value=30000,
-					name="Pb2Chts [Weapon]: Flamethrower"
-				},
-				{
-					address=anchorAddress+0x22,
-					flags=gg.TYPE_WORD,
-					value=30000,
-					name="Pb2Chts [Weapon]: Grenade"
-				},
-				{
-					address=anchorAddress+0x24,
-					flags=gg.TYPE_WORD,
-					value=30000,
-					name="Pb2Chts [Weapon]: Minigun"
-				},
-				{
-					address=anchorAddress+0x26,
-					flags=gg.TYPE_WORD,
-					value=30000,
-					name="Pb2Chts [Weapon]: Explosives"
-				},
-				{
-					address=anchorAddress+0x28,
-					flags=gg.TYPE_WORD,
-					value=32222,
-					name="Pb2Chts [Weapon]: Turret"
-				},
-				{
-					address=anchorAddress+0x2A,
-					flags=gg.TYPE_WORD,
-					value=32222,
-					name="Pb2Chts [Weapon]: Laser"
-				},
-			}
-			gg.setValues(t)
-			gg.addListItems(t)
-			toast("🔨️ Weapon value Modified")
-		end
-	elseif CH == 2 then
 		CH = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;..whatever\nbut i recommend diving each with ";0W;" instead (for more accuracy)'})
 		if (CH and CH[1]) then
 			tmp = 0xB6730000
@@ -275,21 +383,10 @@ function cheat_weaponammo()
 				toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number")
 			end
 		end
-	elseif CH == 3 then
-		t = loopSearch(16,gg.TYPE_WORD,'Put your weapon ammo',memRange.WpnAmmWrd)
-		if gg.getResultCount() == 0 then
-			toast("Can't find the said number, did you put the right number?")
-		else
-			for i=1, #t do
-				t[i].value = 9999
-			end
-			gg.setValues(t)
-			toast("🔨️ Weapon value Modified")
-		end
-	elseif CH == 4 then
+	elseif CH == 2 then
 		gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
 		gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61",gg.TYPE_DWORD)
-		local t = gg.getResults(5000,nil,nil,nil,nil,nil,gg.TYPE_DWORD)
+		local t = gg.getResults(999,nil,nil,nil,nil,nil,gg.TYPE_DWORD)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
@@ -302,7 +399,7 @@ function cheat_weaponammo()
 			gg.clearResults()
 			toast("Weapon ON")
 		end
-	elseif CH == 5 then
+	elseif CH == 3 then
 	--For modularity (just in case coz I know there's memory issue whatever stuff)
 		tmp = 0xC2274300
 	--set the cheated weapons
@@ -652,7 +749,7 @@ function cheat_strongveichle()
 	},nil,"Veichle default health modifier")
 	if CH then
 		if CH == 9 then MENU()
-		elseif CH == 1 then CAR_HEALTH_VALUE = 85000
+		elseif CH == 1 then CAR_HEALTH_VALUE = 85e3
 		elseif CH == 2 then CAR_HEALTH_VALUE = 125
 		elseif CH == 3 then CAR_HEALTH_VALUE = -1
 		elseif CH == 4 then
@@ -823,136 +920,6 @@ function cheat_togglevoidmode()
 	end
 end
 
-function cheat_noreload()
-	local CH,t,num1 = gg.choice({
-		"1. Default (for pistol,sg,rocket,C4s)",
-		"2. Grenade (for grenades)",
-		string.format("__back__")
-	},nil,"Rel0ad\nPS: dont get out of match, drive car, respawn. or the cheat will fail\nDISCLAIMMER: DO NOT USE THIS TO ABUSE OTHER PLAYER !!!!")
-	if CH then
-		if CH == 3 then MENU()
-		elseif CH == 1 then
-			gg.setRanges(gg.REGION_OTHER)
-			local anchorAddress = findAnchor20('Put one of your weapon ammo')
-			if not anchorAddress then
-				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
-			else
-				t = {
-				{
-				address=anchorAddress+0x84,
-				flags=gg.TYPE_WORD,
-				value=0,
-				freeze=true,
-				name="Pb2Chts [Rel0adTimer]"
-				}
-				}
-				gg.setValues(t)
-				gg.addListItems(t)
-				gg.clearResults()
-				toast('Found! Rel0ad ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!')
-			end
-		elseif CH == 2 then
-			gg.setRanges(gg.REGION_OTHER)
-			local anchorAddress = findAnchor20('Put one of your weapon ammo (i recommend grenade though)')
-			if not anchorAddress then
-				toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
-			else
-				t = {
-				{
-				address=anchorAddress+0x84,
-				flags=gg.TYPE_WORD,
-				freeze=true,
-				name="Pb2Chts [Rel0adTimer]"
-				}
-				}
-				local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0;100]"},{0},{"number"})
-				if (grenadeRange and grenadeRange[1] ~= "0") then
-					toast("Wait for it, dont forget to hold your grenade")
-					sleep(999)
-					t[1].value = grenadeRange[1]
-					gg.setValues(t)
-					gg.addListItems(t)
-					sleep(999)
-				end
-				t[1].value = -63
-				gg.setValues(t)
-				gg.addListItems(t)
-				toast('Rel0ad (Grenade) On. WARNING:\n- DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\n- You need to disable Rel0ad grenade before using Other Reload (for shotgun, pistol).\n- You cant shoot pistol,shotgun,etc when using Rel0ad Grenade.')
-				grenadeRange = nil
-				gg.clearResults()
-			end
-		end
-	end
-end
-
-function cheat_immortal()
---this cheat is based on rel0ad cheat
-	gg.setRanges(gg.REGION_OTHER)
-	local anchorAddress = findAnchor20('Put one of your weapon ammo (i know its weird, because the respawn stage interval is located near there)\nDISCLAIMMER:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!!!\n- DO NOT PvP with non-cheater with this cheat!!')
-	if not anchorAddress then
-		toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
-	else
-		t = {
-		{
-			address=anchorAddress+0x08,
-			flags=gg.TYPE_WORD,
-			freeze=true,
-			value=800,
-			name="Pb2Chts [Health]"
-		},
-		{
-			address=anchorAddress+0x158,
-			flags=gg.TYPE_FLOAT,
-			freeze=true,
-			value=9,
-			name="Pb2Chts [RespawnInterval] (Immortal)"
-		}
-		}
-		--[[this isnt required: {
-			address=anchorAddress+0x98,
-			flags=gg.TYPE_WORD,
-			freeze=true,
-			value=30000,
-			name="Pb2Chts: Invisibility (not really)"
-		},]]
-		gg.setValues(t)
-		gg.addListItems(t)
-		gg.clearResults()
-		toast('Immortality ON\nWARN: Don\'t Drive car, respawn, or get out of match, Or get RESET after couple seconds')
-	end
-end
-
-function cheat_c4paint()
---this cheat is based on rel0ad cheat
-	gg.setRanges(gg.REGION_OTHER)
---search for anchor 20
-	local anchorAddress = findAnchor20('Put one of your weapon ammo (i know its weird, because the c4 placement position is located near there)\nto make c4 painting possible, c4 current placed position must freezed to -1')
-	if not anchorAddress then
-		toast('Can\'t find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
-	else
-		t = {
-			{
-				address=anchorAddress+0x2C,
-				flags=gg.TYPE_WORD,
-				value=-1,
-				freeze=true,
-				name="Pb2Chts [C4Position]: X"
-			},
-			{
-				address=anchorAddress+0x2E,
-				flags=gg.TYPE_WORD,
-				value=-1,
-				freeze=true,
-				name="Pb2Chts [C4Position]: Y"
-			}
-		}
-		gg.setValues(t)
-		gg.addListItems(t)
-		toast('Found! C4 Painting ON\nWARNING: DO NOT DRIVE CAR, RESPAWN, OR GET OUT OF MATCH, OR WILL RESET !!\nDetonate it by respawn')
-		gg.clearResults()
-	end
-end
-
 function cheat_xpmodifier()
 --CAlloc for the gameplay and actual google play value
 --Annonymous from joker video
@@ -1006,7 +973,7 @@ function cheat_changeplayername()
 --search old player name
 	if (player_name and player_name[1] and player_name[1] ~= ":") then
 		gg.searchNumber(player_name[1],gg.TYPE_BYTE)
-		revert.PlayerName = gg.getResults(5555)
+		revert.PlayerName = gg.getResults(5e3)
 		if gg.getResultCount() == 0 then
 			toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
@@ -1061,8 +1028,8 @@ function cheat_changeplayernamecolor()
 		--search old player name
 			gg.searchNumber(player_name[1],gg.TYPE_BYTE)
 		--fetch result,make backup result,make some temporary stuff
-			local t,tmp0,removeOffset = gg.getResults(5555),0,0x0
-			revert.PlayerName = gg.getResults(5555)
+			local t,tmp0,removeOffset = gg.getResults(5e3),0,0x0
+			revert.PlayerName = gg.getResults(5e3)
 		--generic found stuff
 			if gg.getResultCount() == 0 then
 				toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
@@ -1419,7 +1386,7 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	local num1,t = gg.prompt({msg1})
 	restrictedMemArea = restrictedMemArea or {}
 	if (num1 and num1[1]) then
-	--Search within restricted memory address, which will give more performance
+	--Search within restricted memory address, which can be faster
 		gg.searchNumber(num1[1],valueType,nil,nil,restrictedMemArea[1],restrictedMemArea[2])
 		if gg.getResultCount() > 0 then
 			while gg.getResultCount() > desiredResultCount do
@@ -1473,33 +1440,47 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	end
 end
 function findAnchor20(msg)
-	gg.setRanges(gg.REGION_OTHER) print(cfg)
+	gg.setRanges(gg.REGION_OTHER)
 	if cfg.cheatSettings.findAnchor20.searchMethod == "useWordWeaponAmmo" then
 		t = loopSearch(1,gg.TYPE_WORD,msg,memRange.WpnAmmWrd)
 		if gg.getResultCount() == 0 then return end
 		t = t[1]
-		t.value = 30000
+		t.value = 3e4
 		gg.setValues({t})
 		gg.clearResults()
 		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t.address - 0x2A,t.address)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	elseif cfg.cheatSettings.findAnchor20.searchMethod == "holdWeapon" then
-		toast("Hold your knife")
-		sleep(777)
-		gg.searchNumber("20;0::25",gg.TYPE_WORD,nil,nil,memRange.HldWpn[1],memRange.HldWpn[2])
-		gg.refineNumber(0)
+		toast("Hold your pistol")
+		sleep(2e3)
+		gg.searchNumber(13,gg.TYPE_WORD,nil,nil,memRange.HldWpn[1],memRange.HldWpn[2])
 		t = gg.getResults(200)
 		while gg.getResultCount() > 1 do
-			toast("Hold your pistol")
-			sleep(777)
-			gg.refineNumber(13)
-			t = gg.getResults(200)
-			if gg.getResultCount() == 1 then break elseif gg.getResultCount() == 0 then return end
 			toast("Hold your knife")
-			sleep(777)
+			sleep(2e3)
 			gg.refineNumber(0)
 			t = gg.getResults(200)
-			if gg.getResultCount() == 0 then return end
+			if gg.getResultCount() == 1 then break
+			elseif gg.getResultCount() == 0 then return
+			elseif gg.getResultCount() == 2 then
+				t = gg.getResults(2)
+				if t[1].value == t[2].value then
+					t = {t[1]}
+					break
+				end
+			end
+			toast("Hold your pistol")
+			sleep(2e3)
+			gg.refineNumber(13)
+			t = gg.getResults(200)
+			if gg.getResultCount() == 0 then return
+			elseif gg.getResultCount() == 2 then
+				t = gg.getResults(2)
+				if t[1].value == t[2].value then
+					t = {t[1]}
+					break
+				end
+			end
 		end
 		t = t[1].address
 		gg.clearResults()
@@ -1507,7 +1488,7 @@ function findAnchor20(msg)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	else
 		toast("An error occured: Exit out of script for more details.")
-		print("[Error]: Configuration \"cfg.cheatSettings.findAnchor20.searchMethod\" is invalid.\n         Please set it to right value\n         Possible values: useWordWeaponAmmo, holdWeapon")
+		print("[Error]: Configuration \"cfg.cheatSettings.findAnchor20.searchMethod\" is invalid.\n         Please set it to right value\n         Possible values: useWordWeaponAmmo, holdWeapon\n         You set the value to "..cfg.cheatSettings.findAnchor20.searchMethod.."\n         Your Configuration:\n"..cfg)
 		return
 	end
 end
@@ -1519,25 +1500,22 @@ function MergeTables(...)
 		not recommended on array-like tables
 	]]
 	local r = {}
-		for _,t in ipairs{...} do
-			for k,v in pairs(t) do
-				r[k] = v
-			end
+	for _,t in ipairs{...} do
+		for k,v in pairs(t) do
+			r[k] = v
 		end
+	end
 	return r
 end
-function ConcatTables(...)
+function ConcatTables(t1,t2)
 	--[[
 		Creates new table then
 		add table 1 and table 2
 	]]
-	local r = {}
-	for _,t in ipairs{...} do
-		for i=1,#t do
-			r[#r+i] = t[i]
-		end
+	for i=1,#t2 do
+		t1[#t1+i] = t2[i]
 	end
-	return r
+	return t1
 end
 function update_language()
 	--[[
@@ -1573,7 +1551,6 @@ function loadConfig()
 				searchMethod="useWordWeaponAmmo"
 			}
 		},
-		enableLogging=false,
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
@@ -1623,14 +1600,14 @@ sleep = gg.sleep
 VAL_PstlSgKnckbck=0.25
 VAL_CrDfltHlth=125
 VAL_DmgIntnsty=300
-VAL_WallResist={-500,-1.00001,-1}
+VAL_WallResist={-500,-1e-5,-1}
 VAL_BigBody={3,5.9}
 memOffset={
 	BigBody={0.09500002861,0.00000019073}
 }
 memRange={
 	WpnAmmWrd={0xB000051C,0xBD0FFD2A},
-	HldWpn={0xB0000518,0xBD0FFD18}
+	HldWpn={0xB0E00518,0xBDFFFD2A}
 }
 
 -- Load settings and languages
