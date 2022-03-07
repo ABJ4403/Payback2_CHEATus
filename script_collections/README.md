@@ -114,15 +114,7 @@ newtable     r71     0     0
 [=[=[===========================================================================================================================================================================================>
  $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
 [=[=[===========================================================================================================================================================================================>
- $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
-[=[=[===========================================================================================================================================================================================>
- $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
-[=[=[===========================================================================================================================================================================================>
- $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
-[=[=[===========================================================================================================================================================================================>
- $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
-[=[=[===========================================================================================================================================================================================>
-
+[The text above this, is repeated 5x]
 
 -- © Published in 07_Feb_22
 -- © Tools Encrypt By [ 🛡️ Alpha GG Hacker YT 🛡️]
@@ -132,11 +124,20 @@ newtable     r71     0     0
 
  ==========================================================================================================
 	```
-	Ahh YES, The `666 🇵🇭 P H I L I P P I N E S 🇵🇭 Satan 👺️ Encryption tool 🛡️🛡️🛡️`, very very gloooorious.
+	Ahh YES, The `🛡️6🛡️6🛡️6  🇵🇭 P H I L I P P I N E S 🇵🇭 Satanism 👺️ Encryption tool 9🛡️9🛡️9🛡️`, very very gloooorious.
 	Don't worry. It's already decrypted (this time without tehtmi help), because its still the same "AlphaGG" encryption tool, that can be decrypted.
 	thankfully, AlphaGG didnt see this and didnt learn his failures.
 	i know, there is still some confusion stuff whatever, but hey atleast i can put the "Safe" label there, because yes its actually safe like the previous script (no, not the one with SerrangGaming encryption tool).
 	btw, script password (just in case you didnt watch AlphaGG's video description): alphaencmodz100yt
+
+- `PB2_JokerGGScripterV1.lua` (`PB2_JokerGGScripterSV1.lua` from [`MediaFire`](https://www.mediafire.com/file/enpsqtcy8ub6z19/JokerGGScripterSV1.lua/file)), by "Joker?".
+
+	`Difficulty: 10` `🔏️ Decryptor: ABJ4403` `🦠⚠️ Should be careful (doing io opreation)` `🛡️ Obfuscation (level:20)` `🔒️ String Encryption (difficulty:24)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using "PGv3" lua encryption tool` `❌️ Anti-decompiler` `❌️ Anti-LuaASM` `❌️ Different file encoding` `🦠 GG Log Pollution` `uses _ENV (Lua environment) variable` `❌️ Debug variable detection`
+
+	Wow... this one is a bit simpler than Serrang Gaming, but the string encryption... too hard man... too hard wow i didnt expect this one (nah tehtmi wouldnt help with this, he only helps with decompiling, not decryption. i dont have a people which can help me in decrypting this satanic nonsense)
+	Thankfully atleast i can decompile this easy as pie, just use patched-unluac lmfaooo (atleast PGv3 didnt use header modification).
+	also i disabled the log pollution and all the nonsense on the decompiled version, so anyone that really wants to reverse enginner the numbers slightly easier way can just press random button and look on what it searches for.
+	btw, password is "JokerGGScripter" (it might be wrong, because Joker? censors the password)
 
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
