@@ -50,5 +50,5 @@ Because i see Payback 2 players (notably cheaters) are very rude, and did'nt wan
 - Latic AX and ToxicCoder - for providing the removed script through YouTube and MediaFire.
 - AlphaGGHacker - for providing "Wall Hack" & "Car Health" GameGuardian Values (no thanks for ridicilous military-encryption script though...)
 - GKTV (Pumpkin Hacker) - Payback2 GG script.
-- Joker? - for providing "No Blast Damage", and "No Reload" GameGuardian Values.
+- JokerGGS - for providing "No Blast Damage", and "No Reload" GameGuardian Values.
 

@@ -50,5 +50,5 @@ Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak m
 - Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui YouTube dan MediaFire.
 - AlphaGGHacker - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk `enkripsi level 666 yang sangggggat giilaaa`).
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2.
-- Joker? - Untuk menyediakan Value "No Blast Damage", dan "No Reload" GameGuardian.
+- JokerGGS - Untuk menyediakan Value "No Blast Damage", dan "No Reload" GameGuardian.
 
