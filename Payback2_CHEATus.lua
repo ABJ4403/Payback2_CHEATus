@@ -1572,8 +1572,8 @@ function loadConfig()
 	end
 	VAL_PlayerCurrentName = cfg.PlayerCurrentName
 	update_language()
-	cfg.memZones.WpnAmmWrd = cfg.memZones.WpnAmmWrd or {}
-	cfg.memZones.HldWpn = cfg.memZones.HldWpn or {}
+	cfg.memZones.WpnAmmWrd = cfg.memZones.WpnAmmWrd or {0,-1}
+	cfg.memZones.HldWpn = cfg.memZones.HldWpn or {0,-1}
 end
 function restoreSuspend()
 	--[[
