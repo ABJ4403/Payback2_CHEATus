@@ -1,3 +1,142 @@
+--[[
+
+	here we go again, another decompiled file from JokerGGS.
+	ignore the "Anti-malicious + Malicious activity dumper",
+	do not remove it, or the script might be able to do mallicious things.
+
+]]
+
+
+
+
+
+-- [BEGIN] Anti-malicious + Malicious activity dumper
+-- some compatibility stuff
+table.tostring=function(t)
+	if type(t) == 'table' then
+		local r
+		for k,v in pairs(t) do
+			if type(k) == 'string' then
+				r = r..'["'..k..'"]='
+			end
+			if type(v) == 'table' then
+				r = r..table.tostring(v)
+			elseif type(v) == 'boolean' then
+				r = r..tostring(v)
+			else
+				r = r..'"'..v..'"'
+			end
+			r = r..','
+		end
+		if r ~= '' then
+				r = r:sub(1,r:len()-1)
+		end
+		return '{'..r..'}'
+	else return t end
+end
+-- Make a backup variable
+local io,os,Repl,tmp = io,os,{["GG"]=gg,["print"]=print,["IO"]=io,["OS"]=os}
+local malogFile = gg.getFile()..".maldump"
+local logFile = gg.getFile()..".log"
+local Logger=function(ext,...)
+--Here it should execute io.write to current file + .maldump
+	if ext == "malog" then
+		Repl.IO.open(malogFile,"a")
+		Repl.IO.output(malogFile)
+		Repl.IO.write(table.tostring({...}))
+		Repl.IO.close(malogFile)
+	else
+		Repl.IO.open(logFile,"a")
+		Repl.IO.output(logFile)
+		Repl.IO.write(table.tostring({...}))
+		Repl.IO.close(malogFile)
+	end
+end
+local void=function(...)
+	print("[Malicious] something tries to do malicious thing")
+	Logger("malog",{["Type"]="Mallicious",["EntryPoint"]="void()",["Description"]="something tries to do malicious thing"},...)
+	return nil
+end
+--Block access to critical commands (because it can POTENTIALLY REMOVE ROOT DIR >> /)
+os.execute = void
+os.remove  = void
+--atleast allow io.open() but RO (read-only), and only certain files
+io.open    = function(file,opmodes)
+	print('[Malicious] something tries to open "'..file..'" with operation mode '..opmodes..', we already intercepted it to /sdcard/GG/Container/HahahaReallyMalwareUCantInfectMe.txt')
+	Logger("log",'[Malicious] something tries to open "'..file..'" with operation mode '..opmodes..', we already intercepted it to /sdcard/GG/Container/HahahaReallyMalwareUCantInfectMe.txt')
+	return Repl.IO.open("/sdcard/GG/Container/HahahaReallyMalwareUCantInfectMe.txt","r")
+end
+io.close   = void
+io.input   = void
+io.output  = void
+io.read    = void
+io.write   = void
+--mAke sure it didnt write malicious values to RAM part used by other process
+gg.getFile=function()
+	Repl.print("[Malicious] Something tries to get the Lua directory (possibly to corrupt the script after being used, or save a config file (rarely used)), we already intercepted it to /sdcard/GG/Container/HahahaReallyMalwareUCantInfectMe.lua")
+	Logger("malog",'[Malicious] something tries to get the Lua directory (possibly to corrupt the script after being used, or save a config file (rarely used)), we already intercepted it to /sdcard/GG/Container/HahahaReallyMalwareUCantInfectMe.lua')
+	return "/sdcard/GG/Container/HahahaReallyMalwareUCantInfectMe.lua"
+end	
+gg.searchNumber=function(n,t,e,s,f,t,l,...)
+	tmp = Repl.GG.searchNumber(n,t,e,s,f,t,l,...)
+	Repl.print("GG.SearchNumber("..n..","..t..","..s..")")
+	Logger("log",'GG.SearchNumber('..n..','..t..','..s..')',n,t,e,s,f,t,l,...,tmp)
+	return tmp
+end
+gg.refineNumber=function(n,t,e,s,f,t,l,...)
+	tmp = Repl.GG.refineNumber(n,t,e,s,f,t,l,...)
+	Repl.print("GG.RefineNumber("..n..","..t..","..s..")")
+	Logger("log",'GG.RefineNumber('..n..','..t..','..s..')',n,t,e,s,f,t,l,...,tmp)
+	return tmp
+end
+gg.getResults=function(c,a,b,d,e,f,t,...)
+	tmp = Repl.GG.getResults(c,a,b,d,e,f,t,...)
+	Repl.print("GG.GetResult("..c..","..t..")")
+	Logger("log",'GG.GetResult('..c..','..t..')',a,b,d,e,f,tmp)
+	return tmp
+end
+gg.setValues=function(t,...)
+	Repl.print("GG.SetVal:"..t)
+	Logger("log",'GG.SetVal',t)
+	return Repl.GG.setValues(t,...)
+end
+gg.addListItems=function(t,...)
+	Repl.print("GG.AddList:"..t)
+	Logger("log",'GG.SetVal:',t)
+	return Repl.GG.addListItems(t,...)
+end
+gg.editAll=function(v,t,...)
+	Repl.print("GG.Edit("..v,t..")")
+	return Repl.GG.getResults(v,t,...)
+end
+gg.setRanges=function(r)
+	Repl.print("GG.SetRange("..r..")")
+	return Repl.GG.setRanges(r)
+end
+--IMPORTANT TO BLOCK, POTENTIAL MALWARE!!!!
+gg.makeRequest=function(uri,header,data)
+	Repl.print('[Malicious] Something tries to request something to "'..uri..'" If you get any popup about allow script to access internet. DENY IT, we already intercepted the request and returned fake values')
+	Logger("malog",{["Type"]="Mallicious",["EntryPoint"]="gg.makeRequest()",["Description"]='Something tries to request something to "'..uri..'" If you get any popup about allow script to access internet. DENY IT, we already intercepted the request and returned fake values'},header,data)
+	return {
+		url=uri,
+		requestMethod=nil,
+		code=300,
+		message="Success",
+		headers=header,
+		error=false,
+		content=data
+	}
+end
+
+print=function(...)
+	local args = ...
+	print("[Script] "..args)
+	args = nil
+end
+collectgarbage("collect")
+-- [END] Anti-malicious + Malicious activity dumper
+
+-- [BEGIN] Decompiled Script
 local L0_1,L1_1,L0_2,L1_2,L2_2,L3_2,L4_2,L5_2,L6_2,L7_2,L8_2,L9_2,L10_2,L11_2,L12_2,L13_2,L14_2,L15_2,L16_2,L17_2,L18_2,L19_2,L20_2,L21_2,L22_2,L23_2,L24_2,L25_2,L26_2,L27_2,L28_2,L29_2,L30_2,L31_2,L32_2,L33_2,L34_2,L35_2,L36_2,L37_2,L38_2,L39_2,L40_2,L41_2,L42_2,L43_2,L44_2,L45_2,L46_2,L47_2,L48_2,L49_2,L50_2,L51_2,L52_2,L53_2,L54_2,L55_2,L56_2,L57_2,L58_2,L59_2,L60_2,L61_2,L62_2,L63_2,L64_2,L65_2,L66_2,L67_2,L68_2,L69_2,L70_2,L71_2,L72_2,L73_2,L74_2,L75_2,L76_2,L77_2,L78_2,L79_2,L80_2,L81_2,L82_2,L83_2,L84_2,L85_2,L86_2,L87_2,L88_2,L89_2,L90_2,L91_2,L92_2,L93_2,L94_2,L95_2,L96_2,L97_2,L98_2,L99_2,L100_2,L101_2,L102_2,L103_2,L104_2,L105_2,L106_2,L107_2,L108_2,L109_2,L110_2,L111_2,L112_2,L113_2,L114_2,L115_2,L116_2,L117_2,L118_2,L119_2,L120_2,L121_2,L122_2,L123_2,L124_2,L125_2,L126_2,L127_2,L128_2,L129_2,L130_2,L131_2,L132_2,L133_2,L134_2,L135_2,L136_2,L137_2,L138_2,L139_2,L140_2,L141_2,L142_2,L143_2,L144_2,L145_2,L146_2,L147_2,L148_2,L149_2,L150_2,L151_2,L152_2,L153_2,L154_2
 L0_1 = ""
 L1_1 = {}
@@ -157,32 +296,6 @@ L32_2[20] = L52_2
 L32_2[21] = L53_2
 L32_2[22] = L54_2
 PGFC = L32_2
-while true do
-	L32_2 = {}
-	L33_2 = nil % nil
-	L32_2[1] = L33_2
-	i = L32_2
-	L32_2 = ipairs
-	L33_2 = i
-	L32_2,L33_2,L34_2 = L32_2(L33_2)
-	for L35_2 in L32_2,L33_2,L34_2 do
-		L36_2 = {}
-		L37_2 = {}
-		L38_2 = nil % nil
-		L37_2[1] = L38_2
-		L38_2 = {}
-		L39_2 = nil % nil
-		L38_2[1] = L39_2
-		L36_2[1] = L37_2
-		L36_2[2] = L38_2
-		L35_2 = L36_2
-		L36_2 = {}
-		L37_2 = nil % nil
-		L36_2[1] = L37_2
-		L36_2 = _ENV[L36_2]
-		L35_2.i = L36_2
-	end
-end
 function L32_2(A0_3)
 	local L1_3,L2_3,L3_3,L4_3,L5_3,L6_3,L7_3
 	L1_3 = {}
@@ -260,8 +373,7 @@ function L32_2(A0_3)
 		L7_3 = PGFUNCTION
 		L5_3(L6_3,L7_3)
 	end
-	L1_3 = KEY
-	return L1_3
+	return KEY
 end
 L32_2(PGFC)
 function PGENC_1(A0_3)
@@ -295,36 +407,6 @@ function PGENC_1(A0_3)
 	end
 	L1_3 = res
 	return L1_3
-end
-while true do
-	L32_2 = false
-	if not L32_2 then
-		break
-	end
-	L32_2 = {}
-	L33_2 = nil % nil
-	L32_2[1] = L33_2
-	i = L32_2
-	L32_2 = ipairs
-	L33_2 = i
-	L32_2,L33_2,L34_2 = L32_2(L33_2)
-	for L35_2 in L32_2,L33_2,L34_2 do
-		L36_2 = {}
-		L37_2 = {}
-		L38_2 = nil % nil
-		L37_2[1] = L38_2
-		L38_2 = {}
-		L39_2 = nil % nil
-		L38_2[1] = L39_2
-		L36_2[1] = L37_2
-		L36_2[2] = L38_2
-		L35_2 = L36_2
-		L36_2 = {}
-		L37_2 = nil % nil
-		L36_2[1] = L37_2
-		L36_2 = _ENV[L36_2]
-		L35_2.i = L36_2
-	end
 end
 L32_2 = 50
 L33_2 = keyy10
@@ -482,36 +564,6 @@ L64_2[20] = L84_2
 L64_2[21] = L85_2
 L64_2[22] = L86_2
 PGFC1 = L64_2
-while true do
-	L64_2 = false
-	if not L64_2 then
-		break
-	end
-	L64_2 = {}
-	L65_2 = nil % nil
-	L64_2[1] = L65_2
-	i = L64_2
-	L64_2 = ipairs
-	L65_2 = i
-	L64_2,L65_2,L66_2 = L64_2(L65_2)
-	for L67_2 in L64_2,L65_2,L66_2 do
-		L68_2 = {}
-		L69_2 = {}
-		L70_2 = nil % nil
-		L69_2[1] = L70_2
-		L70_2 = {}
-		L71_2 = nil % nil
-		L70_2[1] = L71_2
-		L68_2[1] = L69_2
-		L68_2[2] = L70_2
-		L67_2 = L68_2
-		L68_2 = {}
-		L69_2 = nil % nil
-		L68_2[1] = L69_2
-		L68_2 = _ENV[L68_2]
-		L67_2.i = L68_2
-	end
-end
 function L64_2(A0_3)
 	local L1_3,L2_3,L3_3,L4_3,L5_3,L6_3,L7_3
 	L1_3 = {}
@@ -626,36 +678,6 @@ function PGENC_2(A0_3)
 	end
 	L1_3 = res
 	return L1_3
-end
-while true do
-	L64_2 = false
-	if not L64_2 then
-		break
-	end
-	L64_2 = {}
-	L65_2 = nil % nil
-	L64_2[1] = L65_2
-	i = L64_2
-	L64_2 = ipairs
-	L65_2 = i
-	L64_2,L65_2,L66_2 = L64_2(L65_2)
-	for L67_2 in L64_2,L65_2,L66_2 do
-		L68_2 = {}
-		L69_2 = {}
-		L70_2 = nil % nil
-		L69_2[1] = L70_2
-		L70_2 = {}
-		L71_2 = nil % nil
-		L70_2[1] = L71_2
-		L68_2[1] = L69_2
-		L68_2[2] = L70_2
-		L67_2 = L68_2
-		L68_2 = {}
-		L69_2 = nil % nil
-		L68_2[1] = L69_2
-		L68_2 = _ENV[L68_2]
-		L67_2.i = L68_2
-	end
 end
 L64_2 = 232
 L65_2 = keyyy10
@@ -813,36 +835,6 @@ L96_2[20] = L116_2
 L96_2[21] = L117_2
 L96_2[22] = L118_2
 PGFC2 = L96_2
-while true do
-	L96_2 = false
-	if not L96_2 then
-		break
-	end
-	L96_2 = {}
-	L97_2 = nil % nil
-	L96_2[1] = L97_2
-	i = L96_2
-	L96_2 = ipairs
-	L97_2 = i
-	L96_2,L97_2,L98_2 = L96_2(L97_2)
-	for L99_2 in L96_2,L97_2,L98_2 do
-		L100_2 = {}
-		L101_2 = {}
-		L102_2 = nil % nil
-		L101_2[1] = L102_2
-		L102_2 = {}
-		L103_2 = nil % nil
-		L102_2[1] = L103_2
-		L100_2[1] = L101_2
-		L100_2[2] = L102_2
-		L99_2 = L100_2
-		L100_2 = {}
-		L101_2 = nil % nil
-		L100_2[1] = L101_2
-		L100_2 = _ENV[L100_2]
-		L99_2.i = L100_2
-	end
-end
 function PGPRON2(A0_3)
 	local L1_3,L2_3,L3_3,L4_3,L5_3,L6_3,L7_3
 	L1_3 = {}
@@ -955,36 +947,6 @@ function PGENC_3(A0_3)
 	end
 	L1_3 = res
 	return L1_3
-end
-while true do
-	L96_2 = false
-	if not L96_2 then
-		break
-	end
-	L96_2 = {}
-	L97_2 = nil % nil
-	L96_2[1] = L97_2
-	i = L96_2
-	L96_2 = ipairs
-	L97_2 = i
-	L96_2,L97_2,L98_2 = L96_2(L97_2)
-	for L99_2 in L96_2,L97_2,L98_2 do
-		L100_2 = {}
-		L101_2 = {}
-		L102_2 = nil % nil
-		L101_2[1] = L102_2
-		L102_2 = {}
-		L103_2 = nil % nil
-		L102_2[1] = L103_2
-		L100_2[1] = L101_2
-		L100_2[2] = L102_2
-		L99_2 = L100_2
-		L100_2 = {}
-		L101_2 = nil % nil
-		L100_2[1] = L101_2
-		L100_2 = _ENV[L100_2]
-		L99_2.i = L100_2
-	end
 end
 L96_2 = 120
 L97_2 = keyyyy10
@@ -1142,36 +1104,6 @@ L128_2[20] = L148_2
 L128_2[21] = L149_2
 L128_2[22] = L150_2
 PGFC3 = L128_2
-while true do
-	L128_2 = false
-	if not L128_2 then
-		break
-	end
-	L128_2 = {}
-	L129_2 = nil % nil
-	L128_2[1] = L129_2
-	i = L128_2
-	L128_2 = ipairs
-	L129_2 = i
-	L128_2,L129_2,L130_2 = L128_2(L129_2)
-	for L131_2 in L128_2,L129_2,L130_2 do
-		L132_2 = {}
-		L133_2 = {}
-		L134_2 = nil % nil
-		L133_2[1] = L134_2
-		L134_2 = {}
-		L135_2 = nil % nil
-		L134_2[1] = L135_2
-		L132_2[1] = L133_2
-		L132_2[2] = L134_2
-		L131_2 = L132_2
-		L132_2 = {}
-		L133_2 = nil % nil
-		L132_2[1] = L133_2
-		L132_2 = _ENV[L132_2]
-		L131_2.i = L132_2
-	end
-end
 function L128_2(A0_3)
 	local L1_3,L2_3,L3_3,L4_3,L5_3,L6_3,L7_3
 	L1_3 = {}
@@ -1602,10 +1534,7 @@ function PGENC_8(A0_3)
 	return L14_3(L15_3,L16_3,L17_3,L18_3,L19_3,L20_3)
 end
 while true do
-	L129_2 = false
-	if not L129_2 then
-		break
-	end
+
 	L129_2 = {}
 	L130_2 = PG
 	L131_2 = PGENC
@@ -1964,10 +1893,7 @@ if not L129_2 then
 	return
 end
 while true do
-	L129_2 = false
-	if not L129_2 then
-		break
-	end
+
 	L129_2 = i
 	L130_2 = i
 	L131_2 = 1
@@ -2067,1062 +1993,9 @@ end
 L129_2 = 1
 L130_2 = 0
 L131_2 = 1
-for L132_2 = L129_2,L130_2,L131_2 do
-	L133_2 = {}
-	L134_2 = L133_2.data
-	L134_2 = L134_2()
-	L133_2.sel = L134_2
-	L134_2 = L133_2.data
-	if L134_2 ~= nil then
-		L134_2 = L133_2.data
-		L134_2 = L134_2()
-		L133_2.sel = L134_2
-	end
-	L133_2 = nil
-end
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_1 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_3 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_3 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_4 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_5 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_6 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_7 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_8 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_9 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_10 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_11 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_12 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_13 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_14 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_15 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_16 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_17 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_18 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_19 = L129_2
-function L129_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_20 = L129_2
 L129_2 = 12
 L130_2 = 91
 L131_2 = nil
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_1 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_3 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_3 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_4 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_5 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_6 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_7 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_8 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_9 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_10 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_11 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_12 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_13 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_14 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_15 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_16 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_17 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_18 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_19 = L132_2
-function L132_2()
-	local L0_3,L1_3
-	goto lbl_5
-	do return end
-	while true do
-		L0_3 = e
-		L0_3()
-		::lbl_5::
-		function L0_3()
-			local L0_4,L1_4
-			goto lbl_5
-			do return end
-			while true do
-				L0_4 = e
-				L0_4()
-				::lbl_5::
-				function L0_4()
-					local L0_5,L1_5
-				end
-				d = L0_4
-			end
-		end
-		e = L0_3
-	end
-end
-_20 = L132_2
 L132_2 = 1
 L133_2 = 0
 L134_2 = 1
@@ -3140,10 +2013,7 @@ for L135_2 = L132_2,L133_2,L134_2 do
 	L136_2 = nil
 end
 while true do
-	L132_2 = false
-	if not L132_2 then
-		break
-	end
+
 	L132_2 = i
 	L133_2 = i
 	L134_2 = 1
@@ -3241,644 +2111,7 @@ while true do
 	return
 end
 function L132_2(A0_3)
-	local L1_3,L2_3,L3_3,L4_3,L5_3,L6_3,L7_3,L8_3,L9_3,L10_3,L11_3,L12_3,L13_3,L14_3,L15_3,L16_3,L17_3,L18_3,L19_3,L20_3,L21_3,L22_3,L23_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_1 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_3 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_3 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_4 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_5 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_6 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_7 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_8 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_9 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_10 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_11 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_12 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_13 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_14 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_15 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_16 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_17 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_18 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_19 = L1_3
-	function L1_3()
-		local L0_4,L1_4
-		goto lbl_5
-		do return end
-		while true do
-			L0_4 = e
-			L0_4()
-			::lbl_5::
-			function L0_4()
-				local L0_5,L1_5
-				goto lbl_5
-				do return end
-				while true do
-					L0_5 = e
-					L0_5()
-					::lbl_5::
-					function L0_5()
-						local L0_6,L1_6
-					end
-					d = L0_5
-				end
-			end
-			e = L0_4
-		end
-	end
-	_20 = L1_3
-	L1_3 = 1
-	L2_3 = 0
-	L3_3 = 1
-	for L4_3 = L1_3,L2_3,L3_3 do
-		L5_3 = {}
-		L6_3 = L5_3.data
-		L6_3 = L6_3()
-		L5_3.sel = L6_3
-		L6_3 = L5_3.data
-		if L6_3 ~= nil then
-			L6_3 = L5_3.data
-			L6_3 = L6_3()
-			L5_3.sel = L6_3
-		end
-		L5_3 = nil
-	end
 	while true do
-		L1_3 = false
-		if not L1_3 then
-			break
-		end
-		L1_3 = i
-		L2_3 = i
-		L3_3 = 1
-		for L4_3 = L1_3,L2_3,L3_3 do
-			L5_3 = {}
-			L6_3 = L5_3.i
-			if L6_3 then
-				L6_3 = L5_3.i
-				L7_3 = L5_3
-				L6_3 = L6_3(L7_3)
-				L5_3.i = L6_3
-			end
-			L6_3 = L5_3.i
-			L7_3 = L5_3.i
-			L8_3 = L5_3.i
-			for L9_3 = L6_3,L7_3,L8_3 do
-				L10_3 = {}
-				L11_3 = L10_3.i
-				if L11_3 then
-					L11_3 = L10_3.i
-					L11_3 = L11_3()
-					L10_3.i = L11_3
-				end
-				L11_3 = L5_3
-				L12_3 = L10_3.i
-				L13_3 = L5_3
-				for L14_3 = L11_3,L12_3,L13_3 do
-					L15_3 = {}
-					L16_3 = L15_3.i
-					if L16_3 then
-						L16_3 = L15_3.i
-						L17_3 = L5_3
-						L16_3 = L16_3(L17_3)
-						L15_3.i = L16_3
-					end
-					L16_3 = L5_3
-					L17_3 = L10_3
-					L18_3 = L15_3.i
-					for L19_3 = L16_3,L17_3,L18_3 do
-						L20_3 = {}
-						L21_3 = L20_3.i
-						if L21_3 then
-							L21_3 = L20_3.i
-							L22_3 = L5_3
-							L21_3 = L21_3(L22_3)
-							L20_3.i = L21_3
-						end
-						L21_3 = {}
-						L22_3 = L21_3.i
-						if L22_3 then
-							L22_3 = L21_3 | L15_3
-							L22_3 = L22_3 | L10_3
-							L22_3 = L22_3 | L5_3
-							L23_3 = L5_3
-							L22_3 = L22_3(L23_3)
-							L21_3.i = L22_3
-						end
-					end
-					L16_3 = {}
-					L17_3 = L16_3.i
-					if L17_3 then
-						L17_3 = true | L16_3
-						L17_3 = L17_3 | L10_3
-						L17_3 = L17_3 | L5_3
-						L18_3 = L5_3
-						L17_3 = L17_3(L18_3)
-						L16_3.i = L17_3
-					end
-				end
-				L11_3 = {}
-				L12_3 = L11_3.i
-				if L12_3 then
-					L12_3 = true | false
-					L12_3 = L12_3 | L11_3
-					L12_3 = L12_3 | L5_3
-					L13_3 = L5_3
-					L12_3 = L12_3(L13_3)
-					L11_3.i = L12_3
-				end
-			end
-			L6_3 = {}
-			L7_3 = L6_3.i
-			if L7_3 then
-				L7_3 = true | false
-				L7_3 = L7_3 | nil
-				L7_3 = L7_3 | L6_3
-				L8_3 = L6_3
-				L7_3 = L7_3(L8_3)
-				L6_3.i = L7_3
-			end
-			L7_3 = true | false
-			L7_3 = L7_3 | nil
-			return L7_3
-		end
-		return
-	end
 	L1_3 = L129_2
 	L1_3 = 69 + L1_3
 	L2_3 = L130_2
@@ -12378,3 +10611,4 @@ function Exit()
 	L0_3(L1_3(L2_3({PG=L4_3})))
 	os.exit()
 end
+-- [END] Decompiled Script
