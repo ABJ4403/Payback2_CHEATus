@@ -1,5 +1,5 @@
 --Predefine local variables (can improve performance according to lua-users.org wiki)
-local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,memRange,isStillOpen,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{},true
+local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,isStillOpen,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{},true
 
 function MENU()
 --Let the user choose stuff
@@ -866,7 +866,7 @@ function cheat_destroycar()
 		string.format("__back__")
 	},nil,"Destroy cars")
 	if CH then
-		gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
+		gg.setRanges(gg.REGION_JAVA_HEAP | gg.REGION_C_BSS | gg.REGION_C_ALLOC)
 		if CH == 3 then MENU()
 		elseif CH == 1 then
 			gg.searchNumber("0.89868283272;0.91149836779;0.92426908016;0.93699574471;0.9496794343;0.9623208046;0.97492086887;0.98748034239;1;1.01248061657;1.02492284775;1.03732740879;1.04969501495;1.06202638149;1.07432198524;1.08658242226;1.09880852699;1.11100065708;1.12315940857;1.1352853775;1.14737904072;1.15944087505;1.17147147655;1.18347120285;1.19544064999;1.20738017559;1.2192902565;1.23117136955::109",gg.TYPE_FLOAT)
@@ -1441,19 +1441,10 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 end
 function findAnchor20(msg)
 	gg.setRanges(gg.REGION_OTHER)
-	if cfg.cheatSettings.findAnchor20.searchMethod == "useWordWeaponAmmo" then
-		t = loopSearch(1,gg.TYPE_WORD,msg,memRange.WpnAmmWrd)
-		if gg.getResultCount() == 0 then return end
-		t = t[1]
-		t.value = 3e4
-		gg.setValues({t})
-		gg.clearResults()
-		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t.address - 0x2A,t.address)
-		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
-	elseif cfg.cheatSettings.findAnchor20.searchMethod == "holdWeapon" then
+	if cfg.cheatSettings.findAnchor20.searchMethod == "holdWeapon" then
 		toast("Hold your pistol")
 		sleep(2e3)
-		gg.searchNumber(13,gg.TYPE_WORD,nil,nil,memRange.HldWpn[1],memRange.HldWpn[2])
+		gg.searchNumber(13,gg.TYPE_WORD,nil,nil,cfg.memZones.HldWpn[1],memRange.HldWpn[2])
 		t = gg.getResults(200)
 		while gg.getResultCount() > 1 do
 			toast("Hold your knife")
@@ -1485,6 +1476,15 @@ function findAnchor20(msg)
 		t = t[1].address
 		gg.clearResults()
 		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t - 0x18,t - 0x18)
+		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
+	elseif cfg.cheatSettings.findAnchor20.searchMethod == "useWordWeaponAmmo" then
+		t = loopSearch(1,gg.TYPE_WORD,msg,cfg.memZones.WpnAmmWrd)
+		if gg.getResultCount() == 0 then return end
+		t = t[1]
+		t.value = 3e4
+		gg.setValues({t})
+		gg.clearResults()
+		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t.address - 0x2A,t.address)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	else
 		toast("An error occured: Exit out of script for more details.")
@@ -1548,14 +1548,18 @@ function loadConfig()
 				useFuzzyDecrease=false
 			},
 			findAnchor20={
-				searchMethod="useWordWeaponAmmo"
+				searchMethod="holdWeapon"
 			}
 		},
+		memZones={
+			WpnAmmWrd={0xB000051C,0xBD0FFD2A},
+			HldWpn={0xB0E00518,0xBDFFFD2A}
+		}
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="2.0.4"
+		VERSION="2.0.5"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
@@ -1604,10 +1608,6 @@ VAL_WallResist={-500,-1e-5,-1}
 VAL_BigBody={3,5.9}
 memOffset={
 	BigBody={0.09500002861,0.00000019073}
-}
-memRange={
-	WpnAmmWrd={0xB000051C,0xBD0FFD2A},
-	HldWpn={0xB0E00518,0xBDFFFD2A}
 }
 
 -- Load settings and languages
