@@ -1444,7 +1444,7 @@ function findAnchor20(msg)
 	if cfg.cheatSettings.findAnchor20.searchMethod == "holdWeapon" then
 		toast("Hold your pistol")
 		sleep(2e3)
-		gg.searchNumber(13,gg.TYPE_WORD,nil,nil,cfg.memZones.HldWpn[1],memRange.HldWpn[2])
+		gg.searchNumber(13,gg.TYPE_WORD,nil,nil,cfg.memZones.HldWpn[1],cfg.memZones.HldWpn[2])
 		t = gg.getResults(200)
 		while gg.getResultCount() > 1 do
 			toast("Hold your knife")
@@ -1572,6 +1572,8 @@ function loadConfig()
 	end
 	VAL_PlayerCurrentName = cfg.PlayerCurrentName
 	update_language()
+	cfg.memZones.WpnAmmWrd = cfg.memZones.WpnAmmWrd or {}
+	cfg.memZones.HldWpn = cfg.memZones.HldWpn or {}
 end
 function restoreSuspend()
 	--[[
