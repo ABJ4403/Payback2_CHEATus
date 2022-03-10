@@ -1554,7 +1554,7 @@ function loadConfig()
 		memZones={
 			WpnAmmWrd={0xB000051C,0xBD0FFD2A},
 			HldWpn={0xB0E00518,0xBDFFFD2A}
-		}
+		},
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
