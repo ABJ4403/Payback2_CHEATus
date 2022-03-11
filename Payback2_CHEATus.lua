@@ -1,6 +1,7 @@
---Predefine local variables (can improve performance according to lua-users.org wiki)
+-- (pre)Define local variables (can possibly improve performance according to lua-users.org wiki) --
 local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,isStillOpen,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{},true
 
+-- Cheat menus --
 function MENU()
 --Let the user choose stuff
 	local CH = gg.choice({
@@ -46,7 +47,6 @@ function MENU()
 --Now collectgarbage can have an easy time to clear all that crap
 	collectgarbage("collect")
 end
-
 function MENU_CSD()
 --Let the user choose stuff
 	local CH = gg.choice({
@@ -82,12 +82,11 @@ function MENU_CSD()
 ---
 	elseif CH == 15 then MENU() end
 end
-
 function MENU_incompat()
 --Let the user choose stuff
 	local CH = gg.choice({
 		"Incompatible cheats (below PB2 v2.104.12.4/GG v101.0)",
-		"These cheats isn't compatible with the latest version of PB2. searching these will result in values not found, especially those that isnt located in CAlloc,Annonymous,Other,CodeApp\nSome of them are from ICE menu",
+		"These cheats isn't compatible with the latest version of PB2. searching these will result in values not found, especially those that isnt located in CAlloc,Anonymous,Other,CodeApp\nSome of them are from ICE menu",
 		"1. void mode",
 		"2. Destroy all veichles",
 		"3. Change XP",
@@ -103,14 +102,13 @@ function MENU_incompat()
 	if CH == 3 then cheat_togglevoidmode()
 	elseif CH == 4 then cheat_destroycar()
 	elseif CH == 5 then cheat_xpmodifier()
-	elseif CH == 6 then cheat2_win()
-	elseif CH == 7 then cheat2_givegrenade()
-	elseif CH == 8 then cheat2_givec4()
-	elseif CH == 9 then cheat2_givelaser()
+	elseif CH == 6 then cheat_win()
+	elseif CH == 7 then cheat_givegrenade()
+	elseif CH == 8 then cheat_givec4()
+	elseif CH == 9 then cheat_givelaser()
 ---
 	elseif CH == 11 then MENU() end
 end
-
 function MENU_settings()
 --Let the user choose stuff
 	local CH = gg.choice({
@@ -182,10 +180,9 @@ end
 --[[
 	A little note before looking at the cheat mechanics:
 	On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
-	old version uses Ca,Ch,Jh,A (C++Alloc,C++Heap,JavaHeap,Annonymous)
+	old version uses Ca,Ch,Jh,A (C++Alloc,C++Heap,JavaHeap,Anonymous)
 	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
 ]]
-
 function cheat_godmode()
 --Let the user choose stuff
 	local CH = gg.multiChoice({
@@ -218,7 +215,7 @@ function cheat_godmode()
 	if CH then
 	--last option 21 + separator 3 + shift 1
 		if CH[25] then MENU() end
-		gg.setRanges(gg.REGION_OTHER)
+		gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
 		local anchorAddress = findAnchor20('Put one of your weapon ammo')
 		if not anchorAddress then
 			toast('Can\'t find the weapon you\'re holding, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
@@ -242,9 +239,9 @@ function cheat_godmode()
 					tmp.a[i].value = 3e4
 				end
 			--Todo: add the word flag using forloop, if ch2 loop freeze, if ch3 loop unfreeze
-				t = ConcatTables(t,tmp.a)
+				t = ConcatTable(t,tmp.a)
 			end
-			if CH[3] then t = ConcatTables(t,{
+			if CH[3] then t = ConcatTable(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [Rel0adTimer]: Default"}
 			})
 			end
@@ -260,45 +257,45 @@ function cheat_godmode()
 					sleep(999)
 				end
 				tmp.a[1].value = -63
-				t = ConcatTables(t,tmp.a)
+				t = ConcatTable(t,tmp.a)
 			end
-			if CH[5] then t = ConcatTables(t,{
+			if CH[5] then t = ConcatTable(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=800,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=9,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
-			if CH[6] then t = ConcatTables(t,{
+			if CH[6] then t = ConcatTable(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=3e4,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_WORD,freeze=true,value=1,name="Pb2Chts [RespawnInterval] (Immortal Self-explode)"}
 			})
 			end
-			if CH[7] then t = ConcatTables(t,{
+			if CH[7] then t = ConcatTable(t,{
 				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: X"},
 				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: Y"}
 			})
 			end
-			if CH[8] then t = ConcatTables(t,{
+			if CH[8] then t = ConcatTable(t,{
 				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,value=300,freeze=true,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
-			if CH[9] then t = ConcatTables(t,{
+			if CH[9] then t = ConcatTable(t,{
 				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Float]"}
 			})
 			end
-			if CH[10] then t = ConcatTables(t,{
+			if CH[10] then t = ConcatTable(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Ragdoll]"},
 				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=0,freeze=true,freezeType=gg.FREEZE_IN_RANGE,freezeFrom=0,freezeTo=120,name="Pb2Chts [Ragdoll]"}
 			})
 			end
-			if CH[11] then t = ConcatTables(t,{
+			if CH[11] then t = ConcatTable(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
 			})
 			end
-			if CH[12] then t = ConcatTables(t,{
+			if CH[12] then t = ConcatTable(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Firebody"},
 			})
 			end
-			if CH[13] then t = ConcatTables(t,{
+			if CH[13] then t = ConcatTable(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Burning"},
 			})
 			end
@@ -316,39 +313,39 @@ function cheat_godmode()
 			gg.addListItems(tmp.a)
 			sleep(2e3)
 		--And change it back to 512 so you can control it too :D
-			t = ConcatTables(t,{
+			t = ConcatTable(t,{
 				{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=512,freeze=true,name="Pb2Chts [ControlState]"}
 			})
 			end
 			---
-			if CH[17] then t = ConcatTables(t,{
+			if CH[17] then t = ConcatTable(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [Rel0adTimer]"}
 			})
 			end
-			if CH[18] then t = ConcatTables(t,{
+			if CH[18] then t = ConcatTable(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=false,value=999,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
-			if CH[19] then t = ConcatTables(t,{
+			if CH[19] then t = ConcatTable(t,{
 				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: X"},
 				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: Y"}
 			})
 			end
-			if CH[20] then t = ConcatTables(t,{
+			if CH[20] then t = ConcatTable(t,{
 				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
-			if CH[21] then t = ConcatTables(t,{
+			if CH[21] then t = ConcatTable(t,{
 				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Float]"}
 			})
 			end
-			if CH[22] then t = ConcatTables(t,{
+			if CH[22] then t = ConcatTable(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Ragdoll]"},
 				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=65536,freeze=false,name="Pb2Chts [Ragdoll]"}
 			})
 			end
-			if CH[23] then t = ConcatTables(t,{
+			if CH[23] then t = ConcatTable(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
 			})
 			end
@@ -359,7 +356,6 @@ function cheat_godmode()
 		end
 	end
 end
-
 function cheat_weaponammo()
 	local CH = gg.choice({
 		"1. DWORD (works by changing match settings. Requires respawn, works best in offline mode)",
@@ -368,7 +364,7 @@ function cheat_weaponammo()
 		string.format("__back__")
 	},nil,"Select method for modifying Weapon Ammo")
 --gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS
-	gg.setRanges(gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
 	if CH == 6 then MENU()
 	elseif CH == 1 then
 		CH = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;..whatever\nbut i recommend diving each with ";0W;" instead (for more accuracy)'})
@@ -416,7 +412,6 @@ function cheat_weaponammo()
 	end
 	gg.clearResults()
 end
-
 function cheat_firebody()
 	local CH = gg.choice({
 		"ON",
@@ -443,7 +438,6 @@ function cheat_firebody()
 		end
 	end
 end
-
 function cheat_pistolknockback()
 	local CH = gg.choice({
 		"Grapple gun/Pull (-20)",
@@ -513,7 +507,6 @@ function cheat_pistolknockback()
 		end
 	end
 end
-
 function cheat_wallhack()
 	local CH = gg.choice({
 		"ON (GKTV, wonky physics, fast to enable, survives multiple match, and can wallhack other entities not just a wall)",
@@ -637,7 +630,6 @@ function cheat_wallhack()
 		end
 	end
 end
-
 function cheat_bigbody()
 	local CH = gg.choice({
 		"ON (Default, based on Mangyu original script)",
@@ -734,7 +726,6 @@ function cheat_bigbody()
 		gg.clearResults()
 	end
 end
-
 function cheat_strongveichle()
 	local CH = gg.choice({
 		"ON (85000)",
@@ -797,7 +788,6 @@ function cheat_strongveichle()
 		end
 	end
 end
-
 function cheat_noblastdamage()
 	local CH = gg.choice({
 		"ON (0)",
@@ -858,7 +848,6 @@ function cheat_noblastdamage()
 		end
 	end
 end
-
 function cheat_destroycar()
 	local CH = gg.choice({
 		"ON",
@@ -892,7 +881,6 @@ function cheat_destroycar()
 		gg.clearResults()
 	end
 end
-
 function cheat_togglevoidmode()
 	local CH = gg.choice({
 		"Default (not work for now due to memory address issue)",
@@ -919,13 +907,12 @@ function cheat_togglevoidmode()
 		end
 	end
 end
-
 function cheat_xpmodifier()
 --CAlloc for the gameplay and actual google play value
---Annonymous from joker video
+--Anonymous from joker video
 --OTHER for the Chat and Displayed XP
 --Won't affect stored xp (aka. temporary)
-	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANNONYMOUS | gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 --request user to give player name
 	local player_xp = gg.prompt({
 		'Put your current XP (make sure that your XP value is differentiateable, because there\'s no looping thingy method yet.)',
@@ -956,9 +943,8 @@ function cheat_xpmodifier()
 		end
 	end
 end
-
 function cheat_changeplayername()
-	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 --request user to give player name
 	local player_name = gg.prompt({
 		'Put your current player name (case-sensitive, ":" or ";" is required at the beginning, because how GameGuardian search works)',
@@ -984,7 +970,6 @@ function cheat_changeplayername()
 		end
 	end
 end
-
 function cheat_changeplayernamecolor()
 	gg.setRanges(gg.REGION_OTHER)
 --request user to give player name
@@ -1074,7 +1059,6 @@ function cheat_changeplayernamecolor()
 		end
 	end
 end
-
 function cheat_walkwonkyness()
 	local CH = gg.choice({
 		"Default (0.004)",
@@ -1105,7 +1089,6 @@ function cheat_walkwonkyness()
 		gg.clearResults()
 	end
 end
-
 function cheat_coloredtree()
 	local CH = gg.choice({
 		"ON",
@@ -1130,7 +1113,6 @@ function cheat_coloredtree()
 		end
 	end
 end
-
 function cheat_bigflamethroweritem()
 	local CH = gg.choice({
 		"ON",
@@ -1155,7 +1137,6 @@ function cheat_bigflamethroweritem()
 		end
 	end
 end
-
 function cheat_shadowfx()
 	local CH = gg.choice({
 		"OFF",
@@ -1179,7 +1160,6 @@ function cheat_shadowfx()
 		end
 	end
 end
-
 function cheat_clrdpplsp()
 	local CH = gg.choice({
 		"ON",
@@ -1203,7 +1183,6 @@ function cheat_clrdpplsp()
 		end
 	end
 end
-
 function cheat_deleteingameplaytext()
 	gg.setRanges(gg.REGION_C_ALLOC)
 	tmp = {
@@ -1233,7 +1212,6 @@ function cheat_deleteingameplaytext()
 	end
 	toast("In-gameplay-text cleared, to restore, you have to restart the game\nPS: This might not work, idk why though..")
 end
-
 function cheat_reflectiongraphics()
 	local CH = gg.choice({
 		"ON (1)",
@@ -1277,9 +1255,7 @@ function cheat_reflectiongraphics()
 		gg.clearResults()
 	end
 end
-
-
-function cheat2_givegrenade()
+function cheat_givegrenade()
 	gg.setRanges(gg.REGION_C_BSS)
 	t = loopSearch(1,gg.TYPE_DWORD,'Put your grenade ammo')
 	if gg.getResultCount() == 0 then
@@ -1294,8 +1270,7 @@ function cheat2_givegrenade()
 		toast('Grenade ammo ON')
 	end
 end
-
-function cheat2_givec4()
+function cheat_givec4()
 	gg.setRanges(gg.REGION_C_BSS)
 	t = loopSearch(1,gg.TYPE_DWORD,'Put your sticky bomb ammo')
 	if gg.getResultCount() == 0 then
@@ -1310,8 +1285,7 @@ function cheat2_givec4()
 		toast('C4 ammo ON')
 	end
 end
-
-function cheat2_givelaser()
+function cheat_givelaser()
 	gg.setRanges(gg.REGION_C_BSS)
 	t = loopSearch(1,gg.TYPE_DWORD,'Put your laser ammo')
 	if gg.getResultCount() == 0 then
@@ -1327,8 +1301,7 @@ function cheat2_givelaser()
 	end
 	tmp = nil
 end
-
-function cheat2_win()
+function cheat_win()
 	gg.setRanges(gg.REGION_ANONYMOUS)
 	t = loopSearch(1,gg.TYPE_DWORD,'Put one of your weapon ammo (the original ICE Menu dev told that all ammo can work, this might wrong)')
 	if gg.getResultCount() == 0 then
@@ -1343,7 +1316,6 @@ function cheat2_win()
 		toast('Level Win ON')
 	end
 end
-
 function show_about()
 	local CH = gg.choice({
 		string.format("__about__"),
@@ -1361,15 +1333,28 @@ function show_about()
 	elseif CH == 6 then CH = nil MENU() end
 end
 
+-- Helper functions --
+table.merge=function(...)
+	--[[
+		merge 2 tables, just like Object.assign on JS
+		first table will be replaced by new table...
+		recommended only on object-like tables, but not on array-like tables
+	]]
+	local r = {}
+	for _,t in ipairs{...} do
+		for k,v in pairs(t) do
+			r[k] = v
+		end
+	end
+	return r
+end
 function exit()
 	isStillOpen=false
 	gg.saveVariable(cfg,cfg_file)
 	gg.clearResults()
---gg.clearList() -- this will clear your list not recommend though...
 	print(string.format("Exit_ThankYouMsg"))
 	os.exit()
 end
-
 function suspend()
 	isStillOpen=false
 	gg.saveVariable({
@@ -1380,8 +1365,16 @@ function suspend()
 	print(string.format("Suspend_Text"))
 	os.exit()
 end
-
--- Helper functions
+function ConcatTable(t1,t2)
+	--[[
+		Creates new table then
+		add table 1 and table 2
+	]]
+	for i=1,#t2 do
+		t1[#t1+i] = t2[i]
+	end
+	return t1
+end
 function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	local num1,t = gg.prompt({msg1})
 	restrictedMemArea = restrictedMemArea or {}
@@ -1440,7 +1433,7 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	end
 end
 function findAnchor20(msg)
-	gg.setRanges(gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
 	if cfg.cheatSettings.findAnchor20.searchMethod == "holdWeapon" then
 		toast("Hold your pistol")
 		sleep(2e3)
@@ -1492,31 +1485,6 @@ function findAnchor20(msg)
 		return
 	end
 end
-function MergeTables(...)
-	--[[
-		merge 2 tables, just like Object.assign on JS
-		first table will be replaced by new table...
-		recommended only on object-like tables
-		not recommended on array-like tables
-	]]
-	local r = {}
-	for _,t in ipairs{...} do
-		for k,v in pairs(t) do
-			r[k] = v
-		end
-	end
-	return r
-end
-function ConcatTables(t1,t2)
-	--[[
-		Creates new table then
-		add table 1 and table 2
-	]]
-	for i=1,#t2 do
-		t1[#t1+i] = t2[i]
-	end
-	return t1
-end
 function update_language()
 	--[[
 		Parse language strings...
@@ -1552,28 +1520,27 @@ function loadConfig()
 			}
 		},
 		memZones={
-			WpnAmmWrd={0xB000051C,0xBD0FFD2A},
-			HldWpn={0xB0E00518,0xBDFFFD2A}
+			WpnAmmWrd={0xB000051C,0xCD0FFD2A},
+			HldWpn={0xB0000518,0xCDFFFD18}
 		},
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="2.0.5"
+		VERSION="2.0.5b"
 	}
+--unfortunately, alot of people had problem with my script if i put memory restriction on. if you are experiencing the same thing, change the memZones in the .conf file from {????????;????????;} to {0;-1;}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
 		cfg_load = cfg_load()
 		cfg_load.VERSION = cfg.VERSION
-		cfg = MergeTables(cfg,cfg_load)
+		cfg = table.merge(cfg,cfg_load)
 	else
 		toast("No configuration files detected, Creating new one... 💾️\nHi There! 👋️ Looks like You're new here.")
 		gg.saveVariable(cfg,cfg_file)
 	end
 	VAL_PlayerCurrentName = cfg.PlayerCurrentName
 	update_language()
-	cfg.memZones.WpnAmmWrd = cfg.memZones.WpnAmmWrd or {0,-1}
-	cfg.memZones.HldWpn = cfg.memZones.HldWpn or {0,-1}
 end
 function restoreSuspend()
 	--[[
