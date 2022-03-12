@@ -10,10 +10,9 @@ function MENU()
 		"3. Strong veichle",
 		"4. No blast damage",
 		"5. Pistol/SG Knockback",
-		"---",
-		"Other cheats:",
+		"---\nOther cheats:",
 		"6. God modes",
-		"7. Client-side cosmetics",
+		"7. Client-side cheats",
 		"8. Incompatible cheats",
 		"---",
 		string.format("Settings"),
@@ -26,16 +25,15 @@ function MENU()
 	elseif CH == 3 then cheat_strongveichle()
 	elseif CH == 4 then cheat_noblastdamage()
 	elseif CH == 5 then cheat_pistolknockback()
+---Title:Othercheat..
+	elseif CH == 7 then cheat_godmode()
+	elseif CH == 8 then MENU_CSD()
+	elseif CH == 9 then MENU_incompat()
 ---
---Title:Othercheat..
-	elseif CH == 8 then cheat_godmode()
-	elseif CH == 9 then MENU_CSD()
-	elseif CH == 10 then MENU_incompat()
----
-	elseif CH == 12 then MENU_settings()
-	elseif CH == 13 then show_about()
-	elseif CH == 14 then exit()
-	elseif CH == 15 then suspend() end
+	elseif CH == 11 then MENU_settings()
+	elseif CH == 12 then show_about()
+	elseif CH == 13 then exit()
+	elseif CH == 14 then suspend() end
 	CH = nil
 	if type(tmp) == "table" then
 	--This will clear tmp without creating memory garbage (doing tmp={} adds more memory garbage, try print({}) in Lua interpreter, you will see "table: 0xXXXXXXXXXXXX", that will be always different address)
@@ -50,8 +48,7 @@ end
 function MENU_CSD()
 --Let the user choose stuff
 	local CH = gg.choice({
-		"Client-side cosmetics",
-		"These cheats won't affect your actual gameplay, its more of a fancy stuff\nMost of these type of cheats come from GKTV",
+		"Client-side cheats\nSome cheats won't affect other people, it's only applied to you",
 		"1. Walk animation Wonkyness (client-side only)",
 		"2. Change Name (EXPERIMENTAL)",
 		"3. Change Name Color (EXPERIMENTAL)",
@@ -62,31 +59,31 @@ function MENU_CSD()
 		"8. Shadows",
 		"9. Colored People's (ESP)",
 		"10. Reflection Graphics",
-		"11. Delete All Names",
+		"11. Explosion Power",
+		"12. Delete All Names",
 		"---",
 		string.format("__back__")
 	},nil,string.format("Title_Version"))
 --Title:CSD...
---Title:This menu...
-	if CH == 3 then cheat_walkwonkyness()
-	elseif CH == 4 then cheat_changeplayername()
-	elseif CH == 5 then cheat_changeplayernamecolor()
-	elseif CH == 6 then cheat_firebody()
-	elseif CH == 7 then cheat_bigbody()
-	elseif CH == 8 then cheat_coloredtree()
-	elseif CH == 9 then cheat_bigflamethroweritem()
-	elseif CH == 10 then cheat_shadowfx()
-	elseif CH == 11 then cheat_clrdpplsp()
-	elseif CH == 12 then cheat_reflectiongraphics()
-	elseif CH == 13 then cheat_delete_ingameplaytext()
+	if CH == 2 then cheat_walkwonkyness()
+	elseif CH == 3 then cheat_changeplayername()
+	elseif CH == 4 then cheat_changeplayernamecolor()
+	elseif CH == 5 then cheat_firebody()
+	elseif CH == 6 then cheat_bigbody()
+	elseif CH == 7 then cheat_coloredtree()
+	elseif CH == 8 then cheat_bigflamethroweritem()
+	elseif CH == 9 then cheat_shadowfx()
+	elseif CH == 10 then cheat_clrdpplsp()
+	elseif CH == 11 then cheat_reflectiongraphics()
+	elseif CH == 12 then cheat_explodepower()
+	elseif CH == 13 then cheat_deleteingameplaytext()
 ---
 	elseif CH == 15 then MENU() end
 end
 function MENU_incompat()
 --Let the user choose stuff
 	local CH = gg.choice({
-		"Incompatible cheats (below PB2 v2.104.12.4/GG v101.0)",
-		"These cheats isn't compatible with the latest version of PB2. searching these will result in values not found, especially those that isnt located in CAlloc,Anonymous,Other,CodeApp\nSome of them are from ICE menu",
+		"Incompatible cheats (below PB2 v2.104.12.4/GG v101.0)\nThese cheats isn't compatible with the latest version of PB2. searching these will result in values not found, especially those that isnt located in CAlloc,Anonymous,Other,CodeApp\nSome of them are from ICE menu",
 		"1. void mode",
 		"2. Destroy all veichles",
 		"3. Change XP",
@@ -98,16 +95,15 @@ function MENU_incompat()
 		string.format("__back__")
 	},nil,string.format("Title_Version"))
 --Title:CSD...
---Title:This menu...
-	if CH == 3 then cheat_togglevoidmode()
-	elseif CH == 4 then cheat_destroycar()
-	elseif CH == 5 then cheat_xpmodifier()
-	elseif CH == 6 then cheat_win()
-	elseif CH == 7 then cheat_givegrenade()
-	elseif CH == 8 then cheat_givec4()
-	elseif CH == 9 then cheat_givelaser()
+	if CH == 2 then cheat_togglevoidmode()
+	elseif CH == 3 then cheat_destroycar()
+	elseif CH == 4 then cheat_xpmodifier()
+	elseif CH == 5 then cheat_win()
+	elseif CH == 6 then cheat_givegrenade()
+	elseif CH == 7 then cheat_givec4()
+	elseif CH == 8 then cheat_givelaser()
 ---
-	elseif CH == 11 then MENU() end
+	elseif CH == 10 then MENU() end
 end
 function MENU_settings()
 --Let the user choose stuff
@@ -1255,6 +1251,59 @@ function cheat_reflectiongraphics()
 		gg.clearResults()
 	end
 end
+function cheat_explodepower()
+	local CH = gg.choice({
+		"Modify Explosion power",
+		"---",
+		"Change current Explosion power",
+		"Restore previous value",
+		"Clear memory buffer",
+		string.format("__back__")
+	},nil,"Explosion power modifier\nCurrent: "..VAL_XplodePowr.."\n")
+	if CH then
+		if CH == 5 then MENU()
+		elseif CH == 1 then
+			local CH = gg.prompt({'Put your explosion power. Lower is more powerful\nSet to -1 to disable explosion\n PS:only applies to you'},{VAL_XplodePowr},{'number'})
+			if (CH and CH[1]) then
+				EXPLOSION_POWER = CH[1]
+			else
+				cheat_explodepower()
+			end
+		---
+		elseif CH == 3 then
+			local CH = gg.prompt({'If you think the current explosion power is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current explosion power'},{[1] = VAL_PstlSgKnckbck},{[1] = 'number'})
+			if (CH and CH[1]) then VAL_XplodePowr = CH[1] end
+			cheat_explodepower()
+		elseif CH == 4 then
+			revert.ExplodePower = nil
+			cheat_explodepower()
+		elseif CH == 5 then
+			memBuffer.ExplodePower = nil
+			cheat_explodepower()
+		end
+		if EXPLOSION_POWER then
+			gg.setRanges(gg.REGION_CODE_APP)
+			if not memBuffer.ExplodePower then
+				toast('No buffer found, creating new buffer')
+				gg.searchNumber("15120W;"..VAL_XplodePowr.."F::3")
+				gg.refineNumber(VAL_XplodePowr,gg.TYPE_FLOAT)
+				memBuffer.ExplodePower,revert.ExplodePower = gg.getResults(1),gg.getResults(1)
+			else
+				toast('Previous result found, using previous result.')
+				gg.loadResults(memBuffer.ExplodePower)
+			end
+			if gg.getResultCount() == 0 then
+				memBuffer.ExplodePower,revert.ExplodePower = nil,nil
+				toast("Can't find the specific set of number. if you changed the explosion power and reopened the script, restore current number using 'Change current explosion power' menu")
+			else
+				memBuffer.ExplodePower[1].value,VAL_XplodePowr,EXPLOSION_POWER = EXPLOSION_POWER,EXPLOSION_POWER,nil
+				toast("Explosion power modified to "..VAL_XplodePowr)
+				gg.setValues(memBuffer.ExplodePower)
+			end
+			gg.clearResults()
+		end
+	end
+end
 function cheat_givegrenade()
 	gg.setRanges(gg.REGION_C_BSS)
 	t = loopSearch(1,gg.TYPE_DWORD,'Put your grenade ammo')
@@ -1527,7 +1576,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="2.0.5b"
+		VERSION="2.0.6"
 	}
 --unfortunately, alot of people had problem with my script if i put memory restriction on. if you are experiencing the same thing, change the memZones in the .conf file from {????????;????????;} to {0;-1;}
 	local cfg_load = loadfile(cfg_file)
@@ -1575,6 +1624,7 @@ VAL_CrDfltHlth=125
 VAL_DmgIntnsty=300
 VAL_WallResist={-500,-1e-5,-1}
 VAL_BigBody={3,5.9}
+VAL_XplodePowr=10000000
 memOffset={
 	BigBody={0.09500002861,0.00000019073}
 }
