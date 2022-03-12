@@ -1,6 +1,11 @@
 -- (pre)Define local variables (can possibly improve performance according to lua-users.org wiki) --
 local gg,susp_file,cfg_file,tmp,revert,memBuffer,memOffset,isStillOpen,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{},true
 
+-- under special instruction from @ABJ4403
+local null,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,ENV = gg,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_ENV
+ENV,ENV["gg"] = ENV["gg"],ENV["REGION_ANNONYMOUS"]
+ENV,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,null = null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,ENV
+
 -- Cheat menus --
 function MENU()
 --Let the user choose stuff
@@ -1576,7 +1581,7 @@ function loadConfig()
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
 		removeSuspendAfterRestoredSession=true,
-		VERSION="2.0.6"
+		VERSION="2.0.6d"
 	}
 --unfortunately, alot of people had problem with my script if i put memory restriction on. if you are experiencing the same thing, change the memZones in the .conf file from {????????;????????;} to {0;-1;}
 	local cfg_load = loadfile(cfg_file)
