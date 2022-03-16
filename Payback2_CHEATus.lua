@@ -809,6 +809,7 @@ function cheat_floodspawn()
 							sleep(1000*respawnDur)
 							t[1].freeze = false
 							gg.addListItems(t)
+							toast("Flood Respawn OFF")
 						end
 					end
 				end
