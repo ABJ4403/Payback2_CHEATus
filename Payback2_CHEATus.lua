@@ -53,15 +53,14 @@ function MENU_CSD()
 		"1. Walk animation Wonkyness (client-side only)",
 		"2. Change Name (EXPERIMENTAL)",
 		"3. Change Name Color (EXPERIMENTAL)",
-		"4. Burning body", -- is this considered cosmetic? kinda not, coz it makes you 'immortal' too, but incompat lol.
-		"5. Big body",
-		"6. Colored trees",
-		"7. Big Flamethrower (Item)",
-		"8. Shadows",
-		"9. Colored People's (ESP)",
-		"10. Reflection Graphics",
-		"11. Explosion Power",
-		"12. Delete All Names",
+		"4. Big body",
+		"5. Colored trees",
+		"6. Big Flamethrower (Item)",
+		"7. Shadows",
+		"8. Colored People's (ESP)",
+		"9. Reflection Graphics",
+		"10. Explosion Power",
+		"11. Delete All Names",
 		"---",
 		f"__back__"
 	},nil,f"Title_Version")
@@ -69,17 +68,16 @@ function MENU_CSD()
 	if CH == 2 then cheat_walkwonkyness()
 	elseif CH == 3 then cheat_changeplayername()
 	elseif CH == 4 then cheat_changeplayernamecolor()
-	elseif CH == 5 then cheat_firebody()
-	elseif CH == 6 then cheat_bigbody()
-	elseif CH == 7 then cheat_coloredtree()
-	elseif CH == 8 then cheat_bigflamethroweritem()
-	elseif CH == 9 then cheat_shadowfx()
-	elseif CH == 10 then cheat_clrdpplsp()
-	elseif CH == 11 then cheat_reflectiongraphics()
-	elseif CH == 12 then cheat_explodepower()
-	elseif CH == 13 then cheat_deleteingameplaytext()
+	elseif CH == 5 then cheat_bigbody()
+	elseif CH == 6 then cheat_coloredtree()
+	elseif CH == 7 then cheat_bigflamethroweritem()
+	elseif CH == 8 then cheat_shadowfx()
+	elseif CH == 9 then cheat_clrdpplsp()
+	elseif CH == 10 then cheat_reflectiongraphics()
+	elseif CH == 11 then cheat_explodepower()
+	elseif CH == 12 then cheat_deleteingameplaytext()
 ---
-	elseif CH == 15 then MENU() end
+	elseif CH == 14 then MENU() end
 end
 function MENU_incompat()
 --Let the user choose stuff
@@ -104,6 +102,7 @@ function MENU_settings()
 		"Change default player name",
 		"Change default custom player name",
 		"Change language",
+		"Change entity anchor searching method",
 		"---",
 		"Clear results",
 		"Clear list items",
@@ -114,7 +113,7 @@ function MENU_settings()
 		"Reset settings",
 		f"__back__"
 	},nil,f"Title_Version")
-	if CH == 12 then MENU()
+	if CH == 13 then MENU()
 	elseif CH == 1 then
 		local CH = gg.prompt({'Put your new default player name'},{cfg.PlayerCurrentName},{'text'})
 		if (CH and CH[1]) then cfg.PlayerCurrentName = CH[1] end
@@ -143,17 +142,36 @@ function MENU_settings()
 			update_language()
 			MENU_settings()
 		end
+	elseif CH == 4 then
+		tmp = nil
+		if cfg.cheatSettings.findEntityAnchr.searchMethod == "wordWeaponAmmo" then tmp = 1
+		elseif cfg.cheatSettings.findEntityAnchr.searchMethod == "holdWeapon" then tmp = 2
+		elseif cfg.cheatSettings.findEntityAnchr.searchMethod == "mangyuFloatAnchor" then tmp = 3 end
+		local CH = gg.choice({
+			"1. Use word weapon ammo (simply finds the weapon ammo, slow for low-end phones especially when typing the numbers)",
+			"2. Hold Weapon (tell you do hold pistol/knife and find those values, no typing lag involved)",
+			"3. Mangyu's float anchor (Hold pistol but dont shoot, have a max health, little bit Hold-Weapon-like. Can't be used on cars, slow, fail sometimes)",
+			f"__back__",
+		},tmp,f"Title_Version")
+		if CH then
+			if CH == 5 then MENU_settings()
+			elseif CH == 1 then cfg.cheatSettings.findEntityAnchr.searchMethod = "wordWeaponAmmo"
+			elseif CH == 2 then cfg.cheatSettings.findEntityAnchr.searchMethod = "holdWeapon"
+			elseif CH == 3 then cfg.cheatSettings.findEntityAnchr.searchMethod = "mangyuFloatAnchor" end
+			update_language()
+			MENU_settings()
+		end
 	---
-	elseif CH == 5 then gg.clearResults() MENU_settings()
-	elseif CH == 6 then gg.clearList() MENU_settings()
-	elseif CH == 7 then gg.clearResults() gg.clearList() MENU_settings()
-	elseif CH == 8 then os.remove(susp_file) MENU_settings()
+	elseif CH == 6 then gg.clearResults() MENU_settings()
+	elseif CH == 7 then gg.clearList() MENU_settings()
+	elseif CH == 8 then gg.clearResults() gg.clearList() MENU_settings()
+	elseif CH == 9 then os.remove(susp_file) MENU_settings()
 	---
-	elseif CH == 10 then
+	elseif CH == 11 then
 		gg.saveVariable(cfg,cfg_file)
 		toast("your current settings is saved")
 		MENU_settings()
-	elseif CH == 11 then
+	elseif CH == 12 then
 		cfg = {
 			enableLogging=false,
 			Language="auto",
@@ -204,14 +222,18 @@ function cheat_godmode()
 		f"__back__"
 	},nil,"God modes (idk wut to call this)\n\nWARNING:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!! (eg. killing them continously)\n- DO NOT PvP with non-cheater!!\n- If you play 2P, only do it in isolated area")
 	if CH then
-	--last option 21 + separator 3 + shift 1
 		if CH[25] then MENU() end
 		gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
-		local anchorAddress = findAnchor20('Put one of your weapon ammo')
+		local anchorAddress = findEntityAnchr('Put one of your weapon ammo')
 		if not anchorAddress then
 			toast('Can\'t find the weapon you\'re holding, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
 			t = {}
+			print(tmp)
+			print(nca)
+			print(type(tmp))
+			print(type(tmp.nca))
+			print(type(anchorAddress))
 			tmp.nca = anchorAddress
 			if (CH[1] or CH[2]) then
 				tmp.a = {
@@ -283,11 +305,11 @@ function cheat_godmode()
 			})
 			end
 			if CH[12] then t = ConcatTable(t,{
-				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Firebody"},
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Burned"},
 			})
 			end
 			if CH[13] then t = ConcatTable(t,{
-				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Burning"},
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Fire"},
 			})
 			end
 			if CH[14] then t = ConcatTable(t,{
@@ -379,7 +401,7 @@ function cheat_weaponammo()
 		end
 	elseif CH == 2 then
 		gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
-	--HUGE FACT: this is anchor20 (well... in float form), we cam automate whatever stuff
+	--HUGE FACT: this is entity anchor (well... in float form), we cam automate whatever stuff
 		gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61")
 		gg.refineNumber("0~71131136",gg.TYPE_DWORD)
 		local t = gg.getResults(99)
@@ -392,31 +414,6 @@ function cheat_weaponammo()
 			gg.setValues(t)
 			t = nil
 			toast("Weapon Ammo modified 🔨️")
-		end
-	end
-end
-function cheat_firebody()
-	local CH = gg.choice({
-		"ON",
-		"OFF",
-		"Back"
-	},nil,"Burning body")
-	if CH then
-		if CH == 3 then MENU()
-		elseif CH == 1 then tmp={9999,0,"ON"}
-		elseif CH == 2 then tmp={0,9999,"OFF"} end
-		gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
-		gg.searchNumber('1.68155816e-43F;'..tmp[1]..'D;2.80259693e-44F;1.12103877e-42F;1.821688e-44F::45',gg.TYPE_DWORD)
-		local t = gg.getResults(555,nil,nil,nil,nil,nil,gg.TYPE_DWORD)
-		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
-		else
-			for i=1,#t do
-				t[i].value = tmp[2]
-				t[i].freeze = true
-			end
-			gg.setValues(t)
-			toast("Burning body "..tmp[3])
 		end
 	end
 end
@@ -1252,9 +1249,10 @@ function searchWatchdog(msg,refineVal,mmBfr)
 
 ]]
 	if gg.getResultCount() < 2 then return gg.getResults(1)
-	elseif msg then toast(msg) end
+	elseif msg then toast(msg.."\nClick GG Icon to abort the search") end
 	local prvVl,foundTheValue = gg.getResults(100)
 	while not foundTheValue do
+		if gg.isVisible() then gg.setVisible(false) foundTheValue = 1 end
 		gg.refineNumber(refineVal)
 		if gg.getResultCount() > 0 then
 			foundTheValue = 1
@@ -1350,11 +1348,7 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 				tmp = gg.getResultCount()
 				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease and tonumber(num1[1]) > 20) then
 					toast('Got '..tmp..' results\n3 seconds to reduce ammo value')
-					sleep(999)
-					toast('Got '..tmp..' results\n2 seconds to reduce ammo value')
-					sleep(999)
-					toast('Got '..tmp..' results\n1 seconds to reduce ammo value')
-					sleep(999)
+					sleep(3e3)
 					toast('Timeout, searching...')
 					gg.refineNumber("0~32767")
 					gg.searchFuzzy(0,gg.SIGN_FUZZY_LESS)
@@ -1362,14 +1356,9 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 				--old method:ask user their current ammo
 				--because mostly the ammo will go down, we should use fuzzy and dont ask user about ammo anymore (but theres a bug with searchFuzzy itself, it wouldnt found anything AT ALL COST IF USED IN SCRIPT!!!)
 					toast('3 seconds to change ammo value')
-					sleep(999)
-					toast('2 seconds to change ammo value')
-					sleep(999)
-					toast('1 seconds to change ammo value')
-					sleep(999)
+					sleep(3e3)
 					num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..tmp},{num1[1]})
 					if not (num1 and num1[1]) then break end
-					gg.refineNumber("0~32767")
 					gg.refineNumber(num1[1])
 				end
 			--If found 2 result, check if 2 numbers are same, and return 1st value if so (this means user is on a veichle)
@@ -1377,6 +1366,7 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 				if tmp == 2 then
 					t = gg.getResults(2)
 					if t[1].value == t[2].value then
+						tmp = {}
 						return {t[1]}
 					end
 			--If nothing found...
@@ -1392,13 +1382,14 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 					end
 				end
 			end
+			tmp = {}
 			return gg.getResults(desiredResultCount)
 		end
 	end
 end
-function findAnchor20(msg)
+function findEntityAnchr(msg)
 	gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
-	if cfg.cheatSettings.findAnchor20.searchMethod == "holdWeapon" then
+	if cfg.cheatSettings.findEntityAnchr.searchMethod == "holdWeapon" then
 		toast("Hold your pistol")
 		sleep(2e3)
 		gg.searchNumber(13,gg.TYPE_WORD,nil,nil,cfg.memZones.HldWpn[1],cfg.memZones.HldWpn[2])
@@ -1434,7 +1425,7 @@ function findAnchor20(msg)
 		gg.clearResults()
 		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t - 0x18,t - 0x18)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
-	elseif cfg.cheatSettings.findAnchor20.searchMethod == "useWordWeaponAmmo" then
+	elseif cfg.cheatSettings.findEntityAnchr.searchMethod == "wordWeaponAmmo" then
 		t = loopSearch(1,gg.TYPE_WORD,msg,cfg.memZones.WpnAmmWrd)
 		if gg.getResultCount() == 0 then return end
 		t = t[1]
@@ -1443,10 +1434,14 @@ function findAnchor20(msg)
 		gg.clearResults()
 		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t.address - 0x2A,t.address)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
+	elseif cfg.cheatSettings.findEntityAnchr.searchMethod == "mangyuFloatAnchor" then
+		toast("Hold your pistol but dont shoot, and keep your health at maximum.")
+		gg.searchNumber("1.68155816e-43;2.80259693e-44;1.12103877e-42;1.821688e-44::45",gg.TYPE_FLOAT,nil,nil,cfg.memZones.Common_RegionOtherB[1],cfg.memZones.Common_RegionOtherB[2])
+		gg.refineNumber(2.80259693e-44)
+		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	else
-		toast("An error occured: Exit out of script for more details.")
-		print("[Error]: Configuration \"cfg.cheatSettings.findAnchor20.searchMethod\" is invalid.\n         Please set it to right value\n         Possible values: useWordWeaponAmmo, holdWeapon\n         You set the value to "..cfg.cheatSettings.findAnchor20.searchMethod.."\n         Your Configuration:\n"..cfg)
-		return
+		toast("An error occured (InvalidConf): Exit out of script and see print log for more details.")
+		print("[Error.InvalidConf]: Configuration value for \"cfg.cheatSettings.findEntityAnchr.searchMethod\" ("..cfg.cheatSettings.findEntityAnchr.searchMethod..") is invalid.\n         Possible values: wordWeaponAmmo, holdWeapon, mangyuFloatAnchor\n         Your Configuration:\n"..cfg)
 	end
 end
 function update_language()
@@ -1479,7 +1474,7 @@ function loadConfig()
 			loopSearch={
 				useFuzzyDecrease=false
 			},
-			findAnchor20={
+			findEntityAnchr={
 				searchMethod="holdWeapon"
 			}
 		},
@@ -1492,7 +1487,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.0.9"
+		VERSION="2.1.0"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
