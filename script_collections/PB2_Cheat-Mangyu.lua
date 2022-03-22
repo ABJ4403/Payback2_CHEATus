@@ -1,9 +1,9 @@
-gg.alert(os.date('ℹ%A %d/%m/%Y\n⏰%X [%p]\n\nℹTUTORIAL HOW TO ACTIVATED CHEATℹ\n🍃CONTACT🍃\n🔸Facebook ID :Mangyu📩\n🔸Whatsapp    :+62895700748439📨\n🔸Youtube        :Mangyu Channel💻\n\n'))
-gg.alert("⚠CAUTION⚠\n ℹSUPPORT NEW VERSION GAMEGUARDIANℹ\n🔰NO LAG\n🔰NO ERROR\n🔰NO CORROUPT\n🔰EASY WIN\n🔰ENJOY PLAY\n🔰NICE FEATURE CHEAT")
-gg.toast("\n⌛Please Wait⌛")
+--gg.alert(os.date('ℹ%A %d/%m/%Y\n⏰%X [%p]\n\nℹTUTORIAL HOW TO ACTIVATED CHEATℹ\n🍃CONTACT🍃\n🔸Facebook ID :Mangyu📩\n🔸Whatsapp    :+62895700748439📨\n🔸Youtube        :Mangyu Channel💻\n\n'))
+--gg.alert("⚠CAUTION⚠\n ℹSUPPORT NEW VERSION GAMEGUARDIANℹ\n🔰NO LAG\n🔰NO ERROR\n🔰NO CORROUPT\n🔰EASY WIN\n🔰ENJOY PLAY\n🔰NICE FEATURE CHEAT")
+--gg.toast("\n⌛Please Wait⌛")
 
 function HOME()
-gg.toast("\n🔸Mangyu\n🔸24-04-1995\n🔸Banjarmasin,Indonesia\n🔸Taurus")
+--gg.toast("\n🔸Mangyu\n🔸24-04-1995\n🔸Banjarmasin,Indonesia\n🔸Taurus")
 RS =gg.choice({
 "🔴ON",
 "❌❎EXIT❎❌"
@@ -14,13 +14,13 @@ else
       GG1()
 end
  if RS == 2 then
-      Exit()     
+      Exit()
   end
 end
 HOMEDM = -1
 end
 function b1()
-gg.setRanges(gg.REGION_C_BSS)
+gg.setRanges(gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1)
 
 revert = gg.getResults(5000, nil, nil, nil, nil, nil, nil, nil, nil)
@@ -39,7 +39,7 @@ gg.sleep(900)
 gg.toast("\n🚩Cheat By: 😎Mangyu Channel😎")
 end
 function b2()
-gg.setRanges(gg.REGION_C_BSS)
+gg.setRanges(gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 gg.searchNumber("1.68155816e-43F;0D;2.80259693e-44F;1.12103877e-42F;1.821688e-44F::45", gg.TYPE_DWORD, false, gg.SIGN_EQUAL, 0, -1)
 
 revert = gg.getResults(5000, nil, nil, nil, nil, nil, nil, nil, nil)
