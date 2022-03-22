@@ -188,16 +188,18 @@ function cheat_godmode()
 		"11. Anti-Burn body",
 		"12. Burned body",
 		"13. Burning body",
+		"14. Dr0wned",
 		"---",
-		"14. Clone player",
+		"15. Clone player",
 		"---",
-		"15. Rel0ad OFF",
-		"16. Immortality OFF",
-		"17. C4 Drawing OFF",
-		"18. Speed Slide OFF",
-		"19. Float Hack OFF",
-		"20. Ragdoll Hack OFF",
-		"21. Normal body",
+		"16. Rel0ad OFF",
+		"17. Immortality OFF",
+		"18. C4 Drawing OFF",
+		"19. Speed Slide OFF",
+		"20. Float Hack OFF",
+		"21. Ragdoll Hack OFF",
+		"22. Normal body",
+		"23. Normal drowned",
 		"---",
 		f"__back__"
 	},nil,"God modes (idk wut to call this)\n\nWARNING:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!! (eg. killing them continously)\n- DO NOT PvP with non-cheater!!\n- If you play 2P, only do it in isolated area")
@@ -288,8 +290,12 @@ function cheat_godmode()
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Burning"},
 			})
 			end
+			if CH[14] then t = ConcatTable(t,{
+				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Dr0wned]"},
+			})
+			end
 			---
-			if CH[15] then
+			if CH[16] then
 		--This will clone the player (you). How this is done?
 		--First told user (you) to change the weapon to your loved weapon before the user cant do it anymore
 			toast("[Clone Player] Change your weapon to your wanted weapon before you can\'t change it anymore")
@@ -307,35 +313,39 @@ function cheat_godmode()
 			})
 			end
 			---
-			if CH[17] then t = ConcatTable(t,{
+			if CH[18] then t = ConcatTable(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [Rel0adTimer]"}
 			})
 			end
-			if CH[18] then t = ConcatTable(t,{
+			if CH[19] then t = ConcatTable(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=false,value=999,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
-			if CH[19] then t = ConcatTable(t,{
+			if CH[20] then t = ConcatTable(t,{
 				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: X"},
 				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: Y"}
 			})
 			end
-			if CH[20] then t = ConcatTable(t,{
+			if CH[21] then t = ConcatTable(t,{
 				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
-			if CH[21] then t = ConcatTable(t,{
+			if CH[22] then t = ConcatTable(t,{
 				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Float]"}
 			})
 			end
-			if CH[22] then t = ConcatTable(t,{
+			if CH[23] then t = ConcatTable(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Ragdoll]"},
 				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=65536,freeze=false,name="Pb2Chts [Ragdoll]"}
 			})
 			end
-			if CH[23] then t = ConcatTable(t,{
+			if CH[24] then t = ConcatTable(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
+			})
+			end
+			if CH[25] then t = ConcatTable(t,{
+				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=false,name="Pb2Chts [Dr0wned]"},
 			})
 			end
 			gg.setValues(t)
@@ -348,8 +358,7 @@ end
 function cheat_weaponammo()
 	local CH = gg.choice({
 		"1. DWORD (works by changing match settings. Requires respawn, works best in offline mode)",
-		"2. Automatic (Mangyu method, old version)",
-		"3. Automatic (v2, not work because dynamic memory stuff)",
+		"2. Automatic (Mangyu method)",
 		f"__back__"
 	},nil,"Select method for modifying Weapon Ammo")
 --gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS
@@ -365,38 +374,25 @@ function cheat_weaponammo()
 				toast("Can't find the said number, did you put the right number?")
 			else
 				gg.editAll(9999,gg.TYPE_DWORD)
-				toast("Now respawn yourself (Pause,end,respawn,yes), to get the desired number")
+				toast("Weapon Ammo modified 🔨️. Now respawn yourself (Pause,End,Respawn,Yes) to get the desired number")
 			end
 		end
 	elseif CH == 2 then
-		gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
-		gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61",gg.TYPE_DWORD)
-		local t = gg.getResults(999,nil,nil,nil,nil,nil,gg.TYPE_DWORD)
+		gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
+	--HUGE FACT: this is anchor20 (well... in float form), we cam automate whatever stuff
+		gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61")
+		gg.refineNumber("0~71131136",gg.TYPE_DWORD)
+		local t = gg.getResults(99)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			for i=1,#t do
-				t[i].value = 71131136
-				t[i].freeze = true
+				t[i].value = 2097184e3
 			end
 			gg.setValues(t)
 			t = nil
-			toast("Weapon ON")
+			toast("Weapon Ammo modified 🔨️")
 		end
-	elseif CH == 3 then
-	--For modularity (just in case coz I know there's memory issue whatever stuff)
-		tmp = 0xC2274300
-	--set the cheated weapons
-		gg.setValues({
-			{flags=gg.TYPE_DWORD,value=9999,address=tmp+0xC4,name="Pb2Chts [Weapon,1P] Shotgun"},
-			{flags=gg.TYPE_DWORD,value=9999,address=tmp+0xC8,name="Pb2Chts [Weapon,1P] Rocket"},
-			{flags=gg.TYPE_DWORD,value=9999,address=tmp+0xCC,name="Pb2Chts [Weapon,1P] Flamethower"},
-			{flags=gg.TYPE_DWORD,value=9999,address=tmp+0xD0,name="Pb2Chts [Weapon,1P] Grenade"},
-			{flags=gg.TYPE_DWORD,value=9999,address=tmp+0xD4,name="Pb2Chts [Weapon,1P] Machine Gun"},
-			{flags=gg.TYPE_DWORD,value=9999,address=tmp+0xD8,name="Pb2Chts [Weapon,1P] Explosives"},
-			{flags=gg.TYPE_DWORD,value=9999,address=tmp+0xDC,name="Pb2Chts [Weapon,1P] Turret"},
-			{flags=gg.TYPE_DWORD,value=999,address=tmp+0xE0,name="Pb2Chts [Weapon,1P] Laser"} -- Laser amount will be -1 if the number is >999
-		})
 	end
 end
 function cheat_firebody()
@@ -815,7 +811,7 @@ function cheat_floodspawn()
 				end
 			end
 		elseif CH == 2 then
-      memBuffer.respawnCheat = nil
+			memBfr.respawnCheat = nil
 			cheat_floodspawn()
 		end
 	end
@@ -914,7 +910,7 @@ function cheat_xpmodifier()
 	end
 end
 function cheat_changeplayername()
-	gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 --request user to give player name
 	local player_name = gg.prompt({
 		'Put your current player name (case-sensitive, ":" or ";" is required at the beginning, because how GameGuardian search works)',
@@ -940,7 +936,7 @@ function cheat_changeplayername()
 	end
 end
 function cheat_changeplayernamecolor()
-	gg.setRanges(gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 --request user to give player name
 	local CH,player_name,player_color_choice = gg.choice({
 		"Color:",
@@ -1496,7 +1492,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.0.8"
+		VERSION="2.0.9"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
