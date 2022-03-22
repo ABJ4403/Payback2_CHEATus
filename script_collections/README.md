@@ -6,25 +6,18 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 
 - `PB2_Cheat-Mangyu.lua` ("PAYBACK2.lua", from [`MediaFire`](https://www.mediafire.com/file/9m1s41x7fjorzrf/PAYBACK2.lua/file)), By Mangyu (uploaded by "Latic AX")
 - `PB2_ICE-Menu_v1.0.lua` ("{1.0} PB 2.lua", from [`MediaFire`](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)), By Crystal_Mods100x (uploaded by "Toxic Coder")
-- `PB2_VIPTheSmat7Pro27-Mangyu.lua` (from [`MediaFire`](https://www.mediafire.com/file/6t6hy9cdszcezpr/%25E2%259C%25A8SCRIPT_PAYBACK2_VIP_THE_SMAT7_PRO_27%25E2%259C%25A8_.lua.7z/file), fork of Mangyu's script), by VIPTheSmat7Pro27
-
-	`Difficulty: 2` `🔏️ Decryptor: ABJ4403` `🦠 None (Safe)` `🔐️ 7z+AES Encrypted` `⚙️ Decryption tools: none` `⚙️ Requirement: 7z`
-
-	Encrypted in 7z format, Password: `LUA V1`. Where do i get this you say? from his video comment, because its in spanish i cant read it until i use Google Translate, everything revealed.
-  Unfortunately, this script is just another modified version of Mangyu's cheat Script, didnt have any cheat changes except adding replacing `Mangyu` with his name `THE SMAT7 PRO 27`, adding more bloat and stuff.
-
+- `PB2_VIPTheSmat7Pro27-Mangyu.lua` (from [`MediaFire`](https://www.mediafire.com/file/6t6hy9cdszcezpr/%25E2%259C%25A8SCRIPT_PAYBACK2_VIP_THE_SMAT7_PRO_27%25E2%259C%25A8_.lua.7z/file), same Mangyu script), by VIPTheSmat7Pro27
 - `PB2_GKTV_v1.lua` (`Payback 2 - CHEAT [V1].lua` from [`MediaFire`](https://www.mediafire.com/file/hros99ssjzmkp00/Payback_2_-_CHEAT_%255BV1%255D.lua/file)), by GKTV (now "Pumpkin Hacker")
 
 	`Difficulty: 2` `🔏️ Decryptor: MDP43140` `🦠 None (Safe)` `💾️ Compiled binary` `💧️ Leaks variables` `⚙️ Decryption tools: Custom Patched unluac` `⚙️ Requirement: Java`
 
-	Thankfully unlike others, this one is a bit easy. i cant decrypt this using unluac/luadec, i just need the patched custom unluac that has modified non-standard OPCodes.
-	Then it works
+	Thankfully unlike others, this one is a bit easy. i cant decrypt this using unluac/luadec, i just need the patched custom unluac that has modified non-standard OPCodes, Then it works.
 	
 - `PB2_Hydra-WallHack.lua` (`WALL HACK payback2.lua` from [`MediaFire`](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file)), by Hydra.
 
 	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 Sus, doing some file modification, even though i see its nonsense (kinda not safe)` `🛡️ Obfuscation (level:3)` `🔐️String Encryption (difficulty:3)` `🔐️ Password: 7o31kql9p0` `📈️ Function argument overflow` `✏️ Bytecode modification` `💣️ Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
 
-  Finally i had this file decrypted (kindof) , Thank you [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
+  Finally i had this file decrypted (kindof), Thanks to [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
   Actually what happened that is the file had some nonsense, this will be visible if you dissasemble the file:
 ```
 settable     r59   r71   r71
@@ -50,28 +43,26 @@ newtable     r71     0     0
   and this nonsense: ```loadk         r0   k36```.
   both fills the script alot and confuses unluac, eats ~100-200kb size. just disassemble the file, remove all that above, reassemble the file, and decompile it again using patched unluac, it will work.
 
-	I know this isn't really 'decompiled' because bunch of variables were gone, replaced by A\*_\* and its huge (400kb), so this makes it harder to reverse-engineer.
+	I know this isn't really 'decompiled' because the encrypted script debug info is stripped and its huge (400kb), so this makes it harder to reverse-engineer.
 
 	Thanks to [mdp43140](https://github.com/mdp43140) for reverse-engineering to get the password
-- `PB2_AlphaGGHackerYT_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱.lua` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
+- `PB2_AGH_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱.lua` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
 
 	`Difficulty: 4` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 Safe` `🛡️ Obfuscation (level:2)` `🔒️ String Encryption (difficulty:2)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using "AlphaGG" lua encryption tool` `❌️ Anti-decompiler` `🤬️ R*c*st level:1` `⚙️ Decryption tools: unluac-patched` `⚙️ Requirement: Java, text-editor that supports replacing newlines, (also some decryption tools, you will get it by patience and knowledge)`
 
 	Ridicilous Arbitrary slow loading embedded on the script with 0 way to bypass that at all.
-
 	Assembled, Obfuscated, Encrypted + the author bullying you in the code itself (even though he missed one thing... password, which is a good thing).
 	
 	OR AM I? its DECOMPILED, so he thought his encryption works like a charm, eh?
 
 	this one is almost the same as the hydra wallhack ones, but simpler (if u successfully decompile the script and getting rid of nonsense stuff...)
-
-	One thing to point put though, AlphaGG put the string decryption thing on the top
+	One thing to point put though, AGH put the string decryption thing on the top
 
 	Thanks again to [tehtmi](https://sourceforge.net/u/tehtmi) for the patched unluac.
 
-- `PB2_AlphaGGHackerYT_pb2mod1.lua` (or should i say `PB2_AlphaGGHackerYT_Mod1-unsanitized.lua`) (`『Alpha_ENC』Payback 2 Mod.lua` from [`MediaFire`](https://www.mediafire.com/file/py0v2idvgo35qi3/%25E3%2580%258EAlpha_ENC%25E3%2580%258FPayback_2_Mod.lua/file)), by "Alpha GG Hacker YT".
+- `PB2_AGH_pb2mod1.lua` (or should i say `PB2_AGH_Mod1-unsanitized.lua`) (`『Alpha_ENC』Payback 2 Mod.lua` from [`MediaFire`](https://www.mediafire.com/file/py0v2idvgo35qi3/%25E3%2580%258EAlpha_ENC%25E3%2580%258FPayback_2_Mod.lua/file)), by "Alpha GG Hacker YT".
 
-	`Difficulty: 20` `🔏️ Decryptor: tehtmi, ABJ4403` `🦠⚠️ Too much that this is considered UNTRUSTED & NOT SAFE!!` `🛡️ Obfuscation (level:17)` `🔒️ String Encryption (difficulty:29)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using "Serrang Gaming" lua encryption tool` `🤬️ R*c*st level:3` `❌️ Anti-decompiler` `❌️ Anti-LuaASM` `❌️ Different file encoding` `📝️ LUA Header modification` `🦠 GG Log Pollution & detection` `❌️ LUA Environment variable detection` `❌️ Debug variable detection` `⚙️ Decryption tools: unluac-patched, ghex, mousepad` `⚙️ Requirement: Java (to run unluac), text-editor that supports replacing newlines (eg. Mousepad), Hex editor (eg. Ghex)`
+	`Difficulty: 20` `🔏️ Decryptor: tehtmi, ABJ4403` `🦠⚠️ Use it with caution` `🛡️ Obfuscation (level:17)` `🔒️ String Encryption (difficulty:29)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using "Serrang Gaming" lua encryption tool` `🤬️ R*c*st level:3` `❌️ Anti-decompiler` `❌️ Anti-LuaASM` `❌️ Different file encoding` `📝️ LUA Header modification` `🦠 GG Log Pollution & detection` `❌️ LUA Environment variable detection` `❌️ Debug variable detection` `⚙️ Decryption tools: unluac-patched, ghex, mousepad` `⚙️ Requirement: Java (to run unluac), text-editor that supports replacing newlines (eg. Mousepad), Hex editor (eg. Ghex)`
 
 	WAY RIDICILOUS AND WAY WAY TOO MUCH IMPOSSIBLE!!!!!
 	if you decompile this lua script with unluac or any other decompiler, it gives you almost nothing.
@@ -79,7 +70,7 @@ newtable     r71     0     0
 	BUT IS IT?
 	[I asked tehtmi for help with this ridicilous nonsense](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42/#723e), and he gave a very good solution.
 
-	The one. and the only. Edit Header with Hex editor, disassemble, remove op41,op42,op43,op44,op45, reassemble and decompile.
+	Modify the file header with Hex editor, disassemble, remove op41,op42,op43,op44,op45, reassemble and decompile.
 	no i wont reverse engineer this thing, because it will took a lot of time.
 	BUT... HEY, atleast its decompiled :D
 
@@ -139,6 +130,19 @@ newtable     r71     0     0
 	also i disabled the log pollution and all the nonsense on the decompiled version, so anyone that really wants to reverse enginner the numbers slightly easier way can just press random button and look on what it searches for.
 	btw, password is "JokerGGScripter" (it might be wrong, because JokerGGS censors the password)
 
+	`PB2_AGH-GGScript-OTHER.lua` (`` from `MediaFire` (LINK NO LONGER OBTAINABLE DUE TO CHANNEL BEING BANNED)), by AlphaGGHacker
+
+	`Difficulty: 10` `🔏️ Decryptor: ABJ4403` `🦠⚠️ SG Encryption is known for doing malicious operations` `🛡️ Obfuscation (level:20)` `🔒️ String Encryption (difficulty:24)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using AGH,SG,PGv? lua encryption tool` `❌️ Anti-decompiler` `❌️ Anti-LuaASM` `❌️ Different file encoding` `🦠 GG Log Pollution & detection` `uses _ENV (Lua environment) variable` `❌️ Debug variable detection`
+
+	Ahh yet *finally* AGH learned his failure and now he's combining AGH,SG,PGv? encryption and uses it as his new 'encryption' toolbox.
+	so i wont decrypt this, why you might ask? because i modified the script assembly to eliminate almost all log spam, and what do you know dude? i got all the values with gg listItems, and gg script logging
+	if you want to use this, only use the reasmv1.lua script (on the 7z file)
+	the difference is that reasmv1 eliminates almost all log spams, and getting rid of message nonsense, and the log detection thing (just increase the 5.7777999blabla value near `LOG"` on the assembly file)
+	
+	btw this is the last script he shared before youtube terminates his channel
+
+### you can find these files by downloading the 7z archives in the "encrypted" folder (the 7z archive isn't password-protected like you would expect)
+
 # Warning:
 **Use the assembled/obfuscated/encrypted script AT YOUR OWN RISK!!! I don't ever know if there is a MALWARE IN THESE SCRIPT or not.**
 
@@ -148,7 +152,7 @@ Because its VERY HARD to find these scripts dude...
 # Decompiler/Decryptor resources:
 - [unluac Discussion about decrypting nonsense (im the one that reports these lool)](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
 - [unluac - `Common` Decompiler for LUA v5.x](https://sourceforge.net/projects/unluac)
-- [unluac_patch - Custom patched version of (older) unluac that used to decode AlphaGG script](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
+- [unluac_patch - Custom patched version of (older) unluac that used to decode AGH script](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
 - [unluac_patch - Custom patched version of (older) unluac with modified non-standard OPCODES](https://sourceforge.net/p/unluac/discussion/general/thread/88e9b323cc)
 - [LuaDec - LUA Decompiler for lua v5.1-3](https://github.com/viruscamp/luadec)
 - [ChunkSpy - LUA Chuck inspector/dissasembler](https://github.com/viruscamp/luadec/blob/master/ChunkSpy)
