@@ -5,37 +5,35 @@ local gg,susp_file,cfg_file,tmp,revert,memBfr,memOffset,t,CH,ShowMenu,VAL_PstlSg
 function MENU()
 --Let the user choose stuff
 	local CH = gg.choice({
-		"1. Weapon ammo",
-		"2. Wall Hack",
-		"3. Strong veichle",
-		"4. No blast damage",
-		"5. Pistol/SG Knockback",
-		"6. Flood Respawn",
+		"1. Wall Hack",
+		"2. Strong veichle",
+		"3. No blast damage",
+		"4. Pistol/SG Knockback",
+		"5. Flood Respawn",
 		"---\nOther cheats:",
-		"7. God modes",
-		"8. Client-side cheats",
-		"9. Incompatible cheats",
+		"6. God modes",
+		"7. Client-side cheats",
+		"8. Other cheats",
 		"---",
 		f"Settings",
 		f"__about__",
 		f"__exit__",
 		f"Suspend"
 	},nil,f"Title_Version")
-	if CH == 1 then cheat_weaponammo()
-	elseif CH == 2 then cheat_wallhack()
-	elseif CH == 3 then cheat_strongveichle()
-	elseif CH == 4 then cheat_noblastdamage()
-	elseif CH == 5 then cheat_pistolknockback()
-	elseif CH == 6 then cheat_floodspawn()
+	if CH == 1 then cheat_wallhack()
+	elseif CH == 2 then cheat_strongveichle()
+	elseif CH == 3 then cheat_noblastdamage()
+	elseif CH == 4 then cheat_pistolknockback()
+	elseif CH == 5 then cheat_floodspawn()
 ---Title:Othercheat..
-	elseif CH == 8 then cheat_godmode()
-	elseif CH == 9 then MENU_CSD()
-	elseif CH == 10 then MENU_incompat()
+	elseif CH == 7 then cheat_godmode()
+	elseif CH == 8 then MENU_CSD()
+	elseif CH == 9 then MENU_other()
 ---
-	elseif CH == 12 then MENU_settings()
-	elseif CH == 13 then show_about()
-	elseif CH == 14 then exit()
-	elseif CH == 15 then suspend() end
+	elseif CH == 11 then MENU_settings()
+	elseif CH == 12 then show_about()
+	elseif CH == 13 then exit()
+	elseif CH == 14 then suspend() end
 	CH = nil
 	gg.clearResults()
 	if type(tmp) == "table" then
@@ -53,14 +51,15 @@ function MENU_CSD()
 		"1. Walk animation Wonkyness (client-side only)",
 		"2. Change Name (EXPERIMENTAL)",
 		"3. Change Name Color (EXPERIMENTAL)",
-		"4. Big body",
-		"5. Colored trees",
-		"6. Big Flamethrower (Item)",
-		"7. Shadows",
-		"8. Colored People's (ESP)",
-		"9. Reflection Graphics",
-		"10. Explosion Power",
-		"11. Delete All Names",
+		"4. Change XP",
+		"5. Big body",
+		"6. Colored trees",
+		"7. Big Flamethrower (Item)",
+		"8. Shadows",
+		"9. Colored Peoples (ESP)",
+		"10. Reflection Graphics",
+		"11. Explosion Power",
+		"12. Delete All Names",
 		"---",
 		f"__back__"
 	},nil,f"Title_Version")
@@ -68,33 +67,30 @@ function MENU_CSD()
 	if CH == 2 then cheat_walkwonkyness()
 	elseif CH == 3 then cheat_changeplayername()
 	elseif CH == 4 then cheat_changeplayernamecolor()
-	elseif CH == 5 then cheat_bigbody()
-	elseif CH == 6 then cheat_coloredtree()
-	elseif CH == 7 then cheat_bigflamethroweritem()
-	elseif CH == 8 then cheat_shadowfx()
-	elseif CH == 9 then cheat_clrdpplsp()
-	elseif CH == 10 then cheat_reflectiongraphics()
-	elseif CH == 11 then cheat_explodepower()
-	elseif CH == 12 then cheat_deleteingameplaytext()
+	elseif CH == 5 then cheat_xpmodifier()
+	elseif CH == 6 then cheat_bigbody()
+	elseif CH == 7 then cheat_coloredtree()
+	elseif CH == 8 then cheat_bigflamethroweritem()
+	elseif CH == 9 then cheat_shadowfx()
+	elseif CH == 10 then cheat_clrdpplsp()
+	elseif CH == 11 then cheat_reflectiongraphics()
+	elseif CH == 12 then cheat_explodepower()
+	elseif CH == 13 then cheat_deleteingameplaytext()
 ---
-	elseif CH == 14 then MENU() end
+	elseif CH == 15 then MENU() end
 end
-function MENU_incompat()
+function MENU_other()
 --Let the user choose stuff
 	local CH = gg.choice({
-		"Incompatible cheats (below PB2 v2.104.12.4/GG v101.0)\nThese cheats isn't compatible with the latest version of PB2. searching these will result in values not found, especially those that isnt located in CAlloc,Anonymous,Other,CodeApp\nSome of them are from ICE menu",
-		"1. void mode",
-		"2. Destroy all veichles",
-		"3. Change XP",
-		"---",
+		"1. Weapon ammo",
+		"2. void mode",
+		"3. Destroy all veichles",
 		f"__back__"
-	},nil,f"Title_Version")
---Title:CSD...
-	if CH == 2 then cheat_togglevoidmode()
+	},nil,"Other cheats\nmost of these cheats might be experiment, or uncategorized or whatnot...")
+	if CH == 1 then cheat_weaponammo()
+	elseif CH == 2 then cheat_togglevoidmode()
 	elseif CH == 3 then cheat_destroycar()
-	elseif CH == 4 then cheat_xpmodifier()
----
-	elseif CH == 6 then MENU() end
+	elseif CH == 4 then MENU() end
 end
 function MENU_settings()
 --Let the user choose stuff
@@ -229,11 +225,6 @@ function cheat_godmode()
 			toast('Can\'t find the weapon you\'re holding, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
 			t = {}
-			print(tmp)
-			print(nca)
-			print(type(tmp))
-			print(type(tmp.nca))
-			print(type(anchorAddress))
 			tmp.nca = anchorAddress
 			if (CH[1] or CH[2]) then
 				tmp.a = {
@@ -373,46 +364,22 @@ function cheat_godmode()
 			gg.setValues(t)
 			gg.addListItems(t)
 			gg.clearResults()
-			toast('Selected options opreation done\nWARN: Don\'t Drive/getoutof car, respawn, or get out of match')
+			toast('Selected operations done\nWARN: Don\'t Drive/getoutof car, respawn, or get out of match')
 		end
 	end
 end
 function cheat_weaponammo()
-	local CH = gg.choice({
-		"1. DWORD (works by changing match settings. Requires respawn, works best in offline mode)",
-		"2. Automatic (Mangyu method)",
-		f"__back__"
-	},nil,"Select method for modifying Weapon Ammo")
 --gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS
 	gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
-	if CH == 6 then MENU()
-	elseif CH == 1 then
-		CH = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;..whatever\nbut i recommend diving each with ";0W;" instead (for more accuracy)'})
-		if (CH and CH[1]) then
-			tmp = 0xB6730000
-			gg.searchNumber(CH[1]..":29",gg.TYPE_DWORD,nil,nil,tmp+0x3C4,tmp+0x4E0)
-			gg.getResults(16)
-			if gg.getResultCount() == 0 then
-				toast("Can't find the said number, did you put the right number?")
-			else
-				gg.editAll(9999,gg.TYPE_DWORD)
-				toast("Weapon Ammo modified 🔨️. Now respawn yourself (Pause,End,Respawn,Yes) to get the desired number")
-			end
-		end
-	elseif CH == 2 then
-		gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
-	--HUGE FACT: this is entity anchor (well... in float form), we cam automate whatever stuff
-		gg.searchNumber("1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F;0D~71131136D::61")
-		gg.refineNumber("0~71131136",gg.TYPE_DWORD)
-		local t = gg.getResults(99)
+	CH = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;..whatever\nbut i recommend diving each with ";0W;" instead (for more accuracy)'})
+	if (CH and CH[1]) then
+		tmp = 0xB6730000
+		gg.searchNumber(CH[1]..":29",gg.TYPE_DWORD,nil,nil,tmp+0x3C4,tmp+0x4E0)
+		gg.getResults(16)
 		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			toast("Can't find the number, did you put it right?")
 		else
-			for i=1,#t do
-				t[i].value = 2097184e3
-			end
-			gg.setValues(t)
-			t = nil
+			gg.editAll(9e3,gg.TYPE_DWORD)
 			toast("Weapon Ammo modified 🔨️")
 		end
 	end
@@ -848,27 +815,33 @@ end
 function cheat_togglevoidmode()
 	local CH = gg.choice({
 		"Default (not work for now due to memory address issue)",
-		"Joker method (only works on older version)",
+		"Joker method (Quirky)",
 		f"__back__"
 	},nil,"Void mode, select method")
 	if CH then
 		if CH == 3 then MENU()
 		elseif CH == 1 then
 			gg.setValues({
-				{flags=gg.TYPE_DWORD,value=99,address=0xC20FC36C,name="Pb2Chts [Mode]: 1P"},
-				{flags=gg.TYPE_DWORD,value=99,address=0xC1EBB47C,name="Pb2Chts [Mode]: 2P"},
-				{flags=gg.TYPE_DWORD,value=99,address=0xC20FC3A0,name="Pb2Chts [AIDifficulty]"},
-				{flags=gg.TYPE_DWORD,value=99,address=0xC20FC38C,name="Pb2Chts [CopsIntensity]"},
-				{flags=gg.TYPE_DWORD,value=99,address=0xC132A8B8,name="Pb2Chts [TimeLimit]"}
+				{flags=gg.TYPE_WORD,value=9,address=0xC20FC36C,name="Pb2Chts [Mode]: 1P"},
+				{flags=gg.TYPE_WORD,value=9,address=0xC1EBB47C,name="Pb2Chts [Mode]: 2P"},
+				{flags=gg.TYPE_WORD,value=99,address=0xC20FC3A0,name="Pb2Chts [AIDifficulty]"},
+				{flags=gg.TYPE_WORD,value=99,address=0xC20FC38C,name="Pb2Chts [CopsIntensity]"},
+				{flags=gg.TYPE_WORD,value=99,address=0xC132A8B8,name="Pb2Chts [TimeLimit]"}
 			})
-			toast('void mode is set. to restore, simply change to any mode you desire')
 		elseif CH == 2 then
-			gg.setRanges(gg.REGION_ANONYMOUS)
-			gg.searchNumber(38654705671,gg.TYPE_QWORD)
-			gg.getResults(100)
-			gg.editAll(38654705673)
-			toast('void mode is set. to restore, simply change to any mode you desire\nnote again that this only works on old version')
+			gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_OTHER)
+			toast('Set the Mode to Knockout, and set the Opponents to 9 (if you\'re on singleplayer)\n5 seconds before starting the search',false)
+			sleep(5e3)
+			gg.searchNumber("0W;38654705671Q::3",nil,nil,nil,cfg.memZones.Common_RegionOtherB[1],cfg.memZones.Common_RegionOtherB[2])
+			gg.refineNumber(38654705671,gg.TYPE_QWORD)
+			gg.getResults(8)
+			if gg.getResultCount() == 0 then
+				toast("Can't find the specific set of number, be noted that this cheat its kinda quirky so it might (not) work")
+			else
+				gg.editAll(38654705673,gg.TYPE_QWORD)
+			end
 		end
+		toast('void mode is set. to restore, simply change to any mode you desire\nbe noted that this cheat its kinda quirky so it might (not) work')
 	end
 end
 function cheat_xpmodifier()
@@ -934,90 +907,75 @@ function cheat_changeplayername()
 end
 function cheat_changeplayernamecolor()
 	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
---request user to give player name
 	local CH,player_name,player_color_choice = gg.choice({
-		"Color:",
 		"Invisible name (all values 1 byte, Experimental)",
 		"Red (2)",
 		"Blue (3)",
 		"White (4)",
 		"Yellow (5,9)",
 		"Green (6h)",
-		"---",
-		"Icon (more will be added later...):",
 		"Coin (7h)",
-		"White people (8h)",
+		"Man icon (8h)",
 		"Corrupted (10h)",
 		"---",
-		"None (remove every color and icon)",
-		"---",
+		"Remove all color/icon",
 		f"__back__"
 	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{VAL_PlayerCurrentName},{'text'})
-	if (CH or player_name and player_name[1] and player_name[1] ~= ":") then
-	--Color
-		if CH == 2 then player_color_choice = 1
-		elseif CH == 3 then player_color_choice = 2
-		elseif CH == 4 then player_color_choice = 3
-		elseif CH == 5 then player_color_choice = 4
-		elseif CH == 6 then player_color_choice = 5
-		elseif CH == 7 then player_color_choice = 6
+	if CH then
+		if CH == 1 then player_color_choice = 1
+		elseif CH == 2 then player_color_choice = 2
+		elseif CH == 3 then player_color_choice = 3
+		elseif CH == 4 then player_color_choice = 4
+		elseif CH == 5 then player_color_choice = 5
+		elseif CH == 6 then player_color_choice = 6
+		elseif CH == 7 then player_color_choice = 7
+		elseif CH == 8 then player_color_choice = 8
+		elseif CH == 9 then player_color_choice = 10
 	---
-	--Icon
-		elseif CH == 10 then player_color_choice = 7
-		elseif CH == 11 then player_color_choice = 8
-		elseif CH == 12 then player_color_choice = 10
-	---
-		elseif CH == 14 then player_color_choice = 0
-	---
-		elseif CH == 16 then MENU() end
-
+		elseif CH == 11 then player_color_choice = 0
+		elseif CH == 12 then MENU() end
 		if player_color_choice then
-		--search old player name
 			gg.searchNumber(player_name[1],gg.TYPE_BYTE)
-		--fetch result,make backup result,make some temporary stuff
-			local t,tmp0,removeOffset = gg.getResults(5e3),0,0x0
+			local t,removeOffset = gg.getResults(5e3),0
 			revert.PlayerName = gg.getResults(5e3)
-		--generic found stuff
 			if gg.getResultCount() == 0 then
-				toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+				toast('Can\'t find the player name, this cheat is still in experimentation phase')
 			else
-			--if player color chioce was 0 (none), interpret that as request remove colors
+			--if the chioce is 0, remove color/icons
 				if player_color_choice == 0 then
 					for i=1,#t do
 					--if within the custom color/icon range
-						if (t[i].value >= 0 and t[i].value < 20) then
+						if (t[i].value >= 0 and t[i].value < 11) then
 						--remove it
 							t[i] = nil
-							removeOffset = removeOffset + 0x1
+							removeOffset = removeOffset + 1
 						else
 						--and -removeOffset for the rest
-							tmp0 = t[i].address
-							t[i].address = tmp0 - removeOffset
-							t[i].freeze = false
-							t[i].flags = gg.TYPE_BYTE
+							tmp[1] = t[i].address
+							t[i].address = tmp[1] - removeOffset
 						end
 					end
-			--else (colors ranging from 2-9)
+			--else (numbers ranging from 2-10)
 				else
-				--this is where the problem arises, you know that the player names might me more than 1?, will this vvv work? probably not, mostly.
+				--this is where the problem arises, you know that the player names might be more than 1?, will this vvv work? probably not, mostly.
 				--1. shift all addreses
 					for i=1,#t do
-						tmp0 = t[i].address
-						t[i].address = tmp0 + 0x1
-						t[i].freeze = false
-						t[1].flags = gg.TYPE_BYTE
+						tmp[1] = t[i].address
+						t[i].address = tmp[1] + 1
 					end
 				--2. add value whatever
-					table.insert(t,1,{})
-					t[1].address = t[2].address - 0x1
-					t[1].freeze = false
-					t[1].flags = gg.TYPE_BYTE
-					t[1].value = player_color_choice
+					tmp[1] = t[1].address - 1
+					table.insert(t,1,{
+						address = tmp[1]
+						freeze = false
+						flags = gg.TYPE_BYTE
+						value = player_color_choice
+					})
 				end
+				VAL_PlayerCurrentName = table.concat(t)
 				gg.setValues(t)
 				toast('Color set to '..player_color_choice..'. PS: still in experimental phase, might not work')
 			end
-			tmp0 = nil
 		end
 	end
 end
@@ -1487,7 +1445,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.0"
+		VERSION="2.1.1"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
@@ -1610,4 +1568,6 @@ while true do
 		gg.setVisible(false)
 		ShowMenu()
 	end
+--As suggested in https://gameguardian.net/forum/topic/20568-examples-of-lua-scripts
+	sleep(100)
 end
