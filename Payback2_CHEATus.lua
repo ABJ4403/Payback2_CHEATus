@@ -951,8 +951,7 @@ function cheat_changeplayernamecolor()
 							removeOffset = removeOffset + 1
 						else
 						--and -removeOffset for the rest
-							tmp[1] = t[i].address
-							t[i].address = tmp[1] - removeOffset
+							t[i].address = (t[i].address - removeOffset)
 						end
 					end
 			--else (numbers ranging from 2-10)
@@ -960,15 +959,13 @@ function cheat_changeplayernamecolor()
 				--this is where the problem arises, you know that the player names might be more than 1?, will this vvv work? probably not, mostly.
 				--1. shift all addreses
 					for i=1,#t do
-						tmp[1] = t[i].address
-						t[i].address = tmp[1] + 1
+						t[i].address = (t[i].address + 1)
 					end
 				--2. add value whatever
-					tmp[1] = t[1].address - 1
 					table.insert(t,1,{
-						address = tmp[1]
-						freeze = false
-						flags = gg.TYPE_BYTE
+						address = (t[1].address - 1),
+						freeze = false,
+						flags = gg.TYPE_BYTE,
 						value = player_color_choice
 					})
 				end
@@ -1445,7 +1442,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.1"
+		VERSION="2.1.1b"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
