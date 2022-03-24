@@ -37,7 +37,7 @@ function MENU()
 	CH = nil
 	gg.clearResults()
 	if type(tmp) == "table" then
-		for i in pairs(tmp) do tmp[i] = nil end
+		table.clear(tmp)
 	else
 		tmp = {}
 	end
@@ -193,33 +193,35 @@ function cheat_godmode()
 		"2. Weapon Ammo (Freeze)",
 		"3. Rel0ad Pistol,SG,Rocket,C4s",
 		"4. Rel0ad Grenade",
-		"5. Immortality ON",
-		"6. Immortality (Self-explode)",
-		"7. C4 Drawing ON",
-		"8. Speed Slide ON",
-		"9. Float Hack ON",
-		"10. Ragdoll Hack ON",
-		"11. Anti-Burn body",
-		"12. Burned body",
-		"13. Burning body",
-		"14. Dr0wned",
+		"5. Disable veichle stealing",
+		"6. Immortality ON",
+		"7. Immortality (Self-explode)",
+		"8. C4 Drawing ON",
+		"9. Speed Slide ON",
+		"10 Float Hack ON",
+		"11. Ragdoll Hack ON",
+		"12. Anti-Burn body",
+		"13. Burned body",
+		"14. Burning body",
+		"15. Dr0wned",
 		"---",
-		"15. Clone player",
+		"16. Clone player",
+		"17. Change vehicle color",
 		"---",
-		"16. Rel0ad OFF",
-		"17. Immortality OFF",
-		"18. C4 Drawing OFF",
-		"19. Speed Slide OFF",
-		"20. Float Hack OFF",
-		"21. Ragdoll Hack OFF",
-		"22. Normal body",
-		"23. Normal drowned",
+		"18. Rel0ad OFF",
+		"19. Immortality OFF",
+		"20. C4 Drawing OFF",
+		"21. Speed Slide OFF",
+		"22. Float Hack OFF",
+		"23. Ragdoll Hack OFF",
+		"24. Normal body",
+		"25. Normal drowned",
 		"---",
 		f"__back__"
 	},nil,"God modes (idk wut to call this)\n\nWARNING:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!! (eg. killing them continously)\n- DO NOT PvP with non-cheater!!\n- If you play 2P, only do it in isolated area")
 	if CH then
-		if CH[25] then MENU() end
-		gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
+		if CH[29] then MENU() end
+		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 		local anchorAddress = findEntityAnchr('Put one of your weapon ammo')
 		if not anchorAddress then
 			toast('Can\'t find the weapon you\'re holding, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
@@ -243,9 +245,9 @@ function cheat_godmode()
 					tmp.a[i].value = 3e4
 				end
 			--Todo: add the word flag using forloop, if ch2 loop freeze, if ch3 loop unfreeze
-				t = ConcatTable(t,tmp.a)
+				t = table.append(t,tmp.a)
 			end
-			if CH[3] then t = ConcatTable(t,{
+			if CH[3] then t = table.append(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [Rel0adTimer]: Default"}
 			})
 			end
@@ -261,54 +263,60 @@ function cheat_godmode()
 					sleep(999)
 				end
 				tmp.a[1].value = -63
-				t = ConcatTable(t,tmp.a)
+				t = table.append(t,tmp.a)
 			end
-			if CH[5] then t = ConcatTable(t,{
+			if CH[5] then t = table.append(t,{
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
+				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=0,name="Pb2Chts [Health]"},
+				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=0,name="Pb2Chts [RespawnInterval] (Immortal)"},
+			})
+			end
+			if CH[6] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=800,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=9,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
-			if CH[6] then t = ConcatTable(t,{
+			if CH[7] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=3e4,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_WORD,freeze=true,value=1,name="Pb2Chts [RespawnInterval] (Immortal Self-explode)"}
 			})
 			end
-			if CH[7] then t = ConcatTable(t,{
+			if CH[8] then t = table.append(t,{
 				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: X"},
 				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: Y"}
 			})
 			end
-			if CH[8] then t = ConcatTable(t,{
+			if CH[9] then t = table.append(t,{
 				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,value=300,freeze=true,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
-			if CH[9] then t = ConcatTable(t,{
+			if CH[10] then t = table.append(t,{
 				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Float]"}
 			})
 			end
-			if CH[10] then t = ConcatTable(t,{
+			if CH[11] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Ragdoll]"},
 				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=0,freeze=true,freezeType=gg.FREEZE_IN_RANGE,freezeFrom=0,freezeTo=120,name="Pb2Chts [Ragdoll]"}
 			})
 			end
-			if CH[11] then t = ConcatTable(t,{
+			if CH[12] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
 			})
 			end
-			if CH[12] then t = ConcatTable(t,{
+			if CH[13] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Burned"},
 			})
 			end
-			if CH[13] then t = ConcatTable(t,{
+			if CH[14] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Fire"},
 			})
 			end
-			if CH[14] then t = ConcatTable(t,{
+			if CH[15] then t = table.append(t,{
 				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Dr0wned]"},
 			})
 			end
 			---
-			if CH[16] then
+			if CH[17] then
 		--This will clone the player (you). How this is done?
 		--First told user (you) to change the weapon to your loved weapon before the user cant do it anymore
 			toast("[Clone Player] Change your weapon to your wanted weapon before you can\'t change it anymore")
@@ -321,43 +329,95 @@ function cheat_godmode()
 			gg.addListItems(tmp.a)
 			sleep(2e3)
 		--And change it back to 512 so you can control it too :D
-			t = ConcatTable(t,{
+			t = table.append(t,{
 				{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=512,freeze=true,name="Pb2Chts [ControlState]"}
 			})
 			end
+			if CH[18] then
+				local CH,PlyrClrCH = gg.choice({
+					"1. Black (256)",
+					"2. Blue (257)",
+					"3. Green (258)",
+					"4. Brown (259)",
+					"5. Red (260)",
+					"6. Gray (261)",
+					"7. Yellow (262)",
+					"8. White (263)",
+					"9. Bold red (264)",
+					"10. Exteme black (272)",
+					"11. Rare green (304)",
+					"12. Dark green (306)",
+					"13. Dark red (315)",
+					"14. Tomato red (321)",
+					"----- [Click here to "..f"__cancel__".."]",
+					"15. Rainbow (Experimental)"
+				},nil,"Select the color you want")
+				if CH == 1 then PlyrClrCH = 256
+				elseif CH == 2 then PlyrClrCH = 257
+				elseif CH == 3 then PlyrClrCH = 258
+				elseif CH == 4 then PlyrClrCH = 259
+				elseif CH == 5 then PlyrClrCH = 260
+				elseif CH == 6 then PlyrClrCH = 261
+				elseif CH == 7 then PlyrClrCH = 262
+				elseif CH == 8 then PlyrClrCH = 263
+				elseif CH == 9 then PlyrClrCH = 264
+				elseif CH == 10 then PlyrClrCH = 272
+				elseif CH == 11 then PlyrClrCH = 304
+				elseif CH == 12 then PlyrClrCH = 306
+				elseif CH == 13 then PlyrClrCH = 315
+				elseif CH == 14 then PlyrClrCH = 321
+				-----cancel
+				elseif CH == 16 then PlyrClrCH = -1 end
+				if (PlyrClrCH and PlyrClrCH >= 0) then t = table.append(t,{
+					{address=tmp.nca+0x94,flags=gg.TYPE_WORD,freeze=false,value=PlyrClrCH,name="Pb2Chts [Vehicle color]"},
+				})
+				elseif (PlyrClrCH and PlyrClrCH == -1) then
+					toast("Still in building phase, click GG to stop. while the rainbow animation playing, you cannot access GG until its stopped\nand this will not apply other cheats you select, make sure you activate cheat choice of yours before activating this")
+					tmp.rainbowCurClr = 257
+					tmp.rainbowCar = {{address=tmp.nca+0x94,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [Vehicle color]"}}
+					while true do
+						if gg.isVisible() then gg.setVisible(false) break end
+						if tmp.rainbowCurClr > 264 then tmp.rainbowCurClr = 256 end
+						tmp.rainbowCar[1].value = tmp.rainbowCurClr
+						gg.setValues(tmp.rainbowCar)
+						sleep(50)
+						tmp.rainbowCurClr = tmp.rainbowCurClr + 1
+					end
+				end
+			end
 			---
-			if CH[18] then t = ConcatTable(t,{
+			if CH[20] then t = table.append(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [Rel0adTimer]"}
 			})
 			end
-			if CH[19] then t = ConcatTable(t,{
+			if CH[21] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=false,value=999,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
-			if CH[20] then t = ConcatTable(t,{
+			if CH[22] then t = table.append(t,{
 				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: X"},
 				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: Y"}
 			})
 			end
-			if CH[21] then t = ConcatTable(t,{
+			if CH[23] then t = table.append(t,{
 				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
-			if CH[22] then t = ConcatTable(t,{
+			if CH[24] then t = table.append(t,{
 				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Float]"}
 			})
 			end
-			if CH[23] then t = ConcatTable(t,{
+			if CH[25] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Ragdoll]"},
 				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=65536,freeze=false,name="Pb2Chts [Ragdoll]"}
 			})
 			end
-			if CH[24] then t = ConcatTable(t,{
+			if CH[26] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
 			})
 			end
-			if CH[25] then t = ConcatTable(t,{
+			if CH[27] then t = table.append(t,{
 				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=false,name="Pb2Chts [Dr0wned]"},
 			})
 			end
@@ -369,8 +429,8 @@ function cheat_godmode()
 	end
 end
 function cheat_weaponammo()
---gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS
-	gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
+--gg.REGION_C_ALLOC + gg.REGION_ANONYMOUS
+	gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 	CH = gg.prompt({'Put all of your weapon ammo, divide each using ";"\neg. 100;200;..whatever\nbut i recommend diving each with ";0W;" instead (for more accuracy)'})
 	if (CH and CH[1]) then
 		tmp = 0xB6730000
@@ -424,7 +484,7 @@ function cheat_pistolknockback()
 			cheat_pistolknockback()
 		end
 		if PISTOL_KNOCKBACK_VALUE then
-		-- | gg.REGION_ANONYMOUS
+		-- + gg.REGION_ANONYMOUS
 			gg.setRanges(gg.REGION_C_ALLOC)
 			handleMemBfr("PistolKnockback",VAL_PstlSgKnckbck.."F;1067869798D::13",VAL_PstlSgKnckbck,gg.TYPE_FLOAT,1)
 			if gg.getResultCount() == 0 then
@@ -434,8 +494,7 @@ function cheat_pistolknockback()
 				for i=1,#memBfr.PistolKnockback do
 					memBfr.PistolKnockback[i].value = PISTOL_KNOCKBACK_VALUE
 				end
-				VAL_PstlSgKnckbck = PISTOL_KNOCKBACK_VALUE
-				PISTOL_KNOCKBACK_VALUE = nil
+				VAL_PstlSgKnckbck,PISTOL_KNOCKBACK_VALUE = PISTOL_KNOCKBACK_VALUE,nil
 				toast("Pistol/SG Knockback "..VAL_PstlSgKnckbck)
 				gg.setValues(memBfr.PistolKnockback)
 			end
@@ -559,7 +618,7 @@ function cheat_bigbody()
 		local t
 		if CH == 7 then MENU()
 		elseif CH == 1 then
-			gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
+			gg.setRanges(gg.REGION_C_BSS + gg.REGION_C_ALLOC)
 			t = handleMemBfr("bigbody_mangyu",1+memOffset.BigBody[1],nil,gg.TYPE_FLOAT,555)
 			if gg.getResultCount() == 0 then
 				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
@@ -581,7 +640,7 @@ function cheat_bigbody()
 				toast("Big Body ON")
 			end
 		elseif CH == 3 then
-			gg.setRanges(gg.REGION_C_BSS | gg.REGION_C_ALLOC)
+			gg.setRanges(gg.REGION_C_BSS + gg.REGION_C_ALLOC)
 			t =  handleMemBfr("bigbody_mangyu",VAL_BigBody[1]+memOffset.BigBody[1],nil,gg.TYPE_FLOAT,555)
 			if gg.getResultCount() == 0 then
 				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
@@ -787,7 +846,7 @@ function cheat_destroycar()
 		f"__back__"
 	},nil,"Destroy cars")
 	if CH then
-		gg.setRanges(gg.REGION_JAVA_HEAP | gg.REGION_C_BSS | gg.REGION_C_ALLOC)
+		gg.setRanges(gg.REGION_JAVA_HEAP + gg.REGION_C_BSS + gg.REGION_C_ALLOC)
 		if CH == 3 then MENU()
 		elseif CH == 1 then
 			gg.searchNumber("0.89868283272;0.91149836779;0.92426908016;0.93699574471;0.9496794343;0.9623208046;0.97492086887;0.98748034239;1;1.01248061657;1.02492284775;1.03732740879;1.04969501495;1.06202638149;1.07432198524;1.08658242226;1.09880852699;1.11100065708;1.12315940857;1.1352853775;1.14737904072;1.15944087505;1.17147147655;1.18347120285;1.19544064999;1.20738017559;1.2192902565;1.23117136955::109",gg.TYPE_FLOAT)
@@ -829,7 +888,7 @@ function cheat_togglevoidmode()
 				{flags=gg.TYPE_WORD,value=99,address=0xC132A8B8,name="Pb2Chts [TimeLimit]"}
 			})
 		elseif CH == 2 then
-			gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_OTHER)
+			gg.setRanges(gg.REGION_ANONYMOUS + gg.REGION_OTHER)
 			toast('Set the Mode to Knockout, and set the Opponents to 9 (if you\'re on singleplayer)\n5 seconds before starting the search',false)
 			sleep(5e3)
 			gg.searchNumber("0W;38654705671Q::3",nil,nil,nil,cfg.memZones.Common_RegionOtherB[1],cfg.memZones.Common_RegionOtherB[2])
@@ -849,7 +908,7 @@ function cheat_xpmodifier()
 --Anonymous (from joker video, if you use something VMOS/x8sandbox-related this might apply)
 --OTHER for the Chat and Displayed XP
 --Won't affect stored xp (aka. temporary)
-	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_C_ALLOC + gg.REGION_ANONYMOUS + gg.REGION_OTHER)
 --request user to give player name
 	local player_xp = gg.prompt({
 		'Put your current XP (make sure that your XP value is differentiateable, because there\'s no looping thingy method yet.)',
@@ -880,7 +939,7 @@ function cheat_xpmodifier()
 	end
 end
 function cheat_changeplayername()
-	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_C_ALLOC + gg.REGION_ANONYMOUS + gg.REGION_OTHER)
 --request user to give player name
 	local player_name = gg.prompt({
 		'Put your current player name (case-sensitive, ":" or ";" is required at the beginning, because how GameGuardian search works)',
@@ -906,7 +965,7 @@ function cheat_changeplayername()
 	end
 end
 function cheat_changeplayernamecolor()
-	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
+	gg.setRanges(gg.REGION_C_ALLOC + gg.REGION_ANONYMOUS + gg.REGION_OTHER)
 	local CH,player_name,player_color_choice = gg.choice({
 		"Invisible name (all values 1 byte, Experimental)",
 		"Red (2)",
@@ -1108,7 +1167,7 @@ function cheat_deleteingameplaytext()
 		"KILL"
 	}
 	for i=1,#tmp do
-		gg.searchNumber(":"..tmp[i],gg.TYPE_BYTE)
+		gg.searchNumber(":"..tmp[i])
 		gg.getResults(99)
 		gg.editAll(0,gg.TYPE_BYTE)
 		gg.clearResults()
@@ -1247,10 +1306,18 @@ function handleMemBfr(memBfrName,val,valRefine,valTypes,desiredResultCount,memZo
 	end
 	return gg.getResults(desiredResultCount)
 end
+function table.clear(t)
+--[[
+	Dereferencing table contents instead of recreating new ones.
+	aka. reuse the table
+]]
+	for k in pairs(t) do t[k] = nil end
+end
 function table.merge(...)
 	--[[
 		merge 2 tables, just like Object.assign on JS
 		first table will be replaced by new table...
+		also merge tables recursively
 		recommended only on object-like tables, but not on array-like tables
 	]]
 	local r = {}
@@ -1264,6 +1331,16 @@ function table.merge(...)
 		end
 	end
 	return r
+end
+function table.append(t1,t2)
+	--[[
+		Creates new table then
+		add table 1 and table 2
+	]]
+	for _,v in ipairs(t2) do
+		table.insert(t1,v)
+	end
+	return t1
 end
 function exit()
 	isStillOpen=false
@@ -1282,16 +1359,6 @@ function suspend()
 	print(f"Suspend_Text")
 	os.exit()
 end
-function ConcatTable(t1,t2)
-	--[[
-		Creates new table then
-		add table 1 and table 2
-	]]
-	for i=1,#t2 do
-		t1[#t1+i] = t2[i]
-	end
-	return t1
-end
 function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	local num1,t = gg.prompt({msg1})
 	restrictedMemArea = restrictedMemArea or {}
@@ -1300,50 +1367,39 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 		gg.searchNumber(num1[1],valueType,nil,nil,restrictedMemArea[1],restrictedMemArea[2])
 		if gg.getResultCount() > 0 then
 			while gg.getResultCount() > desiredResultCount do
-				tmp = gg.getResultCount()
-				if (cfg.cheatSettings.loopSearch.useFuzzyDecrease and tonumber(num1[1]) > 20) then
-					toast('Got '..tmp..' results\n3 seconds to reduce ammo value')
-					sleep(3e3)
-					toast('Timeout, searching...')
-					gg.refineNumber("0~32767")
-					gg.searchFuzzy(0,gg.SIGN_FUZZY_LESS)
-				else
-				--old method:ask user their current ammo
-				--because mostly the ammo will go down, we should use fuzzy and dont ask user about ammo anymore (but theres a bug with searchFuzzy itself, it wouldnt found anything AT ALL COST IF USED IN SCRIPT!!!)
-					toast('3 seconds to change ammo value')
-					sleep(3e3)
-					num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..tmp},{num1[1]})
-					if not (num1 and num1[1]) then break end
-					gg.refineNumber(num1[1])
-				end
+				tmp[1] = gg.getResultCount()
+			--old method:ask user their current ammo
+			--because mostly the ammo will go down, we should use fuzzy and dont ask user about ammo anymore (but theres a bug with searchFuzzy itself, it wouldnt found anything AT ALL COST IF USED IN SCRIPT!!!)
+				toast('3 seconds to change ammo value')
+				sleep(3e3)
+				num1 = gg.prompt({'Put your weapon ammo\nCurrently found: '..tmp},{num1[1]})
+				if not (num1 and num1[1]) then break end
+				gg.refineNumber(num1[1])
 			--If found 2 result, check if 2 numbers are same, and return 1st value if so (this means user is on a veichle)
-				tmp = gg.getResultCount()
-				if tmp == 2 then
+				tmp[1] = gg.getResultCount()
+				if tmp[1] == 2 then
 					t = gg.getResults(2)
 					if t[1].value == t[2].value then
-						tmp = {}
 						return {t[1]}
 					end
 			--If nothing found...
-				elseif tmp == 0 then
+				elseif tmp[1] == 0 then
 					if not restrictedMemArea[1] then
 					--If fail but have restricted memory, try again with no restriction
 						break
 					else
 					--else break and return nothing, and let the 0 handler did its job
-						tmp = {}
 						toast("Oh, this is weird 🤔️... We don't find the value you're searching for 🔍️. We will try again, but without memory restriction")
 						return loopSearch(desiredResultCount,valueType,msg1)
 					end
 				end
 			end
-			tmp = {}
 			return gg.getResults(desiredResultCount)
 		end
 	end
 end
 function findEntityAnchr(msg)
-	gg.setRanges(gg.REGION_OTHER | gg.REGION_ANONYMOUS)
+	gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 	if cfg.cheatSettings.findEntityAnchr.searchMethod == "holdWeapon" then
 		toast("Hold your pistol")
 		sleep(2e3)
@@ -1426,9 +1482,6 @@ function loadConfig()
 			c4paint={
 				useSearch20=true
 			},
-			loopSearch={
-				useFuzzyDecrease=false
-			},
 			findEntityAnchr={
 				searchMethod="holdWeapon"
 			}
@@ -1442,7 +1495,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.1b"
+		VERSION="2.1.2"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
@@ -1453,6 +1506,7 @@ function loadConfig()
 		toast("No configuration files detected, Creating new one...  💾️\nHi There! 👋️ Looks like You're new here.")
 		gg.saveVariable(cfg,cfg_file)
 	end
+	cfg_load = nil
 	VAL_PlayerCurrentName = cfg.PlayerCurrentName
 	update_language()
 end
@@ -1490,6 +1544,22 @@ VAL_BigBody={3,5.9}
 VAL_XplodePowr=10000000
 memOffset={
 	BigBody={0.09500002861,0.00000019073}
+}
+local predefinedLangLists = {
+	"Automatic",
+	"About_Text",
+	"Credits",
+	"Credits_Text",
+	"Disclaimmer",
+	"Disclaimmer_Text",
+	"Exit_ThankYouMsg",
+	"License",
+	"License_Text",
+	"Settings",
+	"Suspend",
+	"Suspend_Detected",
+	"Suspend_Text",
+	"Title_Version"
 }
 
 -- Load settings and languages
@@ -1531,28 +1601,8 @@ Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403."
 }
 }
 function f(input,...)
-	local predefinedLanguages = {
-		"Automatic",
-		"About_Text",
-		"Credits",
-		"Credits_Text",
-		"Disclaimmer",
-		"Disclaimmer_Text",
-		"Exit_ThankYouMsg",
-		"License",
-		"License_Text",
-		"Settings",
-		"Suspend",
-		"Suspend_Detected",
-		"Suspend_Text",
-		"Title_Version"
-	}
-	for i=1,#predefinedLanguages do
-		if input == predefinedLanguages[i] then
-			return lang[curr_lang][input]
-		end
-	end
-	return string.format(input,...)
+	tmp[1] = lang[curr_lang][input]
+	return tmp[1] or string.format(input,...)
 end
 
 -- Restore suspend file if any
