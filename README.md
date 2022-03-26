@@ -4,17 +4,23 @@
 Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "fork" of Mangyu's cheat script but better, less-bloated, and easier to read.
 
 # Features:
-- `🔫 No Reload` (RARE to get cheats like these).
-- `🛡️➕️ Immortality` (RARE to get cheats like these).
+- `🔫 No Reload`.
+- `🛡️ Immortality`.
+- `🏊‍♀️️ No drowned` (RARE).
+- `🚗️🔏️❌️ No steal car` (RARE).
+- `👥️ Respawn & Clone` (RARE).
+- `🚗️🖌️ Change car color` (RARE).
 - `🔫 Pistol/SG Knockback`.
 - `🔫 Weapon Ammo`.
 - `🧱 Wall Hack`.
+- `💻️🤝️📱️ Better compatibility (Root/VM, CBSS(todo)/Anonymous/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other)`.
+- `🗜️ Minified version available (if you really need that tiny size. be warned, its not the very latest...)`.
 - `📈️ Performance experiment` (optional).
-- `📈️ Memory restricted search` (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB)))
+- `📈️ Memory restricted search` (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB, better optimized for OTHER/Anonymous memory region))).
 - `📈️ Memory Buffer` (technical feature that accelerates searches on area that won't change alot).
 - `🦠❌ 0-Malware` its because...
-- `💰❌ FOSS (Free & Open-source)` this cheat source code is not compiled (or even encrypted) so people can make sure this isnt malware.
-- And more that i didnt mention here (because some of them wont work).
+- `💰❌ FOSS (Free & Open-source)` this cheat source code is not compiled (or even encrypted/obfuscated) so people can make sure this isnt malware.
+- And even more that i didn't even put here.
 
 still confused about these stuff? go to [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
 
@@ -31,24 +37,20 @@ Tested on:
 This cheat is part of FOSS (Free and Open-Source Software)
 
 # Usage
-- Make sure your phone is rooted (i recommend using [Magisk](https://github.com/topjohnwu/magisk) because its open-source) to use [GameGuardian](https://gameguardian.net).
-  - You can use GameGuardian without root in virtual environment, but it might not work.
-  - (Recommended) because the game has so many ads, i recommend using Hosts AdBlocking, like [AdAway](https://adaway.org)
-- Install The latest version of [GameGuardian](https://gameguardian.net).
-- Install the latest "[Payback 2](https://play.google.com/store/apps/details?id=net.apex_designs.payback2)" (if it does'nt work, download the version 2.104.12.4, i recommend getting it from [Aurora store](https://auroraoss.org), or use [APKMirror](https://apkmirror.com))
-- Download the [cheat script](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/Payback2_CHEATus.lua?raw=true). WARNING: ONLY download from this source, if you are a content creator, YOU HAVE TO give the DIRECT GitHub Link, YOU'RE NOT ALLOWED TO GIVE DOWNLOAD LINK TO OTHER SITES WITH COMPILED LUA SCRIPT!
-  - Any changes in terms of source-code MUST be SHOWN to public, according to GPLv3 license.
+See [How to use Payback2_CHEATus wiki for that](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-use-Payback2_CHEATus)
 
-# Why i make this?
-Because i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy (because im foss oriented lol), we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number). even if he gives [download link of one cheat (wall-hack)](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file), its still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word "[LOCKED]" and on the video description which he provides, theres garbled text that says "7o31kql9p", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the "Payback2 CHEATus" project comes
+IMPORTANT: there are rules that you MUST follow if you want to share the script: [RulesForSharingThisScript](https://github.com/ABJ4403/Payback2_CHEATus/wiki/Rules-for-sharing-this-script)
+
+Violating the rules means you're also Violating GPLv3 License (especially if its related to sharing unreadable version of my codes over mediafire or something related).
 
 # Credit
 - Mangyu - Original script author.
 - mdp43140 - Main Contributor.
+- MisterCuteX - Mega Explosion, Respawn Hack.
 - tehtmi - unluac Creator (and decompile helper).
-- Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is dead. if you want the original, try [this link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
-- Latic AX and ToxicCoder - for providing the removed script through YouTube and MediaFire.
-- AlphaGGHacker - for providing "Wall Hack" & "Car Health" GameGuardian Values (no thanks for ridicilous military-encryption script though...)
-- GKTV (Pumpkin Hacker) - Payback2 GG script.
-- JokerGGS - for providing "No Blast Damage", and "No Reload" GameGuardian Values.
+- Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this download link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is gone. try [this mediafire link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
+- Latic AX & ToxicCoder - for providing the removed script through YT & MediaFire.
+- AGH (Banned from YT, now it's Blue Devil) - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)
+- GKTV (Pumpkin Hacker) - Payback2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp).
+- JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values.
 
