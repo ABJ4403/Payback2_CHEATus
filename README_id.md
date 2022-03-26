@@ -4,17 +4,24 @@
 Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang dimana ini adalah "fork" dari skrip cheat Mangyu tapi lebih bagus, sedikit-bloated, dan mudah untuk dibaca.
 
 # Fitur:
-- `🔫 No Reload` (Tidak ada jeda isi ulang/no reload. LANGKA untuk mendapatkan cheat seperti ini).
-- `🛡️➕️ Immortalitas` (LANGKA untuk mendapatkan cheat seperti ini).
+- `🔫 No Reload`. (Tidak ada jeda isi ulang/no reload).
+- `🛡️ Immortality`.
+- `🏊‍♀️️ No drowned` (LANGKA).
+- `🚗️🔏️❌️ No steal car` (LANGKA).
+- `👥️ Respawn & Clone` (LANGKA).
+- `🚗️🖌️ Change car color` (LANGKA).
 - `🔫 Knockback Pistol/SG`.
 - `🔫 Ammo Senjata`.
 - `🧱 Wall Hack`.
+- `💻🤝📱 Better compatibility (Root/VM, CBSS(todo)/Anonymous/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other)`.
+- `💻🤝📱 Kompatibilitas lebih baik (Root/VM, CBSS(todo)/Anonymous/Other, Interpreter Lua GG/Standard, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain)`.
+- `🗜️ Versi minified tersedia (Jika Anda membutuhkan skrip yang ukurannya kecil. perhatian mini, itu bukan yang terbaru...)`.
 - `📈️ Eksperimen performa` (opsional).
-- `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memory (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB)))
+- `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memory (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB, dioptimalkan untuk zona memori OTHER/Anonymous)))
 - `📈️ Buffer Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
 - `🦠❌ 0-Malware` itu karena...
-- `💰❌ FOSS (Gratis & bersumber-terbuka)` sumber kode cheat ini tidak dicompile (atau bahkan dienkripsi) jadi orang lain bisa memastikan bahwa ini bukan malware.
-- Dan lebih banyak lagi yang tidak disebut (karena beberapa tidak bekerja).
+- `💰❌ FOSS (Gratis & bersumber-terbuka)` sumber kode cheat ini tidak dicompile (atau bahkan dienkripsi/obfuscate) jadi orang lain bisa memastikan bahwa ini bukan malware.
+- Dan lebih banyak lagi bahkan saya tidak taruh disini.
 
 Masih bingung? menuju ke [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
 
@@ -31,24 +38,19 @@ Diuji di:
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
 
 # Pengunaan
-- Pastikan ponsel Anda telah di-root untuk menggunakan [GameGuardian](https://gameguardian.net) ([Lihat Wiki ini untuk bantuannya](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-root-your-phone), ya gw tau itu basa ingris wkwk).
-	- Anda dapat menggunakan GameGuardian tanpa root di lingkungan virtual, tetapi mungkin tidak berfungsi.
-	- (Disarankan) Karena "Payback 2" banyak iklan, saya sarankan menggunakan Hosts AdBlocking, seperti [AdAway](https://awaway.org)
-- Instal versi terbaru [GameGuardian](https://gameguardian.net).
-- Instal [Payback 2](https://play.google.com/store/apps/details?id=net.apex_designs.payback2) versi terbaru (jika tidak berhasil, unduh versi 2.104.12.4, saya sarankan untuk mendapatkannya dari [Aurora Store](https://auroraoss.org), atau dari [APKMirror](https://apkmirror.com))
-- Unduh [skrip cheat](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/Payback2_CHEATus.lua?raw=true). PERINGATAN: HANYA unduh dari sumber ini, jika Anda adalah pembuat konten, ANDA HARUS memberikan [tautan GitHub](https://github.com/ABJ4403/Payback2_CHEATus) langsung, ANDA TIDAK DIPERBOLEHKAN UNTUK MEMBERI LINK DOWNLOAD KE SITUS LAIN DENGAN MENGCOMPILE SCRIPT LUA DAN MEMBUATNYA TIDAK BISA DIDECOMPILE!
-	- Setiap perubahan dalam hal sumber kode HARUS ditunjukkan kepada publik, sesuai dengan lisensi GPLv3.
+Lihat [Wiki Cara Menggunakan Payback2_CHEATus untuk itu](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-use-Payback2_CHEATus)
 
-# Kenapa saya membuat ini?
-Karena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source (karena saya adalah open-source oriented), kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim. Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall), itu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek "Payback2 CHEATus" datang
+PENTING: Ada aturan yang HARUS diikuti jika ingin membagikan skrip: [AturanUntukMembagikanSkripIni](https://github.com/ABJ4403/Payback2_CHEATus/wiki/Rules-for-sharing-this-script)
+
+Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkait dengan berbagi versi kode saya yang tidak dapat dibaca via MediaFire atau sesuatu yang terkait).
 
 # Kredit
 - Mangyu - Pembuat skrip original.
 - mdp43140 - Kontributor Utama.
+- MisterCuteX - Mega Explosion, Respawn Hack.
 - tehtmi - Pembuat unluac (dan helper dekompilasi).
 - Crystal_Mods100x - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. kalau kamu mau yang original, coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
-- Latic AX dan ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum gameguardian melalui YouTube dan MediaFire.
-- AlphaGGHacker - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk `enkripsi level 666 yang sangggggat giilaaa`).
-- GKTV (Pumpkin Hacker) - Skrip GG Payback2.
-- JokerGGS - Untuk menyediakan Value "No Blast Damage", dan "No Reload" GameGuardian.
-
+- Latic AX & ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum GameGuardian melalui YT & MediaFire.
+- AGH (Banned dari YT, sekarang Blue Devil) - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk enkripsi yang sangggggat giilaaa).
+- GKTV (Pumpkin Hacker) - Skrip GG Payback2 (wall hack,big body,colored tree,big flamethower item,shadow,esp).
+- JokerGGS - Untuk menyediakan Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG.
