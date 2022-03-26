@@ -1600,7 +1600,7 @@ Suspend_Text		 = "Anda keluar dari program melalui opsi suspensi. Anda bisa mela
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403."
 }
 }
-local f=function(i,...)
+f=function(i,...)
 	return lang[curr_lang][i] or string.format(i,...)
 end
 
