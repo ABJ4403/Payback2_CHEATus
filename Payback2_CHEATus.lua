@@ -1,6 +1,5 @@
 -- (pre)Define local variables (can possibly improve performance according to lua-users.org wiki) --
-local gg,susp_file,cfg_file,tmp,revert,memBfr,memOffset,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{}
-
+local gg,susp_file,cfg_file,tmp,revert,memBfr,memOffset,t,CH,ShowMenu,VAL_PstlSgKnckbck,VAL_CrDfltHlth,VAL_DmgIntnsty,VAL_WallResist,VAL_BigBody = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',setmetatable({},{__mode='v'}),{},{},{},{}
 -- Cheat menus --
 function MENU()
 --Let the user choose stuff
@@ -39,10 +38,10 @@ function MENU()
 	if type(tmp) == "table" then
 		table.clear(tmp)
 	else
-		tmp = {}
+		tmp = setmetatable({},{__mode='v'})
 	end
 --Now collectgarbage can have an easy time to clear all that crap
-	collectgarbage"collect"
+	collectgarbage()
 end
 function MENU_CSD()
 --Let the user choose stuff
@@ -244,7 +243,6 @@ function cheat_godmode()
 					tmp.a[i].freeze = CH[2]
 					tmp.a[i].value = 3e4
 				end
-			--Todo: add the word flag using forloop, if ch2 loop freeze, if ch3 loop unfreeze
 				t = table.append(t,tmp.a)
 			end
 			if CH[3] then t = table.append(t,{
@@ -265,13 +263,17 @@ function cheat_godmode()
 				tmp.a[1].value = -63
 				t = table.append(t,tmp.a)
 			end
-			if CH[5] then t = table.append(t,{
-				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
-				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=0,name="Pb2Chts [Health]"},
-				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=0,name="Pb2Chts [RespawnInterval] (Immortal)"},
-			})
+			if CH[5] then
+				tmp.isImmortal = CH[6] and 1 or 0
+				t = table.append(t,{
+					{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
+					{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=0,name="Pb2Chts [Health]"},
+					{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=tmp.isImmortal,name="Pb2Chts [RespawnInterval]"},
+				})
+				toast("If you cant move the car after you enable no steal car cheat,\nsuspend the script and reduce the \"Freeze duration\" to somewhere below 1000")
+				tmp.isImmortal = 0
 			end
-			if CH[6] then t = table.append(t,{
+			if CH[6] and not CH[5] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=800,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=9,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
@@ -387,12 +389,12 @@ function cheat_godmode()
 			end
 			---
 			if CH[20] then t = table.append(t,{
-				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [Rel0adTimer]"}
+				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,value=0,name="Pb2Chts [Rel0adTimer]"}
 			})
 			end
 			if CH[21] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=false,value=999,name="Pb2Chts [Health]"},
-				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,name="Pb2Chts [RespawnInterval] (Immortal)"}
+				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,value=0,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
 			if CH[22] then t = table.append(t,{
@@ -401,11 +403,11 @@ function cheat_godmode()
 			})
 			end
 			if CH[23] then t = table.append(t,{
-				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [SpeedSlide]"}
+				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,value=0,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
 			if CH[24] then t = table.append(t,{
-				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Float]"}
+				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,value=0,name="Pb2Chts [Float]"}
 			})
 			end
 			if CH[25] then t = table.append(t,{
@@ -414,11 +416,11 @@ function cheat_godmode()
 			})
 			end
 			if CH[26] then t = table.append(t,{
-				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
+				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,value=0,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
 			})
 			end
 			if CH[27] then t = table.append(t,{
-				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=false,name="Pb2Chts [Dr0wned]"},
+				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=false,value=0,name="Pb2Chts [Dr0wned]"},
 			})
 			end
 			gg.setValues(t)
@@ -1258,6 +1260,42 @@ function show_about()
 end
 
 -- Helper functions --
+function table.clear(t)
+--[[
+	Dereferencing table contents instead of recreating new ones.
+	aka. reuse the table
+]]
+	for k in pairs(t) do t[k] = nil end
+end
+function table.merge(...)
+	--[[
+		merge 2 tables, just like Object.assign on JS
+		first table will be replaced by new table...
+		also merge tables recursively
+		recommended only on object-like tables, but not on array-like tables
+	]]
+	local r = {}
+	for _,t in ipairs{...} do
+		for k,v in pairs(t) do
+			if type(r[k]) == "table" then
+				r[k] = table.merge(r[k],v)
+			else
+				r[k] = v
+			end
+		end
+	end
+	return r
+end
+function table.append(t1,t2)
+	--[[
+		Creates new table then
+		add table 1 and table 2
+	]]
+	for _,v in ipairs(t2) do
+		table.insert(t1,v)
+	end
+	return t1
+end
 function searchWatchdog(msg,refineVal,mmBfr)
 --[[
 
@@ -1305,59 +1343,6 @@ function handleMemBfr(memBfrName,val,valRefine,valTypes,desiredResultCount,memZo
 		memBfr[memBfrName],revert[memBfrName] = gg.getResults(desiredResultCount),gg.getResults(desiredResultCount)
 	end
 	return gg.getResults(desiredResultCount)
-end
-function table.clear(t)
---[[
-	Dereferencing table contents instead of recreating new ones.
-	aka. reuse the table
-]]
-	for k in pairs(t) do t[k] = nil end
-end
-function table.merge(...)
-	--[[
-		merge 2 tables, just like Object.assign on JS
-		first table will be replaced by new table...
-		also merge tables recursively
-		recommended only on object-like tables, but not on array-like tables
-	]]
-	local r = {}
-	for _,t in ipairs{...} do
-		for k,v in pairs(t) do
-			if type(r[k]) == "table" then
-				r[k] = table.merge(r[k],v)
-			else
-				r[k] = v
-			end
-		end
-	end
-	return r
-end
-function table.append(t1,t2)
-	--[[
-		Creates new table then
-		add table 1 and table 2
-	]]
-	for _,v in ipairs(t2) do
-		table.insert(t1,v)
-	end
-	return t1
-end
-function exit()
-	isStillOpen=false
-	gg.saveVariable(cfg,cfg_file)
-	gg.clearResults()
-	print(f"Exit_ThankYouMsg")
-	os.exit()
-end
-function suspend()
-	isStillOpen=false
-	gg.saveVariable({
-		revert=revert,
-		memBfr=memBfr,
-		cfg=cfg
-	},susp_file)
-	print(f"Suspend_Text")
-	os.exit()
 end
 function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	local num1,t = gg.prompt({msg1})
@@ -1455,6 +1440,21 @@ function findEntityAnchr(msg)
 		print("[Error.InvalidConf]: Configuration value for \"cfg.cheatSettings.findEntityAnchr.searchMethod\" ("..cfg.cheatSettings.findEntityAnchr.searchMethod..") is invalid.\n         Possible values: wordWeaponAmmo, holdWeapon, mangyuFloatAnchor\n         Your Configuration:\n"..cfg)
 	end
 end
+function exit()
+	gg.saveVariable(cfg,cfg_file)
+	gg.clearResults()
+	print(f"Exit_ThankYouMsg")
+	os.exit()
+end
+function suspend()
+	gg.saveVariable({
+		revert=revert,
+		memBfr=memBfr,
+		cfg=cfg
+	},susp_file)
+	print(f"Suspend_Text")
+	os.exit()
+end
 function update_language()
 	--[[
 		Parse language strings...
@@ -1495,7 +1495,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.2"
+		VERSION="2.1.2b"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
@@ -1600,9 +1600,8 @@ Suspend_Text		 = "Anda keluar dari program melalui opsi suspensi. Anda bisa mela
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403."
 }
 }
-function f(input,...)
-	tmp[1] = lang[curr_lang][input]
-	return tmp[1] or string.format(input,...)
+local f=function(i,...)
+	return lang[curr_lang][i] or string.format(i,...)
 end
 
 -- Restore suspend file if any
@@ -1615,6 +1614,5 @@ while true do
 		gg.setVisible(false)
 		ShowMenu()
 	end
---As suggested in https://gameguardian.net/forum/topic/20568-examples-of-lua-scripts
 	sleep(100)
 end
