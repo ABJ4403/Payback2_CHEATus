@@ -206,22 +206,23 @@ function cheat_godmode()
 		"---",
 		"16. Clone player",
 		"17. Change vehicle color",
+		"18. Fast car acceleration time",
 		"---",
-		"18. Rel0ad OFF",
-		"19. Immortality OFF",
-		"20. C4 Drawing OFF",
-		"21. Speed Slide OFF",
-		"22. Float Hack OFF",
-		"23. Ragdoll Hack OFF",
-		"24. Normal body",
-		"25. Normal drowned",
+		"19. Rel0ad OFF",
+		"20. Immortality OFF",
+		"21. C4 Drawing OFF",
+		"22. Speed Slide OFF",
+		"23. Float Hack OFF",
+		"24. Ragdoll Hack OFF",
+		"25. Normal body",
+		"26. Normal drowned",
 		"---",
 		f"__back__"
 	},nil,"God modes (idk wut to call this)\n\nWARNING:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!! (eg. killing them continously)\n- DO NOT PvP with non-cheater!!\n- If you play 2P, only do it in isolated area")
 	if CH then
-		if CH[29] then MENU() end
+		if CH[30] then MENU() end
 		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
-		local anchorAddress = findEntityAnchr('Put one of your weapon ammo')
+		local anchorAddress = findEntityAnchr()
 		if not anchorAddress then
 			toast('Can\'t find the weapon you\'re holding, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
@@ -229,21 +230,23 @@ function cheat_godmode()
 			tmp.nca = anchorAddress
 			if (CH[1] or CH[2]) then
 				tmp.a = {
-					{address=tmp.nca+0x1C,name="Pb2Chts [Weapon]: Shotgun"},
-					{address=tmp.nca+0x1E,name="Pb2Chts [Weapon]: Rocket"},
-					{address=tmp.nca+0x20,name="Pb2Chts [Weapon]: Flamethrower"},
-					{address=tmp.nca+0x22,name="Pb2Chts [Weapon]: Grenade"},
-					{address=tmp.nca+0x24,name="Pb2Chts [Weapon]: Minigun"},
-					{address=tmp.nca+0x26,name="Pb2Chts [Weapon]: Explosives"},
-					{address=tmp.nca+0x28,name="Pb2Chts [Weapon]: Turret"},
-					{address=tmp.nca+0x2A,name="Pb2Chts [Weapon]: Laser"},
+					{address=tmp.nca+0x1C,name="Shotgun"},
+					{address=tmp.nca+0x1E,name="Rocket"},
+					{address=tmp.nca+0x20,name="Flamethrower"},
+					{address=tmp.nca+0x22,name="Grenade"},
+					{address=tmp.nca+0x24,name="Minigun"},
+					{address=tmp.nca+0x26,name="Explosives"},
+					{address=tmp.nca+0x28,name="Turret"},
+					{address=tmp.nca+0x2A,name="Laser"},
 				}
 				for i=1,#tmp.a do
+					tmp.a[i].name = "Pb2Chts [Weapon]: "..(tmp.a[i].name)
 					tmp.a[i].flags = gg.TYPE_WORD
 					tmp.a[i].freeze = CH[2]
 					tmp.a[i].value = 3e4
 				end
 				t = table.append(t,tmp.a)
+				tmp.a = nil
 			end
 			if CH[3] then t = table.append(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [Rel0adTimer]: Default"}
@@ -267,13 +270,11 @@ function cheat_godmode()
 				tmp.isImmortal = CH[6] and 1 or 0
 				t = table.append(t,{
 					{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
-					{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=0,name="Pb2Chts [Health]"},
+					{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=-501,name="Pb2Chts [Health]"},
 					{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=tmp.isImmortal,name="Pb2Chts [RespawnInterval]"},
 				})
-				toast("If you cant move the car after you enable no steal car cheat,\nsuspend the script and reduce the \"Freeze duration\" to somewhere below 1000")
 				tmp.isImmortal = 0
-			end
-			if CH[6] and not CH[5] then t = table.append(t,{
+			elseif CH[6] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=800,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=9,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
@@ -387,39 +388,46 @@ function cheat_godmode()
 					end
 				end
 			end
+			if CH[19] then
+			--the fastest possible value is 1, setting it below 1 will make the veichle acceleration acts very weird
+				t = table.append(t,{
+					{address=tmp.nca-0x208,flags=gg.TYPE_FLOAT,freeze=true,value=1,name="Pb2Chts [Veichle Speed]"},
+					{address=tmp.nca-0x204,flags=gg.TYPE_FLOAT,freeze=true,value=1,name="Pb2Chts [Veichle Speed]"}
+				})
+			end
 			---
-			if CH[20] then t = table.append(t,{
+			if CH[21] then t = table.append(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,value=0,name="Pb2Chts [Rel0adTimer]"}
 			})
 			end
-			if CH[21] then t = table.append(t,{
+			if CH[22] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=false,value=999,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,value=0,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
-			if CH[22] then t = table.append(t,{
+			if CH[23] then t = table.append(t,{
 				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: X"},
 				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: Y"}
 			})
 			end
-			if CH[23] then t = table.append(t,{
+			if CH[24] then t = table.append(t,{
 				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,value=0,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
-			if CH[24] then t = table.append(t,{
+			if CH[25] then t = table.append(t,{
 				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,value=0,name="Pb2Chts [Float]"}
 			})
 			end
-			if CH[25] then t = table.append(t,{
+			if CH[26] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Ragdoll]"},
 				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=65536,freeze=false,name="Pb2Chts [Ragdoll]"}
 			})
 			end
-			if CH[26] then t = table.append(t,{
+			if CH[27] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,value=0,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
 			})
 			end
-			if CH[27] then t = table.append(t,{
+			if CH[28] then t = table.append(t,{
 				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=false,value=0,name="Pb2Chts [Dr0wned]"},
 			})
 			end
@@ -1383,7 +1391,7 @@ function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 		end
 	end
 end
-function findEntityAnchr(msg)
+function findEntityAnchr()
 	gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 	if cfg.cheatSettings.findEntityAnchr.searchMethod == "holdWeapon" then
 		toast("Hold your pistol")
@@ -1422,7 +1430,7 @@ function findEntityAnchr(msg)
 		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t - 0x18,t - 0x18)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	elseif cfg.cheatSettings.findEntityAnchr.searchMethod == "wordWeaponAmmo" then
-		t = loopSearch(1,gg.TYPE_WORD,msg,cfg.memZones.WpnAmmWrd)
+		t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo',cfg.memZones.WpnAmmWrd)
 		if gg.getResultCount() == 0 then return end
 		t = t[1]
 		t.value = 3e4
@@ -1495,7 +1503,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.2b"
+		VERSION="2.1.3"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
