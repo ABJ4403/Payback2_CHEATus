@@ -18,7 +18,7 @@ Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang diman
 - `🗜️ Versi minified tersedia (Jika Anda membutuhkan skrip yang ukurannya kecil. perhatian mini, versi minified bukan yang terbaru karena jarang diupdate kecuali ada pembaruan major...)`.
 - `📈️ Eksperimen performa` (opsional).
 - `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memori (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB, dioptimalkan untuk zona memori OTHER/Anonymous)))
-- `📈️ Buffer Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
+- `📈️ Memoisasi Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
 - `🦠❌ 0-Malware` itu karena...
 - `💰❌ FOSS (Gratis & bersumber-terbuka)` sumber kode cheat ini tidak dicompile (atau bahkan dienkripsi/obfuscate) jadi orang lain bisa memastikan bahwa ini bukan malware.
 - Dan lebih banyak lagi bahkan saya tidak taruh disini 😅️...
