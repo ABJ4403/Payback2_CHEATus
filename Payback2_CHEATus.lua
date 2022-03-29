@@ -1068,17 +1068,17 @@ function cheat_coloredtree()
 		"OFF",
 		f"__back__"
 	},nil,"Colored trees\nThis will change some shader stuff (actually idk wut this does lol) that affects trees")
-	if CH then
-		if CH == 3 then MENU()
-		elseif CH == 1 then tmp={0.04,-999,"ON"}
-		elseif CH == 2 then tmp={-999,0.04,"OFF"} end
+	if CH == 3 then MENU()
+	elseif CH == 1 then tmp={0.04,-999,"ON"}
+	elseif CH == 2 then tmp={-999,0.04,"OFF"} end
+	if tmp then
 		gg.setRanges(gg.REGION_CODE_APP)
-		local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tm0[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
+		local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
 			gg.editAll(tmp[2],gg.TYPE_FLOAT)
-			toast("Colored trees "..tm0[3])
+			toast("Colored trees "..tmp[3])
 		end
 	end
 end
@@ -1109,9 +1109,9 @@ function cheat_shadowfx()
 		f"__back__"
 	},nil,"Shadow effects\nInfo: this wont affect your game performance at all (not making it lag/fast)\ndont use this for performance purpose :)")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp.shadowcache={1e-4,-1.0012,"Disabled"}
-	elseif CH == 2 then tmp.shadowcache={-1.0012,1e-4,"Enabled"} end
-	if tmp.shadowcache then
+	elseif CH == 1 then tmp={1e-4,-1.0012,"Disabled"}
+	elseif CH == 2 then tmp={-1.0012,1e-4,"Enabled"} end
+	if tmp then
 		gg.setRanges(gg.REGION_CODE_APP)
 		handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1)
 		if gg.getResultCount() == 0 then
@@ -1490,7 +1490,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.4"
+		VERSION="2.1.4b"
 	}
 	local cfg_load = loadfile(cfg_file)
 	if cfg_load then
