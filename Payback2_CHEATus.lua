@@ -1,5 +1,5 @@
 -- (pre)Define local variables (can possibly improve performance according to lua-users.org wiki) --
-local gg,susp_file,cfg_file,tmp,revert,memOzt,memOffset,t,curVal,CH = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',setmetatable({},{__mode='v'}),{},{},{},{}
+local gg,susp_file,cfg_file,tmp,revert,memOzt,memOffset,t,curVal,CH = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{}
 -- Cheat menus --
 function MENU()
 --Let the user choose stuff
@@ -244,8 +244,8 @@ function MENU_godmode()
 			end
 			if CH[4] then
 				tmp.a = {{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=true,name="Pb2Chts [Rel0adTimer]: Grenade"}}
-				local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0;100]"},{0},{"number"})
-				if (grenadeRange and grenadeRange[1] ~= "0") then
+				local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0;100]"},{100},{"number"})
+				if (grenadeRange and grenadeRange[1] and grenadeRange[1] ~= "0") then
 					toast("Wait for it")
 					tmp.a[1].value = grenadeRange[1]
 					gg.setValues({{address=tmp.nca+0x18,flags=gg.TYPE_WORD,value=3,name="Pb2Chts [CurrentlyHoldWeapon]: Grenade"}})
@@ -1296,13 +1296,6 @@ function show_about()
 end
 
 -- Helper functions --
-function table.clear(t)
---[[
-	Dereferencing table contents instead of recreating new ones.
-	aka. reuse the table
-]]
-	for k in pairs(t) do t[k] = nil end
-end
 function table.merge(...)
 	--[[
 		merge 2 tables, just like Object.assign on JS
@@ -1531,7 +1524,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.5",
+		VERSION="2.1.5b",
 		clearAllList=false
 	}
 	local cfg_load = loadfile(cfg_file)
@@ -1639,7 +1632,7 @@ Suspend_Text		 = "Anda keluar dari program melalui opsi suspensi. Anda bisa mela
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403."
 }
 }
-f=function(i,...)return lang[curr_lang][i]or string.format(i,...)end
+function f(i,...)return lang[curr_lang][i]or string.format(i,...)end
 
 -- Restore suspend file if any
 restoreSuspend()
@@ -1652,9 +1645,9 @@ while true do
 		CH = nil
 		gg.clearResults()
 		if type(tmp) == "table" then
-			table.clear(tmp)
+			for k in pairs(tmp)do tmp[k]=nil end
 		else
-			tmp = setmetatable({},{__mode='v'})
+			tmp={}
 		end
 	--Now collectgarbage can have an easy time to clear all that crap
 		collectgarbage()
