@@ -10,12 +10,12 @@ Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang diman
 - `🚗️🔏️❌️ Anti-curi mobil` (LANGKA).
 - `👥️ Respawn & Klon` (LANGKA).
 - `🚗️🖌️ Ganti warna mobil` (LANGKA).
-- `🚗️💨️ Ganti kecepatan mobil` (LANGKA, segera datang di versi 2.1.3)
+- `🚗️💨️ Ganti kecepatan mobil` (LANGKA)
 - `🔫 Knockback Pistol/SG`.
 - `🔫 Amunisi Senjata`.
 - `🧱 Tembus Dinding`.
-- `💻🤝📱 Kompatibilitas lebih baik (Root/VM, CBSS(todo)/Anonymous/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash)`.
-- `🗜️ Versi minified tersedia (Jika Anda membutuhkan skrip yang ukurannya kecil. perhatian mini, versi minified bukan yang terbaru karena jarang diupdate kecuali ada pembaruan major...)`.
+- `💻🤝📱 Kompatibilitas lebih baik` (Root/VM, CBSS(todo)/Anonymous/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash).
+- `🗜️ Versi minified tersedia` (Jika Anda membutuhkan skrip yang ukurannya kecil. perhatian mini, versi minified bukan yang terbaru karena jarang diupdate kecuali ada pembaruan major...).
 - `📈️ Eksperimen performa` (opsional).
 - `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memori (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB, dioptimalkan untuk zona memori OTHER/Anonymous)))
 - `📈️ Memoisasi Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).

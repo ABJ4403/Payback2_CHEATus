@@ -10,12 +10,12 @@ Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "f
 - `🚗️🔏️❌️ No steal car` (RARE).
 - `👥️ Respawn & Clone` (RARE).
 - `🚗️🖌️ Change car color` (RARE).
-- `🚗️💨️ Change car speed` (RARE, coming soon in version 2.1.3)
+- `🚗️💨️ Change car speed` (RARE)
 - `🔫 Pistol/SG Knockback`.
 - `🔫 Weapon Ammo`.
 - `🧱 Wall Hack`.
-- `💻️🤝️📱️ Better compatibility (Root/VM, CBSS(todo)/Anonymous/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happend)`.
-- `🗜️ Minified version available (if you really need that tiny size. be warned, its not the very latest, its rarely updated except major updates...)`.
+- `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happend).
+- `🗜️ Minified version available` (if you really need that tiny size. be warned, its not the very latest, its rarely updated except major updates...).
 - `📈️ Performance experiment` (optional).
 - `📈️ Memory restricted search` (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB, better optimized for OTHER/Anonymous memory region))).
 - `📈️ Memory Memoization` (technical feature that accelerates searches on area that won't change alot).
