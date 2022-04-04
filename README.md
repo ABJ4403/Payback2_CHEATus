@@ -1,6 +1,6 @@
 # Payback2 CHEATus, created by ABJ4403.
 [`🇮🇩️ ReadMe Bahasa Indonesia`](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
-
+![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/3e9fe551-422b-4985-b006-25d04a36b7e4)
 Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "fork" of Mangyu's cheat script but better, less-bloated, and easier to read.
 
 # Features
