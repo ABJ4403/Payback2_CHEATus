@@ -33,6 +33,8 @@ function MENU()
 	elseif CH == 12 then show_about()
 	elseif CH == 13 then exit()
 	elseif CH == 14 then suspend() end
+	CH = nil
+	if type(tmp)=="table" then for k in pairs(tmp)do tmp[k]=nil end else tmp={}end
 end
 function MENU_CSD()
 --Let the user choose stuff
@@ -43,14 +45,15 @@ function MENU_CSD()
 		"3. Change Name Color (EXPERIMENTAL)",
 		"4. Change XP",
 		"5. Explosion Power",
-		"6. Particle interval (Slow/Fast explosion)",
-		"7. Reflection Graphics",
-		"8. Colored trees",
-		"9. Big body",
-		"10. Big Flamethrower (Item)",
-		"11. Shadows",
-		"12. Colored Peoples (ESP)",
-		"13. Delete All Names",
+		"6. Explosion Direction",
+		"7. Particle interval (Slow/Fast explosion)",
+		"8. Reflection Graphics",
+		"9. Colored trees",
+		"10. Big body",
+		"11. Big Flamethrower (Item)",
+		"12. Shadows",
+		"13. Colored Peoples (ESP)",
+		"14. Delete All Names",
 		"---",
 		f"__back__"
 	},nil,f"Title_Version")
@@ -59,15 +62,16 @@ function MENU_CSD()
 	elseif CH == 3 then cheat_changeplayername()
 	elseif CH == 4 then cheat_changeplayernamecolor()
 	elseif CH == 5 then cheat_xpmodifier()
-	elseif CH == 6 then cheat_explodepower()
-	elseif CH == 7 then cheat_prtclintrvl()
-	elseif CH == 8 then cheat_reflectiongraphics()
-	elseif CH == 9 then cheat_coloredtree()
-	elseif CH == 10 then cheat_bigbody()
-	elseif CH == 11 then cheat_bigflamethroweritem()
-	elseif CH == 12 then cheat_shadowfx()
-	elseif CH == 13 then cheat_clrdpplsp()
-	elseif CH == 14 then cheat_deleteingameplaytext()
+	elseif CH == 6 then cheat_explodepow()
+	elseif CH == 7 then cheat_explodedir()
+	elseif CH == 8 then cheat_prtclintrvl()
+	elseif CH == 9 then cheat_reflectiongraphics()
+	elseif CH == 10 then cheat_coloredtree()
+	elseif CH == 11 then cheat_bigbody()
+	elseif CH == 12 then cheat_bigflamethroweritem()
+	elseif CH == 13 then cheat_shadowfx()
+	elseif CH == 14 then cheat_clrdpplsp()
+	elseif CH == 15 then cheat_deleteingameplaytext()
 ---
 	elseif CH == 16 then MENU() end
 end
@@ -197,20 +201,21 @@ function MENU_godmode()
 		"16. Clone player",
 		"17. Change vehicle color",
 		"18. Fast car acceleration time",
+		"19. Win (known to work on Rampage, others not tested yet)",
 		"---",
-		"19. Rel0ad OFF",
-		"20. Immortality OFF",
-		"21. C4 Drawing OFF",
-		"22. Speed Slide OFF",
-		"23. Float Hack OFF",
-		"24. Ragdoll Hack OFF",
-		"25. Normal body",
-		"26. Normal drowned",
+		"20. Rel0ad OFF",
+		"21. Immortality OFF",
+		"22. C4 Drawing OFF",
+		"23. Speed Slide OFF",
+		"24. Float Hack OFF",
+		"25. Ragdoll Hack OFF",
+		"26. Normal body",
+		"27. Normal drowned",
 		"---",
 		f"__back__"
 	},nil,"God modes (idk wut to call this)\n\nWARNING:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!! (eg. killing them continously)\n- DO NOT PvP with non-cheater!!\n- If you play 2P, only do it in isolated area")
 	if CH then
-		if CH[30] then MENU() end
+		if CH[31] then MENU() end
 		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 		local anchorAddress = findEntityAnchr()
 		if not anchorAddress then
@@ -218,7 +223,7 @@ function MENU_godmode()
 		else
 			t = {}
 			tmp.nca = anchorAddress
-			if (CH[1] or CH[2]) then
+			if CH[1] or CH[2] then
 				tmp.a = {
 					{address=tmp.nca+0x1C,name="Shotgun"},
 					{address=tmp.nca+0x1E,name="Rocket"},
@@ -245,7 +250,7 @@ function MENU_godmode()
 			if CH[4] then
 				tmp.a = {{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=true,name="Pb2Chts [Rel0adTimer]: Grenade"}}
 				local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0;100]"},{100},{"number"})
-				if (grenadeRange and grenadeRange[1] and grenadeRange[1] ~= "0") then
+				if grenadeRange and grenadeRange[1] and grenadeRange[1] ~= "0" then
 					toast("Wait for it")
 					tmp.a[1].value = grenadeRange[1]
 					gg.setValues({{address=tmp.nca+0x18,flags=gg.TYPE_WORD,value=3,name="Pb2Chts [CurrentlyHoldWeapon]: Grenade"}})
@@ -361,10 +366,10 @@ function MENU_godmode()
 				elseif CH == 14 then PlyrClrCH = 321
 				-----cancel
 				elseif CH == 16 then PlyrClrCH = -1 end
-				if (PlyrClrCH and PlyrClrCH >= 0) then t = table.append(t,{
+				if PlyrClrCH and PlyrClrCH >= 0 then t = table.append(t,{
 					{address=tmp.nca+0x94,flags=gg.TYPE_WORD,freeze=false,value=PlyrClrCH,name="Pb2Chts [Vehicle color]"},
 				})
-				elseif (PlyrClrCH and PlyrClrCH == -1) then
+				elseif PlyrClrCH and PlyrClrCH == -1 then
 					toast("Still in building phase, click GG to stop. while the rainbow animation playing, you cannot access GG until its stopped\nand this will not apply other cheats you select, make sure you activate cheat choice of yours before activating this")
 					tmp.rainbowCurClr = 257
 					tmp.rainbowCar = {{address=tmp.nca+0x94,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [Vehicle color]"}}
@@ -385,39 +390,43 @@ function MENU_godmode()
 					{address=tmp.nca-0x204,flags=gg.TYPE_FLOAT,freeze=true,value=1,name="Pb2Chts [Veichle Speed]"}
 				})
 			end
+			if CH[20] then t = table.append(t,{
+				{address=tmp.nca+0x30,flags=gg.TYPE_DWORD,value=9e8,freeze=true,name="Pb2Chts [Win] (remove this after you win match)"},
+			})
+			end
 			---
-			if CH[21] then t = table.append(t,{
+			if CH[22] then t = table.append(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,value=0,name="Pb2Chts [Rel0adTimer]"}
 			})
 			end
-			if CH[22] then t = table.append(t,{
+			if CH[23] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=false,value=999,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,value=0,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
-			if CH[23] then t = table.append(t,{
+			if CH[24] then t = table.append(t,{
 				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: X"},
 				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: Y"}
 			})
 			end
-			if CH[24] then t = table.append(t,{
+			if CH[25] then t = table.append(t,{
 				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,value=0,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
-			if CH[25] then t = table.append(t,{
+			if CH[26] then t = table.append(t,{
 				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,value=0,name="Pb2Chts [Float]"}
 			})
 			end
-			if CH[26] then t = table.append(t,{
+			if CH[27] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Ragdoll]"},
 				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=65536,freeze=false,name="Pb2Chts [Ragdoll]"}
 			})
 			end
-			if CH[27] then t = table.append(t,{
+			if CH[28] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,value=0,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
 			})
 			end
-			if CH[28] then t = table.append(t,{
+			if CH[29] then t = table.append(t,{
 				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=false,value=0,name="Pb2Chts [Dr0wned]"},
 			})
 			end
@@ -432,11 +441,11 @@ function cheat_weaponammo()
 --gg.REGION_C_ALLOC + gg.REGION_ANONYMOUS
 	gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 	CH = gg.prompt({'Put all of your weapon ammo, divide each using ";"'})
-	if (CH and CH[1]) then
+	if CH and CH[1] then
 		tmp = 0xB6730000
 		gg.searchNumber(CH[1]..":29",gg.TYPE_DWORD,nil,nil,tmp+0x3C4,tmp+0x4E0)
-		gg.getResults(16)
-		if gg.getResultCount() == 0 then
+		tmp = gg.getResults(16)
+		if tmp[1] then
 			toast("Can't find the number, did you put it right?")
 		else
 			gg.editAll(9e3,gg.TYPE_DWORD)
@@ -466,7 +475,7 @@ function cheat_pistolknockback()
 		elseif CH == 4 then PISTOL_KNOCKBACK_VALUE = 1e-5
 		elseif CH == 5 then
 			local CH = gg.prompt({'Input your custom knockback value'})
-			if (CH and CH[1]) then
+			if CH and CH[1] then
 				PISTOL_KNOCKBACK_VALUE = CH[1]
 			else
 				cheat_pistolknockback()
@@ -474,7 +483,7 @@ function cheat_pistolknockback()
 		---
 		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current knockback value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current pistol/shotgun knockback value'},{[1] = curVal.PstlSgKnckbck},{[1] = 'number'})
-			if (CH and CH[1]) then curVal.PstlSgKnckbck = CH[1] end
+			if CH and CH[1] then curVal.PstlSgKnckbck = CH[1] end
 			cheat_pistolknockback()
 		elseif CH == 8 then
 			revert.PistolKnockback = nil
@@ -710,7 +719,7 @@ function cheat_strongveichle()
 		elseif CH == 3 then CAR_HEALTH_VALUE = -1
 		elseif CH == 4 then
 			local CH = gg.prompt({'Input your custom Veichle default health value'})
-			if (CH and CH[1]) then
+			if CH and CH[1] then
 				CAR_HEALTH_VALUE = CH[1]
 			else
 				cheat_strongveichle()
@@ -718,7 +727,7 @@ function cheat_strongveichle()
 		---
 		elseif CH == 6 then
 			local CH = gg.prompt({'If you think the current Veichle default health value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Veichle default health value'},{[1] = curVal.CrDfltHlth},{[1] = 'number'})
-			if (CH and CH[1]) then curVal.CrDfltHlth = CH[1] end
+			if CH and CH[1] then curVal.CrDfltHlth = CH[1] end
 			cheat_strongveichle()
 		elseif CH == 7 then
 			CH,revert.CarHealth = nil,nil
@@ -747,40 +756,42 @@ end
 function cheat_noblastdamage()
 	local CH = gg.choice({
 		"ON (0)",
-		"OFF (300)",
+		"Default (300)",
+		"Feather death (3e3, dead with almost any explosed explosion)",
 		"Custom",
 		"---",
 		"Change current damage value",
 		"Restore previous value",
 		"Clear memory buffer",
 		f"__back__"
-	},nil,"No damage\nThis will make you unable to get killed using any explosion blasts (that means you still can get killed by sg,mg,laser,turret,any non explosive weapons)\nPS: this will make your character buggy though")
+	},nil,"No blast damage")
 	if CH then
-		if CH == 8 then MENU()
+		if CH == 9 then MENU()
 		elseif CH == 1 then DAMAGE_INTENSITY_VALUE = 0
 		elseif CH == 2 then DAMAGE_INTENSITY_VALUE = 300
-		elseif CH == 3 then
+		elseif CH == 3 then DAMAGE_INTENSITY_VALUE = 3e3
+		elseif CH == 4 then
 			local CH = gg.prompt({'Input your custom damage intensity'})
-			if (CH and CH[1]) then
+			if CH and CH[1] then
 				DAMAGE_INTENSITY_VALUE = CH[1]
 			else
 				cheat_noblastdamage()
 			end
 		---
-		elseif CH == 5 then
-			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{[1] = curVal.DmgIntnsty},{[1] = 'number'})
-			if (CH and CH[1]) then curVal.DmgIntnsty = CH[1] end
-			cheat_noblastdamage()
 		elseif CH == 6 then
-			CH,revert.NoBlastDamage = nil,nil
+			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{[1] = curVal.DmgIntnsty},{[1] = 'number'})
+			if CH and CH[1] then curVal.DmgIntnsty = CH[1] end
 			cheat_noblastdamage()
 		elseif CH == 7 then
+			CH,revert.NoBlastDamage = nil,nil
+			cheat_noblastdamage()
+		elseif CH == 8 then
 			CH,memOzt.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
 		end
 		if DAMAGE_INTENSITY_VALUE then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("NoBlastDamage","-7264W;10W;-5632W;"..curVal.DmgIntnsty.."F;17302W::",curVal.DmgIntnsty,gg.TYPE_FLOAT,9)
+			handleMemOzt("NoBlastDamage","-5632W;"..curVal.DmgIntnsty.."F;1324247848D::7",curVal.DmgIntnsty,gg.TYPE_FLOAT,9)
 			if gg.getResultCount() == 0 then
 				memOzt.NoBlastDamage,revert.NoBlastDamage = nil,nil
 				toast("Can't find the specific set of number. if you changed the blast intensity value and reopened the script, restore the actual current number using 'Change current damage value' menu")
@@ -799,11 +810,16 @@ function cheat_floodspawn()
 	CH = gg.choice({
 		"Activate",
 		"Clear memory buffer",
+		"Clear buffer and Activate",
 		"Back"
-	},nil,"Flood Respawn\nDISCLAIMMER:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!!\n- THIS CHEAT IS TECHINCALLY POWERFUL, BECAUSE IT WILL DROP SERVER TPS AND LAG PLAYERS. ONLY USE IT OFFLINE!!!\nPS:\n- Use it in offline first because other entity respawn will interrupt the process")
+	},nil,"Flood Respawn\nDISCLAIMMER:\n- DO NOT USE THIS TO ABUSE OTHER PLAYER!!!\n- THIS CHEAT IS TECHINCALLY POWERFUL, BECAUSE IT DROPS SERVER TPS AND LAG PLAYERS. ONLY USE IT OFFLINE!!")
 	if CH then
-		if CH == 3 then MENU()
-		elseif CH == 1 then
+		if CH == 4 then MENU() end
+		if CH == 2 or CH == 3 then
+			memOzt.respawnCheat = nil
+			cheat_floodspawn()
+		end
+		if CH == 1 or CH == 3 then
 			gg.setRanges(gg.REGION_OTHER)
 			t = handleMemOzt("respawnCheat",52428800,nil,gg.TYPE_DWORD,10,cfg.memZones.Common_RegionOtherB)
 			if gg.getResultCount() == 0 then
@@ -814,7 +830,7 @@ function cheat_floodspawn()
 					toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 				else
 					local respawnDur = gg.prompt({"Put the respawn duration (in seconds), set to 0 to disable duration [0;20]"},{1},{"number"})
-					if (respawnDur and respawnDur[1]) then
+					if respawnDur and respawnDur[1] then
 						t[1].value = 52428801
 						t[1].freeze = true
 						t[1].name = "Pb2Chts [RespawnHack]"
@@ -833,9 +849,6 @@ function cheat_floodspawn()
 					end
 				end
 			end
-		elseif CH == 2 then
-			memOzt.respawnCheat = nil
-			cheat_floodspawn()
 		end
 	end
 end
@@ -891,7 +904,7 @@ function cheat_togglevoidmode()
 			gg.setRanges(gg.REGION_ANONYMOUS + gg.REGION_OTHER)
 			toast('Set the Mode to Knockout, and set the Opponents to 9 (if available)\n5 seconds before starting the search',false)
 			sleep(5e3)
-			gg.searchNumber("0W;38654705671Q::3",nil,nil,nil,cfg.memZones.Common_RegionOtherB[1],cfg.memZones.Common_RegionOtherB[2])
+			gg.searchNumber("0W;38654705671Q::3",nil,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
 			gg.refineNumber(38654705671,gg.TYPE_QWORD)
 			gg.getResults(8)
 			if gg.getResultCount() == 0 then
@@ -930,16 +943,16 @@ function cheat_changeplayername()
 --request user to give player name
 	local player_name = gg.prompt({
 		'Put your current player name (case-sensitive, ":" or ";" is required at the beginning, because how GameGuardian search works)',
-		'Put new player name (cannot be longer than current name, you can change color/add icon by converting to hex and use hex 1-9 for color)'
+		'Put new player name (cant be longer than current name, you can change color/add icon by copy-pasting custom name edited using hex-editor (use hex 1-9 for color))'
 	},{
 		curVal.PlayerCurrentName,
 		cfg.PlayerCustomName
 	},{
-		"number",
-		"number"
+		"text",
+		"text"
 	})
 --search old player name
-	if (player_name and player_name[1] and player_name[1] ~= ":") then
+	if player_name and player_name[1] and player_name[1] ~= ":" then
 		gg.searchNumber(player_name[1],gg.TYPE_BYTE)
 		revert.PlayerName = gg.getResults(5e3)
 		if gg.getResultCount() == 0 then
@@ -991,7 +1004,7 @@ function cheat_changeplayernamecolor()
 				if player_color_choice == 0 then
 					for i=1,#t do
 					--if within the custom color/icon range
-						if (t[i].value >= 0 and t[i].value < 11) then
+						if t[i].value >= 0 and t[i].value < 11 then
 						--remove it
 							t[i] = nil
 							removeOffset = removeOffset + 1
@@ -1183,7 +1196,7 @@ function cheat_reflectiongraphics()
 	end
 	t = nil
 end
-function cheat_explodepower()
+function cheat_explodepow()
 	local CH = gg.choice({
 		"Modify Explosion power",
 		"---",
@@ -1191,38 +1204,91 @@ function cheat_explodepower()
 		"Restore previous value",
 		"Clear memory buffer",
 		f"__back__"
-	},nil,"Explosion power modifier\nCurrent: "..curVal.XplodePowr.."\n")
+	},nil,"Explosion power modifier\nCurrent: "..curVal.XplodPow.."\n")
 	if CH then
-		if CH == 5 then MENU()
+		if CH == 6 then MENU()
 		elseif CH == 1 then
-			local CH = gg.prompt({'Put your explosion power. Lower is more powerful\nSet to -1 to disable explosion\n PS:only applies to you'},{curVal.XplodePowr},{'number'})
-			if (CH and CH[1]) then
+			local CH = gg.prompt({'Put your explosion power. Lower is more powerful\nSet to -1 to disable explosion\n PS:only applies to you'},{curVal.XplodPow},{'number'})
+			if CH and CH[1] then
 				EXPLOSION_POWER = CH[1]
 			else
-				cheat_explodepower()
+				cheat_explodepow()
 			end
 		---
 		elseif CH == 3 then
 			local CH = gg.prompt({'If you think the current explosion power is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current explosion power'},{[1] = curVal.PstlSgKnckbck},{[1] = 'number'})
-			if (CH and CH[1]) then curVal.XplodePowr = CH[1] end
-			cheat_explodepower()
+			if CH and CH[1] then curVal.XplodPow = CH[1] end
+			cheat_explodepow()
 		elseif CH == 4 then
-			revert.ExplodePower = nil
-			cheat_explodepower()
+			revert.EXplodPower = nil
+			cheat_explodepow()
 		elseif CH == 5 then
-			memOzt.ExplodePower = nil
-			cheat_explodepower()
+			memOzt.EXplodPower = nil
+			cheat_explodepow()
 		end
 		if EXPLOSION_POWER then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("ExplodePower","15120W;"..curVal.XplodePowr.."F::3",curVal.XplodePowr,gg.TYPE_FLOAT,1)
+			handleMemOzt("explodePower","15120W;"..curVal.XplodPow.."F::3",curVal.XplodPow,gg.TYPE_FLOAT,1)
 			if gg.getResultCount() == 0 then
-				memOzt.ExplodePower,revert.ExplodePower = nil,nil
+				memOzt.EXplodPower,revert.EXplodPower = nil,nil
 				toast("Can't find the specific set of number. if you changed the explosion power and reopened the script, restore current number using 'Change current explosion power' menu")
 			else
-				memOzt.ExplodePower[1].value,curVal.XplodePowr,EXPLOSION_POWER = EXPLOSION_POWER,EXPLOSION_POWER,nil
-				toast("Explosion power modified to "..curVal.XplodePowr)
-				gg.setValues(memOzt.ExplodePower)
+				memOzt.EXplodPower[1].value,curVal.XplodPow,EXPLOSION_POWER = EXPLOSION_POWER,EXPLOSION_POWER,nil
+				toast("Explosion power modified to "..curVal.XplodPow)
+				gg.setValues(memOzt.EXplodPower)
+			end
+		end
+	end
+end
+function cheat_explodedir()
+	local CH = gg.choice({
+		"Default (50000)",
+		"OFF (0)",
+		"Attractive/magnet (-50000)",
+		"Custom",
+		"---",
+		"Change current value",
+		"Restore previous value",
+		"Clear memory buffer",
+		f"__back__"
+	},nil,"No blast damage")
+	if CH then
+		if CH == 8 then MENU()
+		elseif CH == 1 then XPLODIR_VAL = 5e4
+		elseif CH == 2 then XPLODIR_VAL = 0
+		elseif CH == 3 then XPLODIR_VAL = -5e4
+		elseif CH == 4 then
+			local CH = gg.prompt({'Input your custom damage intensity'})
+			if CH and CH[1] then
+				XPLODIR_VAL = CH[1]
+			else
+				cheat_explodedir()
+			end
+		---
+		elseif CH == 6 then
+			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{[1] = curVal.DmgIntnsty},{[1] = 'number'})
+			if CH and CH[1] then curVal.XplodDir = CH[1] end
+			cheat_explodedir()
+		elseif CH == 7 then
+			CH,revert.explodeDir = nil,nil
+			cheat_explodedir()
+		elseif CH == 8 then
+			CH,memOzt.explodeDir = nil,nil
+			cheat_explodedir()
+		end
+		if XPLODIR_VAL then
+			gg.setRanges(gg.REGION_CODE_APP)
+			handleMemOzt("explodeDir","1259902592D;"..curVal.XplodDir.."F::5",curVal.XplodDir,gg.TYPE_FLOAT,9)
+			if gg.getResultCount() == 0 then
+				memOzt.explodeDir,revert.explodeDir = nil,nil
+				toast("Can't find the specific set of number. if you changed the value and reopened the script, restore the actual current number using 'Change current value' menu")
+			else
+				for i=1,#memOzt.explodeDir do
+					memOzt.explodeDir[i].value = XPLODIR_VAL
+				end
+				curVal.XplodDir,XPLODIR_VAL = XPLODIR_VAL,nil
+				toast("Explosion direction is set to "..(curVal.XplodDir > 0 and "default" or curVal.XplodDir < 0 and "magnet" or curVal.XplodDir == 0 and "none"))
+				gg.setValues(memOzt.explodeDir)
 			end
 		end
 	end
@@ -1248,7 +1314,7 @@ function cheat_prtclintrvl()
 		elseif CH == 4 then PARTICLE_INT = 2000
 		elseif CH == 5 then
 			local CH = gg.prompt({'Input your custom interval value (in miliseconds)'})
-			if (CH and CH[1]) then
+			if CH and CH[1] then
 				PARTICLE_INT = CH[1]
 			else
 				cheat_prtclintrvl()
@@ -1256,7 +1322,7 @@ function cheat_prtclintrvl()
 		---
 		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current interval value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current interval'},{[1] = curVal.PrtclAnmtnIntrvl},{[1] = 'number'})
-			if (CH and CH[1]) then curVal.PrtclAnmtnIntrvl = CH[1] end
+			if CH and CH[1] then curVal.PrtclAnmtnIntrvl = CH[1] end
 			cheat_prtclintrvl()
 		elseif CH == 8 then revert.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
 		elseif CH == 9 then memOzt.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
@@ -1315,13 +1381,36 @@ function table.merge(...)
 	end
 	return r
 end
+function table.mergeContents(valuesTable,modifierTable)
+	--[[
+		Same as table.merge but optimized for GameGuardian values
+		this is used to "replace" (kindof) gg.editAll()
+		how to use:table.mergeContents({ -- gg result, comes from searching whatever number using gg.searchNumber()
+			{address:1,value:0,type:gg.TYPE_BYTE},
+			{address:2,value:2,type:gg.TYPE_QWORD},
+			{address:3,value:5,type:gg.TYPE_WORD},
+		},{value:1,type:gg.TYPE_DWORD,freeze:true})
+		{ {address:1,value:1,type:gg.TYPE_DWORD,freeze:true},
+			{address:2,value:1,type:gg.TYPE_DWORD,freeze:true},
+		} {address:3,value:1,type:gg.TYPE_DWORD,freeze:true},
+	]]
+--for each result
+	for i=1,#valuesTable do
+	--for each contents in modifier table...
+		for k,v in pairs(modifierTable) do
+		--change valuesTable contents to new modifierTable contents
+			valuesTable[i][k] = modifierTable[k]
+		end
+	end
+	return valuesTable
+end
 function table.append(t1,t2)
 	--[[
 		Creates new table then
 		add table 1 and table 2
 	]]
 	for _,v in ipairs(t2) do
-		table.insert(t1,v)
+		t1[#t1+1]=v
 	end
 	return t1
 end
@@ -1376,7 +1465,7 @@ end
 function loopSearch(desiredResultCount,valueType,msg1,restrictedMemArea)
 	local num1,t = gg.prompt({msg1})
 	restrictedMemArea = restrictedMemArea or {}
-	if (num1 and num1[1]) then
+	if num1 and num1[1] then
 	--Search within restricted memory address, which can be faster
 		gg.searchNumber(num1[1],valueType,nil,nil,restrictedMemArea[1],restrictedMemArea[2])
 		if gg.getResultCount() > 0 then
@@ -1417,7 +1506,7 @@ function findEntityAnchr()
 	if cfg.cheatSettings.findEntityAnchr.searchMethod == "holdWeapon" then
 		toast("Hold your pistol")
 		sleep(2e3)
-		gg.searchNumber(13,gg.TYPE_WORD,nil,nil,cfg.memZones.HldWpn[1],cfg.memZones.HldWpn[2])
+		gg.searchNumber(13,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.HldWpn))
 		t = gg.getResults(200)
 		while gg.getResultCount() > 1 do
 			toast("Hold your knife")
@@ -1461,7 +1550,7 @@ function findEntityAnchr()
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	elseif cfg.cheatSettings.findEntityAnchr.searchMethod == "mangyuFloatAnchor" then
 		toast("Hold your pistol but dont shoot, and keep your health at maximum.")
-		gg.searchNumber("1.68155816e-43;2.80259693e-44;1.12103877e-42;1.821688e-44::45",gg.TYPE_FLOAT,nil,nil,cfg.memZones.Common_RegionOtherB[1],cfg.memZones.Common_RegionOtherB[2])
+		gg.searchNumber("1.68155816e-43;2.80259693e-44;1.12103877e-42;1.821688e-44::45",gg.TYPE_FLOAT,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
 		gg.refineNumber(2.80259693e-44)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	else
@@ -1524,7 +1613,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.5b",
+		VERSION="2.1.6",
 		clearAllList=false
 	}
 	local cfg_load = loadfile(cfg_file)
@@ -1572,7 +1661,8 @@ curVal={
 	DmgIntnsty=300,
 	WallResist={-500,-1e-5,-1},
 	BigBody={3,5.9},
-	XplodePowr=1e7,
+	XplodPow=1e7,
+	XplodDir=5e4,
 	PrtclAnmtnIntrvl=120
 }
 memOffset={
@@ -1587,7 +1677,7 @@ do if not cfg.clearAllList then
 	gg.clearList = function()
 		tmp[1] = gg.getListItems()
 		for i=1,#tmp[1] do
-			if (tmp[1][i].name and tmp[1][i].name:find"Pb2Chts") then
+			if tmp[1][i].name and tmp[1][i].name:find"Pb2Chts" then
 				tmp[1][i] = nil
 			end
 		end
@@ -1642,14 +1732,7 @@ while true do
 	if gg.isVisible() then
 		gg.setVisible(false)
 		MENU()
-		CH = nil
 		gg.clearResults()
-		if type(tmp) == "table" then
-			for k in pairs(tmp)do tmp[k]=nil end
-		else
-			tmp={}
-		end
-	--Now collectgarbage can have an easy time to clear all that crap
 		collectgarbage()
 	end
 	sleep(100)
