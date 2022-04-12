@@ -84,7 +84,7 @@ function MENU_other()
 		f"__back__"
 	},nil,"Other cheats\nmost of these cheats might be experiment, or uncategorized or whatnot...")
 	if CH == 1 then cheat_weaponammo()
-	elseif CH == 2 then cheat_togglevoidmode()
+	elseif CH == 2 then cheat_voidmatchmode()
 	elseif CH == 3 then cheat_destroycar()
 	elseif CH == 4 then MENU() end
 end
@@ -219,7 +219,7 @@ function MENU_godmode()
 		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 		local anchorAddress = findEntityAnchr()
 		if not anchorAddress then
-			toast('Can\'t find the weapon you\'re holding, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			toast('Can\'t find the value, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
 			t = {}
 			tmp.nca = anchorAddress
@@ -273,8 +273,7 @@ function MENU_godmode()
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=800,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=true,value=9,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
-			end
-			if CH[7] then t = table.append(t,{
+			elseif CH[7] then t = table.append(t,{
 				{address=tmp.nca+0x08,flags=gg.TYPE_WORD,freeze=true,value=3e4,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_WORD,freeze=true,value=1,name="Pb2Chts [RespawnInterval] (Immortal Self-explode)"}
 			})
@@ -433,7 +432,7 @@ function MENU_godmode()
 			gg.setValues(t)
 			gg.addListItems(t)
 			gg.clearResults()
-			toast('Selected operations done\nWARN: Don\'t Drive/getoutof car, respawn, or get out of match')
+			toast('Selected operations done')
 		end
 	end
 end
@@ -857,7 +856,7 @@ function cheat_destroycar()
 		"ON",
 		"OFF",
 		f"__back__"
-	},nil,"Destroy cars")
+	},nil,"Destroy cars\nPS: this only works on old version (and maybe vmos)")
 	if CH then
 		gg.setRanges(gg.REGION_JAVA_HEAP + gg.REGION_C_BSS + gg.REGION_C_ALLOC)
 		if CH == 3 then MENU()
@@ -866,7 +865,7 @@ function cheat_destroycar()
 			gg.refineNumber(1)
 			gg.getResults(50)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number.")
 			else
 				gg.editAll(-500,gg.TYPE_FLOAT)
 				toast("Destroy all cars ON")
@@ -876,7 +875,7 @@ function cheat_destroycar()
 			gg.refineNumber(-500)
 			gg.getResults(50)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast("Can't find the specific set of number.")
 			else
 				gg.editAll(1,gg.TYPE_FLOAT)
 				toast("Destroy all cars OFF")
@@ -884,10 +883,10 @@ function cheat_destroycar()
 		end
 	end
 end
-function cheat_togglevoidmode()
+function cheat_voidmatchmode()
 	local CH = gg.choice({
 		"Default (not work for now due to memory address issue)",
-		"Joker method (Quirky)",
+		"Joker method (quirky)",
 		f"__back__"
 	},nil,"Void mode, select method")
 	if CH then
@@ -1220,22 +1219,22 @@ function cheat_explodepow()
 			if CH and CH[1] then curVal.XplodPow = CH[1] end
 			cheat_explodepow()
 		elseif CH == 4 then
-			revert.EXplodPower = nil
+			revert.explodePower = nil
 			cheat_explodepow()
 		elseif CH == 5 then
-			memOzt.EXplodPower = nil
+			memOzt.explodePower = nil
 			cheat_explodepow()
 		end
 		if EXPLOSION_POWER then
 			gg.setRanges(gg.REGION_CODE_APP)
 			handleMemOzt("explodePower","15120W;"..curVal.XplodPow.."F::3",curVal.XplodPow,gg.TYPE_FLOAT,1)
 			if gg.getResultCount() == 0 then
-				memOzt.EXplodPower,revert.EXplodPower = nil,nil
+				memOzt.explodePower,revert.explodePower = nil,nil
 				toast("Can't find the specific set of number. if you changed the explosion power and reopened the script, restore current number using 'Change current explosion power' menu")
 			else
-				memOzt.EXplodPower[1].value,curVal.XplodPow,EXPLOSION_POWER = EXPLOSION_POWER,EXPLOSION_POWER,nil
+				memOzt.explodePower[1].value,curVal.XplodPow,EXPLOSION_POWER = EXPLOSION_POWER,EXPLOSION_POWER,nil
 				toast("Explosion power modified to "..curVal.XplodPow)
-				gg.setValues(memOzt.EXplodPower)
+				gg.setValues(memOzt.explodePower)
 			end
 		end
 	end
@@ -1613,7 +1612,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.6",
+		VERSION="2.1.7rc2",
 		clearAllList=false
 	}
 	local cfg_load = loadfile(cfg_file)
