@@ -3,7 +3,7 @@
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/3e9fe551-422b-4985-b006-25d04a36b7e4)
 Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "fork" of Mangyu's cheat script but better, less-bloated, and easier to read.
 
-# Features
+## Features
 - `🔫 No Reload`.
 - `🛡️ Immortality`.
 - `🏊‍♀️️ No drowned` (RARE).
@@ -29,22 +29,20 @@ This cheat is Open-source on GitHub (unlike any other cheats some cheater bastar
 
 [`Report issues here`](https://github.com/ABJ4403/Payback2_CHEATus)
 
-License: [GPLv3](https://gnu.org/licenses)
-
 Tested on:
 - Payback2 v2.104.12.4
 - GameGuardian v101.0
 
 This cheat is part of FOSS (Free and Open-Source Software)
 
-# Usage, Downloading the script, etc
+## Usage, Downloading the script, etc
 See [How to use Payback2_CHEATus wiki for that](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-use-Payback2_CHEATus)
 
 IMPORTANT: there are rules that you MUST follow if you want to share the script: [RulesForSharingThisScript](https://github.com/ABJ4403/Payback2_CHEATus/wiki/Rules-for-sharing-this-script)
 
 Violating the rules means you're also Violating GPLv3 License (especially if its related to sharing encrypted/compiled/obfuscated/unreadable version of Payback2_CHEATus over [MediaFire](https://mediafire.com) or something related).
 
-# Credit
+## Credit
 - Mangyu - Original script author.
 - mdp43140 - Main Contributor.
 - MisterCuteX - Mega Explosion, Respawn Hack.
@@ -54,3 +52,12 @@ Violating the rules means you're also Violating GPLv3 License (especially if its
 - AGH (Banned from YT, now it's Blue Devil) - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)
 - GKTV (Pumpkin Hacker) - Payback2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp).
 - JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values.
+
+## License
+[![GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
+
+Payback2_CHEATus is Free Software: You can use, study, share, and improve it at
+will. Specifically you can redistribute and/or modify it under the terms of the
+[GNU General Public License](https://www.gnu.org/licenses/gpl.html) as
+published by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.  

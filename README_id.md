@@ -3,7 +3,7 @@
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/3e9fe551-422b-4985-b006-25d04a36b7e4)
 Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang dimana ini adalah "fork" dari skrip cheat Mangyu tapi lebih bagus, sedikit-bloated, dan mudah untuk dibaca.
 
-# Fitur
+## Fitur
 - `🔫 No Reload` (Tidak ada jeda isi ulang).
 - `🛡️ Immortalitas`.
 - `🏊‍♀️️ Anti-tenggelam` (LANGKA).
@@ -29,22 +29,20 @@ Cheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampi
 
 [`Laporkan isu disini`](https://github.com/ABJ4403/Payback2_CHEATus)
 
-Lisensi: [GPLv3](https://gnu.org/licenses)
-
 Diuji di:
 - Payback2 v2.104.12.4
 - GameGuardian v101.0
 
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
 
-# Pengunaan, Mengunduh skrip, dll
+## Pengunaan, Mengunduh skrip, dll
 Lihat [Wiki Cara Menggunakan Payback2_CHEATus untuk itu](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-use-Payback2_CHEATus)
 
 PENTING: Ada aturan yang HARUS diikuti jika ingin membagikan skrip: [AturanUntukMembagikanSkripIni](https://github.com/ABJ4403/Payback2_CHEATus/wiki/Rules-for-sharing-this-script)
 
 Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkait dengan berbagi skrip Payback2_CHEATus yang di enkripsi/kompilasi/obfuscate/tidak bisa dibaca via [MediaFire](https://mediafire.com) atau sesuatu yang terkait).
 
-# Kredit
+## Kredit
 - Mangyu - Pembuat skrip original.
 - mdp43140 - Kontributor Utama.
 - MisterCuteX - Mega Explosion, Respawn Hack.
@@ -54,3 +52,12 @@ Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkai
 - AGH (Banned dari YT, sekarang Blue Devil) - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk enkripsi yang sangggggat giilaaa).
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2 (wall hack,big body,colored tree,big flamethower item,shadow,esp).
 - JokerGGS - Untuk menyediakan Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG.
+
+## Lisensi
+[![Gambar GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
+Payback2_CHEATus adalah Perangkat Lunak Gratis: Anda dapat menggunakan, mempelajari, berbagi, dan meningkatkannya.
+Secara khusus Anda dapat mendistribusikan ulang dan/atau memodifikasinya di bawah ketentuan
+[Lisensi Publik Umum GNU](https://www.gnu.org/licenses/gpl.html) sebagai
+diterbitkan oleh Free Software Foundation, baik versi 3 dari Lisensi, atau
+(sesuai pilihan Anda) versi yang lebih baru.
