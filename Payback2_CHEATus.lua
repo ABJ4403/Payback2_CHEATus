@@ -1519,7 +1519,7 @@ function findEntityAnchr()
 	gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 	if cfg.cheatSettings.findEntityAnchr.searchMethod == "holdWeapon" then
 		toast("Hold your pistol")
-		sleep(2e3)
+		sleep(1e3)
 		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.HldWpn))
 		t = gg.getResults(200)
 		while gg.getResultCount() > 1 do
@@ -1561,16 +1561,17 @@ function findEntityAnchr()
 		gg.searchNumber(20,gg.TYPE_WORD,nil,nil,t.address - 0x2A,t.address)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	elseif cfg.cheatSettings.findEntityAnchr.searchMethod == "mangyuFloatAnchor" then
-		toast("Please wait for ~5seconds... Don't shoot, Keep your health at maximum, Hold pistol.")
-	--this ginormous thing below is basically... just searching this in optimized way: "1.68155816e-43F;2.80259693e-44F;1.12103877e-42F;1.821688e-44F::45"
-		gg.searchNumber(1.68155816e-43,gg.TYPE_FLOAT,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB)) tmp[1] = gg.getResults(5000) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address + 0x1C) end gg.loadResults(tmp[1]) -- 1/4
-		gg.refineNumber(1.12103877e-42) tmp[1] = gg.getResults(5000) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address + 0x10) end gg.loadResults(tmp[1]) -- 2/4
-		gg.refineNumber(1.821688e-44) tmp[1] = gg.getResults(5000) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address - 0x18) end gg.loadResults(tmp[1]) -- 3/4
-		gg.refineNumber(2.80259693e-44) -- 4/4
+		toast("Please wait for ~3 seconds... Don't shoot, Keep your health at max, Hold pistol.")
+	--this ginormous packs of "battery" below is basically... just searching this in optimized way: "120Q;2.80259693e-44F;1~800D;512~513W::45(?ehh,definitely more than 45 though...)"
+		gg.searchNumber(120,gg.TYPE_QWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB)) -- 1/5
+		tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address + 0x1C) tmp[1][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[1]) gg.refineNumber("1~800")        -- 2/5 (Health 1-800)
+		tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address + 0x10) tmp[1][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[1]) gg.refineNumber(13)             -- 3/5 (HoldWeapon 13)
+		tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address + 0xC2) tmp[1][i].flags = gg.TYPE_WORD  end gg.loadResults(tmp[1]) gg.refineNumber("512~513")      -- 4/5 (ControlCode 51{2/3})
+		tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address - 0xDA) tmp[1][i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp[1]) gg.refineNumber(2.80259693e-44) -- 5/5 (Anchor 20)
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	else
 		toast("An error occured (InvalidConf): Exit out of script and see print log for more details.")
-		print("[Error.InvalidConf]: Configuration value for \"cfg.cheatSettings.findEntityAnchr.searchMethod\" ("..cfg.cheatSettings.findEntityAnchr.searchMethod..") is invalid.\n         Possible values: wordWeaponAmmo, holdWeapon, mangyuFloatAnchor\n         Your Configuration:\n"..cfg)
+		print("[Error.InvalidConf]: Configuration value for \"cfg.cheatSettings.findEntityAnchr.searchMethod\" ("..cfg.cheatSettings.findEntityAnchr.searchMethod..") is invalid.\n         Possible values: wordWeaponAmmo, holdWeapon, mangyuFloatAnchor\n         Your Configuration:\n",cfg)
 	end
 end
 function exit()
@@ -1628,7 +1629,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.8",
+		VERSION="2.1.8b",
 		clearAllList=false
 	}
 	local cfg_load = loadfile(cfg_file)
