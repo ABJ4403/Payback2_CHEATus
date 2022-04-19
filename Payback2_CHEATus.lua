@@ -429,9 +429,9 @@ function MENU_godmode()
 					toast("Still in building phase, click GG to stop. while the rainbow animation playing, you cannot access GG until its stopped\nand this will not apply other cheats you select, make sure you activate cheat choice of yours before activating this")
 					tmp.rnbwCurClr = 257
 					tmp.rainbowCar = {{address=tmp.nca+0x94,flags=gg.TYPE_WORD,freeze=false,name="Pb2Chts [Vehicle color]"}}
-    			gg.setValues(t)
-    			gg.addListItems(t)
-    			gg.clearResults()
+					gg.setValues(t)
+					gg.addListItems(t)
+					gg.clearResults()
 					gg.setVisible(false)
 					while not gg.isVisible() do
 						if tmp.rnbwCurClr > 264 then tmp.rnbwCurClr = 256 end
@@ -520,15 +520,12 @@ function cheat_pistolknockback()
 		if PISTOL_KNOCKBACK_VALUE then
 		-- + gg.REGION_ANONYMOUS
 			gg.setRanges(gg.REGION_C_ALLOC)
-			if not memOzt[memOztName] then
-				gg.searchNumber(curVal.PstlSgKnckbck,gg.TYPE_FLOAT)
-				tmp[1] = gg.getResults(gg.getResultCount())
-				gg.clearResults()
+			if not memOzt.PistolKnockback then
 				gg.searchNumber(1067869798,gg.TYPE_DWORD)
-				tmp[2] = gg.getResults(gg.getResultCount())
-				gg.loadResults(table.append(tmp[1],tmp[2]))
+				tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address - 0xC) tmp[1][i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp[1]) gg.refineNumber(curVal.PstlSgKnckbck)
 			end
-			handleMemOzt("PistolKnockback",curVal.PstlSgKnckbck.."F;1067869798D::13",curVal.PstlSgKnckbck,gg.TYPE_FLOAT,1)
+		--specially crafted for above conditions
+			handleMemOzt("PistolKnockback",curVal.PstlSgKnckbck,nil,gg.TYPE_FLOAT,2)
 			if gg.getResultCount() == 0 then
 				memOzt.PistolKnockback,revert.PistolKnockback = nil,nil
 				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
@@ -714,7 +711,7 @@ function cheat_bigbody()
 end
 function cheat_strongveichle()
 	local CH = gg.choice({
-		"ON (85000)",
+		"ON (30000)",
 		"OFF (125)",
 		"Destroy (-1)",
 		"Custom",
@@ -726,7 +723,7 @@ function cheat_strongveichle()
 	},nil,"Veichle default health modifier")
 	if CH then
 		if CH == 9 then MENU()
-		elseif CH == 1 then CAR_HEALTH_VALUE = 85e3
+		elseif CH == 1 then CAR_HEALTH_VALUE = 3e4
 		elseif CH == 2 then CAR_HEALTH_VALUE = 125
 		elseif CH == 3 then CAR_HEALTH_VALUE = -1
 		elseif CH == 4 then
@@ -756,11 +753,12 @@ function cheat_strongveichle()
 				toast("Can't find the specific set of number. if you changed the veichle health value, and reopened the script, restore the actual current number using 'Change current health variable' menu")
 			else
 				for i=1,#memOzt.CarHealth do
+					memOzt.CarHealth[i].flags = gg.TYPE_WORD
 					memOzt.CarHealth[i].value = CAR_HEALTH_VALUE
 				end
 				curVal.CrDfltHlth,CAR_HEALTH_VALUE = CAR_HEALTH_VALUE,nil
-				toast("Veichles default health "..curVal.CrDfltHlth)
 				gg.setValues(memOzt.CarHealth)
+				toast("Veichles default health "..curVal.CrDfltHlth)
 			end
 		end
 	end
@@ -769,8 +767,7 @@ function cheat_noblastdamage()
 	local CH = gg.choice({
 		"ON (0)",
 		"Default (300)",
-		"Feather death (3e3, dead with almost any explosed explosion)",
-		"Custom",
+		"Feather death (3.000.000, dead with almost any explosed explosion)",
 		"---",
 		"Change current damage value",
 		"Restore previous value",
@@ -778,32 +775,25 @@ function cheat_noblastdamage()
 		f"__back__"
 	},nil,"No blast damage")
 	if CH then
-		if CH == 9 then MENU()
+		if CH == 8 then MENU()
 		elseif CH == 1 then DAMAGE_INTENSITY_VALUE = 0
 		elseif CH == 2 then DAMAGE_INTENSITY_VALUE = 300
-		elseif CH == 3 then DAMAGE_INTENSITY_VALUE = 3e3
-		elseif CH == 4 then
-			local CH = gg.prompt({'Input your custom damage intensity'})
-			if CH and CH[1] then
-				DAMAGE_INTENSITY_VALUE = CH[1]
-			else
-				cheat_noblastdamage()
-			end
+		elseif CH == 3 then DAMAGE_INTENSITY_VALUE = 3e6
 		---
-		elseif CH == 6 then
+		elseif CH == 5 then
 			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{curVal.DmgIntnsty},{'number'})
 			if CH and CH[1] then curVal.DmgIntnsty = CH[1] end
 			cheat_noblastdamage()
-		elseif CH == 7 then
+		elseif CH == 6 then
 			CH,revert.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
-		elseif CH == 8 then
+		elseif CH == 7 then
 			CH,memOzt.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
 		end
 		if DAMAGE_INTENSITY_VALUE then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("NoBlastDamage","-5632W;"..curVal.DmgIntnsty.."F;1324247848D::7",curVal.DmgIntnsty,gg.TYPE_FLOAT,9)
+			handleMemOzt("NoBlastDamage",curVal.DmgIntnsty..";2e9::5",curVal.DmgIntnsty,gg.TYPE_FLOAT,9)
 			if gg.getResultCount() == 0 then
 				memOzt.NoBlastDamage,revert.NoBlastDamage = nil,nil
 				toast("Can't find the specific set of number. if you changed the blast intensity value and reopened the script, restore the actual current number using 'Change current damage value' menu")
@@ -1150,11 +1140,17 @@ function cheat_reflectiongraphics()
 		f"__back__"
 	},nil,"Reflection graphics\nWARNING: this can cause rendering issue that requires restart to fix it\nDont forget to disable this before you get in/out-of match\ni only recommend using this in offline mode so you can easily disable the reflection graphics before getting out of match")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={49,1,"ON"}
-	elseif CH == 2 then tmp={1,49,"OFF"} end
+	elseif CH == 1 then tmp={49,1,"ON",true} -- << `,true` is trick from lua.org to make lua better prepare a memory slot area whatevr... (will be used for temporary result save below :)
+	elseif CH == 2 then tmp={1,49,"OFF",true} end
 	if CH and tmp[3] then
 		gg.setRanges(gg.REGION_OTHER)
-		handleMemOzt("RfTgraphics","144;"..tmp[1]..";50::9",tmp[1],gg.TYPE_DWORD,1)
+		if not memOzt.RfTgraphics then
+			gg.searchNumber(144,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
+			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address + 0x8) tmp[4][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[4]) gg.refineNumber(50)
+			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address - 0x4) tmp[4][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[4]) gg.refineNumber(tmp[1])
+		end
+	--specially crafted for above conditions
+		handleMemOzt("RfTgraphics",tmp[1],nil,gg.TYPE_DWORD,1)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
@@ -1562,12 +1558,15 @@ function findEntityAnchr()
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	elseif cfg.cheatSettings.findEntityAnchr.searchMethod == "mangyuFloatAnchor" then
 		toast("Please wait for ~3 seconds... Don't shoot, Keep your health at max, Hold pistol.")
-	--this ginormous packs of "battery" below is basically... just searching this in optimized way: "120Q;2.80259693e-44F;1~800D;512~513W::45(?ehh,definitely more than 45 though...)"
-		gg.searchNumber(120,gg.TYPE_QWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB)) -- 1/5
-		tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address + 0x1C) tmp[1][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[1]) gg.refineNumber("1~800")        -- 2/5 (Health 1-800)
-		tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address + 0x10) tmp[1][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[1]) gg.refineNumber(13)             -- 3/5 (HoldWeapon 13)
-		tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address + 0xC2) tmp[1][i].flags = gg.TYPE_WORD  end gg.loadResults(tmp[1]) gg.refineNumber("512~513")      -- 4/5 (ControlCode 51{2/3})
-		tmp[1]=gg.getResults(5e3) for i=1,#tmp[1] do tmp[1][i].address = (tmp[1][i].address - 0xDA) tmp[1][i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp[1]) gg.refineNumber(2.80259693e-44) -- 5/5 (Anchor 20)
+		local tmp=nil
+	--this ginormous packs of "battery" below is basically... just searching this in accurately optimized way: "120Q;2.80259693e-44F;1~30000D;13D;512~513W::45(?ehh,definitely more than 45 though...)"
+	--and with this optimization too, we can get more accurate result faster.
+		gg.searchNumber(1.68155816e-43,gg.TYPE_FLOAT,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB)) -- 1/5
+		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x1C) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber("-501~30000")   -- 2/5 (Health 1-800+30000(because car health cheat))
+		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x10) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(13)             -- 3/5 (HoldWeapon 13)
+		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xC2) tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber("512~513")      -- 4/5 (ControlCode 51{2/3})
+		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xDA) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(2.80259693e-44) -- 5/5 (Anchor 20)
+		tmp=nil
 		if gg.getResultCount() > 0 then return gg.getResults(1)[1].address end
 	else
 		toast("An error occured (InvalidConf): Exit out of script and see print log for more details.")
@@ -1629,7 +1628,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.8b",
+		VERSION="2.1.8c",
 		clearAllList=false
 	}
 	local cfg_load = loadfile(cfg_file)
