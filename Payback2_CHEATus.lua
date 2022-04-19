@@ -452,7 +452,7 @@ function MENU_godmode()
 end
 function cheat_weaponammo()
 	gg.setRanges(gg.REGION_ANONYMOUS + gg.REGION_OTHER)
-	gg.searchNumber(1217115234,nil,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
+	gg.searchNumber(1217115234,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
 	t = gg.getResults(1)
 	if gg.getResultCount() == 0 then
 		toast("Can't find the specific set of number")
@@ -856,7 +856,7 @@ function cheat_floodspawn()
 end
 function cheat_voidmatchmode()
 	gg.setRanges(gg.REGION_ANONYMOUS + gg.REGION_OTHER)
-	gg.searchNumber(1217115234,nil,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
+	gg.searchNumber(1217115234,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
 	t = gg.getResults(1)
 	if gg.getResultCount() == 0 then
 		toast("Can't find the specific set of number, be noted that this cheat its kinda quirky so it might (not) work")
