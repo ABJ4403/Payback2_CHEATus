@@ -75,20 +75,18 @@ end
 end
 end
 function c1()
-gg.setRanges(gg.REGION_C_BSS)
-gg.searchNumber("1.09500002861",gg.TYPE_FLOAT,false,gg.SIGN_EQUAL,0,-1)
+	gg.setRanges(gg.REGION_C_BSS)
+	gg.searchNumber(1.09500002861,gg.TYPE_FLOAT)
 
-revert=gg.getResults(5000)
-local t=gg.getResults(5000)
-for i,v in ipairs(t) do
-if v.flags==gg.TYPE_FLOAT then
-v.value="3.333111555"
-v.freeze=true
-end
-end
-gg.addListItems(t)
-t=nil
-gg.toast("\n✔BIG BODY (ON)✔")
+	revert=gg.getResults(555)
+	local t=gg.getResults(555)
+	for i=1,#t do
+	t[i].value=3.333111555
+	t[i].freeze=true
+	end
+	gg.addListItems(t)
+	t=nil
+	gg.toast("\n✔BIG BODY (ON)✔")
 end
 function b4()
 local CH=gg.choice({
@@ -125,15 +123,13 @@ end
 end
 function c2()
 gg.setRanges(gg.REGION_C_BSS)
-gg.searchNumber("3.333111555",gg.TYPE_FLOAT,false,gg.SIGN_EQUAL,0,-1)
+gg.searchNumber(3.333111555,gg.TYPE_FLOAT)
 
-revert=gg.getResults(5000)
-local t=gg.getResults(5000)
-for i,v in ipairs(t) do
-if v.flags==gg.TYPE_FLOAT then
-v.value="1.09500002861"
-v.freeze=true
-end
+revert=gg.getResults(555)
+local t=gg.getResults(555)
+for i=1,#t do
+t[i].value=1.09500002861
+t[i].freeze=false
 end
 gg.addListItems(t)
 t=nil
