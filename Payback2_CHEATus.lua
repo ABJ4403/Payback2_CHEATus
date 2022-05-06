@@ -462,51 +462,66 @@ function MENU_matchmode()
 		if CH[4] then MENU()return end
 		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 		local ta = handleMemOzt('MatchOffset',1217115234,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOtherB)
-		if not ta then
+		if not ta[1] then
 			toast('Can\'t find the value, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
-			t,ta = {},ta[1].address
+		--Set 1P and 2P anchor on map seperately instead of using orignal anchor above.
+			t = {}
+			ta = ta[1].address
+			ta = {
+				ta+0xB4,
+				ta+0x1C4
+			}
+
+		--whatever cheat & offset bits & bobs begin here...
 			if CH[1] then
 				tmp.a = {
-					{a=0x10C,v=3e4},
-					{a=0x110,v=3e4},
-					{a=0x114,v=3e4},
-					{a=0x118,v=3e4},
-					{a=0x11C,v=3e4},
-					{a=0x120,v=3e4},
-					{a=0x124,v=3e4},
-					{a=0x128,v=1e3},
-					{a=0x21C,v=3e4},
-					{a=0x220,v=3e4},
-					{a=0x224,v=3e4},
-					{a=0x228,v=3e4},
-					{a=0x22C,v=3e4},
-					{a=0x230,v=3e4},
-					{a=0x234,v=3e4},
-					{a=0x238,v=1e3},
+					{a=0x58,v=3e4},
+					{a=0x5C,v=3e4},
+					{a=0x60,v=3e4},
+					{a=0x64,v=3e4},
+					{a=0x68,v=3e4},
+					{a=0x6C,v=3e4},
+					{a=0x70,v=3e4},
+					{a=0x74,v=1e3},
 				}
-				for i=1,#tmp.a do tmp.a[i].f = gg.TYPE_DWORD end
+				for i=1,#tmp.a do
+					tmp.a[i].f = gg.TYPE_DWORD
+				end
 				t = table.append(t,tmp.a)
 			end
 			if CH[2] then
 				tmp.a = {
-					{a=0xB4,v=9},
-					{a=0xD0,v=6},
-					{a=0x1C4,v=9},
-					{a=0x1E0,v=6}
+					{a=0,v=9},
+					{a=0x1C,v=6},
 				}
-				for i=1,#tmp.a do tmp.a[i].f = gg.TYPE_DWORD end
+				for i=1,#tmp.a do
+					tmp.a[i].f = gg.TYPE_DWORD
+				end
 				t = table.append(t,tmp.a)
 			end
+
+		--unpack the "minified" tables to be usable with GG API
 			for i=1,#t do
-				t[i].address = (ta + t[i].a)
+			--Apply for both 1P and 2P
+			--Make 1st offset for 1P
+				t[i].address = (ta[1] + t[i].a)
 				t[i].value = t[i].v
 				t[i].flags = t[i].f
+			--and make a 2nd copy
+				t[i+#t] = {
+					address = (ta[2] + t[i].a),
+					value = t[i].value,
+					flags = t[i].flags
+				}
+			--nil ununsed shortened hashes
 				t[i].a = nil
 				t[i].v = nil
 				t[i].f = nil
 			end
+		--clear temporary random table
 			tmp.a = nil
+		--set the value like usual
 			gg.setValues(t)
 			gg.addListItems(t)
 			gg.clearResults()
@@ -882,11 +897,13 @@ function cheat_xpmodifier()
 		if gg.getResultCount() == 0 then
 			toast('Can\'t find the specific number.')
 		else
+			t = {}
+			tmp[1] = tmp[1][1].address
 			if CH[1] ~= "-1" then
-				t = {{address=(tmp[1].address-0x804),value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}}
+				t = table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
 			end
 			if CH[2] ~= "-1" then
-				t = table.append(t,{{address=(tmp[1].address-0x608),value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
+				t = table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
 			end
 			gg.setValues(t)
 			gg.addListItems(t)
@@ -1639,7 +1656,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.1.9",
+		VERSION="2.2.0",
 		clearAllList=false,
 		enableLogging=false
 	}
