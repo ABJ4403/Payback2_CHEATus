@@ -51,7 +51,8 @@ Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkai
 - Latic AX & ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum GameGuardian melalui YT & MediaFire.
 - AGH (Banned dari YT, sekarang Blue Devil) - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk enkripsi yang sangggggat giilaaa).
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2 (wall hack,big body,colored tree,big flamethower item,shadow,esp).
-- JokerGGS - Untuk menyediakan Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG.
+- XxGabriel5HRxX - Untuk menyediakan offset Tinggi roda mobil, dan akselerasi mobil GG.
+- JokerGGS - Untuk menyediakan value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG.
 
 ## Lisensi
 [![Gambar GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)

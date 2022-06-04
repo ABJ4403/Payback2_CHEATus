@@ -51,13 +51,14 @@ Violating the rules means you're also Violating GPLv3 License (especially if its
 - Latic AX & ToxicCoder - for providing the removed script from GameGuardian forum through YT & MediaFire.
 - AGH (Banned from YT, now it's Blue Devil) - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)
 - GKTV (Pumpkin Hacker) - Payback2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp).
-- JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values.
+- XxGabriel5HRxX - for Car wheel height and acceleration GG Offsets.
+- JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values/Offsets.
 
 ## License
-[![GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
+[![GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 Payback2_CHEATus is Free Software: You can use, study, share, and improve it at
 will. Specifically you can redistribute and/or modify it under the terms of the
 [GNU General Public License](https://www.gnu.org/licenses/gpl.html) as
 published by the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.  
+(at your option) any later version.
