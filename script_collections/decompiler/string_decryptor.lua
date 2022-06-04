@@ -27,6 +27,7 @@ function Decryptor_1(input) -- uncommon decryptor, found on Hydra wall hack scri
 	return result
 end
 function Decryptor_2(i)
+--why theres random ({})[1]? because gsub actually returns 2 result, we only wanted one result
 	return ({ i:gsub('..',function(i)return string.char((tonumber(i,16) + 500) % 256)end) })[1]
 end
 function Decryptor_2b(t) -- same as dec2 but for tables (both input and output)
