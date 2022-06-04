@@ -215,7 +215,7 @@ function MENU_godmode()
 		"29. Disable veichle jet",
 		"——",
 		f"__back__"
-	},nil,"God modes\n\nWARNING:\n- DO NOT USE THIS TO HARM OTHER PLAYER!!! (eg. killing them non-stop)\n- DO NOT PvP with non-cheater!!\n- If you play 2P, only do it in isolated area")
+	},nil,"God modes\nWARN: DON'T USE THIS TO ABUSE/HARM OTHER NON-CHEATER PLAYERS IN ANY WAY!!")
 	if CH then
 		if CH[33] then MENU()return end
 		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
@@ -311,7 +311,7 @@ function MENU_godmode()
 			})
 			end
 			if CH[15] then t = table.append(t,{
-				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Dr0wned]"},
+				{address=tmp.nca-0x60E,flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [Dr0wned]"},
 			})
 			end
 			---
@@ -320,12 +320,8 @@ function MENU_godmode()
 		--First told user (you) to change the weapon to your loved weapon before the user cant do it anymore
 			toast("[Clone Player] Change your weapon to your wanted weapon before you can\'t change it anymore")
 			sleep(3e3)
-		--Then, make the game think you are dead by changing 0xXXXXXXDA to 2000 (Wasted)
-			tmp.a = {
-				{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=2e3}
-			}
-			gg.setValues(tmp.a)
-			gg.addListItems(tmp.a)
+		--Then, make the game think you are dead by changing 0xXXXXXXDA (Control state code) from 512 (Player controlled) to 2000 (Wasted)
+			gg.setValues({{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=2e3}})
 			sleep(2e3)
 		--And change it back to 512 so you can control it too :D
 			t = table.append(t,{
@@ -337,10 +333,12 @@ function MENU_godmode()
 			})
 			end
 			if CH[20] then
-			--the fastest possible value is 1, setting it below 1 will make the veichle acceleration acts very weird
+			--the fastest possible value (the twos with float type) is 1, setting it below 1 will make the wheel rotates too fast, thus making veichle acceleration acts weird
+      --while the DWORD ones is best set to 3 instead to 1, because it has better maximum speed
 				t = table.append(t,{
-					{address=tmp.nca-0x208,flags=gg.TYPE_FLOAT,freeze=true,value=1,name="Pb2Chts [Veichle Speed]"},
-					{address=tmp.nca-0x204,flags=gg.TYPE_FLOAT,freeze=true,value=1,name="Pb2Chts [Veichle Speed]"}
+					{address=tmp.nca-0x210,flags=gg.TYPE_DWORD,value=3,name="Pb2Chts [CarAccelEngType]"},
+					{address=tmp.nca-0x208,flags=gg.TYPE_FLOAT,value=1,name="Pb2Chts [Veichle Speed]"},
+					{address=tmp.nca-0x204,flags=gg.TYPE_FLOAT,value=1,name="Pb2Chts [Veichle Speed]"}
 				})
 			end
 			if CH[21] then t = table.append(t,{
@@ -461,7 +459,7 @@ function MENU_matchmode()
 	if CH then
 		if CH[4] then MENU()return end
 		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
-		local ta = handleMemOzt('MatchOffset',1217115234,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOtherB)
+		local ta = handleMemOzt('MatchOffset',1217115234,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)
 		if not ta[1] then
 			toast('Can\'t find the value, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
@@ -842,10 +840,10 @@ function cheat_floodspawn()
 		if CH == 1 or CH == 2 or CH == 4 then
 			gg.setRanges(gg.REGION_OTHER)
 			if CH == 1 then
-				t = handleMemOzt("respawnCheat",52428800,nil,gg.TYPE_DWORD,10,cfg.memZones.Common_RegionOtherB)
+				t = handleMemOzt("respawnCheat",52428800,nil,gg.TYPE_DWORD,10,cfg.memZones.Common_RegionOther)
 			else
 				gg.clearResults()
-				gg.searchNumber(52428800,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
+				gg.searchNumber(52428800,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 				t = gg.getResults(gg.getResultCount())
 			end
 			if gg.getResultCount() == 0 then
@@ -855,26 +853,43 @@ function cheat_floodspawn()
 				if gg.getResultCount() == 0 then
 					toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 				else
-					local respawnDur = gg.prompt({"Put the respawn duration (in seconds)\n0 = disable duration [0;20]"},{1},{"number"})
-					if respawnDur and respawnDur[1] then
+					local CH = gg.prompt({
+						"Put the respawn duration (in seconds)\n0:No duration\n-1:No respawn hack [-1;20]",
+					},{
+						1,
+					},{
+						"number",
+					})
+					if CH then
 						for i=1,#t do
 							t[i].value = 52428801
 							t[i].freeze = true
 							t[i].name = "Pb2Chts [RespawnHack]"
 						end
-						gg.setValues(t)
-						gg.addListItems(t)
-						respawnDur = respawnDur[1]
-						if respawnDur == "0" then
-							toast("Flood Respawn ON\nRemember to turn off again by suspending the script (press suspend button, below exit button), go to listItems, and unfreeze \"Pb2Chts [RespawnHack]\"")
-						else
-							toast("Flood Respawn ON for "..respawnDur.." seconds")
-							sleep(1e3*respawnDur)
-							for i=1,#t do
-								t[i].value = 52428800
-								t[i].freeze = false
+					--set respawn hack if not disabled (not -1)
+						if CH ~= "-1" then
+  					--set respawn hack
+  						gg.setValues(t)
+  						gg.addListItems(t)
+  					end
+					--since the only thing required in CH is only the 1st option, change the whole table to that instead
+						CH = CH[1]
+					--if no duration
+						if CH == "0" then
+							toast("Flood Respawn ON\nRemember to turn off again by using \"Clear list items\" button in settings")
+					--if not disabled
+						elseif CH ~= "-1" then
+							toast("Flood Respawn ON for "..CH.." seconds")
+						--Way to sleep for a long time but cancellable by user too, which is great
+							for i=1,CH do
+								if gg.isVisible() then
+									gg.setVisible(false)
+									break
+								end
+								sleep(1e3)
 							end
-							gg.addListItems(t)
+						--restore the value back by removing list items ??? (heres the problem, what if it stays freezed even if removed from list?)
+							gg.removeListItems(t)
 							toast("Flood Respawn OFF")
 						end
 					end
@@ -882,6 +897,7 @@ function cheat_floodspawn()
 			end
 		end
 	end
+	CH = nil
 end
 function cheat_xpmodifier()
 --gg.REGION_C_BSS + // Not ready yet especially because JokerGGS mentioned a problem with CBSS Region.
@@ -891,23 +907,32 @@ function cheat_xpmodifier()
 		'Put your new coin (maximum 32767, temporary, not recommend if you have infinite coin coz it might get reset)',
 		'Freeze XP',
 		'Freeze Coin',
-	},{999999,-1,true,false},{'number','number','checkbox','checkbox'})
-	if CH and CH[1] and CH[2] then
+		'Enable skip slow intro animation',
+		'Win CTS match',
+	},{999999,-1,true,false,false,false},{'number','number','checkbox','checkbox','checkbox','checkbox'})
+	if CH then
 		tmp[1] = handleMemOzt("CustomXP",1014817001,nil,gg.TYPE_DWORD,1)
 		if gg.getResultCount() == 0 then
 			toast('Can\'t find the specific number.')
 		else
 			t = {}
 			tmp[1] = tmp[1][1].address
-			if CH[1] ~= "-1" then
+			if CH[1] and CH[1] ~= "" and CH[1] ~= "-1" then
 				t = table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
 			end
-			if CH[2] ~= "-1" then
+			if CH[2] and CH[2] ~= "" and CH[2] ~= "-1" then
 				t = table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
+			end
+			if CH[5] then
+				t = table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
+			end
+			if CH[6] then
+			--for win cts opponent, the offset is 0x403A2C
+				t = table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=32767,freeze=true,name="Pb2Chts [WinCTS]"}})
 			end
 			gg.setValues(t)
 			gg.addListItems(t)
-			toast('XP changed to '..CH[1]..'\nWarn: XP won\'t applied permanently. to change it permanently, you have to modify Payback.sav file, which is impossible because it\'s encrypted')
+			toast('Selected operations done')
 		end
 	end
 end
@@ -1160,7 +1185,7 @@ function cheat_reflectiongraphics()
 	if CH and tmp[3] then
 		gg.setRanges(gg.REGION_OTHER)
 		if not memOzt.RfTgraphics then
-			gg.searchNumber(144,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB))
+			gg.searchNumber(144,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address + 0x8) tmp[4][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[4]) gg.refineNumber(50)
 			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address - 0x4) tmp[4][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[4]) gg.refineNumber(tmp[1])
 		end
@@ -1400,6 +1425,8 @@ function table.tostring(t,dp)
 		tv = type(v)
 		if tv == 'table' then
 			r = r..table.tostring(v,(dp or 0)+1)
+		elseif tv == 'number' and #tostring(v) > 7 then
+			r = r..'0x'..string.format("%x",v):gsub("%l",string.upper)
 		elseif tv == 'boolean' or tv == 'number' then
 			r = r..tostring(v)
 		else
@@ -1505,7 +1532,9 @@ function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones)
 		if valRefine then
 			gg.refineNumber(valRefine,valTypes)
 		end
-		memOzt[memOztName],revert[memOztName] = gg.getResults(dsrdRslts),gg.getResults(dsrdRslts)
+		if gg.getResultCount() > 0 then
+			memOzt[memOztName],revert[memOztName] = gg.getResults(dsrdRslts),gg.getResults(dsrdRslts)
+		end
 	end
 	return gg.getResults(dsrdRslts)
 end
@@ -1546,7 +1575,7 @@ function findEntityAnchr()
 	if cfg.entityAnchrSearchMethod == "holdWeapon" then
 		toast("Hold your pistol")
 		sleep(1e3)
-		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.HldWpn))
+		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 		t = gg.getResults(200)
 		for i=1,#t do
 			tmp0 = string.format("%x",t[i].address)
@@ -1581,7 +1610,7 @@ function findEntityAnchr()
 		toast("Please wait for ~3 seconds... Don't shoot, Hold pistol.")
 	--this ginormous packs of "battery" below is basically... just searching this in accurately optimized way: "120Q;2.80259693e-44F;1~30000D;13D;512~513W::45(?ehh,definitely more than 45 though...)"
 	--and with this optimization too, we can get more accurate result faster.
-		gg.searchNumber(1.68155816e-43,gg.TYPE_FLOAT,nil,nil,table.unpack(cfg.memZones.Common_RegionOtherB)) -- 1/5 shooting state
+		gg.searchNumber(1.68155816e-43,gg.TYPE_FLOAT,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/5 shooting state
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEE) tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('512~513')      -- 2/5 (ControlCode 512, sometimes 513 mostly happen on veichles)
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC2) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(13)             -- 3/5 (HoldWeapon 13)
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10)                              end gg.loadResults(tmp) gg.refineNumber('-501~30000')   -- 4/5 (Health -501+30000(because carhealth&nostealcar cheat))
@@ -1594,7 +1623,7 @@ function findEntityAnchr()
 			return gg.getResults(1)[1].address
 		end
 	elseif cfg.entityAnchrSearchMethod == "wordWeaponAmmo" then
-		t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo',cfg.memZones.WpnAmmWrd)
+		t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo',cfg.memZones.Common_RegionOther)
 		gg.clearResults()
 		gg.searchNumber(20,gg.TYPE_DWORD,nil,nil,t.address - 42,t.address - 6)
 		return gg.getResultCount() > 0 and gg.getResults(1)[1].address or nil
@@ -1648,15 +1677,13 @@ function loadConfig()
 	cfg = {
 		entityAnchrSearchMethod="abjAutoAnchor",
 		memZones={
-			Common_RegionOther={0xB0000000,0xD0000000},
-			Common_RegionOtherB={0xB0000000,0xBFFFFFFF},
-			WpnAmmWrd={0xB000051C,0xCD0FFD2A},
-			HldWpn={0xB0000518,0xCDFFFD18}
+			Common_RegionOther={0xB0000000,0xCFFFFFFF},
+			Common_RegionOtherB={0xB0000000,0xBFFFFFFF}
 		},
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.2.0",
+		VERSION="2.2.1",
 		clearAllList=false,
 		enableLogging=false
 	}
