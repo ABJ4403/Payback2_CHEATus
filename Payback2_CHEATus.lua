@@ -8,11 +8,12 @@ function MENU()
 		"2. Strong veichle",
 		"3. No blast damage",
 		"4. Pistol/SG Knockback",
-		"5. Flood Respawn",
+		"5. Flood Respawn/RC Spam/Win Brawl/Swag Deliver 0 timer",
+		"6. C4 auto-trigger",
 		"——\nOther cheats:",
-		"6. God modes",
-		"7. Client-side cheats",
-		"8. Match modifier",
+		"7. God modes",
+		"8. Client-side cheats",
+		"9. Match modifier",
 		"——",
 		f"Settings",
 		f"__about__",
@@ -24,15 +25,16 @@ function MENU()
 	elseif CH == 3 then cheat_noblastdamage()
 	elseif CH == 4 then cheat_pistolknockback()
 	elseif CH == 5 then cheat_floodspawn()
+	elseif CH == 6 then cheat_c4autorigg()
 ---Title:Othercheat..
-	elseif CH == 7 then MENU_godmode()
-	elseif CH == 8 then MENU_CSD()
-	elseif CH == 9 then MENU_matchmode()
+	elseif CH == 8 then MENU_godmode()
+	elseif CH == 9 then MENU_CSD()
+	elseif CH == 10 then MENU_matchmode()
 ---
-	elseif CH == 11 then MENU_settings()
-	elseif CH == 12 then show_about()
-	elseif CH == 13 then exit()
-	elseif CH == 14 then suspend() end
+	elseif CH == 12 then MENU_settings()
+	elseif CH == 13 then show_about()
+	elseif CH == 14 then exit()
+	elseif CH == 15 then suspend() end
 	CH = nil
 	if type(tmp)=="table" then for k in pairs(tmp)do tmp[k]=nil end else tmp={}end
 end
@@ -40,42 +42,44 @@ function MENU_CSD()
 --Let the user choose stuff
 	local CH = gg.choice({
 		"Client-side cheats\nSome cheats won't affect other player",
-		"1. Walk animation Wonkyness (client-side only)",
-		"2. Change Name (EXPERIMENTAL)",
-		"3. Change Name Color (EXPERIMENTAL)",
-		"4. Change XP/Coin",
-		"5. Explosion Power",
-		"6. Explosion Direction",
-		"7. Particle interval (Slow/Fast explosion)",
-		"8. Reflection Graphics",
-		"9. Colored trees",
-		"10. Car drift",
-		"11. Big body",
-		"12. Big Flamethrower (Item)",
-		"13. Shadows",
-		"14. Colored Peoples (ESP)",
-		"15. Delete All Names",
+		"1. Running speed modifier",
+		"2. Walk animation Wonkyness (client-side only)",
+		"3. Change Name (EXPERIMENTAL)",
+		"4. Change Name Color (EXPERIMENTAL)",
+		"5. Change XP/Coin",
+		"6. Explosion Power",
+		"7. Explosion Direction",
+		"8. Particle interval (Slow/Fast explosion)",
+		"9. Reflection Graphics",
+		"10. Colored trees",
+		"11. Car drift",
+		"12. Big body",
+		"13. Big Flamethrower (Item)",
+		"14. Shadows",
+		"15. Colored Peoples (ESP)",
+		"16. Delete All Names",
 		"——",
 		f"__back__"
 	},nil,f"Title_Version")
 --Title:CSD...
-	if CH == 2 then cheat_walkwonkyness()
-	elseif CH == 3 then cheat_changeplayername()
-	elseif CH == 4 then cheat_changeplayernamecolor()
-	elseif CH == 5 then cheat_xpmodifier()
-	elseif CH == 6 then cheat_explodepow()
-	elseif CH == 7 then cheat_explodedir()
-	elseif CH == 8 then cheat_prtclintrvl()
-	elseif CH == 9 then cheat_reflectiongraphics()
-	elseif CH == 10 then cheat_coloredtree()
-	elseif CH == 11 then cheat_cardrift()
-	elseif CH == 12 then cheat_bigbody()
-	elseif CH == 13 then cheat_bigflamethroweritem()
-	elseif CH == 14 then cheat_shadowfx()
-	elseif CH == 15 then cheat_clrdpplsp()
-	elseif CH == 16 then cheat_deleteingameplaytext()
+	if CH == 2 then cheat_runspeedmod()
+	elseif CH == 3 then cheat_walkwonkyness()
+	elseif CH == 4 then cheat_changeplayername()
+	elseif CH == 5 then cheat_changeplayernamecolor()
+	elseif CH == 6 then cheat_xpmodifier()
+	elseif CH == 7 then cheat_explodepow()
+	elseif CH == 8 then cheat_explodedir()
+	elseif CH == 9 then cheat_prtclintrvl()
+	elseif CH == 10 then cheat_reflectiongraphics()
+	elseif CH == 11 then cheat_coloredtree()
+	elseif CH == 12 then cheat_cardrift()
+	elseif CH == 13 then cheat_bigbody()
+	elseif CH == 14 then cheat_bigflamethroweritem()
+	elseif CH == 15 then cheat_shadowfx()
+	elseif CH == 16 then cheat_clrdpplsp()
+	elseif CH == 17 then cheat_deleteingameplaytext()
 ---
-	elseif CH == 18 then MENU() end
+	elseif CH == 19 then MENU() end
 end
 function MENU_other()
 --Let the user choose stuff
@@ -200,24 +204,25 @@ function MENU_godmode()
 		"——",
 		"16. Clone player",
 		"17. Change vehicle color",
-		"18. Enable veichle jet",
-		"19. Fast car acceleration time",
-		"20. Win (known to work on Rampage, others not tested yet)",
+		"18. Veichle jet",
+		"19. Fast car acceleration",
+		"20. Change car wheel height",
+		"21. Win (known to work on Rampage, others not tested yet)",
 		"——",
-		"21. Rel0ad OFF",
-		"22. Immortality OFF",
-		"23. C4 Drawing OFF",
-		"24. Speed Slide OFF",
-		"25. Float Hack OFF",
-		"26. Ragdoll Hack OFF",
-		"27. Normal body",
-		"28. Normal drowned",
-		"29. Disable veichle jet",
+		"22. Rel0ad OFF",
+		"23. Immortality OFF",
+		"24. C4 Drawing OFF",
+		"25. Speed Slide OFF",
+		"26. Float Hack OFF",
+		"27. Ragdoll Hack OFF",
+		"28. Normal body",
+		"29. Normal drowned",
+		"30. Disable veichle jet",
 		"——",
 		f"__back__"
 	},nil,"God modes\nWARN: DON'T USE THIS TO ABUSE/HARM OTHER NON-CHEATER PLAYERS IN ANY WAY!!")
 	if CH then
-		if CH[33] then MENU()return end
+		if CH[34] then MENU()return end
 		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
 		local anchorAddress = findEntityAnchr()
 		if not anchorAddress then
@@ -316,72 +321,81 @@ function MENU_godmode()
 			end
 			---
 			if CH[17] then
-		--This will clone the player (you). How this is done?
-		--First told user (you) to change the weapon to your loved weapon before the user cant do it anymore
-			toast("[Clone Player] Change your weapon to your wanted weapon before you can\'t change it anymore")
-			sleep(3e3)
-		--Then, make the game think you are dead by changing 0xXXXXXXDA (Control state code) from 512 (Player controlled) to 2000 (Wasted)
-			gg.setValues({{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=2e3}})
-			sleep(2e3)
-		--And change it back to 512 so you can control it too :D
-			t = table.append(t,{
-				{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=512,freeze=true,name="Pb2Chts [ControlState]"}
-			})
+			--This will clone the player (you). How this is done?
+			--First told user (you) to change the weapon to your loved weapon before the user cant do it anymore
+				toast("[ClonePlayer] Change the weapon you want before you can\'t change it anymore")
+				sleep(3e3)
+			--Then, make the game think you are dead by changing 0xXXXXXXDA (Control state code) from 512 (Control.Player) to 2000 (Died.Wasted)
+				gg.setValues({{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=2e3}})
+				sleep(2e3)
+				t = table.append(t,{
+					{address=tmp.nca+0xDA,flags=gg.TYPE_WORD,value=512,freeze=true,name="Pb2Chts [ControlState]"}
+				})
 			end
 			if CH[19] then t = table.append(t,{
 				{address=tmp.nca-0x1AC,flags=gg.TYPE_WORD,value=1,name="Pb2Chts [Enable jet]"},
 			})
 			end
-			if CH[20] then
-			--the fastest possible value (the twos with float type) is 1, setting it below 1 will make the wheel rotates too fast, thus making veichle acceleration acts weird
-      --while the DWORD ones is best set to 3 instead to 1, because it has better maximum speed
-				t = table.append(t,{
-					{address=tmp.nca-0x210,flags=gg.TYPE_DWORD,value=3,name="Pb2Chts [CarAccelEngType]"},
-					{address=tmp.nca-0x208,flags=gg.TYPE_FLOAT,value=1,name="Pb2Chts [Veichle Speed]"},
-					{address=tmp.nca-0x204,flags=gg.TYPE_FLOAT,value=1,name="Pb2Chts [Veichle Speed]"}
-				})
+			if CH[20] then t = table.append(t,{
+				{address=tmp.nca-0x210,flags=gg.TYPE_WORD,value=3,name="Pb2Chts [CarAccelEngType]"},
+				{address=tmp.nca-0x206,flags=gg.TYPE_WORD,value=0,name="Pb2Chts [CarSpeed]"},
+				{address=tmp.nca-0x202,flags=gg.TYPE_WORD,value=2e4,name="Pb2Chts [CarSpeed]"}
+			})
 			end
-			if CH[21] then t = table.append(t,{
+			if CH[21] then
+				local wheelHeight = gg.prompt({"Set your custom wheel height [-1;16000]"},{15000},{"number"})
+				if wheelHeight and wheelHeight[1] and wheelHeight[1] ~= "-1" then
+					t = table.append(t,{
+						{address=tmp.nca-0x3EA,flags=gg.TYPE_WORD,value=wheelHeight[1],name="Pb2Chts [CarWheel1]: Height"},
+						{address=tmp.nca-0x3DE,flags=gg.TYPE_WORD,value=wheelHeight[1],name="Pb2Chts [CarWheel2]: Height"},
+						{address=tmp.nca-0x3D2,flags=gg.TYPE_WORD,value=wheelHeight[1],name="Pb2Chts [CarWheel3]: Height"},
+						{address=tmp.nca-0x3C6,flags=gg.TYPE_WORD,value=wheelHeight[1],name="Pb2Chts [CarWheel4]: Height"},
+						{address=tmp.nca-0x3BA,flags=gg.TYPE_WORD,value=wheelHeight[1],name="Pb2Chts [CarWheel5]: Height"},
+						{address=tmp.nca-0x3AE,flags=gg.TYPE_WORD,value=wheelHeight[1],name="Pb2Chts [CarWheel6]: Height"}
+					})
+				end
+			end
+			if CH[22] then t = table.append(t,{
 				{address=tmp.nca+0x30,flags=gg.TYPE_DWORD,value=9e8,freeze=true,name="Pb2Chts [Win] (remove this after you win match)"},
 			})
 			end
 			---
-			if CH[23] then t = table.append(t,{
+			if CH[24] then t = table.append(t,{
 				{address=tmp.nca+0x84,flags=gg.TYPE_WORD,freeze=false,value=0,name="Pb2Chts [Rel0adTimer]"}
 			})
 			end
-			if CH[24] then t = table.append(t,{
+			if CH[25] then t = table.append(t,{
 				{address=tmp.nca+0x8,flags=gg.TYPE_WORD,freeze=false,value=999,name="Pb2Chts [Health]"},
 				{address=tmp.nca+0x158,flags=gg.TYPE_FLOAT,freeze=false,value=0,name="Pb2Chts [RespawnInterval] (Immortal)"}
 			})
 			end
-			if CH[25] then t = table.append(t,{
+			if CH[26] then t = table.append(t,{
 				{address=tmp.nca+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: X"},
 				{address=tmp.nca+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=false,name="Pb2Chts [C4Position]: Y"}
 			})
 			end
-			if CH[26] then t = table.append(t,{
+			if CH[27] then t = table.append(t,{
 				{address=tmp.nca+0x86,flags=gg.TYPE_WORD,freeze=false,value=0,name="Pb2Chts [SpeedSlide]"}
 			})
 			end
-			if CH[27] then t = table.append(t,{
+			if CH[28] then t = table.append(t,{
 				{address=tmp.nca-0x408,flags=gg.TYPE_DWORD,value=0,freeze=false,value=0,name="Pb2Chts [Float]"}
 			})
 			end
-			if CH[28] then t = table.append(t,{
+			if CH[29] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,name="Pb2Chts [Ragdoll]"},
 				{address=tmp.nca+0x128,flags=gg.TYPE_DWORD,value=65536,freeze=false,name="Pb2Chts [Ragdoll]"}
 			})
 			end
-			if CH[29] then t = table.append(t,{
+			if CH[30] then t = table.append(t,{
 				{address=tmp.nca-0x4,flags=gg.TYPE_DWORD,value=0,freeze=false,value=0,name="Pb2Chts [BodyBurningStateAndTimer]: Normal"},
 			})
 			end
-			if CH[30] then t = table.append(t,{
+			if CH[31] then t = table.append(t,{
 				{address=tmp.nca-0x610,flags=gg.TYPE_DWORD,value=1,freeze=false,value=0,name="Pb2Chts [Dr0wned]"},
 			})
 			end
-			if CH[31] then t = table.append(t,{
+			if CH[32] then t = table.append(t,{
 				{address=tmp.nca-0x1AC,flags=gg.TYPE_WORD,value=0,name="Pb2Chts [Enable jet]"},
 			})
 			end
@@ -855,16 +869,72 @@ function cheat_floodspawn()
 				else
 					local CH = gg.prompt({
 						"Put the respawn duration (in seconds)\n0:No duration\n-1:No respawn hack [-1;20]",
+						"RC Car Spam",
+						"Win Brawl (client-side only)",
+						"Swag Delivery disable timer",
+						"Freeze camera entity ID"
 					},{
 						1,
+						false,
+						false,
+						false,
+						false
 					},{
 						"number",
+						"checkbox",
+						"checkbox",
+						"checkbox",
+						"checkbox"
 					})
 					if CH then
+					--2nd table that dont affected by timer and crap
+						local ta = {}
+					--prepare respawn/rccarspam/winbrawl values
 						for i=1,#t do
 							t[i].value = 52428801
 							t[i].freeze = true
 							t[i].name = "Pb2Chts [RespawnHack]"
+							if CH[2] then -- rc spam
+								ta = table.append(ta,{{
+									address = t[i].address - 0xE,
+									flags = gg.TYPE_WORD,
+									value = -1,
+									freeze = true,
+									name = "Pb2Chts [RCCarSpam]"
+								}})
+							end
+							if CH[3] then -- win brawl
+								ta = table.append(ta,{{
+									address = t[i].address - 0x14,
+									flags = gg.TYPE_DWORD,
+									value = 9e6,
+									freeze = true,
+									name = "Pb2Chts [WinBrawl]"
+								}})
+							end
+							if CH[4] then -- swag deliver 0 timer
+								ta = table.append(ta,{{
+									address = t[i].address + 0xE,
+									flags = gg.TYPE_WORD,
+									value = 0,
+									freeze = true,
+									name = "Pb2Chts [SwagDeliverTim0r]"
+								}})
+							end
+						--[[if CH[5] then -- lock camera entity id
+							--fetch current entity cam id
+								gg.loadResults({{
+									address = t[i].address + 0xE,
+									flags = gg.TYPE_WORD,
+								}})
+								ta = table.append(ta,{{
+									address = t[i].address + 0xE,
+									flags = gg.TYPE_WORD,
+									value = gg.getResults(1)[1].value,
+									freeze = true,
+									name = "Pb2Chts [SwagDeliverTim0r]"
+								}})
+							end]]
 						end
 					--set respawn hack if not disabled (not -1)
 						if CH ~= "-1" then
@@ -872,6 +942,11 @@ function cheat_floodspawn()
   						gg.setValues(t)
   						gg.addListItems(t)
   					end
+					--set rc car spam if enabled
+						if ta[1] then
+							gg.setValues(ta)
+							gg.addListItems(ta)
+						end
 					--since the only thing required in CH is only the 1st option, change the whole table to that instead
 						CH = CH[1]
 					--if no duration
@@ -898,6 +973,57 @@ function cheat_floodspawn()
 		end
 	end
 	CH = nil
+end
+function cheat_c4autorigg()
+	local totalC4sRigged = 0
+	gg.setRanges(gg.REGION_C_BSS + gg.REGION_ANONYMOUS + gg.REGION_OTHER)
+	gg.clearResults()
+--search c4s control code
+	gg.searchNumber(83886336,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
+	local t = gg.getResults(1e3)
+--Offset -0xD0 (health), load its result
+	for i=1,#t do
+		t[i].address = (t[i].address - 0xD0)
+		t[i].flags = gg.TYPE_WORD
+	end
+	gg.loadResults(t)
+--Refine health 100 (which is C4s health), check if it actually located in [5d]08, and set to 0 if so
+	gg.refineNumber(100)
+	t = gg.getResults(1e3) for i=1,#t do
+		tmp0 = string.format("%x",t[i].address)
+		if tmp0:find('508$') or tmp0:find('d08$') then
+			t[i].value = 0
+			totalC4sRigged = totalC4sRigged + 1
+		else
+			t[i] = nil
+		end
+	end
+	if totalC4sRigged == 0 then
+		gg.toast("Can't find any C4s, is there any C4 bombs planted?")
+	else
+		gg.setValues(t)
+		gg.toast(totalC4sRigged.." C4s rigged!")
+	end
+end
+function cheat_runspeedmod()
+	CH = gg.choice({
+		"400",
+		"120 (Default)",
+		"Back"
+	},nil,"Running speed modifier (Controllable, CodeApp implementation)")
+	if CH then
+		if CH == 3 then MENU()
+		elseif CH == 1 then tmp={"15120W;1186693120D;985158124D;1114636288D::12",15120,15400,"400"}
+		elseif CH == 2 then tmp={"15400W;1186693120D;985158124D;1114636288D::12",15400,15120,"120"} end
+		gg.setRanges(gg.REGION_CODE_APP)
+		handleMemOzt("runSpeed",tmp[1],tmp[2],gg.TYPE_WORD,1)
+		if gg.getResultCount() == 0 then
+			gg.toast("Can't find specific set of number")
+		else
+		  gg.editAll(tmp[3],gg.TYPE_WORD)
+			gg.toast("Running speed "..tmp[4])
+		end
+	end
 end
 function cheat_xpmodifier()
 --gg.REGION_C_BSS + // Not ready yet especially because JokerGGS mentioned a problem with CBSS Region.
@@ -1610,6 +1736,7 @@ function findEntityAnchr()
 		toast("Please wait for ~3 seconds... Don't shoot, Hold pistol.")
 	--this ginormous packs of "battery" below is basically... just searching this in accurately optimized way: "120Q;2.80259693e-44F;1~30000D;13D;512~513W::45(?ehh,definitely more than 45 though...)"
 	--and with this optimization too, we can get more accurate result faster.
+	--TODO: maybe we can somehow allow shooting/hold pistol for split second? by shifting the searching order (but it cant be the one with "A;B" or "A~B", because group/range searching is slower than normal search)
 		gg.searchNumber(1.68155816e-43,gg.TYPE_FLOAT,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/5 shooting state
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEE) tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('512~513')      -- 2/5 (ControlCode 512, sometimes 513 mostly happen on veichles)
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC2) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(13)             -- 3/5 (HoldWeapon 13)
@@ -1683,7 +1810,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.2.1",
+		VERSION="2.2.2",
 		clearAllList=false,
 		enableLogging=false
 	}
@@ -1762,7 +1889,7 @@ en_US={
 Automatic				 = "Automatic",
 About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\n\nWhy i make this?\nBecause i see Payback 2 players (notably cheaters) are very rude, and did'nt want to share their cheat script at all. This ofcourse violates open-source philosophy, we need to see the source code to make sure its safe and not malware. Just take a look at Hydra YouTube videos for example (Payback gamer name: HYDRAofINDONESIA). he's hiding every technique of cheating, the hiding is SO EXTREME (alot of sticker/text/zoom-censor, speedup, especially something related with memory address/value, or well... any number, even cheat menu which didnt show any numbers at all). even if he gives download link of one cheat (wall-hack),\nits still proprietary, i cant read any single code to make sure its not malware (and also if i look correctly in the code, theres word \"[LOCKED]\" and on the video description which he provides, theres garbled text that says \"7o31kql9p\", which means double-encryption! what the fucking hell dude?! get some mental health!), and also its whopping 200kb! I'm done. This is why the \"Payback2 CHEATus\" project comes",
 Credits					 = "Credits",
-Credits_Text		 = "Credit:\n+ Mangyu - Original script author\n+ mdp43140 - Main Contributor\n+ MisterCuteX - Mega Explosion,Respawn Hack\n+ tehtmi - unluac Creator (and decompile helper)\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX & ToxicCoder - for providing removed script through YT & MediaFire\n+ AGH - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)\n+ GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n+ JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values",
+Credits_Text		 = "Credit:\n+ Mangyu - Original script author\n+ mdp43140 - Main Contributor\n+ MisterCuteX - Mega Explosion,Respawn Hack\n+ tehtmi - unluac Creator (and decompile helper)\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX & ToxicCoder - for providing removed script through YT & MediaFire\n+ AGH - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)\n+ GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n+ XxGabriel5HRxX - for Car wheel height and acceleration GG Offsets\n+ JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values",
 Disclaimmer			 = "Disclaimmer (please read)",
 Disclaimmer_Text = "DISCLAIMMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
 Exit_ThankYouMsg = "	If you experienced a bug, report it on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	If you have something to ask, you can start a discussion at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	If you want to know more about this cheat, or other FAQ stuff, go to https://github.com/ABJ4403/Payback2_CHEATus/wiki",
@@ -1778,7 +1905,7 @@ Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403."
 Automatic				 = "Otomatis",
 About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)\n\n\nKenapa saya membuat ini?\nKarena saya melihat pemain Payback 2 (terutama cheater) sangat rude, dan tidak membagikan skrip cheat mereka sama sekali. Tentu ini melanggar filosofi open-source, kita perlu melihat sumber kode untuk memastikan bahwa cheat ini aman dan tidak ada malware. Lihat saja video YouTube Hydra untuk contohnya (Nama gamer Payback: HydraAssasins/HYDRAofINDONESIA). Dia menyembunyikan setiap teknik cheat, menyembuyikannya sangat ekstrim (banyak sensor stiker/teks/zoom-in, speedup, apalagi sesuatu yang berkaitan dengan alamat memory, atau ya... nomor apapun, bahkan menu cheat yang tidak menampilkan nomor sama sekali). Bahkan jika ia memberikan tautan unduhan dari satu cheat (hack wall),\nitu masih proprietri, saya tidak dapat membaca sumber kode satupun untuk memastikan itu bukan malware, dan juga sebesar 200kb! saya selesai. Inilah sebabnya mengapa proyek \"Payback2 CHEATus\" datang",
 Credits					 = "Kredit",
-Credits_Text		 = "Kredit:\n+ Mangyu - Pembuat skrip original\n+ mdp43140 - Kontributor Utama\n+ MisterCuteX - Mega Explosion, Respawn Hack\n+ tehtmi - Pembuat unluac (dan helper dekompilasi)\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX & ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire\n+ AGH - Value WallHack,CarHealth GG (tidak terimakasih untuk enkripsi yang sangggat giilaaa)\n+ GKTV - Skrip GG Payback2 (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n+ JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG",
+Credits_Text		 = "Kredit:\n+ Mangyu - Pembuat skrip original\n+ mdp43140 - Kontributor Utama\n+ MisterCuteX - Mega Explosion, Respawn Hack\n+ tehtmi - Pembuat unluac (dan helper dekompilasi)\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX & ToxicCoder - untuk menyediakan skrip yang telah dihapus melalui YT & MediaFire\n+ AGH - Value WallHack,CarHealth GG (tidak terimakasih untuk enkripsi yang sangggat giilaaa)\n+ GKTV - Skrip GG Payback2 (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n+ XxGabriel5HRxX - Untuk menyediakan offset Tinggi roda mobil, dan akselerasi mobil GG\n+ JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG",
 Disclaimmer			 = "Disklaimmer (mohon untuk dibaca)",
 Disclaimmer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
 Exit_ThankYouMsg = "	Jika Anda mengalami bug, laporkan pada laman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Jika Anda memiliki sesuatu untuk ditanyakan, Anda dapat memulai diskusi di https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Jika Anda ingin tahu lebih banyak tentang cheat ini, atau hal-hal FAQ lainnya, kunjungi https://github.com/ABJ4403/Payback2_CHEATus/wiki",
