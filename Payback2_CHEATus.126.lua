@@ -1,5 +1,8 @@
--- (pre)Define local variables (can possibly improve performance according to lua-users.org wiki)
-local gg,susp_file,cfg_file,tmp,revert,memOzt,memOffset,t,curVal,CH = gg,gg.getFile()..'.suspend',gg.getFile()..'.conf',{},{},{},{},{}
+-- predefine local variables (can possibly improve performance according to lua-users.org wiki)
+local gg,io,os = gg,io,os -- precache the usual call function (faster function call)
+gg.getFile,gg.getTargetInfo,gg.getTargetPackage = gg.getFile(),gg.getTargetInfo(),gg.getTargetPackage() -- prefetch the gg output (faster data fetching w/o recall same function over&over, and cuts some MBs of used RAM)
+local susp_file,cfg_file = gg.getFile..'.suspend',gg.getFile..'.conf' -- define config and suspend files
+local tmp,revert,memOzt,memOffset,t,curVal,CH = {},{},{},{},{} -- blank stuff for who knows...
 -- Cheat menus --
 function MENU()
 --Let the user choose stuff
@@ -179,9 +182,10 @@ function MENU_settings()
 end
 --[[
 	A little note before looking at the cheat mechanics:
-	On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
+	- On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
 	old version uses Ca,Ch,Jh,A (C++Alloc,C++Heap,JavaHeap,Anonymous)
 	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
+	- on version 121+ (specifically build 126), some offsets has been changed (specifically the Xa stuff)
 ]]
 function MENU_godmode()
 --Let the user choose stuff
@@ -466,20 +470,20 @@ function MENU_matchmode()
 --Let the user choose stuff
 	local CH = gg.multiChoice({
 		"Weapon Ammo",
-		"void mode",
+		"void mode (+void/no time limit)",
 		"——",
 		f"__back__"
 	},nil,"Match mode modifier")
 	if CH then
 		if CH[4] then MENU()return end
-		gg.setRanges(gg.REGION_OTHER + gg.REGION_ANONYMOUS)
+		gg.setRanges(gg.REGION_ANONYMOUS + gg.REGION_OTHER)
 		local ta = handleMemOzt('MatchOffset',1217115234,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)
 		if not ta[1] then
 			toast('Can\'t find the value, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
 		--Set 1P and 2P anchor on map seperately instead of using orignal anchor above.
 			t = {}
-			ta = ta[1].address
+			ta = ta[1].address - 0x142BA4
 			ta = {
 				ta+0xB4,
 				ta+0x1C4
@@ -643,25 +647,27 @@ function cheat_wallhack()
 	if tmp then
 		if tmp[1] == 1 then
 			gg.setRanges(gg.REGION_CODE_APP)
-			if not memOzt.wallhack_gktv then
-				toast('No previous memory buffer found, creating new buffer.')
-				gg.searchNumber("3472W;5W;"..tmp[2].."F;-17789W::15") -- wall hack
+			if memOzt.wallhack_gktv then
+				toast('Previous result found, using previous result.')
+			else
+				toast('No buffer found, creating new buffer.')
+				gg.searchNumber("3476W;6W;"..tmp[2].."F;-17789W::15",gg.TYPE_FLOAT) -- wall hack
+			--gg.searchNumber("3472W;5W;"..tmp[2].."F;-17789W::15",gg.TYPE_FLOAT) -- wall hack (build -121)
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				tmp[6] = gg.getResults(1)
 				log("Results: "..gg.getResultsCount())
 				gg.clearResults()
 				gg.searchNumber("2W;16256W;"..tmp[2].."F;24W::9") -- veichle wallhack
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
-				tmp[6][2] = gg.getResults(1)[1]
+				table.insert(tmp[6],gg.getResults(1)[1])
 				log("Results: "..gg.getResultsCount())
 				memOzt.wallhack_gktv,revert.wallhack_gktv = tmp[6],tmp[6]
-			else
-				toast('Previous result found, using previous result.\nif it fails, clear the buffer using "clear buffer" option')
 			end
 			gg.loadResults(memOzt.wallhack_gktv)
-			if gg.getResultCount() == 0 then
+			if #memOzt.wallhack_gktv == 0 then
 				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
+				if #memOzt.wallhack_gktv == 1 then log("Only found 1 result instead of 2 results.\n        Wallhack might partially or not working\n        try to play on build 121.") end
 				for i=1,#memOzt.wallhack_gktv do
 					memOzt.wallhack_gktv[i].value = tmp[3]
 				end
@@ -991,7 +997,7 @@ function cheat_c4autorigg()
 	gg.refineNumber(100)
 	t = gg.getResults(1e3) for i=1,#t do
 		tmp0 = string.format("%x",t[i].address)
-		if tmp0:find('508$') or tmp0:find('d08$') then
+		if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then
 			t[i].value = 0
 			totalC4sRigged = totalC4sRigged + 1
 		else
@@ -1013,15 +1019,16 @@ function cheat_runspeedmod()
 	},nil,"Running speed modifier (Controllable, CodeApp implementation)")
 	if CH then
 		if CH == 3 then MENU()
-		elseif CH == 1 then tmp={"15120W;1186693120D;985158124D;1114636288D::12",15120,15400,"400"}
-		elseif CH == 2 then tmp={"15400W;1186693120D;985158124D;1114636288D::12",15400,15120,"120"} end
+		elseif CH == 1 then tmp={15120,15400,"400"}
+		elseif CH == 2 then tmp={15400,15120,"120"} end
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("runSpeed",tmp[1],tmp[2],gg.TYPE_WORD,1)
+		handleMemOzt("runSpeed",tmp[1].."W;1186693120D;985158124D;989855744D::11",tmp[1],gg.TYPE_WORD,1)
+	--handleMemOzt("runSpeed",tmp[1].."W;1186693120D;985158124D;1114636288D::12",tmp[1],gg.TYPE_WORD,1) build -121
 		if gg.getResultCount() == 0 then
 			gg.toast("Can't find specific set of number")
 		else
-		  gg.editAll(tmp[3],gg.TYPE_WORD)
-			gg.toast("Running speed "..tmp[4])
+		  gg.editAll(tmp[2],gg.TYPE_WORD)
+			gg.toast("Running speed "..tmp[3])
 		end
 	end
 end
@@ -1044,13 +1051,16 @@ function cheat_xpmodifier()
 			t = {}
 			tmp[1] = tmp[1][1].address
 			if CH[1] and CH[1] ~= "" and CH[1] ~= "-1" then
-				t = table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
+				t = table.append(t,{{address=(tmp[1]-0x2E3C4),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
+			--t = table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}}) build -121
 			end
 			if CH[2] and CH[2] ~= "" and CH[2] ~= "-1" then
-				t = table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
+				t = table.append(t,{{address=(tmp[1]-0x2E1C8),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
+			--t = table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}}) build -121
 			end
 			if CH[5] then
-				t = table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
+				t = table.append(t,{{address=(tmp[1]-0xD9D9B8),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
+			--t = table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}}) build -121
 			end
 			if CH[6] then
 			--for win cts opponent, the offset is 0x403A2C
@@ -1169,14 +1179,14 @@ function cheat_walkwonkyness()
 		"Clear memory buffer",
 		f"__back__"
 	},nil,"Walk Wonkyness (fancy-cheat)")
-	gg.setRanges(gg.REGION_CODE_APP)
+	gg.setRanges(gg.REGION_CODE_APP) -- PS: 0.00999999978 > 0.3 for new version
 	if CH == 5 then MENU()
 	elseif CH == 1 then
-		handleMemOzt("walkwonkyness","0~1;0.00999999978::5",nil,gg.TYPE_FLOAT,1)
+		handleMemOzt("walkwonkyness","0~1;0.3::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0.004,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness Default")
 	elseif CH == 2 then
-		handleMemOzt("walkwonkyness","0.004;0.00999999978::5",nil,gg.TYPE_FLOAT,1)
+		handleMemOzt("walkwonkyness","0.004;0.3::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(1.004,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness ON")
 	elseif CH == 3 then
@@ -1201,7 +1211,8 @@ function cheat_coloredtree()
 	elseif CH == 2 then tmp={-999,0.04,"OFF"} end
 	if tmp then
 		gg.setRanges(gg.REGION_CODE_APP)
-		local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
+		local t = handleMemOzt("clrdtree","38W;0.06;"..tmp[1]..";-0.04;-0.02::15",tmp[1],gg.TYPE_FLOAT,1)
+	--local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
@@ -1241,7 +1252,8 @@ function cheat_shadowfx()
 	elseif CH == 2 then tmp={-1.0012,1e-4,"Enabled"} end
 	if tmp then
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1)
+		handleMemOzt("shadow",tmp[1]..";0,07999999821;-6,04130986e27;-2,78792201e28;-3,74440972e28:17",tmp[1],gg.TYPE_FLOAT,1) -- still buggy, but dont have time to fix it ;(
+	--handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1) build -121
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 		else
@@ -1383,7 +1395,7 @@ function cheat_explodedir()
 		"Restore previous value",
 		"Clear memory buffer",
 		f"__back__"
-	},nil,"No blast damage")
+	},nil,"Explode direction")
 	if CH == 8 then MENU()
 	elseif CH == 1 then XPLODIR_VAL = 5e4
 	elseif CH == 2 then XPLODIR_VAL = 0
@@ -1461,7 +1473,8 @@ function cheat_prtclintrvl()
 	end
 	if PARTICLE_INT then
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("PrtclAnmtnIntrvl","-352321693D;"..curVal.PrtclAnmtnIntrvl.."F::5",curVal.PrtclAnmtnIntrvl,gg.TYPE_FLOAT,1)
+		handleMemOzt("PrtclAnmtnIntrvl","-352321695D;"..curVal.PrtclAnmtnIntrvl.."F::5",curVal.PrtclAnmtnIntrvl,gg.TYPE_FLOAT,1)
+	--handleMemOzt("PrtclAnmtnIntrvl","-352321693D;"..curVal.PrtclAnmtnIntrvl.."F::5",curVal.PrtclAnmtnIntrvl,gg.TYPE_FLOAT,1)
 		if gg.getResultCount() == 0 then
 			memOzt.PrtclAnmtnIntrvl,revert.PrtclAnmtnIntrvl = nil,nil
 			toast("Can't find the specific set of number. if you changed the interval and reopened the script, restore the actual current number using 'Change current interval' menu")
@@ -1473,8 +1486,8 @@ function cheat_prtclintrvl()
 			toast("Particle interval "..curVal.PrtclAnmtnIntrvl.."ms")
 			gg.setValues(memOzt.PrtclAnmtnIntrvl)
 		end
+		PARTICLE_INT = nil
 	end
-	PARTICLE_INT = nil
 end
 function cheat_cardrift()
 	local CH = gg.choice({
@@ -1507,7 +1520,8 @@ function cheat_cardrift()
 	end
 	if DRIFT_SPEED then
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("DrftSpd","120F;"..curVal.DrftSpd.."F;-712W::9",curVal.DrftSpd,gg.TYPE_FLOAT,1)
+		handleMemOzt("DrftSpd","120F;"..curVal.DrftSpd.."F;-11020W::9",curVal.DrftSpd,gg.TYPE_FLOAT,1)
+	--handleMemOzt("DrftSpd","120F;"..curVal.DrftSpd.."F;-712W::9",curVal.DrftSpd,gg.TYPE_FLOAT,1)
 		if gg.getResultCount() == 0 then
 			memOzt.DrftSpd,revert.DrftSpd = nil,nil
 			toast("Can't find the specific set of number. if you changed the drift speed and reopened the script, restore current number using 'Change current drift speed' menu")
@@ -1741,7 +1755,7 @@ function findEntityAnchr()
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEE) tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('512~513')      -- 2/5 (ControlCode 512, sometimes 513 mostly happen on veichles)
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC2) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(13)             -- 3/5 (HoldWeapon 13)
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10)                              end gg.loadResults(tmp) gg.refineNumber('-501~30000')   -- 4/5 (Health -501+30000(because carhealth&nostealcar cheat))
-		tmp=gg.getResults(5e3) for i=1,#tmp do tmp0 = string.format("%x",tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 5/5 (Anchor 20)
+		tmp=gg.getResults(5e3) for i=1,#tmp do tmp0 = string.format("%x",tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 5/5 (Anchor 20)
 		tmp,tmp0=nil,nil
 		if gg.getResultCount() > 0 then
 			if gg.getResultCount() > 1 then
@@ -1810,7 +1824,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.2.2",
+		VERSION="2.2.3",
 		clearAllList=false,
 		enableLogging=false
 	}
