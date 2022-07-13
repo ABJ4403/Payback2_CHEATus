@@ -1,7 +1,11 @@
+-- This is Payback2_CHEATus built specifically for version 126
+-- I dont provide much support for this, because some cheats are actually patched by the dev.
+-- I strongly suggest to not upgrade to 126, and stay at version 121
 -- predefine local variables (can possibly improve performance according to lua-users.org wiki)
 local gg,io,os = gg,io,os -- precache the usual call function (faster function call)
 gg.getFile,gg.getTargetInfo,gg.getTargetPackage = gg.getFile(),gg.getTargetInfo(),gg.getTargetPackage() -- prefetch the gg output (faster data fetching w/o recall same function over&over, and cuts some MBs of used RAM)
-local susp_file,cfg_file = gg.getFile..'.suspend',gg.getFile..'.conf' -- define config and suspend files
+gg.getFile = gg.getFile:gsub(".lua$","") -- strip the .lua for .conf and stuff
+local susp_file,cfg_file = gg.getFile..'.suspend.json',gg.getFile..'.conf' -- define config and suspend files
 local tmp,revert,memOzt,memOffset,t,curVal,CH = {},{},{},{},{} -- blank stuff for who knows...
 -- Cheat menus --
 function MENU()
@@ -1190,7 +1194,7 @@ function cheat_walkwonkyness()
 		gg.editAll(1.004,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness ON")
 	elseif CH == 3 then
-		handleMemOzt("walkwonkyness","1.004;0.00999999978::5",nil,gg.TYPE_FLOAT,1)
+		handleMemOzt("walkwonkyness","1.004;0.3::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness OFF")
 	elseif CH == 4 then
@@ -1782,9 +1786,10 @@ function exit()
 end
 function suspend()
 	gg.saveVariable({
-		revert=revert,
+		cfg=cfg,
 		memOzt=memOzt,
-		cfg=cfg
+		pid=gg.getTargetInfo.pid,
+		revert=revert
 	},susp_file)
 	print(f"Suspend_Text")
 	os.exit()
@@ -1847,12 +1852,14 @@ function restoreSuspend()
 	]]
 	local susp = loadfile(susp_file)
 	if susp then
-		toast(f"Suspend_Detected")
 		susp = susp()
-		cfg = susp.cfg
-		revert = susp.revert
-		memOzt = susp.memOzt
 		os.remove(susp_file)
+		if susp.pid == gg.getTargetInfo.pid then
+			toast(f"Suspend_Detected")
+			cfg = susp.cfg
+			revert = susp.revert
+			memOzt = susp.memOzt
+		end
 	end
 	susp = nil
 end
