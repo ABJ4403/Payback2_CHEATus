@@ -53,6 +53,7 @@ Violating the rules means you're also Violating GPLv3 License (especially if its
 - GKTV (Pumpkin Hacker) - Payback2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp).
 - XxGabriel5HRxX - for Car wheel height and acceleration GG Offsets.
 - JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values/Offsets.
+- antonyROOTlegendMAXx - for transparent veichle GG Offsets.
 
 ## License
 [![GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
