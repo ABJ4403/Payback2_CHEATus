@@ -1,10 +1,14 @@
 -- predefine local variables (can possibly improve performance according to lua-users.org wiki)
 local gg,io,os = gg,io,os -- precache the usual call function (faster function call)
-gg.getFile,gg.getTargetInfo,gg.getTargetPackage = gg.getFile(),gg.getTargetInfo(),gg.getTargetPackage() -- prefetch the gg output (faster data fetching w/o recall same function over&over, and cuts some MBs of used RAM)
-gg.getFile = gg.getFile:gsub(".lua$","") -- strip the .lua for .conf and stuff
+gg.getFile,gg.getTargetInfo,gg.getTargetPackage = gg.getFile(),gg.getTargetInfo(),gg.getTargetPackage() -- prefetch gg output
+gg.getFile = gg.getFile:gsub("%.lua$","") -- strip the .lua for .conf and stuff
 local susp_file,cfg_file = gg.getFile..'.suspend.json',gg.getFile..'.conf' -- define config and suspend files
-local tmp,revert,memOzt,memOffset,t,curVal,CH,cfg,lastCfg = {},{},{},{},{} -- blank stuff for who knows...
--- Cheat menus --
+local tmp,revert,memOzt,memOffset,t = {},{},{},{},{} -- blank stuff for who knows...
+local curVal,CH,cfg,lastCfg -- blank stuff for who knows...
+
+
+
+--— Cheat menus ——————————————————--
 function MENU()
 --Let the user choose stuff
 	local CH = gg.choice({
@@ -348,7 +352,7 @@ function MENU_godmode()
 			end
 			if CH[23] then
 				local wheelHeight = gg.prompt({"Set your custom wheel height [-1;16000]"},{15000},{"number"})
-				if wheelHeight and wheelHeight[1] and wheelHeight[1] ~= "-1" then
+				if wheelHeight and wheelHeight[1] ~= "-1" then
 					t = table.append(t,{
 						{address=achAdr-0x3EA,flags=gg.TYPE_WORD,value=wheelHeight[1],name="Pb2Chts [CarWheel1]: Height"},
 						{address=achAdr-0x3DE,flags=gg.TYPE_WORD,value=wheelHeight[1],name="Pb2Chts [CarWheel2]: Height"},
@@ -1016,13 +1020,14 @@ function cheat_xpmodifier()
 --Not ready to use gg.REGION_C_BSS yet especially because JokerGGS mentioned a problem with it.
 	gg.setRanges(cfg.memRange.general)
 	local CH = gg.prompt({
-		'Put your new XP (Play Game limit is 999999, while DWORD limit is 1.999.999.998)',
-		'Put your new coin (maximum 32767, temporary, not recommend if you have infinite coin coz it might get reset)',
+		'Put your new XP (Play Game limit is 999999, while DWORD integer is the max limit)',
+		'Put your new coin (max 30000, temporary, not recommend if you have infinite coin coz it might get reset)',
 		'Freeze XP',
 		'Freeze Coin',
 		'Enable skip slow intro animation',
-		'Win CTS match',
-	},{999999,-1,true,false,false,false},{'number','number','checkbox','checkbox','checkbox','checkbox'})
+		'Override current controlled player [-1;16]',
+		'Win CTS match (0:disable,-1/1 one of the teams) [-1;1]',
+	},{999999,-1,true,false,false,-1,0},{'number','number','checkbox','checkbox','checkbox','number','number'})
 	if CH then
 		tmp[1] = handleMemOzt("CustomXP",1014817001,nil,gg.TYPE_DWORD,1)
 		if gg.getResultCount() == 0 then
@@ -1036,12 +1041,18 @@ function cheat_xpmodifier()
 			if CH[2] and CH[2] ~= "" and CH[2] ~= "-1" then
 				t = table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_DWORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
 			end
-			if CH[5] then
-				t = table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
+			if CH[5] and CH[5] ~= "-1" then
+				t = table.append(t,{{address=(tmp[1]-0x403B54),flags=gg.TYPE_WORD,value=CH[5],name="Pb2Chts [OverrideControlledPlayer]"}})
 			end
 			if CH[6] then
-			--for win cts opponent, the offset is 0x403A2C
-				t = table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=32767,freeze=true,name="Pb2Chts [WinCTS]"}})
+				if CH[6] == "-1" then -- 1
+					t = table.append(t,{{address=(tmp[1]-0x403A2C),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
+				elseif CH[6] == "1" then -- 2
+					t = table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
+				end
+			end
+			if CH[7] then
+				t = table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
 			end
 			gg.setValues(t)
 			gg.addListItems(t)
@@ -1522,8 +1533,11 @@ function show_about()
 	elseif CH == 5 then alert(f"Credits_Text") show_about()
 	elseif CH == 6 then CH = nil MENU() end
 end
+--————————————————————————————————--
 
--- Helper functions --
+
+
+--— Helper functions —————————————--
 function table.tostring(t,dp)
 	local d,r,tab,tv = 0,'{\n',function(i)
 		str = ""
@@ -1705,20 +1719,27 @@ function optimizeRange(range)
 	}
 	t = table.append(t,gg.getRangesList('/data/app/'..gg.getTargetPackage..'-*/base.apk'))
 	t = table.append(t,gg.getRangesList('/data/app/'..gg.getTargetPackage..'-*/split_config.*.apk'))
-	range[3] = range[2] - range[1]
-	for i=1,#t do
+	range[3] = range[2] - range[1] -- calculate the range difference (save it to index 3, later index 3 is removed and table returned)
+	for i=1,#t do -- loop over all gg.getRangesList result tables
+	--If:
+	--the start is below minimum requirement
+	--or the end if above maximum requirement
+	--or range is more than the stated requirement
+	--or not Other/CodeApp region
 		if t[i].start < range[1] or t[i]['end'] > range[2] or (t[i]['end'] - t[i].start) > range[3] or not (t[i].state == "O" or t[i].state == "Xa") then
+		--Remove it
 			t[i] = nil
 		else
+		--else, calculate the result blablabla...
 			result[1] = math.min(result[1],t[i].start)
 			result[2] = math.max(result[2],t[i]['end'])
 		end
 	end
   table.remove(range,3)
-	if next(t) == nil then
-		return range
+	if not next(t) then -- if there {}?? on the table
+		return range -- return the previously given input
 	end
-	return result
+	return result -- else, return the result.
 end
 function findEntityAnchr()
 	gg.setRanges(cfg.memRange.general)
@@ -1892,8 +1913,11 @@ print = (function() -- convert table to readable format (with addition of conver
 		return printLn(table.unpack(tmp))
 	end
 end)()
+--————————————————————————————————--
 
--- Initialization --
+
+
+--— Initialization ———————————————--
 --generic functions
 alert=function(str,...)
 	gg.alert(f(str),...)
@@ -1997,3 +2021,4 @@ while true do
 	gg.clearResults()
 	collectgarbage()
 end
+--————————————————————————————————--
