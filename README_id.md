@@ -14,8 +14,8 @@ Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang diman
 - `🔫 Knockback Pistol/SG`.
 - `🔫 Amunisi Senjata`.
 - `🧱 Tembus Dinding`.
-- `💻🤝📱 Kompatibilitas lebih baik` (Root/VM, CBSS(todo)/Anonymous/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash).
-- `🗜️ Versi minified tersedia` (Jika Anda membutuhkan skrip yang ukurannya kecil. perhatian mini, versi minified bukan yang terbaru karena jarang diupdate kecuali ada pembaruan major...).
+- `💻🤝📱 Kompatibilitas lebih baik` (Root/VM, CBSS(todo)/Anonymous/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash. UPDATE: perangkat yang biasa menggunakan CBSS/Anonymous mungkin mengalami masalah dengan beberapa cheat value tidak ditemukan, walaupun tidak membuat skrip galat).
+- `🗜️ Versi minified tersedia` (Jika Anda membutuhkan skrip yang ukurannya kecil. dengan catatan, versi mini tidak bleeding-edge (paling terbaru mendekati skrip original) karena jarang diupdate kecuali ada pembaruan major...).
 - `📈️ Eksperimen performa` (opsional).
 - `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memori (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB, dioptimalkan untuk zona memori OTHER/Anonymous)))
 - `📈️ Memoisasi Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
@@ -45,11 +45,11 @@ Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkai
 ## Kredit
 - Mangyu - Pembuat skrip original.
 - mdp43140 - Kontributor Utama.
-- MisterCuteX - Mega Explosion, Respawn Hack.
+- MisterCuteX - Ledakan Mega, Respawn Hack.
 - tehtmi - Pembuat unluac (dan helper dekompilasi).
 - Crystal_Mods100x - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX & ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum GameGuardian melalui YT & MediaFire.
-- AGH (Banned dari YT, sekarang Blue Devil) - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk enkripsi yang sangggggat giilaaa).
+- AGH (Banned dari YT) - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk enkripsi yang sangggggat giilaaa).
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2 (wall hack,big body,colored tree,big flamethower item,shadow,esp).
 - XxGabriel5HRxX - Untuk menyediakan offset Tinggi roda mobil, dan akselerasi mobil GG.
 - JokerGGS - Untuk menyediakan value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG.

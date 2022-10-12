@@ -14,8 +14,8 @@ Payback2_CHEATus is a GameGuardian LUA Cheat Script for Payback 2, which is a "f
 - `🔫 Pistol/SG Knockback`.
 - `🔫 Weapon Ammo`.
 - `🧱 Wall Hack`.
-- `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happend).
-- `🗜️ Minified version available` (if you really need that tiny size. be warned, its not the very latest, its rarely updated except major updates...).
+- `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happend. UPDATE: devices that primarily use CBSS/Anonymous might not having certain cheats working, though it didnt make the script crashed).
+- `🗜️ Minified version available` (if you really need that tiny size. little note, its not bleeding-edge (very latest to the original script), its rarely updated except major updates...).
 - `📈️ Performance experiment` (optional).
 - `📈️ Memory restricted search` (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB, better optimized for OTHER/Anonymous memory region))).
 - `📈️ Memory Memoization` (technical feature that accelerates searches on area that won't change alot).
@@ -49,7 +49,7 @@ Violating the rules means you're also Violating GPLv3 License (especially if its
 - tehtmi - unluac Creator (and decompile helper).
 - Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this download link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is gone. try [this mediafire link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX & ToxicCoder - for providing the removed script from GameGuardian forum through YT & MediaFire.
-- AGH (Banned from YT, now it's Blue Devil) - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)
+- AGH (Banned from YT) - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)
 - GKTV (Pumpkin Hacker) - Payback2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp).
 - XxGabriel5HRxX - for Car wheel height and acceleration GG Offsets.
 - JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values/Offsets.
