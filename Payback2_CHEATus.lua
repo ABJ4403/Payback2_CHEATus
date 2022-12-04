@@ -276,9 +276,9 @@ function MENU_godmode()
 			end
 			-- [5]
 			if CH[6] or CH[7] or CH[8] or CH[1] then -- (NoCarSteal/Immortality(On/Explode)) is this a good idea?
-				tmp.isNoSteal = CH[5]
-				tmp.isImmortal = CH[6] or CH[1]
-				tmp.isDestroy = CH[7]
+				tmp.isNoSteal = CH[6]
+				tmp.isImmortal = CH[7] or CH[1]
+				tmp.isDestroy = CH[8]
 				t = table.append(t,{
 					{address=achAdr+0x8,flags=gg.TYPE_WORD,freeze=true,value=(tmp.isNoSteal and -501 or 800),name="Pb2Chts [Health]"},
 					{address=achAdr+0x158,flags=(tmp.isDestroy and gg.TYPE_WORD or gg.TYPE_FLOAT),freeze=true,value=((tmp.isImmortal or tmp.isDestroy) and 1 or 0),name="Pb2Chts [RespawnInterval]"},
