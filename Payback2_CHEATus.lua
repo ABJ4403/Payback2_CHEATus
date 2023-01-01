@@ -110,9 +110,9 @@ function MENU_settings()
 		"Change language",
 		"Change entity anchor searching method",
 		"——",
+		"Clear results & list items",
 		"Clear results",
 		"Clear list items",
-		"Clear results & list items",
 		"Remove suspend file",
 		"——",
 		"Save settings",
@@ -166,9 +166,9 @@ function MENU_settings()
 			MENU_settings()
 		end
 	---
-	elseif CH == 5 then gg.clearResults() MENU_settings()
-	elseif CH == 6 then gg.clearList() MENU_settings()
-	elseif CH == 7 then gg.clearResults() gg.clearList() MENU_settings()
+	elseif CH == 5 then gg.clearResults() gg.clearList() toast('Cleared!')
+	elseif CH == 6 then gg.clearResults() toast('Cleared!')
+	elseif CH == 7 then gg.clearList() toast('Cleared!')
 	elseif CH == 8 then os.remove(susp_file) MENU_settings()
 	---
 	elseif CH == 10 then
@@ -224,12 +224,14 @@ function MENU_godmode()
 		"20. Transparent Veichle",
 		"21. Disable veichle noise",
 		"22. Change car wheel height",
-		"23. Win (known to work on Rampage, others not tested yet)", -- 25
+		"23. 6 Star police", -- 25
+		"24. Win rampage (not instant)",
+		"25. AI Control",
 		"——",
 		f"__back__"
 	},nil,"God modes\nWARN: DON'T USE THIS TO HARM INNOCENT PLAYERS IN ANY WAY!!")
 	if CH then
-		if CH[27]then return MENU()end
+		if CH[29]then return MENU()end
 		local achAdr = findEntityAnchr()
 		if achAdr then
 			t = {}
@@ -348,6 +350,23 @@ function MENU_godmode()
 				gg.setValues(tmp[1])
 				gg.addListItems(tmp[1])
 			end
+			-- [24]
+			if CH[25] then t = table.append(t,{
+				{address=achAdr-0x11,flags=gg.TYPE_BYTE,value=127,name="Pb2Chts [Wanted level]"},
+			})
+			end
+			if CH[26] then t = table.append(t,{
+				{address=achAdr+0x30,flags=gg.TYPE_DWORD,value=9e8,freeze=true,name="Pb2Chts [Win rampage] (remove after you win match)"},
+			})
+			end
+			if CH[27] then t = table.append(t,{
+				{address=achAdr+0xDB,flags=gg.TYPE_BYTE,value=1,freeze=true,name="Pb2Chts [ControlMode] (remove after you win match)"},
+			})
+			end
+			---
+			-- [29] Back
+
+			--- stuff that requires user intervention and takes longer?
 			if CH[24] then -- Custom wheel height
 				local wheelHeight = gg.prompt({"Set your custom wheel height [-1;16000]"},{15e3},{"number"})
 				if wheelHeight and wheelHeight[1] ~= "-1" then
@@ -361,22 +380,16 @@ function MENU_godmode()
 					})
 				end
 			end
-			if CH[25] then t = table.append(t,{
-				{address=achAdr+0x30,flags=gg.TYPE_DWORD,value=9e8,freeze=true,name="Pb2Chts [Win] (remove this after you win match)"},
-			})
-			end
-			---
-			-- [27] Back
-
-			--- stuff that requires user intervention and takes longer?
 			if CH[18] then -- Clone player
 				toast("[ClonePlayer] Change the weapon you want before you can\'t change it anymore")
+				tmp[1] = {
+					{address=achAdr+0xDB,flags=gg.TYPE_BYTE,value=7,freeze=true,name="Pb2Chts [ControlMode]"}
+				}
 				sleep(3e3)
-				gg.setValues({{address=achAdr+0xDB,flags=gg.TYPE_BYTE,value=7}})
-				sleep(2e3)
-				t = table.append(t,{
-					{address=achAdr+0xDB,flags=gg.TYPE_BYTE,value=2,freeze=true,name="Pb2Chts [ControlState]"}
-				})
+				gg.setValues(tmp[1])
+				tmp[1][1].value = 2
+				t = table.append(t,tmp[1])
+				sleep(1e3)
 			end
 			if CH[19] then -- Change veichle color
 				local CH,PlyrClrCH = gg.choice({
@@ -831,11 +844,13 @@ function cheat_floodspawn()
 				CH = gg.prompt({
 					"Put the respawn duration (in seconds)\n0:No duration\n-1:No respawn hack [-1;20]",
 					"RC Car Spam","Win Brawl (client-side)",
-					"Swag Delivery no timer","Freeze camera entity ID (this can protect you against JokerGGS player takeover cheat)"
+					"Swag Delivery no timer","Freeze camera entity ID (this can protect you against JokerGGS player takeover cheat)",
+					"Disable AI"
 				},{
 					1,
 					true,false,
-					false,false
+					false,false,
+					true
 				},{
 					"number",
 					"checkbox","checkbox",
@@ -888,6 +903,14 @@ function cheat_floodspawn()
 								name = "Pb2Chts [EntityCamID]"
 							}})
 							gg.clearResults() -- get rid of temporary trash after used
+						end
+						if CH[6] then -- disable AI
+							ta = table.append(ta,{{
+								address = t[i].address + 0xE8,
+								flags = gg.TYPE_BYTE,
+								value = 0,
+								name = "Pb2Chts [EnableAIControl]"
+							}})
 						end
 					end
 				--since the only thing required in CH is only the 1st option, change the whole table to that instead
@@ -1771,21 +1794,30 @@ function findEntityAnchr()
 		gg.clearResults()
 		return t[1].address - 0x18
 	elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then
-		toast("Please wait for ~3 seconds... Don't shoot, Hold pistol.")
+		toast("Please wait... Don't shoot, Hold pistol 🔫")
 	--this ginormous packs of "battery" below is basically... just searching this in accurately optimized way: "120Q;2.80259693e-44F;1~30000D;13D;512~513W::45(?ehh,definitely more than 45 though...)"
 	--and with this optimization too, we can get more accurate result faster.
 	--TODO: maybe we can somehow allow shooting/hold pistol for split second? by shifting the searching order (but it cant be the one with "A;B" or "A~B", because group/range searching is slower than normal search)
-		gg.searchNumber(1.68155816e-43,gg.TYPE_FLOAT,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/5 shooting state
-		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEE) tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('512~513')      -- 2/5 (ControlCode 512, sometimes 513 mostly happen on veichles)
-		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC2) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(13)             -- 3/5 (HoldWeapon 13)
-		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10)                              end gg.loadResults(tmp) gg.refineNumber('-501~30000')   -- 4/5 (Health -501+30000(because carhealth&nostealcar cheat))
+		gg.searchNumber(120,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/5 shooting state
+		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)      -- 2/5 (ControlCode 512, sometimes 513 mostly happen on veichles)
+		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)             -- 3/5 (HoldWeapon 0;0;13;0::W)
+		tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber('-501~30000')   -- 4/5 (Health -501+30000(because carhealth&nostealcar cheat))
+	--tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x2C) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(32000)
+	--tmp=gg.getResults(5e3) for i=1,#tmp do tmp0 = string.format("%x",tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x34) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20)
 		tmp=gg.getResults(5e3) for i=1,#tmp do tmp0 = string.format("%x",tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 5/5 (Anchor 20)
-		tmp,tmp0=nil,nil
 		if gg.getResultCount() > 0 then
 			if gg.getResultCount() > 1 then
-				log("[findEntityAnchor] Duplicate results detected! "..gg.getResultCount())
+				toast(gg.getResultCount().." Duplicate results! hold knife 🔪")
+				for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine pistol
+				tmp=gg.getResults(1)
+				if tmp[1] then -- just in case nothing found and crash happened
+					tmp0=tmp[1].address - 0x14 -- back to anchor
+				end
+			else
+				tmp0=tmp[1].address
 			end
-			return gg.getResults(1)[1].address
+			tmp=nil
+			return tmp0
 		end
 	elseif cfg.entityAnchrSearchMethod == "weaponAmmo" then
 		t = loopSearch(1,gg.TYPE_WORD,'Put one of your weapon ammo',cfg.memZones.Common_RegionOther)
@@ -1858,7 +1890,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.2.5"
+		VERSION="2.2.6"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
