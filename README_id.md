@@ -7,10 +7,8 @@ Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang diman
 - `🔫 No Reload` (Tidak ada jeda isi ulang).
 - `🛡️ Immortalitas`.
 - `🏊‍♀️️ Anti-tenggelam` (LANGKA).
-- `🚗️🔏️❌️ Anti-curi mobil` (LANGKA).
 - `👥️ Respawn & Klon` (LANGKA).
-- `🚗️🖌️ Ganti warna mobil` (LANGKA).
-- `🚗️💨️ Ganti kecepatan mobil` (LANGKA)
+- `🚗️ Tweak kendaraan (kecepatan, jet, warna, tembus pandang, sunyikan bising, tinggi roda, anti-curi)` (RARE)
 - `🔫 Knockback Pistol/SG`.
 - `🔫 Amunisi Senjata`.
 - `🧱 Tembus Dinding`.
@@ -49,7 +47,7 @@ Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkai
 - tehtmi - Pembuat unluac (dan helper dekompilasi).
 - Crystal_Mods100x - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX & ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum GameGuardian melalui YT & MediaFire.
-- AGH (Banned dari YT) - Untuk menyediakan Value "Wall Hack" & "Car Health" GameGuardian (tidak terimakasih untuk enkripsi yang sangggggat giilaaa).
+- AGH (Banned dari YT) - Untuk menyediakan Value Tembus dinding & hp kendaraan GG.
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2 (wall hack,big body,colored tree,big flamethower item,shadow,esp).
 - XxGabriel5HRxX - Untuk menyediakan offset Tinggi roda mobil, dan akselerasi mobil GG.
 - JokerGGS - Untuk menyediakan value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG.
