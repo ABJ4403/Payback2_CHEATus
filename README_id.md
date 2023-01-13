@@ -1,14 +1,14 @@
 # Payback2 CHEATus, dibuat oleh ABJ4403.
 [`🇺🇸️ ReadMe English`](https://github.com/ABJ4403/Payback2_CHEATus)
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/3e9fe551-422b-4985-b006-25d04a36b7e4)
-Payback2_CHEATus adalah Skrip LUA cheat GameGuardian untuk Payback 2, yang dimana ini adalah "fork" dari skrip cheat Mangyu tapi lebih bagus, sedikit-bloated, dan mudah untuk dibaca.
+Payback2_CHEATus adalah Skrip cheat Lua GameGuardian untuk Payback 2.
 
 ## Fitur
 - `🔫 No Reload` (Tidak ada jeda isi ulang).
 - `🛡️ Immortalitas`.
 - `🏊‍♀️️ Anti-tenggelam` (LANGKA).
-- `👥️ Respawn & Klon` (LANGKA).
-- `🚗️ Tweak kendaraan (kecepatan, jet, warna, tembus pandang, sunyikan bising, tinggi roda, anti-curi)` (RARE)
+- `👥️ Respawn & Klon`.
+- `🚗️ Tweak kendaraan (kecepatan, jet, warna, tembus pandang, sunyikan bising, tinggi roda, anti-curi)` (LANGKA)
 - `🔫 Knockback Pistol/SG`.
 - `🔫 Amunisi Senjata`.
 - `🧱 Tembus Dinding`.
@@ -41,17 +41,18 @@ PENTING: Ada aturan yang HARUS diikuti jika ingin membagikan skrip: [AturanUntuk
 Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkait dengan berbagi skrip Payback2_CHEATus yang di enkripsi/kompilasi/obfuscate/tidak bisa dibaca via [MediaFire](https://mediafire.com) atau sesuatu yang terkait).
 
 ## Kredit
-- Mangyu - Pembuat skrip original.
 - mdp43140 - Kontributor Utama.
-- MisterCuteX - Ledakan Mega, Respawn Hack.
+- Mangyu - Inspirasi original.
+- MisterCuteX - Ledakan Mega, Hack Respawn.
 - tehtmi - Pembuat unluac (dan helper dekompilasi).
 - Crystal_Mods100x - Menu ICE ([tautan ini](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) yang menuju ke [tautan ini](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) sudah mati. coba [tautan ini](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX & ToxicCoder - untuk menyediakan skrip yang telah dihapus dari forum GameGuardian melalui YT & MediaFire.
 - AGH (Banned dari YT) - Untuk menyediakan Value Tembus dinding & hp kendaraan GG.
 - GKTV (Pumpkin Hacker) - Skrip GG Payback2 (wall hack,big body,colored tree,big flamethower item,shadow,esp).
 - XxGabriel5HRxX - Untuk menyediakan offset Tinggi roda mobil, dan akselerasi mobil GG.
-- JokerGGS - Untuk menyediakan value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG.
+- JokerGGS - Untuk menyediakan value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG.
 - antonyROOTlegendMAXx - Untuk menemukan value kendaraan tembus pandang GG.
+- MinFRE - untuk offset 6 bintang polisi GG.
 
 ## Lisensi
 [![Gambar GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
