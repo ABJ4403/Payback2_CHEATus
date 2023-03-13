@@ -148,20 +148,16 @@ function MENU_settings()
 		end
 	elseif CH == 3 then
 		tmp = nil
-		if cfg.entityAnchrSearchMethod == "wordWeaponAmmo" then tmp = 1
-		elseif cfg.entityAnchrSearchMethod == "holdWeapon" then tmp = 2
-		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then tmp = 3 end
+		if cfg.entityAnchrSearchMethod == "holdWeapon" then tmp = 1
+		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then tmp = 2 end
 		local CH = gg.choice({
-			"1. Weapon ammo (finds the weapon ammo, slowest method)",
-			"2. Hold weapon (tells you to hold pistol/knife and find those values. faster, ~6 seconds)",
-			"3. ABJ4403's Automatic anchor (Hold pistol, dont shoot, little bit Hold-Weapon-like. rarely fails)",
+			"1. Hold weapon (tells you to hold pistol/knife and find those values. faster, ~6 seconds)",
+			"2. ABJ4403's Automatic anchor (Hold pistol, dont shoot, little bit Hold-Weapon-like. rarely fails)",
 			f"__back__",
 		},tmp,f"Title_Version")
 		if CH then
-			if CH == 5 then MENU_settings()
-			elseif CH == 1 then cfg.entityAnchrSearchMethod = "wordWeaponAmmo"
-			elseif CH == 2 then cfg.entityAnchrSearchMethod = "holdWeapon"
-			elseif CH == 3 then cfg.entityAnchrSearchMethod = "abjAutoAnchor" end
+			if CH == 1 then cfg.entityAnchrSearchMethod = "holdWeapon"
+			elseif CH == 2 then cfg.entityAnchrSearchMethod = "abjAutoAnchor" end
 			update_language()
 			MENU_settings()
 		end
@@ -199,7 +195,7 @@ end
 function MENU_godmode()
 --Let the user choose stuff
 	local CH = gg.multiChoice({
-		"1. Top 10 Essentials (2,3,6,8,12,15,18,19,20,21)",
+		"1. Top 10 Essentials (2,3,6,8,12,15,18,19,20,21,23)",
 		--[[ Add your own set of favorite frequently used cheats here ]]
 		"——",
 		"2. Weapon Ammo",
@@ -216,18 +212,17 @@ function MENU_godmode()
 		"13. Burned body",
 		"14. Burning body", -- 15
 		"15. Dr0wned",
-		"——",
 		"16. Clone",
-		"17. Change vehicle color",
+		"17. Vehicle color",
 		"18. Vehicle jet", -- 20
-		"19. Fast car acceleration (+ other tweaks)",
-		"20. Translucent Vehicle",
+		"19. Fast car speed (+ other tweaks?)",
+		"20. Translucent vehicle",
 		"21. Disable vehicle noise",
-		"22. Change car wheel height",
-		"23. 6 Star police", -- 25
+		"22. Car wheel height",
+		"23. Wanted star", -- 25
 		"24. Win rampage (not instant)",
 		"25. AI Control",
-		"26. Prevent car from stuckflipped",
+		"26. Auto unstuck car",
 	},nil,f"Cheat_GodModes".."\n"..f"Cheat_GodModes_Notice")
 	if CH then
 		local achAdr = findEntityAnchr()
@@ -260,7 +255,7 @@ function MENU_matchmode()
 				ta+0xB4, -- 1P
 				ta+0x1C4 -- 2P
 			}
-			if CH[1] then t = table.append(t,{
+			if CH[1] then table.append(t,{
 				{a=0x58,value=3e4,flags=gg.TYPE_DWORD},
 				{a=0x5C,value=3e4,flags=gg.TYPE_DWORD},
 				{a=0x60,value=3e4,flags=gg.TYPE_DWORD},
@@ -271,7 +266,7 @@ function MENU_matchmode()
 				{a=0x74,value=1e3,flags=gg.TYPE_DWORD},
 			})
 			end
-			if CH[2] then t = table.append(t,{
+			if CH[2] then table.append(t,{
 				{a=0,value=9,flags=gg.TYPE_DWORD},
 				{a=0x1C,value=6,flags=gg.TYPE_DWORD},
 			})
@@ -299,7 +294,7 @@ end
 function cheat_godmode(CH,anchor)
 	t = {}
 	-- 1. Groups: Essentials (Weapon Ammo,Rel0ad,Immortality,C4 Drawing,Antiburn,Dr0wned,Car jet,Fast car,Transparent car,Disable car noise)
-	---
+	--- 2 ---
 	if CH[3] or CH[1] then -- Weapon Ammo (Freeze/NoFreeze)
 		tmp.a = {
 			{a=0x1C,n='Shotgun'},
@@ -325,7 +320,7 @@ function cheat_godmode(CH,anchor)
 	if CH[4] or CH[5] or CH[1] then -- Rel0ad (Pistol,SG,Rocket,C4/Grenade)
 		tmp.a = {{address=anchor+0x84,flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [Rel0adTimer]"}}
 		if CH[5] then
-			local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0;100]"},{100},{"number"})
+			local grenadeRange = gg.prompt({"Put your grenade range\nHold your grenade if you use this setting\nignore the throw range and disables delay by setting this to 0 [0;100]"},{1},{"number"})
 			if grenadeRange and grenadeRange[1] and grenadeRange[1] ~= "0" then
 				toast("Wait for it")
 				tmp.a[1].value = grenadeRange[1]
@@ -336,14 +331,14 @@ function cheat_godmode(CH,anchor)
 			end
 			tmp.a[1].value = -63
 		end
-		t = table.append(t,tmp.a)
+		table.append(t,tmp.a)
 	end
 	-- [5]
 	if CH[6] or CH[7] or CH[8] or CH[1] then -- (NoCarSteal/Immortality(On/Explode)) is this a good idea?
 		tmp.isNoSteal = CH[6]
 		tmp.isImmortal = CH[7] or CH[1]
 		tmp.isDestroy = CH[8]
-		t = table.append(t,{
+		table.append(t,{
 			{address=anchor+0x8,flags=gg.TYPE_WORD,freeze=true,value=(tmp.isNoSteal and -501 or 800),name="Pb2Chts [Health]"},
 			{address=anchor+0x158,flags=(tmp.isDestroy and gg.TYPE_WORD or gg.TYPE_FLOAT),freeze=true,value=((tmp.isImmortal or tmp.isDestroy) and 1 or 0),name="Pb2Chts [RespawnInterval]"},
 		})
@@ -351,56 +346,55 @@ function cheat_godmode(CH,anchor)
 	end
 	-- [7]
 	-- [8]
-	if CH[9] or CH[1] then t = table.append(t,{
+	if CH[9] or CH[1] then table.append(t,{ -- C4 Drawing
 		{address=anchor+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: X"},
 		{address=anchor+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: Y"}
 	})
 	end
-	if CH[10] then t = table.append(t,{
+	if CH[10] then table.append(t,{ -- Speedslide
 		{address=anchor+0x86,flags=gg.TYPE_WORD,value=300,freeze=true,name="Pb2Chts [SpeedSlide]"}
 	})
 	end
-	if CH[11] then t = table.append(t,{
+	if CH[11] then table.append(t,{ -- Float
 		{address=anchor-0x408,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Float]"}
 	})
 	end
-	if CH[12] then t = table.append(t,{
+	if CH[12] then table.append(t,{ -- Ragdoll
 		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Ragdoll]"},
 		{address=anchor+0x128,flags=gg.TYPE_DWORD,value=0,freeze=true,freezeType=gg.FREEZE_IN_RANGE,freezeFrom=0,freezeTo=120,name="Pb2Chts [Ragdoll]"}
 	})
 	end
-	if CH[13] or CH[7] or CH[1] then t = table.append(t,{ -- AntiBurn/NoSteal
+	if CH[13] or CH[7] or CH[1] then table.append(t,{ -- AntiBurn/NoSteal
 		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [EntityBurning]: Antiburn"},
 	})
 	end
-	if CH[14] then t = table.append(t,{
+	if CH[14] then table.append(t,{ -- Burned body
 		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [EntityBurning]: Burned"},
 	})
 	end
-	if CH[15] then t = table.append(t,{
+	if CH[15] then table.append(t,{ -- Fire body
 		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [EntityBurning]: Fire"},
 	})
 	end
-	if CH[16] or CH[1] then t = table.append(t,{
+	if CH[16] or CH[1] then table.append(t,{ -- Dr0wned
 		{address=anchor-0x60E,flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [Dr0wned]"},
 	})
 	end
-	---
+	-- [17]
 	-- [18]
-	-- [19]
-	if CH[20] or CH[1] then t = table.append(t,{
+	if CH[20] or CH[1] then table.append(t,{ -- Veichle jet
 		{address=anchor-0x1AC,flags=gg.TYPE_WORD,value=1,freeze=true,name="Pb2Chts [Enable jet]"},
 	})
 	end
-	if CH[21] or CH[1] then t = table.append(t,{
+	if CH[21] or CH[1] then table.append(t,{ -- Car speed
 		{address=anchor-0x210,flags=gg.TYPE_BYTE,value=3,freeze=true,name="Pb2Chts [CarAccelEngType]"},
 		{address=anchor-0x208,flags=gg.TYPE_FLOAT,value=0,freeze=true,name="Pb2Chts [CarSpeed]"},
 		{address=anchor-0x202,flags=gg.TYPE_WORD,value=31000,freeze=true,name="Pb2Chts [CarSpeed]"},
-		{address=anchor-0x214,flags=gg.TYPE_WORD,value=4,freeze=true,freezeType=gg.FREEZE_IN_RANGE,freezeFrom=4,freezeTo=6,name="Pb2Chts [WheelCount]"},
+	--{address=anchor-0x214,flags=gg.TYPE_WORD,value=4,freeze=true,freezeType=gg.FREEZE_IN_RANGE,freezeFrom=4,freezeTo=6,name="Pb2Chts [WheelCount]"},
 	--{address=anchor-0x20C,flags=gg.TYPE_FLOAT,value=1000,freeze=true,name="Pb2Chts [WheelGrip]"}, unused, it can give significant "controllable" fast speed, but comes at tons of minuses
 	})
 	end
-	if CH[22] or CH[1] then t = table.append(t,{
+	if CH[22] or CH[1] then table.append(t,{ -- Transparent veichle
 		{address=anchor-0x10,flags=gg.TYPE_WORD,value=1,name="Pb2Chts [TransparentVehicle]"},
 	})
 	end
@@ -415,19 +409,19 @@ function cheat_godmode(CH,anchor)
 		gg.addListItems(tmp[1])
 	end
 	-- [24]
-	if CH[25] then t = table.append(t,{
+	if CH[25] or CH[1] then table.append(t,{ -- Wanted level
 		{address=anchor-0x11,flags=gg.TYPE_BYTE,value=127,name="Pb2Chts [Wanted level]"},
 	})
 	end
-	if CH[26] then t = table.append(t,{
+	if CH[26] then table.append(t,{ -- Win rampage
 		{address=anchor+0x30,flags=gg.TYPE_DWORD,value=9e8,freeze=true,name="Pb2Chts [Win rampage] (remove after you win match)"},
 	})
 	end
-	if CH[27] then t = table.append(t,{
+	if CH[27] then table.append(t,{ -- AI Control
 		{address=anchor+0xDB,flags=gg.TYPE_BYTE,value=1,freeze=true,name="Pb2Chts [ControlMode] (remove after you win match)"},
 	})
 	end
-	if CH[28] then t = table.append(t,{
+	if CH[28] then table.append(t,{ -- Auto Unstuck
 		{address=anchor-0x72A,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [StopStuckFlip]"},
 	})
 	end
@@ -436,7 +430,7 @@ function cheat_godmode(CH,anchor)
 		local wheelHeight = gg.prompt({"Set your custom wheel height [0;200]"},{190},{"number"})
 		if wheelHeight then
 			wheelHeight = wheelHeight[1]
-			t = table.append(t,{
+			table.append(t,{
 				{address=anchor-0x3EB,flags=gg.TYPE_FLOAT,value=wheelHeight,name="Pb2Chts [CarWheelFLZ]"},
 				{address=anchor-0x3DF,flags=gg.TYPE_FLOAT,value=wheelHeight,name="Pb2Chts [CarWheelFRZ]"},
 				{address=anchor-0x3D3,flags=gg.TYPE_FLOAT,value=wheelHeight,name="Pb2Chts [CarWheelBLZ]"},
@@ -454,7 +448,7 @@ function cheat_godmode(CH,anchor)
 		sleep(3e3)
 		gg.setValues(tmp[1])
 		tmp[1][1].value = 2
-		t = table.append(t,tmp[1])
+		table.append(t,tmp[1])
 		sleep(1e3)
 	end
 	if CH[19] then -- Change vehicle color
@@ -490,7 +484,7 @@ function cheat_godmode(CH,anchor)
 		elseif CH == 13 then PlyrClrCH = 59
 		elseif CH == 14 then PlyrClrCH = 65
 		elseif CH == 15 then PlyrClrCH = -1 end
-		if PlyrClrCH and PlyrClrCH >= 0 then t = table.append(t,{
+		if PlyrClrCH and PlyrClrCH >= 0 then table.append(t,{
 			{address=anchor+0x94,flags=gg.TYPE_BYTE,freeze=true,value=PlyrClrCH,name="Pb2Chts [Vehicle color]"},
 		})
 		elseif PlyrClrCH and PlyrClrCH == -1 then
@@ -584,12 +578,12 @@ function cheat_pistolknockback()
 end
 function cheat_wallhack()
 	local CH,tmp = gg.choice({
-		"GKTV, ON (wonky physics, Xa-based, fast to enable, survives multiple match, and can wallhack entities)",
+		"GKTV, ON",
 		"GKTV, OFF",
-		"AGH, ON (physics works best. Ca-based, need to reapplied every match, takes slightly longer than GKTV)",
+		"AGH, ON",
 		"AGH, OFF",
 		"——",
-		"Restore previous value",
+		"Help",
 		"Clear memory buffer",
 		f"__back__"
 	},nil,f"Cheat_WallHack"..". "..f"Cheat_WallHack_Notice"),nil
@@ -601,12 +595,19 @@ function cheat_wallhack()
 	elseif CH == 4 then tmp={2,-1,1140457472,"OFF"}
 	---
 	elseif CH == 6 then
-		gg.setValues(revert.wallhack_agh)
-		gg.setValues(revert.wallhack_gktv)
-		revert.wallhack_agh,revert.wallhack_gktv = nil,nil
-		toast("Previous value restored, be warned though this will cause instability")
-		cheat_wallhack()
 	elseif CH == 7 then
+		alert([[Wall hack is a hack where you can pass through walls
+
+GKTV (known as Pumpkin Hacker)'s Wallhack is recommended, it Xa-based (which is fast to enable/disable),
+able to survive multiple matches (because we're changing Xa, and Xa never changes), and can wallhack entities.
+You can also optionally choose to only wallhack entities, which makes you unpushable by others (only by online players/bots)
+
+AGH (Alpha GG Hacker) method has best physics (wheels wont get stuck), its Ca-based (thus need to be reapplied every match and takes slightly longer than GKTV)
+
+Technical Explanation:
+Xa = GG CodeApp memory region (marked with purple color, its tiny (means really fast to search numbers), and never changes (not requiring to reapply every time).
+Ca = GG C Alloc memory region (marked with yellow color, its quite big (thus searches takes couple seconds, and it changes a lot (because of the nature of C).
+GG = GameGuardian.]])
 		CH,memOzt.wallhack_agh,memOzt.wallhack_gktv = nil,nil,nil
 		toast("Memory buffer cleared")
 		cheat_wallhack()
@@ -621,19 +622,16 @@ function cheat_wallhack()
 				gg.searchNumber("3472W;5W;"..tmp[2].."F;-17789W::15") -- wall hack
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				tmp[6] = gg.getResults(1)
-				log("Results: "..gg.getResultsCount())
 				gg.clearResults()
 				gg.searchNumber("2W;16256W;"..tmp[2].."F;24W::9") -- vehicle wallhack
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				table.insert(tmp[6],gg.getResults(1)[1])
-				log("Results: "..gg.getResultsCount())
 				memOzt.wallhack_gktv,revert.wallhack_gktv = tmp[6],tmp[6]
 			end
 			gg.loadResults(memOzt.wallhack_gktv)
 			if #memOzt.wallhack_gktv == 0 then
 				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
 			else
-				if #memOzt.wallhack_gktv == 1 then log("Only found 1 result instead of 2 results.\n        Wallhack might partially or not working\n        try to play on build 121.") end
 				for i=1,#memOzt.wallhack_gktv do
 					memOzt.wallhack_gktv[i].value = tmp[3]
 				end
@@ -643,7 +641,7 @@ function cheat_wallhack()
 		else
 			gg.setRanges(gg.REGION_C_ALLOC)
 			if not memOzt.wallhack_agh then
-			--Optimized group search of: "576F;"..tmp[2].."D;576F::9"
+			--Optimized group search of: 576F;tmp[2]D;576F::9
 				gg.searchNumber(576,gg.TYPE_FLOAT)
 				t=gg.getResults(1e3) for i=1,#t do t[i].address = (t[i].address + 0x8) end gg.loadResults(t) gg.refineNumber(576)
 				t=gg.getResults(1e3) for i=1,#t do t[i].address = (t[i].address - 0x4) t[i].flags = gg.TYPE_DWORD end gg.loadResults(t) gg.refineNumber(tmp[2])
@@ -871,7 +869,7 @@ function cheat_floodspawn()
 						t[i].freeze = true
 						t[i].name = "Pb2Chts [RespawnHack]"
 						if CH[2] then -- rc spam
-							ta = table.append(ta,{{
+							table.append(ta,{{
 								address = t[i].address - 0xE,
 								flags = gg.TYPE_WORD,
 								value = -1,
@@ -880,7 +878,7 @@ function cheat_floodspawn()
 							}})
 						end
 						if CH[3] then -- win brawl
-							ta = table.append(ta,{{
+							table.append(ta,{{
 								address = t[i].address - 0x14,
 								flags = gg.TYPE_DWORD,
 								value = 9e6,
@@ -889,7 +887,7 @@ function cheat_floodspawn()
 							}})
 						end
 						if CH[4] then -- swag deliver 0 timer
-							ta = table.append(ta,{{
+							table.append(ta,{{
 								address = t[i].address + 0xE,
 								flags = gg.TYPE_WORD,
 								value = 0,
@@ -901,7 +899,7 @@ function cheat_floodspawn()
 						--fetch current entity cam id
 							gg.loadResults({{address=t[i].address + 0x10,flags=gg.TYPE_WORD}})
 						--and apply
-							ta = table.append(ta,{{
+							table.append(ta,{{
 								address = t[i].address + 0x10,
 								flags = gg.TYPE_WORD,
 								value = gg.getResults(1)[1].value,
@@ -911,7 +909,7 @@ function cheat_floodspawn()
 							gg.clearResults() -- get rid of temporary trash after used
 						end
 						if CH[6] then -- disable AI
-							ta = table.append(ta,{{
+							table.append(ta,{{
 								address = t[i].address + 0xE8,
 								flags = gg.TYPE_BYTE,
 								value = 0,
@@ -1026,23 +1024,23 @@ function cheat_xpmodifier()
 			t = {}
 			tmp[1] = tmp[1][1].address
 			if CH[1] and CH[1] ~= "" and CH[1] ~= "-1" then
-				t = table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
+				table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
 			end
 			if CH[2] and CH[2] ~= "" and CH[2] ~= "-1" then
-				t = table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_DWORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
+				table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_DWORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
 			end
 			if CH[5] and CH[5] ~= "-1" then
-				t = table.append(t,{{address=(tmp[1]-0x403B54),flags=gg.TYPE_WORD,value=CH[5],name="Pb2Chts [OverrideControlledPlayer]"}})
+				table.append(t,{{address=(tmp[1]-0x403B54),flags=gg.TYPE_WORD,value=CH[5],name="Pb2Chts [OverrideControlledPlayer]"}})
 			end
 			if CH[6] then
 				if CH[6] == "-1" then -- 1
-					t = table.append(t,{{address=(tmp[1]-0x403A2C),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
+					table.append(t,{{address=(tmp[1]-0x403A2C),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
 				elseif CH[6] == "1" then -- 2
-					t = table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
+					table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
 				end
 			end
 			if CH[7] then
-				t = table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
+				table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
 			end
 			gg.setValues(t)
 			gg.addListItems(t)
@@ -1645,7 +1643,6 @@ function table.append(t1,t2)
 	for _,v in ipairs(t2) do
 		t1[#t1+1]=v
 	end
-	return t1
 end
 function searchWatchdog(msg,refineVal,mmBfr)
 --[[
@@ -1733,6 +1730,7 @@ function optimizeRange(range)
 	if not next(t) then -- if there {}?? on the table
 		return range -- return the previously given input
 	end
+	log("[AutoMemOpti] Reduced scanned memory zone: "..string.format("%x",range[1]):gsub("%l",string.upper).."—"..string.format("%x",range[2]):gsub("%l",string.upper).." → "..string.format("%x",result[1]):gsub("%l",string.upper).."—"..string.format("%x",result[2]):gsub("%l",string.upper))
 	return result -- else, return the result.
 end
 function findEntityAnchr()
@@ -1864,7 +1862,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.2.7"
+		VERSION="2.2.8_rc1"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -1982,7 +1980,7 @@ en_US={
 Automatic				 = "Automatic",
 About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)",
 Credits					 = "Credits",
-Credits_Text		 = "Credit:\n+ mdp43140 - Main Contributor\n+ Mangyu - Original inspiration\n+ MisterCuteX - Mega Explosion,Respawn Hack\n+ tehtmi - unluac Creator (and decompile helper)\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n+ AGH - Wall Hack,Car Health GG Values\n+ GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n+ XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n+ JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n+ antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n+ MinFRE - 6 star police GG Offsets.",
+Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.",
 Disclaimmer			 = "Disclaimmer (please read)",
 Disclaimmer_Text = "DISCLAIMMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
 Exit_ThankYouMsg = "	Report a bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Discussion: at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	FAQ: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
@@ -2010,7 +2008,7 @@ eAchB_hold2      = "Hold your knife 🔪",
 Automatic				 = "Otomatis",
 About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
-Credits_Text		 = "Kredit:\n+ mdp43140 - Kontributor Utama\n+ Mangyu - Inspirasi original\n+ MisterCuteX - Mega Explosion,Respawn Hack\n+ tehtmi - Pembuat unluac (dan helper dekompilasi)\n+ Crystal_Mods100x - Menu ICE\n+ Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n+ AGH - Value WallHack,CarHealth GG\n+ GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n+ XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n+ JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n+ antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n+ MinFRE - Offset 6 star police GG.",
+Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Value WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.",
 Disclaimmer			 = "Disklaimmer (mohon untuk dibaca)",
 Disclaimmer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
 Exit_ThankYouMsg = "	Laporkan bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Diskusi: https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Pertanyaan yang sering ditanyakan: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
