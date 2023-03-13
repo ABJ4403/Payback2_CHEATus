@@ -382,11 +382,11 @@ function cheat_godmode(CH,anchor)
 	end
 	-- [17]
 	-- [18]
-	if CH[20] or CH[1] then table.append(t,{ -- Veichle jet
+	if CH[19] or CH[1] then table.append(t,{ -- Veichle jet
 		{address=anchor-0x1AC,flags=gg.TYPE_WORD,value=1,freeze=true,name="Pb2Chts [Enable jet]"},
 	})
 	end
-	if CH[21] or CH[1] then table.append(t,{ -- Car speed
+	if CH[20] or CH[1] then table.append(t,{ -- Car speed
 		{address=anchor-0x210,flags=gg.TYPE_BYTE,value=3,freeze=true,name="Pb2Chts [CarAccelEngType]"},
 		{address=anchor-0x208,flags=gg.TYPE_FLOAT,value=0,freeze=true,name="Pb2Chts [CarSpeed]"},
 		{address=anchor-0x202,flags=gg.TYPE_WORD,value=31000,freeze=true,name="Pb2Chts [CarSpeed]"},
@@ -394,11 +394,11 @@ function cheat_godmode(CH,anchor)
 	--{address=anchor-0x20C,flags=gg.TYPE_FLOAT,value=1000,freeze=true,name="Pb2Chts [WheelGrip]"}, unused, it can give significant "controllable" fast speed, but comes at tons of minuses
 	})
 	end
-	if CH[22] or CH[1] then table.append(t,{ -- Transparent veichle
+	if CH[21] or CH[1] then table.append(t,{ -- Transparent veichle
 		{address=anchor-0x10,flags=gg.TYPE_WORD,value=1,name="Pb2Chts [TransparentVehicle]"},
 	})
 	end
-	if CH[23] or CH[1] then -- Disable vehicle noise
+	if CH[22] or CH[1] then -- Disable vehicle noise
 		tmp[1] = {
 			{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
 		}
@@ -408,25 +408,25 @@ function cheat_godmode(CH,anchor)
 		gg.setValues(tmp[1])
 		gg.addListItems(tmp[1])
 	end
-	-- [24]
-	if CH[25] or CH[1] then table.append(t,{ -- Wanted level
+	-- [23]
+	if CH[24] or CH[1] then table.append(t,{ -- Wanted level
 		{address=anchor-0x11,flags=gg.TYPE_BYTE,value=127,name="Pb2Chts [Wanted level]"},
 	})
 	end
-	if CH[26] then table.append(t,{ -- Win rampage
+	if CH[25] then table.append(t,{ -- Win rampage
 		{address=anchor+0x30,flags=gg.TYPE_DWORD,value=9e8,freeze=true,name="Pb2Chts [Win rampage] (remove after you win match)"},
 	})
 	end
-	if CH[27] then table.append(t,{ -- AI Control
+	if CH[26] then table.append(t,{ -- AI Control
 		{address=anchor+0xDB,flags=gg.TYPE_BYTE,value=1,freeze=true,name="Pb2Chts [ControlMode] (remove after you win match)"},
 	})
 	end
-	if CH[28] then table.append(t,{ -- Auto Unstuck
+	if CH[27] then table.append(t,{ -- Auto Unstuck
 		{address=anchor-0x72A,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [StopStuckFlip]"},
 	})
 	end
 	--- stuff that requires user intervention and takes longer?
-	if CH[24] then -- Custom wheel height
+	if CH[23] then -- Custom wheel height
 		local wheelHeight = gg.prompt({"Set your custom wheel height [0;200]"},{190},{"number"})
 		if wheelHeight then
 			wheelHeight = wheelHeight[1]
@@ -440,7 +440,7 @@ function cheat_godmode(CH,anchor)
 			})
 		end
 	end
-	if CH[18] then -- Clone player
+	if CH[17] then -- Clone player
 		toast("[ClonePlayer] Change the weapon you want before you can\'t change it anymore")
 		tmp[1] = {
 			{address=anchor+0xDB,flags=gg.TYPE_BYTE,value=7,freeze=true,name="Pb2Chts [ControlMode]"}
@@ -451,7 +451,7 @@ function cheat_godmode(CH,anchor)
 		table.append(t,tmp[1])
 		sleep(1e3)
 	end
-	if CH[19] then -- Change vehicle color
+	if CH[18] then -- Change vehicle color
 		local CH,PlyrClrCH = gg.choice({
 			"1. Black (0)",
 			"2. Blue (1)",
