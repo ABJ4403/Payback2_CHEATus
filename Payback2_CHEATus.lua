@@ -984,34 +984,22 @@ function cheat_floodspawn()
 	CH = nil
 end
 function cheat_c4autorigg()
-	local totalC4sRigged = 0
-	gg.setRanges(cfg.memRange.general)
-	gg.clearResults()
---search c4s control code
-	gg.searchNumber(83886336,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
-	local t = gg.getResults(1e3)
---Offset -0xD0 (health), load its result
-	for i=1,#t do
-		t[i].address = (t[i].address - 0xD0)
-		t[i].flags = gg.TYPE_WORD
-	end
-	gg.loadResults(t)
---Refine health 100 (which is C4s health), check if it actually located in [5d]08, and set to 0 if so
-	gg.refineNumber(100)
-	t = gg.getResults(1e3) for i=1,#t do
-		tmp0 = string.format("%x",t[i].address)
-		if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then
-			t[i].value = 0
-			totalC4sRigged = totalC4sRigged + 1
-		else
-			t[i] = nil
-		end
-	end
-	if totalC4sRigged == 0 then
+	gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
+	tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xA4) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(83886336) -- 3/6 (ControlCode, uncontrolled)
+	tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xD0) end gg.loadResults(tmp) gg.refineNumber(100)                        -- 5/6 (Health)
+	tmp=gg.getResults(5e3) for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+	tmp=gg.getResults(5e3)
+	if #tmp == 0 then
 		gg.toast("Can't find any C4s, is there any C4 bombs planted?")
 	else
+		t = {}
+		for i=1,#tmp do table.append(t,{
+			{address=tmp[i].address+0x8,flags=gg.TYPE_WORD,value=0},
+			{address=tmp[i].address+0x158,flags=gg.TYPE_WORD,value=1}
+		})
+		end
 		gg.setValues(t)
-		gg.toast(totalC4sRigged.." C4s rigged!")
+		gg.toast(#tmp.." C4s rigged!")
 	end
 end
 function cheat_runspeedmod()
