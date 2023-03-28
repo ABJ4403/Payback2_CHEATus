@@ -1748,7 +1748,7 @@ function optimizeRange(range)
 	if not next(t) then -- if there {}?? on the table
 		return range -- return the previously given input
 	end
-	log("[AutoMemOpti] Reduced scanned memory zone: "..string.format("%x",range[1]):gsub("%l",string.upper).."—"..string.format("%x",range[2]):gsub("%l",string.upper).." → "..string.format("%x",result[1]):gsub("%l",string.upper).."—"..string.format("%x",result[2]):gsub("%l",string.upper))
+	log("[AutoMemOpti] Reduced scanned memory zone: "..("%x"):format(range[1]):gsub("%l",string.upper).."—"..("%x"):format(range[2]):gsub("%l",string.upper).." → "..("%x"):format(result[1]):gsub("%l",string.upper).."—"..("%x"):format(result[2]):gsub("%l",string.upper))
 	return result -- else, return the result.
 end
 function findEntityAnchr()
