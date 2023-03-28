@@ -845,7 +845,7 @@ function cheat_floodspawn()
 				t = gg.getResults(5e3)
 			end
 	--[[for i=1,#t do TODO: fix this stuff only works for 1P not 2P due to different address (1P always ends with 66c, while 2P can ends with either 4/6/e??
-				tmp[0] = string.format("%x",t[i].address)
+				tmp[0] = ("%x"):format(t[i].address)
 				if not tmp[0]:find('66c$') then
 					t[i] = nil
 				end
@@ -1590,7 +1590,7 @@ function table.tostring(t,dp)
 		if tv == 'table' then
 			r = r..table.tostring(v,(dp or 0)+1)
 		elseif tv == 'number' and #tostring(v) > 7 then
-			r = r..'0x'..string.format("%x",v):gsub("%l",string.upper)
+			r = r..'0x'..("%x"):format(v):gsub("%l",string.upper)
 		elseif tv == 'boolean' or tv == 'number' then
 			r = r..tostring(v)
 		else
@@ -1785,7 +1785,7 @@ function findEntityAnchr()
 		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 		t = gg.getResults(200)
 		for i=1,#t do
-			tmp0 = string.format("%x",t[i].address)
+			tmp0 = ("%x"):format(t[i].address)
 			if not (tmp0:find('518$') or tmp0:find('d18$')) then t[i] = nil end
 		end
 		while gg.getResultCount() > 1 do
