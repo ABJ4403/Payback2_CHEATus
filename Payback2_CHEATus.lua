@@ -1,11 +1,10 @@
 --— local variables ——————————————--
 --- can reduce latency by couple miliseconds
-local gg,io,os = gg,io,os -- precache the usual call function (faster function call)
-gg.getFile,gg.getTargetInfo,gg.getTargetPackage = gg.getFile(),gg.getTargetInfo(),gg.getTargetPackage() -- prefetch some gg output
-gg.getFile = gg.getFile:gsub("%.lua$","") -- strip .lua
+local gg,io,os = gg,io,os -- cache table query to make it faster
+gg.getFile,gg.getTargetInfo,gg.getTargetPackage = gg.getFile():gsub("%.lua$",""),gg.getTargetInfo(),gg.getTargetPackage() -- prefetch some gg output, also strip .lua on gg.getFile
 local susp_file,cfg_file = gg.getFile..'.suspend.json',gg.getFile..'.conf' -- define config and suspend files
-local tmp,revert,memOzt,memOffset,t = {},{},{},{},{} -- blank stuff for who knows...
-local curVal,CH,cfg,lastCfg -- blank stuff for who knows...
+local tmp,memOzt,t = {},{},{} -- blank table for who knows...
+local curVal,CH,cfg,lastCfg -- preallocate stuff for who knows...
 --————————————————————————————————--
 
 
@@ -26,8 +25,8 @@ function MENU()
 		"9. Match modifier",
 		"——",
 		f"Settings",
-		f"__about__",
-		f"__exit__",
+		"__about__",
+		"__exit__",
 		f"Suspend"
 	},nil,f"Title_Version")
 	if CH == 1 then cheat_wallhack()
@@ -69,7 +68,7 @@ function MENU_CSD()
 		"16. Colored Peoples (ESP)",
 		"17. Delete All Names",
 		"——",
-		f"__back__"
+		"__back__"
 	},nil,f"Title_Version")
 --Title:CSD...
 	if CH == 2 then cheat_runspeedmod()
@@ -97,7 +96,7 @@ function MENU_other()
 	local CH = gg.choice({
 		"1. Weapon ammo",
 		"2. void mode",
-		f"__back__"
+		"__back__"
 	},nil,"Other cheats\nmost of these cheats might be experiment, or uncategorized or whatnot...")
 	if CH == 1 then cheat_weaponammo()
 	elseif CH == 2 then cheat_voidmatchmode()
@@ -117,7 +116,7 @@ function MENU_settings()
 		"——",
 		"Save settings",
 		"Reset settings",
-		f"__back__"
+		"__back__"
 	},nil,f"Title_Version")
 	if CH == 12 then MENU()
 	elseif CH == 1 then
@@ -136,7 +135,7 @@ function MENU_settings()
 			"🇺🇸️ English",
 			"🇮🇩️ Indonesia",
 			"Auto-detect (uses GameGuardian API, will use English as fallback if your language didn't exist)",
-			f"__back__",
+			"__back__",
 		},tmp,f"Title_Version")
 		if CH then
 			if CH == 4 then MENU_settings()
@@ -153,7 +152,7 @@ function MENU_settings()
 		local CH = gg.choice({
 			"1. Hold weapon (tells you to hold pistol/knife and find those values. faster, ~6 seconds)",
 			"2. ABJ4403's Automatic anchor (Hold pistol, dont shoot, little bit Hold-Weapon-like. rarely fails)",
-			f"__back__",
+			"__back__",
 		},tmp,f"Title_Version")
 		if CH then
 			if CH == 1 then cfg.entityAnchrSearchMethod = "holdWeapon"
@@ -184,14 +183,6 @@ function MENU_settings()
 		MENU_settings()
 	end
 end
---[[
-	A little note before looking at the cheat mechanics:
-	- On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
-	old version uses Ca,Ch,Jh,A (C++Alloc,C++Heap,JavaHeap,Anonymous)
-	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
-	- on version 121+ (specifically build 126), some offsets has been changed (specifically the Xa stuff)
-	- If you play on build 126, use Payback2_CHEATus.126.lua instead.
-]]
 function MENU_godmode()
 --Let the user choose stuff
 	local CH = gg.multiChoice({
@@ -245,7 +236,7 @@ function MENU_matchmode()
 		"Weapon Ammo",
 		"void mode (+void/no time limit)",
 		"——",
-		f"__back__"
+		"__back__"
 	},nil,"Match mode modifier")
 	if CH then
 		if CH[4] then return MENU()end
@@ -350,8 +341,8 @@ function cheat_godmode(CH,anchor)
 	-- [7]
 	-- [8]
 	if CH[9] or CH[1] then table.append(t,{ -- C4 Drawing
-		{address=anchor+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: X"},
-		{address=anchor+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: Y"}
+		{address=anchor+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4PosX]"},
+		{address=anchor+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4PosY]"}
 	})
 	end
 	if CH[10] then table.append(t,{ -- Speedslide
@@ -368,15 +359,15 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[13] or CH[7] or CH[1] then table.append(t,{ -- AntiBurn/NoSteal
-		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [EntityBurning]: Antiburn"},
+		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [EntityBurn]: Antiburn"},
 	})
 	end
 	if CH[14] then table.append(t,{ -- Burned body
-		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [EntityBurning]: Burned"},
+		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [EntityBurn]: Burned"},
 	})
 	end
 	if CH[15] then table.append(t,{ -- Fire body
-		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [EntityBurning]: Fire"},
+		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [EntityBurn]: Fire"},
 	})
 	end
 	if CH[16] or CH[1] then table.append(t,{ -- Dr0wned
@@ -397,13 +388,13 @@ function cheat_godmode(CH,anchor)
 	--{address=anchor-0x20C,flags=gg.TYPE_FLOAT,value=1000,freeze=true,name="Pb2Chts [WheelGrip]"}, unused, it can give significant "controllable" fast speed, but comes at tons of minuses
 	})
 	end
-	if CH[21] or CH[1] then table.append(t,{ -- Transparent veichle
+	if CH[21] or CH[1] then table.append(t,{ -- Transparent vehicle
 		{address=anchor-0x10,flags=gg.TYPE_WORD,value=1,name="Pb2Chts [TransparentVehicle]"},
 	})
 	end
-	if CH[22] or CH[1] then -- Disable vehicle noise
+	if CH[22] or CH[1] then -- Disable vehicle noise(/AntiBurn/NoSteal)
 		tmp[1] = {
-			{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
+			{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [EntityBurn]: Antiburn"},
 		}
 		gg.setValues(tmp[1])
 		tmp[1][1].value = 0
@@ -417,15 +408,15 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[25] then table.append(t,{ -- Win rampage
-		{address=anchor+0x30,flags=gg.TYPE_DWORD,value=9e8,freeze=true,name="Pb2Chts [Win rampage] (remove after you win match)"},
+		{address=anchor+0x30,flags=gg.TYPE_DWORD,value=9e8,name="Pb2Chts [WinRampage] (remove after won match)"},
 	})
 	end
 	if CH[26] then table.append(t,{ -- AI Control
-		{address=anchor+0xDB,flags=gg.TYPE_BYTE,value=1,freeze=true,name="Pb2Chts [ControlMode] (remove after you win match)"},
+		{address=anchor+0xDB,flags=gg.TYPE_BYTE,value=1,freeze=true,name="Pb2Chts [CtrlMode]"},
 	})
 	end
-	if CH[27] then table.append(t,{ -- Auto Unstuck
-		{address=anchor-0x72A,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [StopStuckFlip]"},
+	if CH[27] then table.append(t,{ -- Wheel Suspension/Auto Unstuck
+		{address=anchor-0x72A,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [WheelSuspension]"},
 	})
 	end
 	--- stuff that requires user intervention and takes longer?
@@ -455,7 +446,7 @@ function cheat_godmode(CH,anchor)
 		sleep(1e3)
 	end
 	if CH[18] then -- Change vehicle color
-		local CH,PlyrClrCH = gg.choice({
+		local CH = ({0,1,2,3,4,5,6,7,8,16,18,50,59,65,-1})[gg.choice({
 			"1. Black (0)",
 			"2. Blue (1)",
 			"3. Green (2)",
@@ -471,41 +462,29 @@ function cheat_godmode(CH,anchor)
 			"13. Dark red (59)",
 			"14. Tomato red (65)",
 			"15. Rainbow"
-		},nil,"Select the color you want")
-		if CH == 1 then PlyrClrCH = 0
-		elseif CH == 2 then PlyrClrCH = 1
-		elseif CH == 3 then PlyrClrCH = 2
-		elseif CH == 4 then PlyrClrCH = 3
-		elseif CH == 5 then PlyrClrCH = 4
-		elseif CH == 6 then PlyrClrCH = 5
-		elseif CH == 7 then PlyrClrCH = 6
-		elseif CH == 8 then PlyrClrCH = 7
-		elseif CH == 9 then PlyrClrCH = 8
-		elseif CH == 10 then PlyrClrCH = 16
-		elseif CH == 11 then PlyrClrCH = 48
-		elseif CH == 12 then PlyrClrCH = 50
-		elseif CH == 13 then PlyrClrCH = 59
-		elseif CH == 14 then PlyrClrCH = 65
-		elseif CH == 15 then PlyrClrCH = -1 end
-		if PlyrClrCH and PlyrClrCH >= 0 then table.append(t,{
-			{address=anchor+0x94,flags=gg.TYPE_BYTE,freeze=true,value=PlyrClrCH,name="Pb2Chts [Vehicle color]"},
-		})
-		elseif PlyrClrCH and PlyrClrCH == -1 then
-			toast("click the floating GG icon to stop. while the rainbow animation playing, you cannot access GG until its stopped.")
-			tmp.rnbwCurClr = 1
-			tmp.rainbowCar = {{address=anchor+0x94,flags=gg.TYPE_BYTE,freeze=false,name="Pb2Chts [Vehicle color]"}}
-			gg.setValues(t)
-			gg.addListItems(t)
-			gg.clearResults()
-			gg.setVisible(false)
-			while not gg.isVisible() do
-				if tmp.rnbwCurClr > 8 then tmp.rnbwCurClr = 1 end
-				tmp.rainbowCar[1].value = tmp.rnbwCurClr
-				gg.setValues(tmp.rainbowCar)
-				sleep(77)
-				tmp.rnbwCurClr = tmp.rnbwCurClr + 1
+		},nil,"Select the color you want")]
+		if CH then
+			if CH >= 0 then
+				table.append(t,{
+					{address=anchor+0x94,flags=gg.TYPE_BYTE,freeze=true,value=CH,name="Pb2Chts [Vehicle color]"},
+				})
+			elseif CH == -1 then
+				toast("Click GG icon to stop. you can't access GG while rainbow animation is playing")
+				tmp.rnbwCurClr = 1
+				tmp.rainbowCar = {{address=anchor+0x94,flags=gg.TYPE_BYTE,name="Pb2Chts [Vehicle color]"}}
+				gg.setValues(t)
+				gg.addListItems(t)
+				gg.clearResults()
+				gg.setVisible(false)
+				while not gg.isVisible() do
+					if tmp.rnbwCurClr > 8 then tmp.rnbwCurClr = 1 end
+					tmp.rainbowCar[1].value = tmp.rnbwCurClr
+					gg.setValues(tmp.rainbowCar)
+					sleep(77)
+					tmp.rnbwCurClr = tmp.rnbwCurClr + 1
+				end
+				gg.setVisible(false)
 			end
-			gg.setVisible(false)
 		end
 	end
 	gg.setValues(t)
@@ -516,16 +495,15 @@ function cheat_pistolknockback()
 		"Grapple gun/Pull (-20)",
 		"Knockback/Push (20)",
 		"Default (0.25)",
-		"None (0.00001)",
+		"Off (0.00001)",
 		"Custom",
 		"——",
-		"Change current Knockback variable",
-		"Restore previous value",
+		"Change current knockback variable",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Pistol/Shotgun knockback modifier\nCurrent: "..curVal.PstlSgKnckbck.."\nHint: recommended value is -20 to 20 if you use pistol")
 	if CH then
-		if CH == 10 then return MENU()
+		if CH == 9 then return MENU()
 		elseif CH == 1 then PISTOL_KNOCKBACK_VALUE = -20
 		elseif CH == 2 then PISTOL_KNOCKBACK_VALUE = 20
 		elseif CH == 3 then PISTOL_KNOCKBACK_VALUE = 0.25
@@ -543,9 +521,6 @@ function cheat_pistolknockback()
 			if CH and CH[1] then curVal.PstlSgKnckbck = CH[1] end
 			return cheat_pistolknockback()
 		elseif CH == 8 then
-			revert.PistolKnockback = nil
-			return cheat_pistolknockback()
-		elseif CH == 9 then
 			memOzt.PistolKnockback = nil
 			return cheat_pistolknockback()
 		end
@@ -565,7 +540,7 @@ function cheat_pistolknockback()
 		--specially crafted for above conditions
 			handleMemOzt("PistolKnockback",curVal.PstlSgKnckbck,nil,gg.TYPE_FLOAT,2)
 			if gg.getResultCount() == 0 then
-				memOzt.PistolKnockback,revert.PistolKnockback = nil,nil
+				memOzt.PistolKnockback = nil
 				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
 			else
 				for i=1,#memOzt.PistolKnockback do
@@ -589,7 +564,7 @@ function cheat_wallhack()
 		"——",
 		"Help",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,f"Cheat_WallHack"..". "..f"Cheat_WallHack_Notice"),nil
 	if CH == 9 then MENU()
 -- Set value that is going to be searched using logic after this `if CH elseif end`
@@ -631,7 +606,7 @@ GG = GameGuardian.]])
 				gg.searchNumber("2W;16256W;"..tmp[2].."F;24W::9") -- vehicle wallhack
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				table.insert(tmp[6],gg.getResults(1)[1])
-				memOzt.wallhack_gktv,revert.wallhack_gktv = tmp[6],tmp[6]
+				memOzt.wallhack_gktv = tmp[6]
 			end
 			gg.loadResults(memOzt.wallhack_gktv)
 			if #memOzt.wallhack_gktv == 0 then
@@ -675,13 +650,12 @@ function cheat_bigbody()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		"Restore previous value",
 		"Use custom value",
-		f"__back__"
+		"__back__"
 	},nil,"Big body\nPS: client-side only")
 	if CH then
 		local t
-		if CH == 5 then MENU()
+		if CH == 4 then MENU()
 		elseif CH == 1 then
 			gg.setRanges(gg.REGION_CODE_APP)
 			handleMemOzt("bigbody",4.30000019073,nil,gg.TYPE_FLOAT,22)
@@ -701,14 +675,6 @@ function cheat_bigbody()
 				toast("Big body OFF")
 			end
 		elseif CH == 3 then
-			if revert.bigbody then
-				gg.setValues(revert.bigbody)
-				toast("Big body previous value restored")
-			else
-				toast("No values to restore")
-			end
-			revert.bigbody = nil
-		elseif CH == 4 then
 			local CH = gg.prompt({'Put your custom value (Game default: 4.3,Cheatus default: 5.9, offset: .00000019073)'},{curVal.BigBody},{'number'})
 			if CH and CH[1] ~= "" then curVal.BigBody = CH[1] end
 			CH = nil
@@ -726,12 +692,11 @@ function cheat_strongvehicle()
 		"Custom",
 		"——",
 		"Change current health variable",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Vehicle default health modifier")
 	if CH then
-		if CH == 9 then MENU()
+		if CH == 8 then MENU()
 		elseif CH == 1 then CAR_HEALTH_VALUE = 3e4
 		elseif CH == 2 then CAR_HEALTH_VALUE = 125
 		elseif CH == 3 then CAR_HEALTH_VALUE = 1
@@ -749,9 +714,6 @@ function cheat_strongvehicle()
 			if CH and CH[1] then curVal.CrDfltHlth = CH[1] end
 			return cheat_strongvehicle()
 		elseif CH == 8 then
-			CH,revert.CarHealth = nil,nil
-			return cheat_strongvehicle()
-		elseif CH == 9 then
 			CH,memOzt.CarHealth = nil,nil
 			return cheat_strongvehicle()
 		end
@@ -759,7 +721,7 @@ function cheat_strongvehicle()
 			gg.setRanges(gg.REGION_CODE_APP)
 			handleMemOzt("CarHealth",curVal.CrDfltHlth.."D;4D;1F::21",curVal.CrDfltHlth,gg.TYPE_DWORD,50)
 			if gg.getResultCount() == 0 then
-				memOzt.CarHealth,revert.CarHealth = nil,nil
+				memOzt.CarHealth = nil
 				toast("Can't find the specific set of number. if you changed the vehicle health value, and reopened the script, restore the actual current number using 'Change current health variable' menu")
 			else
 				for i=1,#memOzt.CarHealth do
@@ -781,12 +743,11 @@ function cheat_noblastdamage()
 		"Far (3.000.000, dead with almost any explosed explosion)",
 		"——",
 		"Change current damage value",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Blast damage intensity modifier")
 	if CH then
-		if CH == 8 then MENU()
+		if CH == 7 then MENU()
 		elseif CH == 1 then DAMAGE_INTENSITY_VALUE = 0
 		elseif CH == 2 then DAMAGE_INTENSITY_VALUE = 300
 		elseif CH == 3 then DAMAGE_INTENSITY_VALUE = 3e6
@@ -796,9 +757,6 @@ function cheat_noblastdamage()
 			if CH and CH[1] then curVal.DmgIntnsty = CH[1] end
 			cheat_noblastdamage()
 		elseif CH == 6 then
-			CH,revert.NoBlastDamage = nil,nil
-			cheat_noblastdamage()
-		elseif CH == 7 then
 			CH,memOzt.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
 		end
@@ -806,7 +764,7 @@ function cheat_noblastdamage()
 			gg.setRanges(gg.REGION_CODE_APP)
 			handleMemOzt("NoBlastDamage",curVal.DmgIntnsty..";2e9::5",curVal.DmgIntnsty,gg.TYPE_FLOAT,9)
 			if gg.getResultCount() == 0 then
-				memOzt.NoBlastDamage,revert.NoBlastDamage = nil,nil
+				memOzt.NoBlastDamage = nil
 				toast("Can't find the specific set of number. if you changed the blast intensity value and reopened the script, restore the actual current number using 'Change current damage value' menu")
 			else
 				for i=1,#memOzt.NoBlastDamage do
@@ -1026,11 +984,11 @@ function cheat_xpmodifier()
 --Not ready to use gg.REGION_C_BSS yet especially because JokerGGS mentioned a problem with it.
 	gg.setRanges(cfg.memRange.general)
 	local CH = gg.prompt({
-		'Put your new XP (Play Game limit is 999999, while DWORD integer is the max limit)',
-		'Put your new coin (max 30000, temporary, not recommend if you have infinite coin coz it might get reset)',
+		'Modify XP to (Play Game limit is 999999, while DWORD integer is the max limit)',
+		'Modify coin to (max 30000, temporary, not recommend if you have infinite coin coz it might get reset)',
 		'Freeze XP',
 		'Freeze Coin',
-		'Enable skip slow intro animation',
+		'Skip match intro',
 		'Override current controlled player [-1;16]',
 		'Win CTS match (0:disable,-1/1 one of the teams) [-1;1]',
 	},{999999,-1,true,false,false,-1,0},{'number','number','checkbox','checkbox','checkbox','number','number'})
@@ -1045,20 +1003,24 @@ function cheat_xpmodifier()
 				table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
 			end
 			if CH[2] and CH[2] ~= "" and CH[2] ~= "-1" then
+				if cfg.memRange.general == gg.REGION_C_BSS then toast("[!] There is a known bug where the game will crash for C-BSS Users, if the game does crash, do not issue any bug report, we're working on it!")gg.sleep(3e3) end
 				table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_DWORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
 			end
-			if CH[5] and CH[5] ~= "-1" then
-				table.append(t,{{address=(tmp[1]-0x403B54),flags=gg.TYPE_WORD,value=CH[5],name="Pb2Chts [OverrideControlledPlayer]"}})
+		--[3] Freeze XP
+		--[4] Freeze Coin
+		--TODO: 5,6,7 anchor should be 359.697D
+			if CH[5] then
+				table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
 			end
-			if CH[6] then
-				if CH[6] == "-1" then -- 1
-					table.append(t,{{address=(tmp[1]-0x403A2C),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
-				elseif CH[6] == "1" then -- 2
-					table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
-				end
+			if CH[6] and CH[6] ~= "-1" then
+				table.append(t,{{address=(tmp[1]-0x403B54),flags=gg.TYPE_WORD,value=CH[6],name="Pb2Chts [OverrideControlledPlayer]"}})
 			end
 			if CH[7] then
-				table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
+				if CH[7] == "-1" then -- 1
+					table.append(t,{{address=(tmp[1]-0x403A2C),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTS]"}})
+				elseif CH[7] == "1" then -- 2
+					table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTS]"}})
+				end
 			end
 			gg.setValues(t)
 			gg.addListItems(t)
@@ -1082,7 +1044,6 @@ function cheat_changeplayername()
 --search old player name
 	if player_name and player_name[1] and player_name[1] ~= ":" then
 		gg.searchNumber(player_name[1],gg.TYPE_BYTE)
-		revert.PlayerName = gg.getResults(5e3)
 		if gg.getResultCount() == 0 then
 			toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
@@ -1106,7 +1067,7 @@ function cheat_changeplayernamecolor()
 		"Corrupted (10h)",
 		"——",
 		"Remove all color/icon",
-		f"__back__"
+		"__back__"
 	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{curVal.PlayerCurrentName},{'text'})
 	if CH then
 		if CH == 1 then player_color_choice = 1
@@ -1124,7 +1085,6 @@ function cheat_changeplayernamecolor()
 		if player_color_choice then
 			gg.searchNumber(player_name[1],gg.TYPE_BYTE)
 			local t,removeOffset = gg.getResults(5e3),0
-			revert.PlayerName = gg.getResults(5e3)
 			if gg.getResultCount() == 0 then
 				toast('Can\'t find the player name, this cheat is still in experimentation phase')
 			else
@@ -1169,12 +1129,10 @@ function cheat_walkwonkyness()
 		"Default (0.004)",
 		"ON (1)",
 		"OFF (0)",
-		"Restore",
-		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Walk Wonkyness (fancy-cheat)")
 	gg.setRanges(gg.REGION_CODE_APP) -- PS: 0.00999999978 > 0.3 for new version
-	if CH == 5 then MENU()
+	if CH == 3 then MENU()
 	elseif CH == 1 then
 		handleMemOzt("walkwonkyness","0.004~1;0.00999999978::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0.004,gg.TYPE_FLOAT)
@@ -1187,18 +1145,13 @@ function cheat_walkwonkyness()
 		handleMemOzt("walkwonkyness","1.004;0.00999999978::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness OFF")
-	elseif CH == 4 then
-		gg.setValues(revert.walkwonkyness)
-		revert.walkwonkyness = nil
-	elseif CH == 5 then
-		revert.walkwonkyness = nil
 	end
 end
 function cheat_coloredtree()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Colored trees\nThis will change some shader stuff (actually idk wut this does lol) that affects trees")
 	if CH == 3 then MENU()
 	elseif CH == 1 then tmp={0.04,-999,"ON"}
@@ -1218,7 +1171,7 @@ function cheat_bigflamethroweritem()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Big flamethrower (Item)\nPS: this will not make the flame burst bigger")
 	if CH == 3 then MENU()
 	elseif CH == 1 then tmp={0.9,5.1403,"ON"}
@@ -1239,7 +1192,7 @@ function cheat_autoshootrocket()
 		"ON",
 		"ON (Only if holding rocket, better to use with Rel0ad)",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Autoshoot rocket. PS:\n- This will make everyone shoot rocket no matter what weapon they hold\n- To use this, use the machine gun, or use Rel0ad (will be quirky if using this)")
 	if CH == 4 then MENU()
 	elseif CH == 1 then tmp={0,0,"ON"}
@@ -1268,7 +1221,7 @@ function cheat_shadowfx()
 	local CH = gg.choice({
 		"OFF",
 		"ON",
-		f"__back__"
+		"__back__"
 	},nil,"Shadow effects\nInfo: this wont affect your game performance at all (not making it lag/fast)\ndont use this for performance purpose :)")
 	if CH == 3 then MENU()
 	elseif CH == 1 then tmp={1e-4,-1.0012,"Disabled"}
@@ -1288,7 +1241,7 @@ function cheat_clrdpplsp()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Colored people ESP (ExtraSensoryPerception. i guess this is X-Ray Hack)\nPS: Not work on latest version")
 	if CH == 3 then MENU()
 	elseif CH == 1 then tmp={0.08,436,"ON"}
@@ -1337,7 +1290,7 @@ function cheat_reflectiongraphics()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Reflection graphics\nWARNING: this can cause rendering issue that requires restart to fix it\nDont forget to disable this before you get in/out-of match\ni only recommend using this in offline mode so you can easily disable the reflection graphics before getting out of match")
 	if CH == 3 then MENU()
 	elseif CH == 1 then tmp={49,1,"ON",true} -- << `,true` is trick from lua.org to make lua better prepare a memory slot area whatevr... (will be used for temporary result save below :)
@@ -1364,14 +1317,12 @@ end
 function cheat_explodepow()
 	local CH = gg.choice({
 		"Modify Explosion power",
-		"——",
 		"Change current Explosion power",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Explosion power modifier\nCurrent: "..curVal.XplodPow.."\n")
 	if CH then
-		if CH == 6 then MENU()
+		if CH == 4 then MENU()
 		elseif CH == 1 then
 			local CH = gg.prompt({'Put your explosion power. Lower is more powerful\nSet to -1 to disable explosion\n PS:only applies to you'},{curVal.XplodPow},{'number'})
 			if CH and CH[1] then
@@ -1379,15 +1330,11 @@ function cheat_explodepow()
 			else
 				cheat_explodepow()
 			end
-		---
-		elseif CH == 3 then
+		elseif CH == 2 then
 			local CH = gg.prompt({'If you think the current explosion power is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current explosion power'},{curVal.PstlSgKnckbck},{'number'})
 			if CH and CH[1] then curVal.XplodPow = CH[1] end
 			cheat_explodepow()
-		elseif CH == 4 then
-			revert.explodePower = nil
-			cheat_explodepow()
-		elseif CH == 5 then
+		elseif CH == 3 then
 			memOzt.explodePower = nil
 			cheat_explodepow()
 		end
@@ -1395,7 +1342,7 @@ function cheat_explodepow()
 			gg.setRanges(gg.REGION_CODE_APP)
 			handleMemOzt("explodePower","15120W;"..curVal.XplodPow.."F::3",curVal.XplodPow,gg.TYPE_FLOAT,1)
 			if gg.getResultCount() == 0 then
-				memOzt.explodePower,revert.explodePower = nil,nil
+				memOzt.explodePower = nil
 				toast("Can't find the specific set of number. if you changed the explosion power and reopened the script, restore current number using 'Change current explosion power' menu")
 			else
 				memOzt.explodePower[1].value,curVal.XplodPow = EXPLOSION_POWER,EXPLOSION_POWER
@@ -1414,9 +1361,8 @@ function cheat_explodedir()
 		"Custom",
 		"——",
 		"Change current value",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Explode direction")
 	if CH == 8 then MENU()
 	elseif CH == 1 then XPLODIR_VAL = 5e4
@@ -1435,9 +1381,6 @@ function cheat_explodedir()
 		if CH and CH[1] then curVal.XplodDir = CH[1] end
 		cheat_explodedir()
 	elseif CH == 7 then
-		CH,revert.explodeDir = nil,nil
-		cheat_explodedir()
-	elseif CH == 8 then
 		CH,memOzt.explodeDir = nil,nil
 		cheat_explodedir()
 	end
@@ -1445,7 +1388,7 @@ function cheat_explodedir()
 		gg.setRanges(gg.REGION_CODE_APP)
 		handleMemOzt("explodeDir","1259902592D;"..curVal.XplodDir.."F::5",curVal.XplodDir,gg.TYPE_FLOAT,9)
 		if gg.getResultCount() == 0 then
-			memOzt.explodeDir,revert.explodeDir = nil,nil
+			memOzt.explodeDir = nil
 			toast("Can't find the specific set of number. if you changed the value and reopened the script, restore the actual current number using 'Change current value' menu")
 		else
 			for i=1,#memOzt.explodeDir do
@@ -1468,9 +1411,8 @@ function cheat_prtclintrvl()
 		"Custom",
 		"——",
 		"Change current interval variable",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Particle interval modifier\nCurrent: "..curVal.PrtclAnmtnIntrvl)
 	if CH == 10 then MENU()
 	elseif CH == 1 then PARTICLE_INT = 0
@@ -1490,14 +1432,13 @@ function cheat_prtclintrvl()
 		local CH = gg.prompt({'If you think the current interval value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current interval'},{curVal.PrtclAnmtnIntrvl},{'number'})
 		if CH and CH[1] then curVal.PrtclAnmtnIntrvl = CH[1] end
 		cheat_prtclintrvl()
-	elseif CH == 9 then revert.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
-	elseif CH == 10 then memOzt.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
+	elseif CH == 9 then memOzt.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
 	end
 	if PARTICLE_INT then
 		gg.setRanges(gg.REGION_CODE_APP)
 		handleMemOzt("PrtclAnmtnIntrvl","-352321693D;"..curVal.PrtclAnmtnIntrvl.."F::5",curVal.PrtclAnmtnIntrvl,gg.TYPE_FLOAT,1)
 		if gg.getResultCount() == 0 then
-			memOzt.PrtclAnmtnIntrvl,revert.PrtclAnmtnIntrvl = nil,nil
+			memOzt.PrtclAnmtnIntrvl = nil
 			toast("Can't find the specific set of number. if you changed the interval and reopened the script, restore the actual current number using 'Change current interval' menu")
 		else
 			for i=1,#memOzt.PrtclAnmtnIntrvl do
@@ -1513,13 +1454,11 @@ end
 function cheat_cardrift()
 	local CH = gg.choice({
 		"Modify drifting speed",
-		"——",
 		"Change current drifting speed",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Drifting speed modifier\nCurrent: "..curVal.DrftSpd.."\n")
-	if CH == 6 then MENU()
+	if CH == 4 then MENU()
 	elseif CH == 1 then
 		local CH = gg.prompt({'How fast you want the drifting rotation? Higher value is more powerful\nDefault:1 (1.3) [1;20]'},{curVal.DrftSpd},{'number'})
 		if CH and CH[1] then
@@ -1527,15 +1466,11 @@ function cheat_cardrift()
 		else
 			cheat_cardrift()
 		end
-	---
-	elseif CH == 3 then
+	elseif CH == 2 then
 		local CH = gg.prompt({'If you think the current explosion power is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current explosion power'},{curVal.DrftSpd},{'number'})
 		if CH and CH[1] then curVal.DrftSpd = CH[1] end
 		cheat_cardrift()
-	elseif CH == 4 then
-		revert.DrftSpd = nil
-		cheat_cardrift()
-	elseif CH == 5 then
+	elseif CH == 3 then
 		memOzt.DrftSpd = nil
 		cheat_cardrift()
 	end
@@ -1543,7 +1478,7 @@ function cheat_cardrift()
 		gg.setRanges(gg.REGION_CODE_APP)
 		handleMemOzt("DrftSpd","120F;"..curVal.DrftSpd.."F;-712W::9",curVal.DrftSpd,gg.TYPE_FLOAT,1)
 		if gg.getResultCount() == 0 then
-			memOzt.DrftSpd,revert.DrftSpd = nil,nil
+			memOzt.DrftSpd = nil
 			toast("Can't find the specific set of number. if you changed the drift speed and reopened the script, restore current number using 'Change current drift speed' menu")
 		else
 			memOzt.DrftSpd[1].value,curVal.DrftSpd = DRIFT_SPEED,DRIFT_SPEED
@@ -1555,13 +1490,13 @@ function cheat_cardrift()
 end
 function show_about()
 	local CH = gg.choice({
-		f"__about__",
+		"__about__",
 		"——",
 		f"Disclaimmer",
 		f"License",
 		f"Credits",
-		f"__back__"
-	},nil,f"__about__")
+		"__back__"
+	},nil,"__about__"..f"Title_Version")
 	if CH == 1 then alert(f"About_Text") show_about()
 	---
 	elseif CH == 3 then alert(f"Disclaimmer_Text") show_about()
@@ -1576,19 +1511,16 @@ end
 --— Helper functions —————————————--
 --- Its here to make stuff easier & faster
 function table.tostring(t,dp)
-	local d,r,tab,tv = 0,'{\n',function(i)
-		str = ""
-		for i=1,i+(dp or 0) do str = str.."\t" end
-		return str
-	end
+	local r,tv = '{\n'
+	dp = dp or 0
 	for k,v in pairs(t) do
-		r = r..tab(d)
+		r = r..('\t'):rep(dp+1)
+		tv = type(v)
 		if type(k) == 'string' then
 			r = r..k..' = '
 		end
-		tv = type(v)
 		if tv == 'table' then
-			r = r..table.tostring(v,(dp or 0)+1)
+			r = r..table.tostring(v,dp+1)
 		elseif tv == 'number' and #tostring(v) > 7 then
 			r = r..'0x'..("%x"):format(v):gsub("%l",string.upper)
 		elseif tv == 'boolean' or tv == 'number' then
@@ -1596,9 +1528,9 @@ function table.tostring(t,dp)
 		else
 			r = r..'"'..v..'"'
 		end
-		r,tv = r..',\n',nil
+		r = r..',\n'
 	end
-	return r:sub(1,r:len()-2)..'\n'..tab(d-1)..'}'
+	return r..('\t'):rep(dp)..'}'
 end
 function table.merge(...)
 	--[[
@@ -1610,56 +1542,21 @@ function table.merge(...)
 	local r = {}
 	for _,t in ipairs{...} do
 		for k,v in pairs(t) do
-			if type(r[k]) == "table" then
-				r[k] = table.merge(r[k],v)
-			else
-				r[k] = v
-			end
+			r[k] = type(r[k]) == "table" and table.merge(r[k],v) or v
 		end
 	end
 	return r
 end
 function table.copy(t)
-  local t2 = {}
-  for k,v in pairs(t) do
-		if type(v) == "table" then
-			t2[k] = table.copy(v) -- make sure ist not just some reference shit (full no messing up factual deep clone)
-		else
-			t2[k] = v
-		end
+  local t2={}
+  for k,v in pairs(t)do
+		t2[k]=type(v)=="table"and table.copy(v)or v
   end
   return t2
 end
-function table.mergeContents(valuesTable,modifierTable)
-	--[[
-		Same as table.merge but optimized for GameGuardian values
-		this is used to "replace" (kindof) gg.editAll()
-		how to use:table.mergeContents({ -- gg result, comes from searching whatever number using gg.searchNumber()
-			{address:1,value:0,type:gg.TYPE_BYTE},
-			{address:2,value:2,type:gg.TYPE_QWORD},
-			{address:3,value:5,type:gg.TYPE_WORD},
-		},{value:1,type:gg.TYPE_DWORD,freeze:true})
-		{ {address:1,value:1,type:gg.TYPE_DWORD,freeze:true},
-			{address:2,value:1,type:gg.TYPE_DWORD,freeze:true},
-		} {address:3,value:1,type:gg.TYPE_DWORD,freeze:true},
-	]]
---for each result
-	for i=1,#valuesTable do
-	--for each contents in modifier table...
-		for k,v in pairs(modifierTable) do
-		--change valuesTable contents to new modifierTable contents
-			valuesTable[i][k] = modifierTable[k]
-		end
-	end
-	return valuesTable
-end
 function table.append(t1,t2)
-	--[[
-		Creates new table then
-		add table 1 and table 2
-	]]
-	for _,v in ipairs(t2) do
-		t1[#t1+1]=v
+	for i=1,#t2 do
+		t1[#t1+1]=t2[i]
 	end
 end
 function searchWatchdog(msg,refineVal,mmBfr)
@@ -1680,7 +1577,7 @@ function searchWatchdog(msg,refineVal,mmBfr)
 		sleep(100)
 	end
 	t = gg.getResults(1)
-	prvVl,foundTheValue,memOzt[mmBfr],revert[mmBfr] = nil,nil,t,t
+	prvVl,foundTheValue,memOzt[mmBfr] = nil,t,t
 	return t
 end
 function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones)
@@ -1707,7 +1604,7 @@ function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones)
 			gg.refineNumber(valRefine,valTypes)
 		end
 		if gg.getResultCount() > 0 then
-			memOzt[memOztName],revert[memOztName] = gg.getResults(dsrdRslts),gg.getResults(dsrdRslts)
+			memOzt[memOztName] = gg.getResults(dsrdRslts)
 		end
 	end
 	return gg.getResults(dsrdRslts)
@@ -1758,10 +1655,10 @@ function findEntityAnchr()
 		toast(f"eAchA_wait")
 	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 random anchor
-		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it smoethimes shown 122 instead)
-		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2)
+		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
+		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
 		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
-		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501+30000(because carhealth&nostealcar cheat))
+		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
 		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
 		if gg.getResultCount() > 0 then
@@ -1771,6 +1668,8 @@ function findEntityAnchr()
 				tmp=gg.getResults(1)
 				if tmp[1] then -- just in case nothing found and crash happened
 					tmp0=tmp[1].address - 0x14 -- back to anchor
+				else
+					tmp0=nil
 				end
 			else
 				tmp0=tmp[1].address
@@ -1830,7 +1729,6 @@ function suspend()
 		cfg=cfg,
 		memOzt=memOzt,
 		pid=gg.getTargetInfo.pid,
-		revert=revert
 	},susp_file)
 	print(f"Suspend_Text")
 	os.exit()
@@ -1879,7 +1777,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.2.8"
+		VERSION="2.3.0_rc1"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -1907,7 +1805,6 @@ function restoreSuspend()
 		if susp.pid == gg.getTargetInfo.pid then
 			toast(f"Suspend_Detected")
 			cfg = susp.cfg
-			revert = susp.revert
 			memOzt = susp.memOzt
 		end
 	end
