@@ -44,7 +44,7 @@ function MENU()
 	elseif CH == 13 then exit()
 	elseif CH == 14 then suspend() end
 	CH = nil
-	if type(tmp)=="table"then for k in pairs(tmp)do tmp[k]=nil end else tmp={}end
+	tmp={}
 end
 function MENU_CSD()
 --Let the user choose stuff
@@ -214,7 +214,7 @@ function MENU_godmode()
 		"24. Win rampage (not instant)",
 		"25. AI Control",
 		"26. Auto unstuck car",
-	},nil,f"Cheat_GodModes".."\n"..f"Cheat_GodModes_Notice")
+	},{true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},f"Cheat_GodModes".."\n"..f"Cheat_GodModes_Notice")
 	if CH then
 		local achAdr,achAdrL = findEntityAnchr()
 		if achAdr then
@@ -350,7 +350,7 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[11] then table.append(t,{ -- Float
-		{address=anchor-0x408,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Float]"}
+		{address=anchor-0x408,flags=gg.TYPE_WORD,value=1,freeze=true,name="Pb2Chts [Float]"}
 	})
 	end
 	if CH[12] then table.append(t,{ -- Ragdoll
@@ -392,15 +392,9 @@ function cheat_godmode(CH,anchor)
 		{address=anchor-0x10,flags=gg.TYPE_WORD,value=1,name="Pb2Chts [TransparentVehicle]"},
 	})
 	end
-	if CH[22] or CH[1] then -- Disable vehicle noise(/AntiBurn/NoSteal)
-		tmp[1] = {
-			{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [EntityBurn]: Antiburn"},
-		}
-		gg.setValues(tmp[1])
-		tmp[1][1].value = 0
-		gg.sleep(100)
-		gg.setValues(tmp[1])
-		gg.addListItems(tmp[1])
+	if CH[22] or CH[1] then table.append(t,{ -- Disable vehicle noise
+		{address=anchor+0xDC,flags=gg.TYPE_BYTE,value=-1,freeze=true,name="Pb2Chts [Noise]: Disable"},
+	})
 	end
 	-- [23]
 	if CH[24] or CH[1] then table.append(t,{ -- Wanted level
@@ -446,7 +440,7 @@ function cheat_godmode(CH,anchor)
 		sleep(1e3)
 	end
 	if CH[18] then -- Change vehicle color
-		local CH = ({0,1,2,3,4,5,6,7,8,16,18,50,59,65,-1})[gg.choice({
+		local CH = ({0,1,2,3,4,5,6,7,8,16,48,50,59,65,-1})[gg.choice({
 			"1. Black (0)",
 			"2. Blue (1)",
 			"3. Green (2)",
@@ -789,62 +783,65 @@ function cheat_floodspawn()
 	if CH then
 		if CH == 5 then MENU() end -- go back
 		if CH == 2 or CH == 4 then -- clear buffer
-			memOzt.respawnCheat = nil
+			memOzt.floodspawn = nil
 			if CH == 4 then cheat_floodspawn() end -- reopen menu
 		end
 		if CH == 1 or CH == 2 or CH == 3 then -- begin search
 			gg.setRanges(cfg.memRange.general)
+
+			tmp[1] = handleMemOzt("matchBackendAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther) -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
+			if tmp[1] then tmp[1] = tmp[1][1].address end -- grab address
+
+		--Begin search respawn anchors and store its result in t var
 			if CH == 1 then -- one entity
 				toast("Please wait... after the search is done, you should get automatically respawned")
-				t = handleMemOzt("respawnCheat",52428800,nil,gg.TYPE_DWORD,5e3,cfg.memZones.Common_RegionOther)
+				t = handleMemOzt("floodspawn",52428800,nil,gg.TYPE_DWORD,5e3,cfg.memZones.Common_RegionOther)
 			else -- bulk
 				gg.clearResults()
 				gg.searchNumber(52428800,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 				t = gg.getResults(5e3)
 			end
-	--[[for i=1,#t do TODO: fix this stuff only works for 1P not 2P due to different address (1P always ends with 66c, while 2P can ends with either 4/6/e??
-				tmp[0] = ("%x"):format(t[i].address)
-				if not tmp[0]:find('66c$') then
-					t[i] = nil
-				end
-			end
-			gg.loadResults(t)
-			t = gg.getResults(5e3)]]
-			if gg.getResultCount() > 1 and (CH == 1 or CH == 2) then -- if found and targets 1 player, force respawn and find it
+
+		--if found and targets 1 player
+			if gg.getResultCount() > 1 and (CH == 1 or CH == 2) then
 				gg.clearResults()
-			--matchAbortAnchor is temporary name
-				tmp[1] = handleMemOzt("matchAbortAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)
-				if gg.getResultCount() == 0 then
+
+			--Auto-respawn
+				if not tmp[1] then
 					tmp[2] = "Unable to automatically respawn, you need to respawn from pause menu"
 				else
 					gg.setValues({{
-						address=tmp[1][1].address - 0x41,
+						address=tmp[1] - 0x41,
 						value=1,
 						flags=gg.TYPE_BYTE,
 					--name="[Pb2Chts] Respawn"
 					}})
 					tmp[2] = "Trying to find your entity ID... If you dont get respawned, respawn from pause menu"
 				end
-				gg.loadResults(t) -- load t and do the usual thing
-				searchWatchdog(tmp[2],"52428801~52429000","respawnCheat")
+
+			--and find the respawn anchor
+				gg.loadResults(t)
+				searchWatchdog(tmp[2],"52428801~52429000","floodspawn")
 				msg = nil -- remove tmp var
 			end
-			if gg.getResultCount() > 0 then -- if found
+
+		--if found
+			if gg.getResultCount() > 0 then
 				CH = gg.prompt({
 					"Put the respawn duration (in seconds)\n0:No duration\n-1:No respawn hack [-1;20]",
-					"RC Car Spam","Win Brawl (client-side)",
+					"RC Car Spam","Increase score (client-side)",
 					"Swag Delivery no timer","Freeze camera entity ID (this can prevent player takeover cheat)",
-					"Disable AI",--'Win race (client-side, need to know certain values based on map and track type) [-1;20]"
+					"Disable AI & respawn","Win Race/Sprint (sets current lap to 11 which triggers instant win)"
 				},{
 					1,
 					true,false,
 					false,false,
-					true,-- -1
+					false,true,
 				},{
 					"number",
 					"checkbox","checkbox",
 					"checkbox","checkbox",
-					"checkbox",--"number",
+					"checkbox","checkbox",
 				})
 				if CH then
 				--2nd table that dont affected by timer and crap
@@ -864,13 +861,29 @@ function cheat_floodspawn()
 							}})
 						end
 						if CH[3] then -- win brawl
-							table.append(ta,{{
+							table.append(ta,{
+							{
 								address = t[i].address - 0x14,
 								flags = gg.TYPE_DWORD,
 								value = 9e6,
 								freeze = true,
-								name = "Pb2Chts [WinBrawl]"
-							}})
+								name = "Pb2Chts [MatchScore]"
+							},
+							{
+								address = t[i].address - 0x8,
+								flags = gg.TYPE_DWORD,
+								value = 9e6,
+								freeze = true,
+								name = "Pb2Chts [MatchKilled]"
+							},
+							{
+								address = t[i].address - 0x4,
+								flags = gg.TYPE_DWORD,
+								value = 0,
+								freeze = true,
+								name = "Pb2Chts [MatchDied]"
+							},
+							})
 						end
 						if CH[4] then -- swag deliver 0 timer
 							table.append(ta,{{
@@ -894,12 +907,21 @@ function cheat_floodspawn()
 							}})
 							gg.clearResults() -- get rid of temporary trash after used
 						end
-						if CH[6] then -- disable AI
+						if CH[6] then -- disable AI + respawn
 							table.append(ta,{{
-								address = t[i].address + 0xE8,
+								address = t[i].address - 0x20,
 								flags = gg.TYPE_BYTE,
 								value = 0,
-								name = "Pb2Chts [EnableAIControl]"
+								name = "Pb2Chts [EnableAICtrl+Respawn]"
+							}})
+						end
+						if CH[7] then -- win race (client-side, 11 = DEFINITELY win), if you read this code, let me tell a secret: this shit below WORKS ONLINE !!!! WTF?!?! (2p only if the host uses older version though, i tried some didnt work)
+							table.append(ta,{{
+								address = t[i].address - 0x34,
+								flags = gg.TYPE_BYTE,
+								value = 11,
+								freeze = true,
+								name = "Pb2Chts [RaceCurrentLap]"
 							}})
 						end
 					end
@@ -971,7 +993,7 @@ function cheat_runspeedmod()
 		elseif CH == 1 then tmp={15120,15400}
 		elseif CH == 2 then tmp={15400,15120} end
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("runSpeed",tmp[1].."W;1186693120D;985158124D;1114636288D::12",tmp[1],gg.TYPE_WORD,1)
+		handleMemOzt("runSpeed",tmp[1].."W;24000F;985158124D;60F::12",tmp[1],gg.TYPE_WORD,1)
 		if gg.getResultCount() == 0 then
 			gg.toast("Can't find specific set of number")
 		else
@@ -1642,11 +1664,8 @@ function optimizeRange(range)
 		end
 	end
   table.remove(range,3)
-	if not next(t) then -- if there {}?? on the table
-		return range -- return the previously given input
-	end
 	log("[AutoMemOpti] Reduced scanned memory zone: "..("%x"):format(range[1]):gsub("%l",string.upper).."—"..("%x"):format(range[2]):gsub("%l",string.upper).." → "..("%x"):format(result[1]):gsub("%l",string.upper).."—"..("%x"):format(result[2]):gsub("%l",string.upper))
-	return result -- else, return the result.
+	return next(t) and result or range -- if there {}?? on the table, return the previously given input, else return the result.
 end
 function findEntityAnchr()
 	gg.setRanges(cfg.memRange.general)
@@ -1661,16 +1680,13 @@ function findEntityAnchr()
 		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
 		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
-		if gg.getResultCount() > 0 then
-			if gg.getResultCount() > 1 then
-				toast(f("eAchA_dupe",gg.getResultCount()))
+		tmp0 = gg.getResultCount()
+		if tmp0 > 0 then
+			if tmp0 > 1 then
+				toast(f("eAchA_dupe",tmp0))
 				for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine pistol
 				tmp=gg.getResults(1)
-				if tmp[1] then -- just in case nothing found and crash happened
-					tmp0=tmp[1].address - 0x14 -- back to anchor
-				else
-					tmp0=nil
-				end
+				tmp0=tmp[1]and tmp[1].address-0x14 or nil -- back to anchor
 			else
 				tmp0=tmp[1].address
 			end
@@ -1685,16 +1701,18 @@ function findEntityAnchr()
 		t = gg.getResults(200)
 		for i=1,#t do
 			tmp0 = ("%x"):format(t[i].address)
-			if not (tmp0:find('518$') or tmp0:find('d18$')) then t[i] = nil end
+			if not (tmp0:find('518$') or tmp0:find('d18$') or tmp0:find('604$') or tmp0:find('e04$')) then t[i] = nil end
 		end
-		while gg.getResultCount() > 1 do
+		tmp0 = gg.getResultCount()
+		while tmp0 > 1 do
 			toast(f"eAchB_hold2")
 			sleep(2e3)
 			gg.refineNumber(0)
 			t = gg.getResults(200)
-			if gg.getResultCount() == 1 then break
-			elseif gg.getResultCount() == 0 then return
-			elseif gg.getResultCount() == 2 then
+			tmp0 = gg.getResultCount()
+			if tmp0 == 1 then break
+			elseif tmp0 == 0 then return
+			elseif tmp0 == 2 then
 				t = gg.getResults(2)
 				if t[1].value == t[2].value then t = {t[1]} break end
 			end
@@ -1702,12 +1720,14 @@ function findEntityAnchr()
 			sleep(2e3)
 			gg.refineNumber(13)
 			t = gg.getResults(200)
-			if gg.getResultCount() == 1 then break
-			elseif gg.getResultCount() == 0 then return
-			elseif gg.getResultCount() == 2 then
+			tmp0 = gg.getResultCount()
+			if tmp0 == 1 then break
+			elseif tmp0 == 0 then return
+			elseif tmp0 == 2 then
 				t = gg.getResults(2)
 				if t[1].value == t[2].value then t = {t[1]} break end
 			end
+			tmp0 = gg.getResultCount()
 		end
 		tmp,tmp0=nil,nil
 		gg.clearResults()
@@ -1777,7 +1797,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.3.0_rc1"
+		VERSION="2.3.1_rc1"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -1812,15 +1832,15 @@ function restoreSuspend()
 end
 function log(...)if cfg.enableLogging then print("[Debug]",...)end end
 print = (function() -- convert table to readable format (with addition of converting 0xXXXXXXXX+ addreses
-	local printLn,tmp = print,{}
+	local printLn,tmpArgBuffer = print
 	return function(...)
-		tmp = {...}
-		for i=1,#tmp do
-			if type(tmp[i]) == "table" then
-				tmp[i] = table.tostring(tmp[i])
+		tmpArgBuffer = {...}
+		for i=1,#tmpArgBuffer do
+			if type(tmpArgBuffer[i]) == "table" then
+				tmpArgBuffer[i] = table.tostring(tmpArgBuffer[i])
 			end
 		end
-		return printLn(table.unpack(tmp))
+		return printLn(table.unpack(tmpArgBuffer))
 	end
 end)()
 --————————————————————————————————--
@@ -1840,15 +1860,13 @@ toast=function(str,fastmode)
 end
 sleep=gg.sleep
 isVisible=gg.isVisible
-gg.sleepUntilGgGuiChanged=function(checkDuration,visible,showNotice)
-	local checkDuration = checkDuration
-	if showNotice then toast(showNotice) end -- "Script paused. Close the GG GUI to continue..."
+gg.sleepUntilGgGuiChanged=function(checkDuration,visible,msg)
+	local checkDuration = checkDuration or 500
+	if msg then toast(msg)msg = nil end -- "Script paused. Close the GG GUI to continue..."
 	if visible == nil then visible = true end
-	if not checkDuration then checkDuration = 500 end
 	gg.setVisible(visible)
-	showNotice = nil
 	while isVisible() == visible do sleep(checkDuration) end
-	gg.setVisible(false)
+	gg.setVisible(not visible)
 end
 curVal={
 	PstlSgKnckbck=0.25,
