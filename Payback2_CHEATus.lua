@@ -1337,7 +1337,7 @@ function cheat_reflectiongraphics()
 			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address + 0x8) end gg.loadResults(tmp[4]) gg.refineNumber(50)
 			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address - 0x4) end gg.loadResults(tmp[4]) gg.refineNumber(tmp[1])
 		end
-	--specially crafted for above conditions
+	--specially coded for condition above
 		handleMemOzt("RfTgraphics",tmp[1],nil,gg.TYPE_DWORD,1)
 		if gg.getResultCount() == 0 then
 			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
