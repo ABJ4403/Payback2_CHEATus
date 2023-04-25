@@ -15,7 +15,7 @@ function MENU()
 --Let the user choose stuff
 	local CH = gg.choice({
 		"1. "..f"Cheat_WallHack",
-		"2. Flood Respawn/RC Spam/Win Brawl/Swag Deliver 0 timer",
+		"2. Floodspawn + others",
 		"3. "..f"Cheat_C4AutoRig",
 		"4. "..f"Cheat_GodModes",
 		"5. Strong vehicle",
@@ -43,8 +43,7 @@ function MENU()
 	elseif CH == 12 then show_about()
 	elseif CH == 13 then exit()
 	elseif CH == 14 then suspend() end
-	CH = nil
-	tmp={}
+	CH,tmp = nil,{}
 end
 function MENU_CSD()
 --Let the user choose stuff
@@ -91,43 +90,37 @@ function MENU_CSD()
 ---
 	elseif CH == 20 then MENU() end
 end
-function MENU_other()
---Let the user choose stuff
-	local CH = gg.choice({
-		"1. Weapon ammo",
-		"2. void mode",
-		"__back__"
-	},nil,"Other cheats\nmost of these cheats might be experiment, or uncategorized or whatnot...")
-	if CH == 1 then cheat_weaponammo()
-	elseif CH == 2 then cheat_voidmatchmode()
-	elseif CH == 3 then MENU() end
-end
 function MENU_settings()
 --Let the user choose stuff
 	local CH = gg.choice({
-		"Change default player name and custom name",
-		"Change __language__",
-		"Change entity anchor searching method",
-		"——",
 		"Clear results & list items",
 		"Clear results",
 		"Clear list items",
-		"Remove suspend file",
 		"——",
-		"Save settings",
+		"Change default player name & custom name",
+		"Change __language__",
+		"Change entity anchor searching method",
+		"——",
+		"__save__ settings",
 		"Reset settings",
+		"__remove__ suspend file",
 		"__back__"
 	},nil,f"Title_Version")
 	if CH == 12 then MENU()
-	elseif CH == 1 then
-		local CH = gg.prompt({'Put your new default player name','Put your new default custom player name'},{cfg.PlayerCurrentName,cfg.PlayerCustomName},{'text','text'})
+	---
+	elseif CH == 1 then gg.clearResults() gg.clearList() toast('Cleared!')
+	elseif CH == 2 then gg.clearResults() toast('Cleared!')
+	elseif CH == 3 then gg.clearList() toast('Cleared!')
+	---
+	elseif CH == 5 then
+		local CH = gg.prompt({'Default player name:','Default custom player name:'},{cfg.PlayerCurrentName,cfg.PlayerCustomName},{'text','text'})
 		if CH then
 			if CH[1] ~= "" then cfg.PlayerCurrentName = CH[1] end
 			if CH[2] ~= "" then cfg.PlayerCustomName = CH[1] end
 		end
 		CH = nil
 		MENU_settings()
-	elseif CH == 2 then
+	elseif CH == 6 then
 		if cfg.Language == "en_US" then tmp = 1
 		elseif cfg.Language == "in" then tmp = 2
 		elseif cfg.Language == "auto" then tmp = 3 end
@@ -145,7 +138,7 @@ function MENU_settings()
 			update_language()
 			MENU_settings()
 		end
-	elseif CH == 3 then
+	elseif CH == 7 then
 		tmp = nil
 		if cfg.entityAnchrSearchMethod == "holdWeapon" then tmp = 1
 		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then tmp = 2 end
@@ -161,16 +154,11 @@ function MENU_settings()
 			MENU_settings()
 		end
 	---
-	elseif CH == 5 then gg.clearResults() gg.clearList() toast('Cleared!')
-	elseif CH == 6 then gg.clearResults() toast('Cleared!')
-	elseif CH == 7 then gg.clearList() toast('Cleared!')
-	elseif CH == 8 then os.remove(susp_file) MENU_settings()
-	---
-	elseif CH == 10 then
+	elseif CH == 9 then
 		saveConfig()
 		toast("your current settings is saved")
 		MENU_settings()
-	elseif CH == 11 then
+	elseif CH == 10 then
 		cfg = {
 			enableLogging=false,
 			Language="auto",
@@ -181,6 +169,7 @@ function MENU_settings()
 		}
 		toast("your current settings was reset.\n- If you accidentally reset the settings, interrupt the script using the floating stop button and relaunch then script.\n- If you sure to reset, save the setting")
 		MENU_settings()
+	elseif CH == 11 then os.remove(susp_file) MENU_settings()
 	end
 end
 function MENU_godmode()
@@ -285,6 +274,16 @@ function MENU_matchmode()
 	end
 end
 
+--[[
+	A little note before looking at the cheat mechanics:
+	- On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
+	old version uses Ca,Ch,Jh,A (C++Alloc,C++Heap,JavaHeap,Anonymous)
+	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
+	- If you play on build 134, use Payback2_CHEATus.134.lua instead.
+	- on version 121+ (specifically build 134), some offsets has been changed (specifically the Xa stuff)
+	- I recommend staying at build version 121 (32bit), because thats the point before the devs starts to wreak havoc...
+	- 64bit isnt really supported especially because theres just too much "not found" and crap...
+]]
 function cheat_godmode(CH,anchor)
 	t = {}
 	-- 1. Groups: Essentials (Weapon Ammo,Rel0ad,Immortality,C4 Drawing,Antiburn,Dr0wned,Car jet,Fast car,Transparent car,Disable car noise)
@@ -779,7 +778,7 @@ function cheat_floodspawn()
 		"Activate v2 (edit-all values)",
 		"Clear memory buffer",
 		"Back"
-	},nil,"Flood Respawn. WARNING:\n- DO'NT USE THIS TO HARM OTHER PLAYER!\n- THIS CHEAT IS TECHINCALLY POWERFUL, BECAUSE IT INCREASE SERVER LATENCY AND LAG PLAYERS. ONLY USE IT OFFLINE!!\n- if you use this for racing stuff, consider lowering your freeze range to ~40.000-100.000 if after reaching checkpoint wont move to next checkpoint.")
+	},nil,"Floodspawn")
 	if CH then
 		if CH == 5 then MENU() end -- go back
 		if CH == 2 or CH == 4 then -- clear buffer
@@ -828,20 +827,20 @@ function cheat_floodspawn()
 		--if found
 			if gg.getResultCount() > 0 then
 				CH = gg.prompt({
-					"Put the respawn duration (in seconds)\n0:No duration\n-1:No respawn hack [-1;20]",
-					"RC Car Spam","Increase score (client-side)",
-					"Swag Delivery no timer","Freeze camera entity ID (this can prevent player takeover cheat)",
-					"Disable AI & respawn","Win Race/Sprint (sets current lap to 11 which triggers instant win)"
+					"RC Car Spam","Increase score (client-side, wins Brawl&Kingpin)",
+					"Swag Delivery no timer","Lock entity ID (prevents player takeover)",
+					"Disable AI & respawn","Win Race/Sprint",
+					"Respawn duration (in seconds)\n0:No duration\n-1:Floodspawn off\n\nWARNING:\n- DONT USE THIS TO HARM OTHER PLAYERS!\n- THIS CHEAT IS TECHINCALLY POWERFUL, BECAUSE IT INCREASE HOST LATENCY AND LAG PLAYERS. ONLY USE IT OFFLINE!!\n- if you use this for race, consider lowering your freeze range to ~40.000 if after reaching checkpoint wont move to next checkpoint. [-1;20]",
 				},{
-					1,
 					true,false,
 					false,false,
 					false,true,
+					-1,
 				},{
+					"checkbox","checkbox",
+					"checkbox","checkbox",
+					"checkbox","checkbox",
 					"number",
-					"checkbox","checkbox",
-					"checkbox","checkbox",
-					"checkbox","checkbox",
 				})
 				if CH then
 				--2nd table that dont affected by timer and crap
@@ -850,18 +849,8 @@ function cheat_floodspawn()
 					for i=1,#t do
 						t[i].value = 52428801
 						t[i].freeze = true
-						t[i].name = "Pb2Chts [RespawnHack]"
-						if CH[2] then -- rc spam
-							table.append(ta,{{
-								address = t[i].address - 0xE,
-								flags = gg.TYPE_WORD,
-								value = -1,
-								freeze = true,
-								name = "Pb2Chts [RCCarSpam]"
-							}})
-						end
-						if CH[3] then -- win brawl
-							table.append(ta,{
+						t[i].name = "Pb2Chts [RespawnTimer]"
+						if CH[2] then table.append(ta,{ -- win brawl
 							{
 								address = t[i].address - 0x14,
 								flags = gg.TYPE_DWORD,
@@ -883,50 +872,65 @@ function cheat_floodspawn()
 								freeze = true,
 								name = "Pb2Chts [MatchDied]"
 							},
-							})
+						})
 						end
-						if CH[4] then -- swag deliver 0 timer
-							table.append(ta,{{
+						if CH[3] then table.append(ta,{ -- swag deliver 0 timer
+							{
 								address = t[i].address + 0xE,
 								flags = gg.TYPE_WORD,
 								value = 0,
 								freeze = true,
 								name = "Pb2Chts [SwagDeliverTim0r]"
-							}})
+							}
+						})
 						end
-						if CH[5] then -- lock camera entity id
-						--fetch current entity cam id
-							gg.loadResults({{address=t[i].address - 0x10,flags=gg.TYPE_WORD}})
-						--and apply
-							table.append(ta,{{
-								address = t[i].address - 0x10,
-								flags = gg.TYPE_WORD,
-								value = gg.getResults(1)[1].value,
-								freeze = true,
-								name = "Pb2Chts [EntityCamID]"
-							}})
-							gg.clearResults() -- get rid of temporary trash after used
-						end
-						if CH[6] then -- disable AI + respawn
-							table.append(ta,{{
+						if CH[5] then table.append(ta,{ -- disable AI + respawn
+							{
 								address = t[i].address - 0x20,
 								flags = gg.TYPE_BYTE,
 								value = 0,
 								name = "Pb2Chts [EnableAICtrl+Respawn]"
-							}})
+							}
+						})
 						end
-						if CH[7] then -- win race (client-side, 11 = DEFINITELY win), if you read this code, let me tell a secret: this shit below WORKS ONLINE !!!! WTF?!?! (2p only if the host uses older version though, i tried some didnt work)
-							table.append(ta,{{
+						if CH[6] then table.append(ta,{ -- win race (client-side, 11 = DEFINITELY win), if you read this code, let me tell a secret: this shit below WORKS ONLINE !!!! WTF?!?! (2p only if the host uses older version though, i tried some didnt work)
+							{
 								address = t[i].address - 0x34,
 								flags = gg.TYPE_BYTE,
 								value = 11,
 								freeze = true,
 								name = "Pb2Chts [RaceCurrentLap]"
-							}})
+							}
+						})
 						end
 					end
+				--rc spam
+					if CH[1] then
+						table.append(ta,{{
+							address = t[1].address - 0xE,
+							flags = gg.TYPE_WORD,
+							value = -1,
+							freeze = true,
+							name = "Pb2Chts [RCCarSpam]"
+						}})
+					end
+				--lock entity id
+					if CH[4] and CH == "-1" then
+					--fetch current entity id
+						gg.loadResults({{address=t[1].address - 0x10,flags=gg.TYPE_WORD}})
+					--and apply
+						table.append(ta,{{
+							address = t[1].address - 0x10,
+							flags = gg.TYPE_WORD,
+							value = gg.getResults(1)[1].value,
+							freeze = true,
+							name = "Pb2Chts [EntityCamID]"
+						}})
+						gg.clearResults() -- get rid of temporary trash after used
+					end
+
 				--since the only thing required in CH is only the 1st option, change the whole table to that instead
-					CH = CH[1]
+					CH = CH[7]
 				--set other stuff if user ticked those options
 					if ta[1] then
 						gg.setValues(ta)
@@ -1051,24 +1055,33 @@ function cheat_xpmodifier()
 	end
 end
 function cheat_changeplayername()
-	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 --request user to give player name
 	local player_name = gg.prompt({
 		'Put your current player name (case-sensitive, ":" or ";" is required at the beginning, because how GameGuardian search works)',
-		'Put new player name (cant be longer than current name, you can change color/add icon by copy-pasting custom name edited using hex-editor (use hex 1-9 for color))'
+		'Put new player name (cant be longer than current name, you can change color/add icon by copy-pasting custom name edited using hex-editor (use hex 1-9 for color))',
+		'Method (TODO):\n1:Change all (slow, but changes name in match too)\n2:Fast (but name wont be changed in match) [1;2]',
 	},{
 		curVal.PlayerCurrentName,
-		cfg.PlayerCustomName
+		cfg.PlayerCustomName,
+		1,
 	},{
 		"text",
-		"text"
+		"text",
+		"number",
 	})
 --search old player name
 	if player_name and player_name[1] and player_name[1] ~= ":" then
-		gg.searchNumber(player_name[1],gg.TYPE_BYTE)
+		if player_name[3] == 1 then
+			gg.setRanges(gg.REGION_C_ALLOC | cfg.memRange.general)
+			gg.searchNumber(player_name[1],gg.TYPE_BYTE)
+		elseif player_name[3] == 2 then
+			gg.setRanges(cfg.memRange.general)
+			gg.searchNumber(player_name[1],gg.TYPE_BYTE,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
+		end
 		if gg.getResultCount() == 0 then
 			toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
+			gg.getResults(gg.getResultCount()) -- must be called first before calling editAll
 			gg.editAll(player_name[2],gg.TYPE_BYTE)
 			curVal.PlayerCurrentName = player_name[2]
 			toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others')
@@ -1112,14 +1125,14 @@ function cheat_changeplayernamecolor()
 			else
 			--if the chioce is 0, remove color/icons
 				if player_color_choice == 0 then
-					for i=1,#t do
-					--if within the custom color/icon range
+					for i=1,#t do -- loop over player name result
+					--if it within the custom color/icon range
 						if t[i].value >= 0 and t[i].value < 11 then
-						--remove it
+						--remove it, and increment the removeOffset
 							t[i] = nil
 							removeOffset = removeOffset + 1
 						else
-						--and -removeOffset for the rest
+						--else, shift address
 							t[i].address = (t[i].address - removeOffset)
 						end
 					end
@@ -1306,7 +1319,7 @@ function cheat_deleteingameplaytext()
 		gg.editAll(0,gg.TYPE_BYTE)
 		gg.clearResults()
 	end
-	toast("In-gameplay-text cleared, to restore, you have to restart the game\nPS: This might not work, idk why though..")
+	toast("Gameplay texts cleared! to restore, restart the game\nPS: This might not work, idk why though..")
 end
 function cheat_reflectiongraphics()
 	local CH = gg.choice({
@@ -1315,14 +1328,14 @@ function cheat_reflectiongraphics()
 		"__back__"
 	},nil,"Reflection graphics\nWARNING: this can cause rendering issue that requires restart to fix it\nDont forget to disable this before you get in/out-of match\ni only recommend using this in offline mode so you can easily disable the reflection graphics before getting out of match")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={49,1,"ON",true} -- << `,true` is trick from lua.org to make lua better prepare a memory slot area whatevr... (will be used for temporary result save below :)
-	elseif CH == 2 then tmp={1,49,"OFF",true} end
+	elseif CH == 1 then tmp={49,1,"ON"}
+	elseif CH == 2 then tmp={1,49,"OFF"} end
 	if CH and tmp[3] then
 		gg.setRanges(gg.REGION_OTHER)
 		if not memOzt.RfTgraphics then
 			gg.searchNumber(144,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
-			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address + 0x8) tmp[4][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[4]) gg.refineNumber(50)
-			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address - 0x4) tmp[4][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[4]) gg.refineNumber(tmp[1])
+			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address + 0x8) end gg.loadResults(tmp[4]) gg.refineNumber(50)
+			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address - 0x4) end gg.loadResults(tmp[4]) gg.refineNumber(tmp[1])
 		end
 	--specially crafted for above conditions
 		handleMemOzt("RfTgraphics",tmp[1],nil,gg.TYPE_DWORD,1)
@@ -1368,7 +1381,7 @@ function cheat_explodepow()
 				toast("Can't find the specific set of number. if you changed the explosion power and reopened the script, restore current number using 'Change current explosion power' menu")
 			else
 				memOzt.explodePower[1].value,curVal.XplodPow = EXPLOSION_POWER,EXPLOSION_POWER
-				toast("Explosion power modified to "..curVal.XplodPow)
+				toast("Explosion power modified to "..EXPLOSION_POWER)
 				gg.setValues(memOzt.explodePower)
 			end
 		end
@@ -1518,7 +1531,7 @@ function show_about()
 		f"License",
 		f"Credits",
 		"__back__"
-	},nil,"__about__"..f"Title_Version")
+	},nil,f"Title_Version")
 	if CH == 1 then alert(f"About_Text") show_about()
 	---
 	elseif CH == 3 then alert(f"Disclaimmer_Text") show_about()
@@ -1582,24 +1595,20 @@ function table.append(t1,t2)
 	end
 end
 function searchWatchdog(msg,refineVal,mmBfr)
---[[
-
-]]
-	if gg.getResultCount() < 2 then return gg.getResults(1)
+	local prvVl = gg.getResults(100)
+	if #prvVl < 2 then return prvVl
 	elseif msg then toast(msg.."\nClick GG Icon to abort the search") end
-	local prvVl,foundTheValue = gg.getResults(100)
-	while not foundTheValue do
-		if gg.isVisible() then gg.setVisible(false) foundTheValue = 1 end
+	while true do
 		gg.refineNumber(refineVal)
-		if gg.getResultCount() > 0 then
-			foundTheValue = 1
-		else
-			gg.loadResults(prvVl)
+		if gg.isVisible() or gg.getResultCount() > 0 then -- if gg icon clicked or wanted result changes found, break
+			gg.setVisible(false)
+			break
 		end
+		gg.loadResults(prvVl)
 		sleep(100)
 	end
 	t = gg.getResults(1)
-	prvVl,foundTheValue,memOzt[mmBfr] = nil,t,t
+	memOzt[mmBfr] = t
 	return t
 end
 function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones)
@@ -1674,12 +1683,12 @@ function findEntityAnchr()
 		toast(f"eAchA_wait")
 	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 random anchor
-		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
-		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
-		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
-		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
-		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
-		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)
 		tmp0 = gg.getResultCount()
 		if tmp0 > 0 then
 			if tmp0 > 1 then
@@ -1797,7 +1806,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.3.1_rc1"
+		VERSION="2.3.2_rc1"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -1851,17 +1860,12 @@ end)()
 --- This is where everything is prepared
 --- before the final MENU() call is happened
 --generic functions
-alert=function(str,...)
-	gg.alert(f(str),...)
-end
-toast=function(str,fastmode)
-	if fastmode == nil then fastmode = true end
-	gg.toast(str,fastmode)
-end
+alert=function(str,...)gg.alert(f(str),...)end
+toast=function(s,f)gg.toast(s,true)end
 sleep=gg.sleep
 isVisible=gg.isVisible
 gg.sleepUntilGgGuiChanged=function(checkDuration,visible,msg)
-	local checkDuration = checkDuration or 500
+	checkDuration = checkDuration or 500
 	if msg then toast(msg)msg = nil end -- "Script paused. Close the GG GUI to continue..."
 	if visible == nil then visible = true end
 	gg.setVisible(visible)
@@ -1890,20 +1894,13 @@ end
 
 -- Modify gg.clearList (if enabled in config), to only remove Pb2Chts-related values
 if not cfg.clearAllList then
-	gg.clearList = (function()
-		local clearList,tmp = gg.clearList
-		return function()
-			tmp = gg.getListItems()
-			for i=1,#tmp do
-				if tmp[i].name and tmp[i].name:find"Pb2Chts" then
-					tmp[i] = nil
-				end
+	gg.clearList = function()
+		for _,v in ipairs(gg.getListItems()) do
+			if v.name and v.name:find"Pb2Chts" then
+				gg.removeListItems({v})
 			end
-			clearList()
-			gg.addListItems(tmp)
-			tmp = nil
 		end
-	end)()
+	end
 end
 
 -- Initialize language
