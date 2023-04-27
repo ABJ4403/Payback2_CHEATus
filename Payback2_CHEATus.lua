@@ -432,9 +432,9 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[27] then table.append(t,{ -- Wheel Suspension/Auto Unstuck
-	--{address=anchor-0x72D,flags=gg.TYPE_FLOAT,value=0,freeze=true,name="Pb2Chts [WheelSuspensionX]"},
-		{address=anchor-0x72B,flags=gg.TYPE_FLOAT,value=1,freeze=true,name="Pb2Chts [WheelSuspensionY]"},
-	--{address=anchor-0x729,flags=gg.TYPE_FLOAT,value=0,freeze=true,name="Pb2Chts [WheelSuspensionZ]"},
+	--{address=anchor-0x72C,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [WheelSuspensionX]"},
+		{address=anchor-0x72A,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [WheelSuspensionY]"},
+	--{address=anchor-0x728,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [WheelSuspensionZ]"},
 	})
 	end
 	--- stuff that requires user intervention and takes longer?
