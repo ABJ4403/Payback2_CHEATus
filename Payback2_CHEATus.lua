@@ -1385,10 +1385,6 @@ function cheat_explodepow()
 				cheat_explodepow()
 			end
 		elseif CH == 2 then
-			local CH = gg.prompt({'If you think the current explosion power is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current explosion power'},{curVal.PstlSgKnckbck},{'number'})
-			if CH and CH[1] then curVal.XplodPow = CH[1] end
-			cheat_explodepow()
-		elseif CH == 3 then
 			memOzt.explodePower = nil
 			cheat_explodepow()
 		end
@@ -1476,11 +1472,14 @@ function cheat_prtclintrvl()
 	elseif CH == 3 then PARTICLE_INT = 20
 	elseif CH == 4 then PARTICLE_INT = 120
 	elseif CH == 5 then PARTICLE_INT = 2e3
+	elseif CH == 6 then
+		local CH = gg.prompt({'Input your custom interval value (in miliseconds)'})
+		if CH and CH[1] then
+			PARTICLE_INT = CH[1]
+		else
+			cheat_prtclintrvl()
+		end
 	---
-	elseif CH == 7 then
-		local CH = gg.prompt({'If you think the current interval value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current interval'},{curVal.PrtclAnmtnIntrvl},{'number'})
-		if CH and CH[1] then curVal.PrtclAnmtnIntrvl = CH[1] end
-		cheat_prtclintrvl()
 	elseif CH == 8 then memOzt.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
 	end
 	if PARTICLE_INT then
