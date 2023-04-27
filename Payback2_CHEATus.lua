@@ -450,7 +450,7 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[27] then table.append(t,{ -- Wheel Suspension/Auto Unstuck
-		{address=anchor-0x72A,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [WheelSuspension]"},
+		{address=anchor-0x72B,flags=gg.TYPE_FLOAT,value=1,freeze=true,name="Pb2Chts [WheelSuspensionY]"},
 	})
 	end
 	--- stuff that requires user intervention and takes longer?
@@ -1726,11 +1726,11 @@ function findEntityAnchr()
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)
-		tmp0 = gg.getResultCount()
+		tmp0 = #tmp
 		if tmp0 > 0 then
 			if tmp0 > 1 then
 				toast(f("eAchA_dupe",tmp0))
-				for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine pistol
+				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine pistol
 				tmp=gg.getResults(1)
 				tmp0=tmp[1]and tmp[1].address-0x14 or nil -- back to anchor
 			else
@@ -1749,13 +1749,13 @@ function findEntityAnchr()
 			tmp0 = ("%x"):format(t[i].address)
 			if not (tmp0:find('518$') or tmp0:find('d18$') or tmp0:find('604$') or tmp0:find('e04$')) then t[i] = nil end
 		end
-		tmp0 = gg.getResultCount()
+		tmp0 = #t
 		while tmp0 > 1 do
 			toast(f"eAchB_hold2")
 			sleep(2e3)
 			gg.refineNumber(0)
 			t = gg.getResults(200)
-			tmp0 = gg.getResultCount()
+			tmp0 = #t
 			if tmp0 == 1 then break
 			elseif tmp0 == 0 then return
 			elseif tmp0 == 2 then
@@ -1766,14 +1766,14 @@ function findEntityAnchr()
 			sleep(2e3)
 			gg.refineNumber(13)
 			t = gg.getResults(200)
-			tmp0 = gg.getResultCount()
+			tmp0 = #t
 			if tmp0 == 1 then break
 			elseif tmp0 == 0 then return
 			elseif tmp0 == 2 then
 				t = gg.getResults(2)
 				if t[1].value == t[2].value then t = {t[1]} break end
 			end
-			tmp0 = gg.getResultCount()
+			tmp0 = #t
 		end
 		tmp,tmp0=nil,nil
 		gg.clearResults()
@@ -1910,7 +1910,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.3.3"
+		VERSION="2.3.4"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2022,7 +2022,7 @@ License_Text		 = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\n© 2021-2
 Settings				 = "Settings",
 Suspend					 = "Suspend",
 Suspend_Detected = "Session file detected, continuing from suspend...",
-Suspend_Text		 = "You quit the script using suspend option. you can continue your current session by relaunching the script.",
+Suspend_Text		 = "Script suspended. Continue your current session by rerunning the script.",
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403.",
 ErrorToastNotice = "An error occured (%s): Exit out of script and see print log for more details.",
 Cheat_WallHack   = "Wall Hack",
@@ -2033,9 +2033,9 @@ Cheat_GodModes_Notice = "WARN: DON'T USE THIS TO HARM INNOCENT PLAYERS IN ANY WA
 Cheat_CSD        = "Client-side cheats",
 Cheat_CSD_Notice = "Some cheats won't affect other player",
 eAchA_wait       = "Please wait... don't shoot, hold pistol 🔫",
-eAchA_dupe       = "%s Duplicate results! hold knife 🔪",
-eAchB_hold1      = "Hold your pistol 🔫",
-eAchB_hold2      = "Hold your knife 🔪",
+eAchA_dupe       = "%d Duplicate results! hold knife 🔪",
+eAchB_hold1      = "Hold pistol 🔫",
+eAchB_hold2      = "Hold knife 🔪",
 eAchC_wait       = "Please wait, finding all entities...",
 },
 ['in']={
@@ -2051,7 +2051,7 @@ License_Text		 = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\n© 2021-
 Settings				 = "Pengaturan",
 Suspend					 = "Suspensi",
 Suspend_Detected = "File sesi terdeteksi, melanjutkan dari suspensi...",
-Suspend_Text		 = "Anda keluar dari skrip melalui opsi suspensi. Anda bisa melanjutkan sesi saat ini dengan meluncurkan skrip ini.",
+Suspend_Text		 = "Skrip Disuspensi. Lanjutkan sesi saat ini dengan menjalankan skrip ini.",
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403.",
 ErrorToastNotice = "Galat terjadi (%s): Keluar dari skrip dan lihat log print untuk lebih detail.",
 Cheat_WallHack   = "Tembus Dinding",
@@ -2062,7 +2062,7 @@ Cheat_GodModes_Notice = "PERINGATAN: JANGAN MENGGUNAKAN INI UNTUK MENCURANGI PEM
 Cheat_CSD        = "Cheat sisi-klien",
 Cheat_CSD_Notice = "Beberapa cheat tidak akan memengaruhi pemain lain",
 eAchA_wait       = "Mohon tunggu... jangan menembak, pegang pistol 🔫",
-eAchA_dupe       = "%s Hasil duplikat! pegang pisau 🔪",
+eAchA_dupe       = "%d Hasil duplikat! pegang pisau 🔪",
 eAchB_hold1      = "Pegang pistol 🔫",
 eAchB_hold2      = "Pegang pisau 🔪",
 eAchC_wait       = "Mohon tunggu, menemukan semua entitas...",
