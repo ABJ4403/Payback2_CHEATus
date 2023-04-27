@@ -18,11 +18,12 @@ function MENU()
 		"2. Floodspawn + others",
 		"3. "..f"Cheat_C4AutoRig",
 		"4. "..f"Cheat_GodModes",
-		"5. Strong vehicle",
-		"6. No blast damage",
-		"7. Pistol/SG Knockback",
-		"8. "..f"Cheat_CSD",
-		"9. Match modifier",
+		"5. "..f"Cheat_GodModes"..' bulk',
+		"6. Strong vehicle",
+		"7. No blast damage",
+		"8. Pistol/SG Knockback",
+		"9. "..f"Cheat_CSD",
+		"10. Match modifier",
 		"——",
 		f"Settings",
 		"__about__",
@@ -33,16 +34,17 @@ function MENU()
 	elseif CH == 2 then cheat_floodspawn()
 	elseif CH == 3 then cheat_c4autorigg()
 	elseif CH == 4 then MENU_godmode()
-	elseif CH == 5 then cheat_strongvehicle()
-	elseif CH == 6 then cheat_noblastdamage()
-	elseif CH == 7 then cheat_pistolknockback()
-	elseif CH == 8 then MENU_CSD()
-	elseif CH == 9 then MENU_matchmode()
+	elseif CH == 5 then MENU_godmode_bulk()
+	elseif CH == 6 then cheat_strongvehicle()
+	elseif CH == 7 then cheat_noblastdamage()
+	elseif CH == 8 then cheat_pistolknockback()
+	elseif CH == 9 then MENU_CSD()
+	elseif CH == 10 then MENU_matchmode()
 ---
-	elseif CH == 11 then MENU_settings()
-	elseif CH == 12 then show_about()
-	elseif CH == 13 then exit()
-	elseif CH == 14 then suspend() end
+	elseif CH == 12 then MENU_settings()
+	elseif CH == 13 then show_about()
+	elseif CH == 14 then exit()
+	elseif CH == 15 then suspend() end
 	CH,tmp = nil,{}
 end
 function MENU_CSD()
@@ -141,15 +143,18 @@ function MENU_settings()
 	elseif CH == 7 then
 		tmp = nil
 		if cfg.entityAnchrSearchMethod == "holdWeapon" then tmp = 1
-		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then tmp = 2 end
+		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then tmp = 2
+		elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then tmp = 3 end
 		local CH = gg.choice({
 			"1. Hold weapon (tells you to hold pistol/knife and find those values. faster, ~6 seconds)",
 			"2. ABJ4403's Automatic anchor (Hold pistol, dont shoot, little bit Hold-Weapon-like. rarely fails)",
+			"3. ABJ4403 auto anchor 2 (finds everyone, any player/ai/veichle, EXPERIMENTAL)",
 			"__back__",
 		},tmp,f"Title_Version")
 		if CH then
 			if CH == 1 then cfg.entityAnchrSearchMethod = "holdWeapon"
-			elseif CH == 2 then cfg.entityAnchrSearchMethod = "abjAutoAnchor" end
+			elseif CH == 2 then cfg.entityAnchrSearchMethod = "abjAutoAnchor"
+			elseif CH == 3 then cfg.entityAnchrSearchMethod = "abjAutoBatchAnchor2" end
 			update_language()
 			MENU_settings()
 		end
@@ -273,7 +278,43 @@ function MENU_matchmode()
 		end
 	end
 end
-
+function MENU_godmode_bulk()
+	local CH = gg.choice({
+		"1. Fix broken vehicle",
+		"2. Clear all player dupes (this will remove some duplicates, useful if you use ABJ4403 auto anchor method)",
+	},nil,"God mode bulk, PS: some can be useful but some can harm other innocent players!")
+	if CH then
+		if CH == 1 then searchType = 'blownUp'
+		elseif CH == 2 then searchType = 'player' end
+		local achAdr,achAdrL = findEntityAnchr_custom(searchType)
+		if achAdr then
+			achAdrL = #achAdr
+			toast('Preparing...')
+			for i=1,achAdrL do
+				if CH == 1 then
+					table.append(t,{
+						{address=achAdr[i]-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [EntityBurning]: Antiburn"},
+						{address=achAdr[i]+0x8,flags=gg.TYPE_WORD,value=800,freeze=true,name="Pb2Chts [Health]"},
+						{address=achAdr[i]+0xDB,flags=gg.TYPE_BYTE,value=4,name="Pb2Chts [CtrlCode]"},
+					})
+				elseif CH == 2 then
+					table.append(t,{
+						{address=achAdr[i]-0x4,flags=gg.TYPE_DWORD,value=99,name="Pb2Chts [EntityBurning]: Antiburn"},
+						{address=achAdr[i]+0x8,flags=gg.TYPE_WORD,value=-501,name="Pb2Chts [Health]"},
+						{address=achAdr[i]+0xDB,flags=gg.TYPE_BYTE,value=6,name="Pb2Chts [CtrlCode]"},
+						{address=achAdr[i]+0x158,flags=gg.TYPE_WORD,value=1,name="Pb2Chts [RespawnInterval]"},
+					})
+				end
+			end
+			toast('Applied to '..achAdrL..' Entities!\nSelected operations done')
+			gg.setValues(t)
+			gg.addListItems(t)
+			achAdr = nil
+		else
+			toast('Can\'t find the value. Try different entity anchor search method on settings, and disable memory optimization in config file.\nNothing worked? report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+		end
+	end
+end
 --[[
 	A little note before looking at the cheat mechanics:
 	- On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
@@ -968,22 +1009,18 @@ function cheat_floodspawn()
 	CH = nil
 end
 function cheat_c4autorigg()
-	gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
-	tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xA4) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(83886336) -- 3/6 (ControlCode, uncontrolled)
-	tmp=gg.getResults(5e3) for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xD0) end gg.loadResults(tmp) gg.refineNumber(100)                        -- 5/6 (Health)
-	tmp=gg.getResults(5e3) for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
-	tmp=gg.getResults(5e3)
-	if #tmp == 0 then
-		gg.toast("Can't find any C4s, is there any C4 bombs planted?")
-	else
+	anchors = findEntityAnchr_custom('blowables')
+	if anchors then
 		t = {}
-		for i=1,#tmp do table.append(t,{
-			{address=tmp[i].address+0x8,flags=gg.TYPE_WORD,value=0},
-			{address=tmp[i].address+0x158,flags=gg.TYPE_WORD,value=1}
+		for i=1,#anchors do table.append(t,{
+			{address=anchors[i]+0x8,flags=gg.TYPE_WORD,value=0},
+		--{address=anchors[i]+0x158,flags=gg.TYPE_WORD,value=1}
 		})
 		end
 		gg.setValues(t)
-		gg.toast(#tmp.." C4s rigged!")
+		gg.toast(#anchors.." C4s rigged!")
+	else
+		gg.toast("Can't find any C4s...")
 	end
 end
 function cheat_runspeedmod()
@@ -1741,10 +1778,77 @@ function findEntityAnchr()
 		tmp,tmp0=nil,nil
 		gg.clearResults()
 		return {t[1].address - 0x18}
+	elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then
+		toast(f"eAchC_wait")
+	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
+		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) tmp[i].flags = gg.TYPE_BYTE end gg.loadResults(tmp) gg.refineNumber('0~256') -- 2/6 (Shooting state)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) end gg.loadResults(tmp) gg.refineNumber(cfg.abjAutoAnchor2_EntityTypeRangeFrom..'~'..cfg.abjAutoAnchor2_EntityTypeRangeTo) -- 3/6 (ControlCode)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC3) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber('0~101')	-- 4/6 (HoldWeapon)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp) gg.refineNumber('-501~30000')                        -- 5/6 (Health)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)
+		if #tmp > 0 then
+			gg.clearResults()
+			for i=1,#tmp do tmp[i]=tmp[i].address end
+			return tmp
+		end
 	else
 		toast(f("ErrorToastNotice","invalidConf"))
-		print("[Error.InvalidConf]: Configuration value for \"cfg.entityAnchrSearchMethod\" ("..cfg.entityAnchrSearchMethod..") is invalid.\n         Possible values: abjAutoAnchor, holdWeapon")
+		print("[Error.InvalidConf]: Configuration value for \"cfg.entityAnchrSearchMethod\" ("..cfg.entityAnchrSearchMethod..") is invalid.\n         Possible values: abjAutoAnchor, holdWeapon, abjAutoBatchAnchor2")
 		log("Your Configuration:\n",cfg)
+	end
+end
+function findEntityAnchr_custom(searchType)
+	--customizable type input from arg and stuff
+	gg.setRanges(cfg.memRange.general)
+	local tmp,tmp0
+	if not searchType then return nil end
+	toast(f"eAchC_wait")
+	if searchType == 'blowables' then -- C4s and RC Cars
+		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
+		tmp=gg.getResults(5e3) -- will be reused
+		tmp0 = table.copy(tmp) -- make a copy for 2nd searches
+		log(1,gg.getResultCount())
+
+	--search c4s control code (put to tmp)
+		for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xA4) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(83886336) -- 3/6 (ControlCode, uncontrolled)
+		tmp=gg.getResults(5e3)log(2,gg.getResultCount())
+		for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xD0) end gg.loadResults(tmp) gg.refineNumber(100)                        -- 5/6 (Health)
+		tmp=gg.getResults(5e3)log(3,gg.getResultCount())
+
+	--search rc car control code (put to tmp0)
+		gg.clearResults()
+		for i=1,#tmp0 do tmp0[i].address = (tmp0[i].address + 0xA4) tmp0[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp0) gg.refineNumber(67109120) -- 3/6 (ControlCode, uncontrolled)
+		tmp0=gg.getResults(5e3)log(2,gg.getResultCount())
+		for i=1,#tmp0 do tmp0[i].address = (tmp0[i].address - 0xD0) end gg.loadResults(tmp0) gg.refineNumber('1~30000')                        -- 5/6 (Health)
+		tmp0=gg.getResults(5e3)log(3,gg.getResultCount())
+
+	--merge 2 searches and find anchor
+		table.append(tmp,tmp0)
+		for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)log(4,gg.getResultCount())
+	elseif searchType == 'blownUp' then -- exploded tanks or other (persistent) vehicles
+		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
+		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) tmp[i].flags = gg.TYPE_BYTE end gg.loadResults(tmp) gg.refineNumber(120) -- 2/6 (Shooting state, idle)
+		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) end gg.loadResults(tmp) gg.refineNumber('4~7') -- 3/6 (ControlCode, uncontrolled)
+		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC3) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber('0~101')	-- 4/6 (HoldWeapon)
+		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp) gg.refineNumber('-500~0')                        -- 5/6 (Health)
+		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
+	elseif searchType == 'player' then
+		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 random anchor
+		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
+		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
+		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
+		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
+		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
+	end
+	if gg.getResultCount() > 0 then
+		gg.clearResults()
+		for i=1,#tmp do tmp[i]=tmp[i].address end
+		return tmp
 	end
 end
 function exit()
@@ -1806,7 +1910,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.3.2_rc1"
+		VERSION="2.3.3"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -1932,6 +2036,7 @@ eAchA_wait       = "Please wait... don't shoot, hold pistol 🔫",
 eAchA_dupe       = "%s Duplicate results! hold knife 🔪",
 eAchB_hold1      = "Hold your pistol 🔫",
 eAchB_hold2      = "Hold your knife 🔪",
+eAchC_wait       = "Please wait, finding all entities...",
 },
 ['in']={
 Automatic				 = "Otomatis",
@@ -1960,6 +2065,7 @@ eAchA_wait       = "Mohon tunggu... jangan menembak, pegang pistol 🔫",
 eAchA_dupe       = "%s Hasil duplikat! pegang pisau 🔪",
 eAchB_hold1      = "Pegang pistol 🔫",
 eAchB_hold2      = "Pegang pisau 🔪",
+eAchC_wait       = "Mohon tunggu, menemukan semua entitas...",
 }
 }
 function f(i,...)return string.format(lang[curr_lang][i]or i,...)end
