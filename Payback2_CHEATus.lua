@@ -1446,7 +1446,7 @@ function cheat_explodedir()
 		memOzt.explodeDir = gg.getResults(1)
 		if gg.getResultCount() == 0 then
 			memOzt.explodeDir = nil
-			toast(f"ErrNotFound"..". if you changed the value and reopened the script, restore the actual current number using 'Change current value' menu")
+			toast(f"ErrNotFound")
 		else
 			for i=1,#memOzt.explodeDir do
 				memOzt.explodeDir[i].value = XPLODIR_VAL
@@ -1492,7 +1492,7 @@ function cheat_prtclintrvl()
 		memOzt.PrtclAnmtnIntrvl = gg.getResults(1)
 		if gg.getResultCount() == 0 then
 			memOzt.PrtclAnmtnIntrvl = nil
-			toast(f"ErrNotFound"..". if you changed the interval and reopened the script, restore the actual current number using 'Change current interval' menu")
+			toast(f"ErrNotFound")
 		else
 			for i=1,#memOzt.PrtclAnmtnIntrvl do
 				memOzt.PrtclAnmtnIntrvl[i].value = PARTICLE_INT
@@ -1520,7 +1520,7 @@ function cheat_cardrift()
 			cheat_cardrift()
 		end
 	elseif CH == 2 then
-		local CH = gg.prompt({'If you think the current explosion power is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current explosion power'},{curVal.DrftSpd},{'number'})
+		local CH = gg.prompt({'If you think the current drifting rotation is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current drifting rotation'},{curVal.DrftSpd},{'number'})
 		if CH and CH[1] then curVal.DrftSpd = CH[1] end
 		cheat_cardrift()
 	elseif CH == 3 then
