@@ -516,7 +516,7 @@ function cheat_pistolknockback()
 		"Off (0.00001)",
 		"Custom",
 		"——",
-		"Change current knockback variable",
+		"Change current knockback value",
 		"Clear memory buffer",
 		"__back__"
 	},nil,"Pistol/Shotgun knockback modifier\nCurrent: "..curVal.PstlSgKnckbck.."\nHint: recommended value is -20 to 20 if you use pistol")
@@ -733,11 +733,13 @@ function cheat_strongvehicle()
 		if CAR_HEALTH_VALUE then
 			gg.setRanges(gg.REGION_CODE_APP)
 		--basically searching ?D;4D;1F::21
-			gg.searchNumber(1,gg.TYPE_FLOAT)
-			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(4)
-			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp)
-			memOzt.CarHealth = gg.getResults(99)
-			if gg.getResultCount() == 0 then
+			if not memOzt.CarHealth then
+				gg.searchNumber(1,gg.TYPE_FLOAT)
+				tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(4)
+				tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp)
+				memOzt.CarHealth = gg.getResults(99)
+			end
+			if not memOzt.CarHealth[1] then
 				memOzt.CarHealth = nil
 				toast(f"ErrNotFound")
 			else
@@ -775,12 +777,14 @@ function cheat_noblastdamage()
 		if DAMAGE_INTENSITY_VALUE then
 			gg.setRanges(gg.REGION_CODE_APP)
 		--basically searching ?F;2e9F::5
-			gg.searchNumber(2e9,gg.TYPE_FLOAT)
-			tmp=gg.getResults(1)
-			tmp[1].address = tmp[1].address - 0x4
-			gg.loadResults(tmp)
-			memOzt.NoBlastDamage = gg.getResults(1)
-			if gg.getResultCount() == 0 then
+			if not memOzt.NoBlastDamage then
+				gg.searchNumber(2e9,gg.TYPE_FLOAT)
+				tmp=gg.getResults(1)
+				tmp[1].address = tmp[1].address - 0x4
+				gg.loadResults(tmp)
+				memOzt.NoBlastDamage = gg.getResults(1)
+			end
+			if not memOzt.NoBlastDamage[1] then
 				memOzt.NoBlastDamage = nil
 				toast(f"ErrNotFound")
 			else
@@ -1008,21 +1012,35 @@ function cheat_c4autorigg()
 end
 function cheat_runspeedmod()
 	CH = gg.choice({
-		"400",
-		"120 (Default)",
-		"Back"
-	},nil,"Running speed modifier (Controllable, CodeApp implementation)")
-	if CH then
-		if CH == 3 then MENU()
-		elseif CH == 1 then tmp={15120,15400}
-		elseif CH == 2 then tmp={15400,15120} end
+		[15120]="120 (Default)",
+		[15400]="400",
+		[33001]="——",
+		[33002]="Clear memory buffer",
+		[33003]="Back"
+	},nil,"Running speed modifier")
+	if CH == 33003 then MENU()
+	elseif CH == 33002 then
+		CH,memOzt.runSpeed = nil,nil
+		cheat_runspeedmod()
+	elseif CH ~= 33001 then
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("runSpeed",tmp[1].."W;24000F;985158124D;60F::12",tmp[1],gg.TYPE_WORD,1)
-		if gg.getResultCount() == 0 then
-			gg.toast("Can't find specific set of number")
+	--basically searching ?W;24000F;60F;576F::19
+		if not memOzt.runSpeed then
+			gg.searchNumber(576,gg.TYPE_FLOAT)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x8) end gg.loadResults(tmp) gg.refineNumber(60)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x8) end gg.loadResults(tmp) gg.refineNumber(24000)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x2) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp)
+			memOzt.runSpeed = gg.getResults(1)
+		end
+		if not memOzt.runSpeed[1] then
+			gg.toast(f"ErrNotFound")
 		else
-		  gg.editAll(tmp[2],gg.TYPE_WORD)
-			gg.toast("Running speed changed")
+			for i=1,#memOzt.runSpeed do
+				memOzt.runSpeed[i].flags = gg.TYPE_WORD
+				memOzt.runSpeed[i].value = CH
+			end
+			gg.setValues(memOzt.runSpeed)
+			gg.toast("Running speed "..CH)
 		end
 	end
 end
@@ -1041,7 +1059,7 @@ function cheat_xpmodifier()
 	if CH then
 		tmp[1] = handleMemOzt("CustomXP",1014817001,nil,gg.TYPE_DWORD,1)
 		if gg.getResultCount() == 0 then
-			toast('Can\'t find the specific number.')
+			toast(f"ErrNotFound")
 		else
 			t = {}
 			tmp[1] = tmp[1][1].address
@@ -1391,11 +1409,13 @@ function cheat_explodepow()
 		if EXPLOSION_POWER then
 			gg.setRanges(gg.REGION_CODE_APP)
 		--basically searching 990904320D;?F;1051260355D::13
-			gg.searchNumber(1051260355,gg.TYPE_DWORD)
-			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) end gg.loadResults(tmp) gg.refineNumber(990904320)
-			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x4) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp)
-			memOzt.explodePower = gg.getResults(1)
-			if gg.getResultCount() == 0 then
+			if not memOzt.explodePower then
+				gg.searchNumber(1051260355,gg.TYPE_DWORD)
+				tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) end gg.loadResults(tmp) gg.refineNumber(990904320)
+				tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x4) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp)
+				memOzt.explodePower = gg.getResults(1)
+			end
+			if not memOzt.explodePower[1] then
 				memOzt.explodePower = nil
 				toast(f"ErrNotFound")
 			else
@@ -1436,11 +1456,13 @@ function cheat_explodedir()
 	if XPLODIR_VAL then
 		gg.setRanges(gg.REGION_CODE_APP)
 	--basically searching 990904320D;?F;1051260355D::13
-		gg.searchNumber(1051260355,gg.TYPE_DWORD)
-		tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) end gg.loadResults(tmp) gg.refineNumber(990904320)
-		tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x8) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp)
-		memOzt.explodeDir = gg.getResults(1)
-		if gg.getResultCount() == 0 then
+		if not memOzt.explodeDir then
+			gg.searchNumber(1051260355,gg.TYPE_DWORD)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) end gg.loadResults(tmp) gg.refineNumber(990904320)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x8) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp)
+			memOzt.explodeDir = gg.getResults(1)
+		end
+		if not memOzt.explodeDir[1] then
 			memOzt.explodeDir = nil
 			toast(f"ErrNotFound")
 		else
@@ -1484,12 +1506,14 @@ function cheat_prtclintrvl()
 	end
 	if PARTICLE_INT then
 		gg.setRanges(gg.REGION_CODE_APP)
-	--basically searching -352321693D;?F;4.3F::9
-		gg.searchNumber(-352321693,gg.TYPE_DWORD)
-		tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x8) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(4.3)
-		tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) end gg.loadResults(tmp)
-		memOzt.PrtclAnmtnIntrvl = gg.getResults(1)
-		if gg.getResultCount() == 0 then
+	--basically searching -5377W;?F;4.3F::7
+		if not memOzt.PrtclAnmtnIntrvl then
+			gg.searchNumber(-5377,gg.TYPE_WORD)
+			tmp=gg.getResults(9e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x6) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(4.3)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) end gg.loadResults(tmp)
+			memOzt.PrtclAnmtnIntrvl = gg.getResults(1)
+		end
+		if not memOzt.PrtclAnmtnIntrvl[1] then
 			memOzt.PrtclAnmtnIntrvl = nil
 			toast(f"ErrNotFound")
 		else
@@ -1506,11 +1530,10 @@ end
 function cheat_cardrift()
 	local CH = gg.choice({
 		"Modify drifting speed",
-		"Change current drifting speed",
 		"Clear memory buffer",
 		"__back__"
 	},nil,"Drifting speed modifier\nCurrent: "..curVal.DrftSpd.."\n")
-	if CH == 4 then MENU()
+	if CH == 3 then MENU()
 	elseif CH == 1 then
 		local CH = gg.prompt({'How fast you want the drifting rotation? Higher value is more powerful\nDefault:1 (1.3) [1;20]'},{curVal.DrftSpd},{'number'})
 		if CH and CH[1] then
@@ -1519,19 +1542,21 @@ function cheat_cardrift()
 			cheat_cardrift()
 		end
 	elseif CH == 2 then
-		local CH = gg.prompt({'If you think the current drifting rotation is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current drifting rotation'},{curVal.DrftSpd},{'number'})
-		if CH and CH[1] then curVal.DrftSpd = CH[1] end
-		cheat_cardrift()
-	elseif CH == 3 then
 		memOzt.DrftSpd = nil
 		cheat_cardrift()
 	end
 	if DRIFT_SPEED then
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("DrftSpd","120F;"..curVal.DrftSpd.."F;-712W::9",curVal.DrftSpd,gg.TYPE_FLOAT,1)
-		if gg.getResultCount() == 0 then
+	--basically searching 120F;?F;712W::9
+		if not memOzt.DrftSpd then
+			gg.searchNumber(-712,gg.TYPE_WORD)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x8) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(120)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x4) end gg.loadResults(tmp)
+			memOzt.DrftSpd = gg.getResults(1)
+		end
+		if not memOzt.DrftSpd[1] then
 			memOzt.DrftSpd = nil
-			toast(f"ErrNotFound"..". if you changed the drift speed and reopened the script, restore current number using 'Change current drift speed' menu")
+			toast(f"ErrNotFound_Report")
 		else
 			memOzt.DrftSpd[1].value,curVal.DrftSpd = DRIFT_SPEED,DRIFT_SPEED
 			gg.setValues(memOzt.DrftSpd)
@@ -1877,7 +1902,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.3.5"
+		VERSION="2.3.6"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
