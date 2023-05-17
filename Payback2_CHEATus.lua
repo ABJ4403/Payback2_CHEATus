@@ -422,7 +422,7 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[22] or CH[1] then table.append(t,{ -- Disable vehicle noise
-		{address=anchor+0xDC,flags=gg.TYPE_BYTE,value=-1,freeze=true,name="Pb2Chts [Noise]: Disable"},
+		{address=anchor+0xDD,flags=gg.TYPE_BYTE,value=-1,freeze=true,name="Pb2Chts [Noise]: Disable"},
 	})
 	end
 	-- [23]
@@ -949,8 +949,8 @@ function cheat_floodspawn()
 							name = "Pb2Chts [RCCarSpam]"
 						}})
 					end
-				--lock entity id
-					if CH[4] and CH == "-1" then
+				--lock entity id (only if floodspawn not used, using both WILL CRASH the game due to buffer-overflow)
+					if CH[4] and CH[7] == "-1" then
 					--fetch current entity id
 						gg.loadResults({{address=t[1].address - 0x10,flags=gg.TYPE_WORD}})
 					--and apply
@@ -1105,8 +1105,8 @@ function cheat_mtcScrnfx()
 			end
 			if CH[9] then -- disable scrn fx
 				table.append(t,{
-					{address=(tmp[2]+0x54),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Camshake]: Disable"}
-					{address=(tmp[2]+0x88),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [MatchFinishGrainFX]: Disable"}
+					{address=(tmp[2]+0x54),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Camshake]: Disable"},
+					{address=(tmp[2]+0x88),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [MatchFinishGrainFX]: Disable"},
 					{address=(tmp[2]+0xA8),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Redfilter]: Disable"}
 				})
 			end
@@ -1118,7 +1118,7 @@ function cheat_mtcScrnfx()
 				})
 			end
 			if CH[11] then -- prevent blank screen
-				table.append(t,{{address=(tmp[]+0xF3),flags=gg.TYPE_BYTE,value=0,freeze=true,name="Pb2Chts [isScrnBlank]: No"}})
+				table.append(t,{{address=(tmp[2]+0xF3),flags=gg.TYPE_BYTE,value=0,freeze=true,name="Pb2Chts [isScrnBlank]: No"}})
 			end
 			gg.setValues(t)
 			gg.addListItems(t)
@@ -1940,7 +1940,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.3.7"
+		VERSION="2.3.8"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
