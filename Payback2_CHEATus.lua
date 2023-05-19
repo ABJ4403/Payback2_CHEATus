@@ -18,11 +18,9 @@ function MENU()
 		"3. "..f"Cheat_C4AutoRig",
 		"4. "..f"Cheat_GodModes",
 		"5. "..f"Cheat_GodModes"..' bulk',
-		"6. Strong vehicle",
-		"7. No blast damage",
-		"8. Pistol/SG Knockback",
-		"9. "..f"Cheat_CSD",
-		"10. Match modifier",
+		"6. Pistol/SG Knockback",
+		"7. "..f"Cheat_CSD",
+		"8. Match modifier",
 		"——",
 		f"Settings",
 		"__about__",
@@ -34,61 +32,63 @@ function MENU()
 	elseif CH == 3 then cheat_c4autorigg()
 	elseif CH == 4 then MENU_godmode()
 	elseif CH == 5 then MENU_godmode_bulk()
-	elseif CH == 6 then cheat_strongvehicle()
-	elseif CH == 7 then cheat_noblastdamage()
-	elseif CH == 8 then cheat_pistolknockback()
-	elseif CH == 9 then MENU_CSD()
-	elseif CH == 10 then MENU_matchmode()
+	elseif CH == 6 then cheat_pistolknockback()
+	elseif CH == 7 then MENU_CSD()
+	elseif CH == 8 then MENU_matchmode()
 ---
-	elseif CH == 12 then MENU_settings()
-	elseif CH == 13 then show_about()
-	elseif CH == 14 then exit()
-	elseif CH == 15 then suspend() end
+	elseif CH == 10 then MENU_settings()
+	elseif CH == 11 then show_about()
+	elseif CH == 12 then exit()
+	elseif CH == 13 then suspend() end
 	CH,tmp = nil,{}
 end
 function MENU_CSD()
 	local CH = gg.choice({
 		f"Cheat_CSD".."\n"..f"Cheat_CSD_Notice",
 		"1. Running speed modifier",
-		"2. Walk animation Wonkyness (client-side only)",
-		"3. Change Name (EXPERIMENTAL)",
-		"4. Change Name Color (EXPERIMENTAL)",
-		"5. XP,Coin,etc",
-		"6. Explosion Power",
-		"7. Explosion Direction",
-		"8. Particle interval (Slow/Fast explosion)",
-		"9. Reflection Graphics",
-		"10. Colored trees",
-		"11. Autoshoot Rocket",
-		"12. Car drift",
-		"13. Big body",
-		"14. Big Flamethrower (Item)",
-		"15. Shadows",
-		"16. Colored Peoples (ESP)",
-		"17. Delete All Names",
+		"2. Strong vehicle",
+		"3. No blast damage",
+		"4. XP,Coin,etc",
+		"5. Explosion Power",
+		"6. Explosion Direction",
+		"7. Particle interval (Slow/Fast explosion)",
+		"8. Reflection Graphics",
+		"9. Colored trees",
+		"10. Autoshoot Rocket",
+		"11. Car drift",
+		"12. Walk animation Wonkyness (visual)",
+		"13. Change Name (EXPERIMENTAL)",
+		"14. Change Name Color (EXPERIMENTAL)",
+		"15. Big body",
+		"16. Big Flamethrower (Visual item)",
+		"17. Shadows",
+		"18. Entity X-Ray (visual)",
+		"19. Delete All Names",
 		"——",
 		"__back__"
 	},nil,f"Title_Version")
 --Title:CSD...
 	if CH == 2 then cheat_runspeedmod()
-	elseif CH == 3 then cheat_walkwonkyness()
-	elseif CH == 4 then cheat_changeplayername()
-	elseif CH == 5 then cheat_changeplayernamecolor()
-	elseif CH == 6 then cheat_mtcScrnfx()
-	elseif CH == 7 then cheat_explodepow()
-	elseif CH == 8 then cheat_explodedir()
-	elseif CH == 9 then cheat_prtclintrvl()
-	elseif CH == 10 then cheat_reflectiongraphics()
-	elseif CH == 11 then cheat_coloredtree()
-	elseif CH == 12 then cheat_autoshootrocket()
-	elseif CH == 13 then cheat_cardrift()
-	elseif CH == 14 then cheat_bigbody()
-	elseif CH == 15 then cheat_bigflamethroweritem()
-	elseif CH == 16 then cheat_shadowfx()
-	elseif CH == 17 then cheat_plyxray()
-	elseif CH == 18 then cheat_deleteingameplaytext()
+	elseif CH == 3 then cheat_strongvehicle()
+	elseif CH == 4 then cheat_noblastdamage()
+	elseif CH == 5 then cheat_mtcScrnfx()
+	elseif CH == 6 then cheat_explodepow()
+	elseif CH == 7 then cheat_explodedir()
+	elseif CH == 8 then cheat_prtclintrvl()
+	elseif CH == 9 then cheat_reflectiongraphics()
+	elseif CH == 10 then cheat_coloredtree()
+	elseif CH == 11 then cheat_autoshootrocket()
+	elseif CH == 12 then cheat_cardrift()
+	elseif CH == 13 then cheat_walkwonkyness()
+	elseif CH == 14 then cheat_changeplayername()
+	elseif CH == 15 then cheat_changeplayernamecolor()
+	elseif CH == 16 then cheat_bigbody()
+	elseif CH == 17 then cheat_bigflamethroweritem()
+	elseif CH == 18 then cheat_shadowfx()
+	elseif CH == 19 then cheat_plyxray()
+	elseif CH == 20 then cheat_deleteingameplaytext()
 ---
-	elseif CH == 20 then MENU() end
+	elseif CH == 22 then MENU() end
 end
 function MENU_settings()
 	local CH = gg.choice({
@@ -1264,16 +1264,18 @@ function cheat_coloredtree()
 		"__back__"
 	},nil,"Colored trees\nThis will change some shader stuff (actually idk wut this does lol) that affects trees")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={0.04,-999,"ON"}
-	elseif CH == 2 then tmp={-999,0.04,"OFF"} end
-	if tmp then
-		gg.setRanges(gg.REGION_CODE_APP)
-		local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
-		if gg.getResultCount() == 0 then
-			toast(f"ErrNotFound_Report")
-		else
-			gg.editAll(tmp[2],gg.TYPE_FLOAT)
-			toast("Colored trees "..tmp[3])
+	elseif CH then
+		if CH == 1 then tmp={.04,-999,"ON"}
+		elseif CH == 2 then tmp={-999,.04,"OFF"} end
+		if tmp then
+			gg.setRanges(gg.REGION_CODE_APP)
+			local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
+			if gg.getResultCount() == 0 then
+				toast(f"ErrNotFound_Report")
+			else
+				gg.editAll(tmp[2],gg.TYPE_FLOAT)
+				toast("Colored trees "..tmp[3])
+			end
 		end
 	end
 end
@@ -1284,16 +1286,18 @@ function cheat_bigflamethroweritem()
 		"__back__"
 	},nil,"Big flamethrower (Item)\nPS: this will not make the flame burst bigger")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={0.9,5.1403,"ON"}
-	elseif CH == 2 then tmp={5.1403,0.9,"OFF"} end
-	if tmp then
-		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("bigflmthrwritm","0.4;0.2;"..tmp[1]..";24e3::13",tmp[1],gg.TYPE_FLOAT,9)
-		if gg.getResultCount() == 0 then
-			toast(f"ErrNotFound")
-		else
-			gg.editAll(tmp[2],gg.TYPE_FLOAT)
-			toast("Big flamethrower "..tmp[3])
+	elseif CH then
+		if CH == 1 then tmp={0.9,5.1403,"ON"}
+		elseif CH == 2 then tmp={5.1403,0.9,"OFF"} end
+		if tmp then
+			gg.setRanges(gg.REGION_CODE_APP)
+			handleMemOzt("bigflmthrwritm","0.4;0.2;"..tmp[1]..";24e3::13",tmp[1],gg.TYPE_FLOAT,9)
+			if gg.getResultCount() == 0 then
+				toast(f"ErrNotFound")
+			else
+				gg.editAll(tmp[2],gg.TYPE_FLOAT)
+				toast("Big flamethrower "..tmp[3])
+			end
 		end
 	end
 end
@@ -1305,26 +1309,28 @@ function cheat_autoshootrocket()
 		"__back__"
 	},nil,"Autoshoot rocket. PS:\n- This will make everyone shoot rocket no matter what weapon they hold\n- To use this, use the machine gun, or use Rel0ad (will be quirky if using this)")
 	if CH == 4 then MENU()
-	elseif CH == 1 then tmp={0,0,"ON"}
-	elseif CH == 2 then tmp={754,0,"ON"}
-	elseif CH == 3 then tmp={754,752,"OFF"} end
-	if tmp then
-		gg.setRanges(gg.REGION_CODE_APP)
-		gg.searchNumber(5000,gg.TYPE_FLOAT)
-		t = gg.getResults(1)
-		if gg.getResultCount() == 0 then
-			toast(f"ErrNotFound")
-		else
-			t = t[1].address
-			r = {
-				{address=t+0x80,flags=gg.TYPE_WORD,value=tmp[1]},
-				{address=t+0x88,flags=gg.TYPE_WORD,value=tmp[2]}
-			}
-			gg.setValues(r) -- Pretty non-Pb2Chts-standard variable there XD
-			gg.addListItems(r) -- Debugging
-			toast("Autoshoot rocket "..tmp[3])
+	elseif CH then
+		if CH == 1 then tmp={0,0,"ON"}
+		elseif CH == 2 then tmp={754,0,"ON"}
+		elseif CH == 3 then tmp={754,752,"OFF"} end
+		if tmp then
+			gg.setRanges(gg.REGION_CODE_APP)
+			gg.searchNumber(5000,gg.TYPE_FLOAT)
+			t = gg.getResults(1)
+			if gg.getResultCount() == 0 then
+				toast(f"ErrNotFound")
+			else
+				t = t[1].address
+				r = {
+					{address=t+0x80,flags=gg.TYPE_WORD,value=tmp[1]},
+					{address=t+0x88,flags=gg.TYPE_WORD,value=tmp[2]}
+				}
+				gg.setValues(r) -- Pretty non-Pb2Chts-standard variable there XD
+				gg.addListItems(r) -- Debugging
+				toast("Autoshoot rocket "..tmp[3])
+			end
+			r = nil
 		end
-		r = nil
 	end
 end
 function cheat_shadowfx()
@@ -1334,16 +1340,18 @@ function cheat_shadowfx()
 		"__back__"
 	},nil,"Shadow effects\nInfo: this wont affect your game performance at all (not making it lag/fast)\ndont use this for performance purpose :)")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={1e-4,-1.0012,"Disabled"}
-	elseif CH == 2 then tmp={-1.0012,1e-4,"Enabled"} end
-	if tmp then
-		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1)
-		if gg.getResultCount() == 0 then
-			toast(f"ErrNotFound_Report")
-		else
-			gg.editAll(tmp[2],gg.TYPE_FLOAT)
-			toast("Shadow "..tmp[3])
+	elseif CH then
+		if CH == 1 then tmp={1e-4,-1.0012,"Disabled"}
+		elseif CH == 2 then tmp={-1.0012,1e-4,"Enabled"} end
+		if tmp then
+			gg.setRanges(gg.REGION_CODE_APP)
+			handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1)
+			if gg.getResultCount() == 0 then
+				toast(f"ErrNotFound_Report")
+			else
+				gg.editAll(tmp[2],gg.TYPE_FLOAT)
+				toast("Shadow "..tmp[3])
+			end
 		end
 	end
 end
@@ -1940,7 +1948,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.3.8"
+		VERSION="2.3.9"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2035,7 +2043,7 @@ end
 local lang = {
 en_US={
 Automatic				 = "Automatic",
-About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)",
+About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
 Credits					 = "Credits",
 Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.",
 Disclaimmer			 = "Disclaimmer (please read)",
@@ -2066,7 +2074,7 @@ eAchC_wait       = "Please wait, finding all entities...",
 },
 ['in']={
 Automatic				 = "Otomatis",
-About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
+About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Value WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.",
 Disclaimmer			 = "Disklaimmer (mohon untuk dibaca)",
