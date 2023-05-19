@@ -1,10 +1,10 @@
 --— local variables ——————————————--
 --- can reduce latency by couple miliseconds
 local gg,io,os = gg,io,os -- cache table query to make it faster
-gg.getFile,gg.getTargetInfo,gg.getTargetPackage = gg.getFile():gsub("%.lua$",""),gg.getTargetInfo(),gg.getTargetPackage() -- prefetch some gg output, also strip .lua on gg.getFile
+gg.getFile,gg.getTargetInfo,gg.getTargetPackage,gg.getLocale = gg.getFile():gsub("%.lua$",""),gg.getTargetInfo(),gg.getTargetPackage(),gg.getLocale() -- prefetch some gg output, also strip .lua on gg.getFile
 local susp_file,cfg_file = gg.getFile..'.suspend.json',gg.getFile..'.conf' -- define config and suspend files
 local tmp,memOzt,t = {},{},{} -- blank table for who knows...
-local curVal,CH,cfg,lastCfg -- preallocate stuff for who knows...
+local curVal,CH,cfg,lastCfg,curr_lang,lang,translationTable -- preallocate stuff for who knows...
 --————————————————————————————————--
 
 
@@ -92,9 +92,7 @@ function MENU_CSD()
 end
 function MENU_settings()
 	local CH = gg.choice({
-		"Clear results & list items",
-		"Clear results",
-		"Clear list items",
+		"Clear result & some list items",
 		"——",
 		"Change default & custom player name",
 		"Change __language__",
@@ -104,13 +102,11 @@ function MENU_settings()
 		"Reset settings",
 		"__back__"
 	},nil,f"Title_Version")
-	if CH == 11 then MENU()
+	if CH == 9 then MENU()
 	---
 	elseif CH == 1 then gg.clearResults() gg.clearList() toast('Cleared!')
-	elseif CH == 2 then gg.clearResults() toast('Cleared!')
-	elseif CH == 3 then gg.clearList() toast('Cleared!')
 	---
-	elseif CH == 5 then
+	elseif CH == 3 then
 		local CH = gg.prompt({'Default player name:','Default custom player name:'},{cfg.PlayerCurrentName,cfg.PlayerCustomName},{'text','text'})
 		if CH then
 			if CH[1] ~= "" then cfg.PlayerCurrentName = CH[1] end
@@ -118,7 +114,8 @@ function MENU_settings()
 			CH = nil
 		end
 		MENU_settings()
-	elseif CH == 6 then
+	elseif CH == 4 then
+	--Add your language code below
 		local CH = gg.choice({
 			["en_US"]="🇺🇸️ English",
 			["in"]="🇮🇩️ Indonesia",
@@ -129,15 +126,15 @@ function MENU_settings()
 			update_language()
 		end
 		MENU_settings()
-	elseif CH == 7 then
+	elseif CH == 5 then
 		local CH
 		if cfg.entityAnchrSearchMethod == "holdWeapon" then CH = 1
 		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then CH = 2
 		elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then CH = 3 end
 		CH = gg.choice({
-			"1. Hold weapon (hold pistol/knife. faster, ~6 seconds)",
-			"2. ABJ4403's Automatic anchor (Hold pistol, dont shoot, little bit Hold-Weapon-like. rarely fails)",
-			"3. ABJ4403 auto anchor 2 (finds any player/ai/vehicle)",
+			"1. Hold weapon (Hold pistol/knife. ~6 seconds)",
+			"2. Auto anchor (Hold pistol, dont shoot. Faster, rarely fails)",
+			"3. Auto anchor 2 (finds any player/ai/vehicle)",
 			"__back__",
 		},CH,f"Title_Version")
 		if CH then
@@ -147,11 +144,10 @@ function MENU_settings()
 			MENU_settings()
 		end
 	---
-	elseif CH == 9 then
+	elseif CH == 7 then
 		saveConfig()
-		toast("your current settings is saved")
 		MENU_settings()
-	elseif CH == 10 then
+	elseif CH == 8 then
 		cfg.clearAllList=false
 		cfg.enableAutoMemRangeOpti=true
 		cfg.enableLogging=false
@@ -159,7 +155,7 @@ function MENU_settings()
 		cfg.Language="auto"
 		cfg.PlayerCurrentName=":Player"
 		cfg.PlayerCustomName=":CoolFoe"
-		toast("Your current settings was reset.\n- If you accidentally clicked reset, interrupt the script with the floating stop button and rerun the script.\n- If you sure to reset, save the setting")
+		toast("Current settings was reset.\n- If you accidentally clicked it, interrupt the script with the floating stop button and rerun the script.\n- If you sure to reset, save the setting")
 		MENU_settings()
 	end
 end
@@ -1622,7 +1618,7 @@ function show_about()
 	elseif CH == 2 then alert(f"Disclaimmer_Text") show_about()
 	elseif CH == 3 then alert(f"License_Text") show_about()
 	elseif CH == 4 then alert(f"Credits_Text") show_about()
-	elseif CH == 5 then CH = nil MENU() end
+	elseif CH == 5 then MENU() end
 end
 --————————————————————————————————--
 
@@ -1664,7 +1660,7 @@ end
 function table.copy(t)
   local t2={}
   for k,v in pairs(t)do
-		t2[k]=type(v)=="table"and table.copy(v)or v
+		t2[k] = type(v) == "table" and table.copy(v)or v
   end
   return t2
 end
@@ -1677,15 +1673,12 @@ function searchWatchdog(msg,refineVal,mmBfr)
 	local prvVl = gg.getResults(100)
 	if #prvVl < 2 then return prvVl
 	elseif msg then toast(msg.."\nClick GG Icon to abort the search") end
-	while true do
-		gg.refineNumber(refineVal)
-		if gg.isVisible() or gg.getResultCount() > 0 then -- if gg icon clicked or wanted result changes found, break
-			gg.setVisible(false)
-			break
-		end
+	repeat
 		gg.loadResults(prvVl)
 		sleep(100)
-	end
+		gg.refineNumber(refineVal)
+	until gg.isVisible() or gg.getResultCount() > 0
+	gg.setVisible(false)
 	t = gg.getResults(1)
 	memOzt[mmBfr] = t
 	return t
@@ -1910,16 +1903,15 @@ function suspend()
 	os.exit()
 end
 function update_language()
---Parse language strings...
 	if cfg.Language == "auto" then
- -- Only English and Indonesian are supported (for now)
-		curr_lang = gg.getLocale()
-		if curr_lang ~= "in" then
+		curr_lang = gg.getLocale
+		if not translationTable[curr_lang] then -- if the given language doesn't exist, use English as fallback
 			curr_lang = "en_US"
 		end
 	else
 		curr_lang = cfg.Language
 	end
+	lang = translationTable[curr_lang]
 end
 function saveConfig()
 	cfg.memZones = lastCfg.memZones
@@ -1948,7 +1940,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.3.9"
+		VERSION="2.4.0"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -1963,7 +1955,6 @@ function loadConfig()
 	end
 	cfg_load = nil
 	curVal.PlayerCurrentName = cfg.PlayerCurrentName
-	update_language()
 end
 function restoreSuspend()
 --Restore current session from suspend file and remove it afterwards
@@ -2040,7 +2031,7 @@ if not cfg.clearAllList then
 end
 
 -- Prepare language
-local lang = {
+translationTable = {
 en_US={
 Automatic				 = "Automatic",
 About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
@@ -2104,7 +2095,8 @@ eAchB_hold2      = "Pegang pisau 🔪",
 eAchC_wait       = "Mohon tunggu, menemukan semua entitas...",
 }
 }
-function f(i,...)return string.format(lang[curr_lang][i]or i,...)end
+function f(i,...)return string.format(lang[i]or i,...)end
+update_language()
 
 -- Restore session file if any
 restoreSuspend()
