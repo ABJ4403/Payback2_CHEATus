@@ -599,18 +599,15 @@ function cheat_wallhack()
 	elseif CH == 5 then tmp={2,-1,1140457472,"OFF"}
 	---
 	elseif CH == 7 then
-		alert([[Wall hack is a hack where you can pass through walls
+		alert([[Wall hack allows you to pass through walls.
+GKTV (known as Pumpkin Hacker) Wallhack is a recommended, it's Xa-based, fast to turn on/off.
+You can optionally choose to only wallhack entities, makes entities can't push you.
 
-GKTV (known as Pumpkin Hacker)'s Wallhack is recommended, it Xa-based (which is fast to enable/disable),
-able to survive multiple matches (because we're changing Xa, and Xa never changes), and can wallhack entities.
-You can also optionally choose to only wallhack entities, which makes you unpushable by others (only by online players/bots)
+AGH (AlphaGGHacker) method has better physics but is Ca-based,
+needs to be applied every match and took longer than GKTV.
 
-AGH (Alpha GG Hacker) method has best physics (wheels wont get stuck), its Ca-based (thus need to be reapplied every match and takes slightly longer than GKTV)
-
-Technical Explanation:
-Xa = GG CodeApp memory region (marked with purple color, its tiny (means really fast to search numbers), and never changes (not requiring to reapply every time).
-Ca = GG C Alloc memory region (marked with yellow color, its quite big (thus searches takes couple seconds, and it changes a lot (because of the nature of C).
-GG = GameGuardian.]])
+Xa = GG CodeApp memory region marked with purple color, small and fast.
+Ca = GG C Alloc memory region marked with yellow color, quite big, takes couple seconds.]])
 	elseif CH == 8 then
 		CH,memOzt.wallhack_agh,memOzt.wallhack_gktv = nil,nil,nil
 		toast("Memory buffer cleared")
@@ -1903,14 +1900,7 @@ function suspend()
 	os.exit()
 end
 function update_language()
-	if cfg.Language == "auto" then
-		curr_lang = gg.getLocale
-		if not translationTable[curr_lang] then -- if the given language doesn't exist, use English as fallback
-			curr_lang = "en_US"
-		end
-	else
-		curr_lang = cfg.Language
-	end
+	curr_lang = (cfg.Language == "auto") and (translationTable[gg.getLocale] and gg.getLocale or "en_US") or cfg.Language
 	lang = translationTable[curr_lang]
 end
 function saveConfig()
@@ -1940,7 +1930,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.0"
+		VERSION="2.4.1"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
