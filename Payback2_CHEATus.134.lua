@@ -1,13 +1,12 @@
--- This is Payback2_CHEATus built specifically for version 134
--- I dont provide much support for this, because some cheats are actually patched by the dev.
+-- This is Payback2_CHEATus built specifically for build 138
+-- I dont provide much support for this, because lots of the cheats are patched by the developer.
 --— local variables ——————————————--
 --- can reduce latency by couple miliseconds
-local gg,io,os = gg,io,os -- precache the usual call function (faster function call)
-gg.getFile,gg.getTargetInfo,gg.getTargetPackage = gg.getFile(),gg.getTargetInfo(),gg.getTargetPackage() -- prefetch some gg output
-gg.getFile = gg.getFile:gsub("%.lua$","") -- strip .lua
+local gg,io,os = gg,io,os -- cache table query to make it faster
+gg.getFile,gg.getTargetInfo,gg.getTargetPackage,gg.getLocale = gg.getFile():gsub("%.lua$",""),gg.getTargetInfo(),gg.getTargetPackage(),gg.getLocale() -- prefetch some gg output, also strip .lua on gg.getFile
 local susp_file,cfg_file = gg.getFile..'.suspend.json',gg.getFile..'.conf' -- define config and suspend files
-local tmp,revert,memOzt,memOffset,t = {},{},{},{},{} -- blank stuff for who knows...
-local curVal,CH,cfg,lastCfg -- blank stuff for who knows...
+local tmp,memOzt,t = {},{},{} -- blank table for who knows...
+local curVal,CH,cfg,lastCfg,curr_lang,lang,translationTable -- preallocate stuff for who knows...
 --————————————————————————————————--
 
 
@@ -15,184 +14,152 @@ local curVal,CH,cfg,lastCfg -- blank stuff for who knows...
 --— Cheat menus ——————————————————--
 --- Bunch of menus and cheat codes
 function MENU()
---Let the user choose stuff
 	local CH = gg.choice({
 		"1. "..f"Cheat_WallHack",
-		"2. Flood Respawn/RC Spam/Win Brawl/Swag Deliver 0 timer",
+		"2. Floodspawn + others",
 		"3. "..f"Cheat_C4AutoRig",
 		"4. "..f"Cheat_GodModes",
-		"5. Strong vehicle",
-		"6. No blast damage",
-		"7. Pistol/SG Knockback",
-		"8. "..f"Cheat_CSD",
-		"9. Match modifier",
+		"5. "..f"Cheat_GodModes"..' bulk',
+		"6. Pistol/SG Knockback",
+		"7. "..f"Cheat_CSD",
+		"8. Match modifier",
 		"——",
 		f"Settings",
-		f"__about__",
-		f"__exit__",
+		"__about__",
+		"__exit__",
 		f"Suspend"
 	},nil,f"Title_Version")
 	if CH == 1 then cheat_wallhack()
 	elseif CH == 2 then cheat_floodspawn()
 	elseif CH == 3 then cheat_c4autorigg()
 	elseif CH == 4 then MENU_godmode()
-	elseif CH == 5 then cheat_strongvehicle()
-	elseif CH == 6 then cheat_noblastdamage()
-	elseif CH == 7 then cheat_pistolknockback()
-	elseif CH == 8 then MENU_CSD()
-	elseif CH == 9 then MENU_matchmode()
+	elseif CH == 5 then MENU_godmode_bulk()
+	elseif CH == 6 then cheat_pistolknockback()
+	elseif CH == 7 then MENU_CSD()
+	elseif CH == 8 then MENU_matchmode()
 ---
-	elseif CH == 11 then MENU_settings()
-	elseif CH == 12 then show_about()
-	elseif CH == 13 then exit()
-	elseif CH == 14 then suspend() end
-	CH = nil
-	if type(tmp)=="table"then for k in pairs(tmp)do tmp[k]=nil end else tmp={}end
+	elseif CH == 10 then MENU_settings()
+	elseif CH == 11 then show_about()
+	elseif CH == 12 then exit()
+	elseif CH == 13 then suspend() end
+	CH,tmp = nil,{}
 end
 function MENU_CSD()
---Let the user choose stuff
 	local CH = gg.choice({
 		f"Cheat_CSD".."\n"..f"Cheat_CSD_Notice",
 		"1. Running speed modifier",
-		"2. Walk animation Wonkyness (client-side only)",
-		"3. Change Name (EXPERIMENTAL)",
-		"4. Change Name Color (EXPERIMENTAL)",
-		"5. Change XP/Coin",
-		"6. Explosion Power",
-		"7. Explosion Direction",
-		"8. Particle interval (Slow/Fast explosion)",
-		"9. Reflection Graphics",
-		"10. Colored trees",
-		"11. Autoshoot Rocket (Untested for build 134)",
-		"12. Car drift",
-		"13. Big body",
-		"14. Big Flamethrower (Item)",
-		"15. Shadows",
-		"16. Colored Peoples (ESP)",
-		"17. Delete All Names",
+		"2. Strong vehicle",
+		"3. No blast damage",
+		"4. XP,Coin,etc",
+		"5. Explosion Power",
+		"6. Explosion Direction",
+		"7. Particle interval (Slow/Fast explosion)",
+		"8. Reflection Graphics",
+		"9. Colored trees",
+		"10. Autoshoot Rocket",
+		"11. Car drift",
+		"12. Walk animation Wonkyness (visual)",
+		"13. Change Name (EXPERIMENTAL)",
+		"14. Change Name Color (EXPERIMENTAL)",
+		"15. Big body",
+		"16. Big Flamethrower (Visual item)",
+		"17. Shadows",
+		"18. Entity X-Ray (visual)",
+		"19. Delete All Names",
 		"——",
-		f"__back__"
+		"__back__"
 	},nil,f"Title_Version")
 --Title:CSD...
 	if CH == 2 then cheat_runspeedmod()
-	elseif CH == 3 then cheat_walkwonkyness()
-	elseif CH == 4 then cheat_changeplayername()
-	elseif CH == 5 then cheat_changeplayernamecolor()
-	elseif CH == 6 then cheat_xpmodifier()
-	elseif CH == 7 then cheat_explodepow()
-	elseif CH == 8 then cheat_explodedir()
-	elseif CH == 9 then cheat_prtclintrvl()
-	elseif CH == 10 then cheat_reflectiongraphics()
-	elseif CH == 11 then cheat_coloredtree()
-	elseif CH == 12 then cheat_autoshootrocket()
-	elseif CH == 13 then cheat_cardrift()
-	elseif CH == 14 then cheat_bigbody()
-	elseif CH == 15 then cheat_bigflamethroweritem()
-	elseif CH == 16 then cheat_shadowfx()
-	elseif CH == 17 then cheat_clrdpplsp()
-	elseif CH == 18 then cheat_deleteingameplaytext()
+	elseif CH == 3 then cheat_strongvehicle()
+	elseif CH == 4 then cheat_noblastdamage()
+	elseif CH == 5 then cheat_mtcScrnfx()
+	elseif CH == 6 then cheat_explodepow()
+	elseif CH == 7 then cheat_explodedir()
+	elseif CH == 8 then cheat_prtclintrvl()
+	elseif CH == 9 then cheat_reflectiongraphics()
+	elseif CH == 10 then cheat_coloredtree()
+	elseif CH == 11 then cheat_autoshootrocket()
+	elseif CH == 12 then cheat_cardrift()
+	elseif CH == 13 then cheat_walkwonkyness()
+	elseif CH == 14 then cheat_changeplayername()
+	elseif CH == 15 then cheat_changeplayernamecolor()
+	elseif CH == 16 then cheat_bigbody()
+	elseif CH == 17 then cheat_bigflamethroweritem()
+	elseif CH == 18 then cheat_shadowfx()
+	elseif CH == 19 then cheat_plyxray()
+	elseif CH == 20 then cheat_deleteingameplaytext()
 ---
-	elseif CH == 20 then MENU() end
-end
-function MENU_other()
---Let the user choose stuff
-	local CH = gg.choice({
-		"1. Weapon ammo",
-		"2. void mode",
-		f"__back__"
-	},nil,"Other cheats\nmost of these cheats might be experiment, or uncategorized or whatnot...")
-	if CH == 1 then cheat_weaponammo()
-	elseif CH == 2 then cheat_voidmatchmode()
-	elseif CH == 3 then MENU() end
+	elseif CH == 22 then MENU() end
 end
 function MENU_settings()
---Let the user choose stuff
 	local CH = gg.choice({
-		"Change default player name and custom name",
+		"Clear result & some list items",
+		"——",
+		"Change default & custom player name",
 		"Change __language__",
 		"Change entity anchor searching method",
 		"——",
-		"Clear results & list items",
-		"Clear results",
-		"Clear list items",
-		"Remove suspend file",
-		"——",
-		"Save settings",
+		"__save__ settings",
 		"Reset settings",
-		f"__back__"
+		"__back__"
 	},nil,f"Title_Version")
-	if CH == 12 then MENU()
-	elseif CH == 1 then
-		local CH = gg.prompt({'Put your new default player name','Put your new default custom player name'},{cfg.PlayerCurrentName,cfg.PlayerCustomName},{'text','text'})
+	if CH == 9 then MENU()
+	---
+	elseif CH == 1 then gg.clearResults() gg.clearList() toast('Cleared!')
+	---
+	elseif CH == 3 then
+		CH = gg.prompt({'Default player name:','Default custom player name:'},{cfg.PlayerCurrentName,cfg.PlayerCustomName},{'text','text'})
 		if CH then
 			if CH[1] ~= "" then cfg.PlayerCurrentName = CH[1] end
-			if CH[2] ~= "" then cfg.PlayerCustomName = CH[1] end
+			if CH[2] ~= "" then cfg.PlayerCustomName = CH[2] end
 		end
-		CH = nil
 		MENU_settings()
-	elseif CH == 2 then
-		if cfg.Language == "en_US" then tmp = 1
-		elseif cfg.Language == "in" then tmp = 2
-		elseif cfg.Language == "auto" then tmp = 3 end
-		local CH = gg.choice({
-			"🇺🇸️ English",
-			"🇮🇩️ Indonesia",
-			"Auto-detect (uses GameGuardian API, will use English as fallback if your language didn't exist)",
-			f"__back__",
-		},tmp,f"Title_Version")
+	elseif CH == 4 then
+	--Add your language code below
+		CH = gg.choice({
+			["en_US"]="🇺🇸️ English",
+			["in"]="🇮🇩️ Indonesia",
+			["auto"]="Auto-detect (uses GameGuardian API, uses English as fallback)",
+		},cfg.Language,f"Title_Version")
 		if CH then
-			if CH == 4 then MENU_settings()
-			elseif CH == 1 then cfg.Language = "en_US"
-			elseif CH == 2 then cfg.Language = "in"
-			elseif CH == 3 then cfg.Language = "auto" end
+			cfg.Language = CH
 			update_language()
-			MENU_settings()
 		end
-	elseif CH == 3 then
-		tmp = nil
-		if cfg.entityAnchrSearchMethod == "holdWeapon" then tmp = 1
-		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then tmp = 2 end
-		local CH = gg.choice({
-			"1. Hold weapon (tells you to hold pistol/knife and find those values. faster, ~6 seconds)",
-			"2. ABJ4403's Automatic anchor (Hold pistol, dont shoot, little bit Hold-Weapon-like. rarely fails)",
-			f"__back__",
-		},tmp,f"Title_Version")
+		MENU_settings()
+	elseif CH == 5 then
+		if cfg.entityAnchrSearchMethod == "holdWeapon" then CH = 1
+		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then CH = 2
+		elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then CH = 3 end
+		CH = gg.choice({
+			"1. Hold weapon (Hold pistol/knife. ~6 seconds)",
+			"2. Auto anchor (Hold pistol, dont shoot. Faster, rarely fails)",
+			"3. Auto anchor 2 (finds any player/ai/vehicle)",
+			"__back__",
+		},CH,f"Title_Version")
 		if CH then
 			if CH == 1 then cfg.entityAnchrSearchMethod = "holdWeapon"
-			elseif CH == 2 then cfg.entityAnchrSearchMethod = "abjAutoAnchor" end
-			update_language()
+			elseif CH == 2 then cfg.entityAnchrSearchMethod = "abjAutoAnchor"
+			elseif CH == 3 then cfg.entityAnchrSearchMethod = "abjAutoBatchAnchor2" end
 			MENU_settings()
 		end
 	---
-	elseif CH == 5 then gg.clearResults() gg.clearList() toast('Cleared!')
-	elseif CH == 6 then gg.clearResults() toast('Cleared!')
-	elseif CH == 7 then gg.clearList() toast('Cleared!')
-	elseif CH == 8 then os.remove(susp_file) MENU_settings()
-	---
-	elseif CH == 10 then
+	elseif CH == 7 then
 		saveConfig()
-		toast("your current settings is saved")
 		MENU_settings()
-	elseif CH == 11 then
-		cfg = {
-			enableLogging=false,
-			Language="auto",
-			PlayerCurrentName=":Player",
-			PlayerCustomName=":CoolFoe",
-			removeSuspendAfterRestoredSession=true,
-			VERSION=cfg.VERSION
-		}
-		toast("your current settings was reset.\n- If you accidentally reset the settings, interrupt the script using the floating stop button and relaunch then script.\n- If you sure to reset, save the setting")
+	elseif CH == 8 then
+		cfg.clearAllList=false
+		cfg.enableAutoMemRangeOpti=true
+		cfg.enableLogging=false
+		cfg.entityAnchrSearchMethod="abjAutoAnchor"
+		cfg.Language="auto"
+		cfg.PlayerCurrentName=":Player"
+		cfg.PlayerCustomName=":CoolFoe"
+		toast("Current settings was reset.\n- If you accidentally clicked it, interrupt the script with the floating stop button and rerun the script.\n- If you sure to reset, save the setting")
 		MENU_settings()
 	end
+	CH = nil
 end
---[[
-	A little note before looking at the cheat mechanics:
-	- On newer version of the game, now it stores data mostly on OTHER region (with the rest of the data stored in Calloc, and CodeApp),
-	old version uses Ca,Ch,Jh,A (C++Alloc,C++Heap,JavaHeap,Anonymous)
-	And also the previous value that is fail when tested, will fail even if you change memory region and still use same value
-	- on version 121+ (specifically build 134), some offsets has been changed (specifically the Xa stuff)
-]]
 function MENU_godmode()
 --Let the user choose stuff
 	local CH = gg.multiChoice({
@@ -224,7 +191,7 @@ function MENU_godmode()
 		"24. Win rampage (not instant)",
 		"25. AI Control",
 		"26. Auto unstuck car",
-	},nil,f"Cheat_GodModes".."\n"..f"Cheat_GodModes_Notice")
+	},{true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},f"Cheat_GodModes".."\n"..f"Cheat_GodModes_Notice")
 	if CH then
 		local achAdr,achAdrL = findEntityAnchr()
 		if achAdr then
@@ -236,7 +203,7 @@ function MENU_godmode()
 			toast('Selected operations done')
 			achAdr = nil
 		else
-			toast('Can\'t find the value. Try different entity anchor search method on settings, and disable memory optimization in config file.\nNothing worked? report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			toast(f"ErrNotFound"..'. Try different entity anchor search method on settings, and disable memory optimization in config file.\nNothing worked? report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		end
 	end
 end
@@ -244,12 +211,13 @@ function MENU_matchmode()
 --Let the user choose stuff
 	local CH = gg.multiChoice({
 		"Weapon Ammo",
-		"void mode (+void/no time limit)",
+		"void mode + no time limit",
+		"Win CTS (client-side)",
 		"——",
-		f"__back__"
-	},nil,"Match mode modifier")
+		"__back__"
+	},nil,"Match mode modifier\nPS: Make sure you're on the main menu, not on match (this doesnt work while in match)")
 	if CH then
-		if CH[4] then return MENU()end
+		if CH[5] then return MENU()end
 		gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 		local ta = handleMemOzt('MatchOffset',1217115234,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)
 		if ta[1] then
@@ -257,8 +225,10 @@ function MENU_matchmode()
 			ta = ta[1].address - 0x142BA4
 			ta = {
 				ta+0xB4, -- 1P
-				ta+0x1C4 -- 2P
+				ta+0x1C4, -- 2P
+				ta
 			}
+		--Put the changes that applies to 1P & 2P here
 			if CH[1] then table.append(t,{
 				{a=0x58,value=3e4,flags=gg.TYPE_DWORD},
 				{a=0x5C,value=3e4,flags=gg.TYPE_DWORD},
@@ -277,50 +247,61 @@ function MENU_matchmode()
 			end
 			for i=1,#t do
 				t[i].address = (ta[1] + t[i].a)
-				t[i].value = t[i].value
-				t[i].flags = t[i].flags
 				t[i+#t] = {
 					address = (ta[2] + t[i].a),
 					value = t[i].value,
 					flags = t[i].flags
 				}
 			end
+		--Put the changes that applies to both (1 value only) here
+			if CH[3] then table.append(t,{
+				{address=ta[3] + 0x10F4,value=0,freeze=true,flags=gg.TYPE_WORD},
+				{address=ta[3] + 0x10F6,value=0,freeze=true,flags=gg.TYPE_WORD},
+			})
+			end
 			gg.setValues(t)
 			gg.addListItems(t)
 			gg.clearResults()
 			toast('Selected operations done')
 		else
-			toast('Can\'t find the value, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			toast(f"ErrNotFound_Report")
 		end
 	end
 end
-
 function MENU_godmode_bulk()
 	local CH = gg.choice({
-		"Fix broken vehicle"
+		"1. Fix broken vehicle",
+		"2. Clear all player dupes (this will remove some duplicates, useful if you use ABJ4403 auto anchor method)",
 	},nil,"God mode bulk, PS: some can be useful but some can harm other innocent players!")
 	if CH then
-		if CH == 1 then searchType = 'blownUp' end
+		if CH == 1 then searchType = 'blownUp'
+		elseif CH == 2 then searchType = 'player' end
 		local achAdr,achAdrL = findEntityAnchr_custom(searchType)
 		if achAdr then
 			achAdrL = #achAdr
+			toast('Preparing...')
 			for i=1,achAdrL do
-				toast('Applying to '..i..'/'..achAdrL..' Entities...')
-
 				if CH == 1 then
 					table.append(t,{
 						{address=achAdr[i]-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [EntityBurning]: Antiburn"},
 						{address=achAdr[i]+0x8,flags=gg.TYPE_WORD,value=800,freeze=true,name="Pb2Chts [Health]"},
+						{address=achAdr[i]+0xDB,flags=gg.TYPE_BYTE,value=4,name="Pb2Chts [CtrlCode]"},
+					})
+				elseif CH == 2 then
+					table.append(t,{
+						{address=achAdr[i]-0x4,flags=gg.TYPE_DWORD,value=99,name="Pb2Chts [EntityBurning]: Antiburn"},
+						{address=achAdr[i]+0x8,flags=gg.TYPE_WORD,value=-501,name="Pb2Chts [Health]"},
+						{address=achAdr[i]+0xDB,flags=gg.TYPE_BYTE,value=6,name="Pb2Chts [CtrlCode]"},
+						{address=achAdr[i]+0x158,flags=gg.TYPE_WORD,value=1,name="Pb2Chts [RespawnInterval]"},
 					})
 				end
-				gg.setValues(t)
-				gg.addListItems(t)
-
 			end
-			toast('Selected operations done')
+			toast('Applied to '..achAdrL..' Entities!\nSelected operations done')
+			gg.setValues(t)
+			gg.addListItems(t)
 			achAdr = nil
 		else
-			toast('Can\'t find the value. Try different entity anchor search method on settings, and disable memory optimization in config file.\nNothing worked? report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
+			toast(f"ErrNotFound"..'. Try different entity anchor search method on settings, and disable memory optimization in config file.\nNothing worked? report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		end
 	end
 end
@@ -381,8 +362,8 @@ function cheat_godmode(CH,anchor)
 	-- [7]
 	-- [8]
 	if CH[9] or CH[1] then table.append(t,{ -- C4 Drawing
-		{address=anchor+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: X"},
-		{address=anchor+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4Position]: Y"}
+		{address=anchor+0x2C,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4PosX]"},
+		{address=anchor+0x2E,flags=gg.TYPE_WORD,value=-1,freeze=true,name="Pb2Chts [C4PosY]"}
 	})
 	end
 	if CH[10] then table.append(t,{ -- Speedslide
@@ -390,7 +371,7 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[11] then table.append(t,{ -- Float
-		{address=anchor-0x408,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [Float]"}
+		{address=anchor-0x408,flags=gg.TYPE_WORD,value=1,freeze=true,name="Pb2Chts [Float]"}
 	})
 	end
 	if CH[12] then table.append(t,{ -- Ragdoll
@@ -399,15 +380,15 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[13] or CH[7] or CH[1] then table.append(t,{ -- AntiBurn/NoSteal
-		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [EntityBurning]: Antiburn"},
+		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [EntityBurn]: Antiburn"},
 	})
 	end
 	if CH[14] then table.append(t,{ -- Burned body
-		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [EntityBurning]: Burned"},
+		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=1,freeze=true,name="Pb2Chts [EntityBurn]: Burned"},
 	})
 	end
 	if CH[15] then table.append(t,{ -- Fire body
-		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [EntityBurning]: Fire"},
+		{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [EntityBurn]: Fire"},
 	})
 	end
 	if CH[16] or CH[1] then table.append(t,{ -- Dr0wned
@@ -426,21 +407,16 @@ function cheat_godmode(CH,anchor)
 		{address=anchor-0x202,flags=gg.TYPE_WORD,value=31000,freeze=true,name="Pb2Chts [CarSpeed]"},
 	--{address=anchor-0x214,flags=gg.TYPE_WORD,value=4,freeze=true,freezeType=gg.FREEZE_IN_RANGE,freezeFrom=4,freezeTo=6,name="Pb2Chts [WheelCount]"},
 	--{address=anchor-0x20C,flags=gg.TYPE_FLOAT,value=1000,freeze=true,name="Pb2Chts [WheelGrip]"}, unused, it can give significant "controllable" fast speed, but comes at tons of minuses
+		{address=anchor+0x192,flags=gg.TYPE_WORD,value=1,freeze=true,name="Pb2Chts [VehicleLight]"},
 	})
 	end
 	if CH[21] or CH[1] then table.append(t,{ -- Transparent vehicle
 		{address=anchor-0x10,flags=gg.TYPE_WORD,value=1,name="Pb2Chts [TransparentVehicle]"},
 	})
 	end
-	if CH[22] or CH[1] then -- Disable vehicle noise
-		tmp[1] = {
-			{address=anchor-0x4,flags=gg.TYPE_DWORD,value=99,freeze=true,name="Pb2Chts [BodyBurningStateAndTimer]: Antiburn"},
-		}
-		gg.setValues(tmp[1])
-		tmp[1][1].value = 0
-		gg.sleep(100)
-		gg.setValues(tmp[1])
-		gg.addListItems(tmp[1])
+	if CH[22] or CH[1] then table.append(t,{ -- Disable vehicle noise
+		{address=anchor+0xDD,flags=gg.TYPE_BYTE,value=-1,freeze=true,name="Pb2Chts [Noise]: Disable"},
+	})
 	end
 	-- [23]
 	if CH[24] or CH[1] then table.append(t,{ -- Wanted level
@@ -448,15 +424,17 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[25] then table.append(t,{ -- Win rampage
-		{address=anchor+0x30,flags=gg.TYPE_DWORD,value=9e8,freeze=true,name="Pb2Chts [Win rampage] (remove after you win match)"},
+		{address=anchor+0x30,flags=gg.TYPE_DWORD,value=9e8,name="Pb2Chts [WinRampage] (remove after won match)"},
 	})
 	end
 	if CH[26] then table.append(t,{ -- AI Control
-		{address=anchor+0xDB,flags=gg.TYPE_BYTE,value=1,freeze=true,name="Pb2Chts [ControlMode] (remove after you win match)"},
+		{address=anchor+0xDB,flags=gg.TYPE_BYTE,value=1,freeze=true,name="Pb2Chts [CtrlMode]"},
 	})
 	end
-	if CH[27] then table.append(t,{ -- Auto Unstuck
-		{address=anchor-0x72A,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [StopStuckFlip]"},
+	if CH[27] then table.append(t,{ -- Wheel Suspension/Auto Unstuck
+	--{address=anchor-0x72C,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [WheelSuspensionX]"},
+		{address=anchor-0x72A,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [WheelSuspensionY]"},
+	--{address=anchor-0x728,flags=gg.TYPE_WORD,value=16255,freeze=true,name="Pb2Chts [WheelSuspensionZ]"},
 	})
 	end
 	--- stuff that requires user intervention and takes longer?
@@ -486,7 +464,7 @@ function cheat_godmode(CH,anchor)
 		sleep(1e3)
 	end
 	if CH[18] then -- Change vehicle color
-		local CH,PlyrClrCH = gg.choice({
+		local CH = ({0,1,2,3,4,5,6,7,8,16,48,50,59,65,-1})[gg.choice({
 			"1. Black (0)",
 			"2. Blue (1)",
 			"3. Green (2)",
@@ -502,41 +480,29 @@ function cheat_godmode(CH,anchor)
 			"13. Dark red (59)",
 			"14. Tomato red (65)",
 			"15. Rainbow"
-		},nil,"Select the color you want")
-		if CH == 1 then PlyrClrCH = 0
-		elseif CH == 2 then PlyrClrCH = 1
-		elseif CH == 3 then PlyrClrCH = 2
-		elseif CH == 4 then PlyrClrCH = 3
-		elseif CH == 5 then PlyrClrCH = 4
-		elseif CH == 6 then PlyrClrCH = 5
-		elseif CH == 7 then PlyrClrCH = 6
-		elseif CH == 8 then PlyrClrCH = 7
-		elseif CH == 9 then PlyrClrCH = 8
-		elseif CH == 10 then PlyrClrCH = 16
-		elseif CH == 11 then PlyrClrCH = 48
-		elseif CH == 12 then PlyrClrCH = 50
-		elseif CH == 13 then PlyrClrCH = 59
-		elseif CH == 14 then PlyrClrCH = 65
-		elseif CH == 15 then PlyrClrCH = -1 end
-		if PlyrClrCH and PlyrClrCH >= 0 then table.append(t,{
-			{address=anchor+0x94,flags=gg.TYPE_BYTE,freeze=true,value=PlyrClrCH,name="Pb2Chts [Vehicle color]"},
-		})
-		elseif PlyrClrCH and PlyrClrCH == -1 then
-			toast("click the floating GG icon to stop. while the rainbow animation playing, you cannot access GG until its stopped.")
-			tmp.rnbwCurClr = 1
-			tmp.rainbowCar = {{address=anchor+0x94,flags=gg.TYPE_BYTE,freeze=false,name="Pb2Chts [Vehicle color]"}}
-			gg.setValues(t)
-			gg.addListItems(t)
-			gg.clearResults()
-			gg.setVisible(false)
-			while not gg.isVisible() do
-				if tmp.rnbwCurClr > 8 then tmp.rnbwCurClr = 1 end
-				tmp.rainbowCar[1].value = tmp.rnbwCurClr
-				gg.setValues(tmp.rainbowCar)
-				sleep(77)
-				tmp.rnbwCurClr = tmp.rnbwCurClr + 1
+		},nil,"Select the color you want")]
+		if CH then
+			if CH >= 0 then
+				table.append(t,{
+					{address=anchor+0x94,flags=gg.TYPE_BYTE,freeze=true,value=CH,name="Pb2Chts [Vehicle color]"},
+				})
+			elseif CH == -1 then
+				toast("Click GG icon to stop. you can't access GG while rainbow animation is playing")
+				tmp.rnbwCurClr = 1
+				tmp.rainbowCar = {{address=anchor+0x94,flags=gg.TYPE_BYTE,name="Pb2Chts [Vehicle color]"}}
+				gg.setValues(t)
+				gg.addListItems(t)
+				gg.clearResults()
+				gg.setVisible(false)
+				while not gg.isVisible() do
+					if tmp.rnbwCurClr > 8 then tmp.rnbwCurClr = 1 end
+					tmp.rainbowCar[1].value = tmp.rnbwCurClr
+					gg.setValues(tmp.rainbowCar)
+					sleep(77)
+					tmp.rnbwCurClr = tmp.rnbwCurClr + 1
+				end
+				gg.setVisible(false)
 			end
-			gg.setVisible(false)
 		end
 	end
 	gg.setValues(t)
@@ -547,22 +513,21 @@ function cheat_pistolknockback()
 		"Grapple gun/Pull (-20)",
 		"Knockback/Push (20)",
 		"Default (0.25)",
-		"None (0.00001)",
+		"Off (0.00001)",
 		"Custom",
 		"——",
-		"Change current Knockback variable",
-		"Restore previous value",
+		"Change current knockback value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Pistol/Shotgun knockback modifier\nCurrent: "..curVal.PstlSgKnckbck.."\nHint: recommended value is -20 to 20 if you use pistol")
 	if CH then
-		if CH == 10 then return MENU()
+		if CH == 9 then return MENU()
 		elseif CH == 1 then PISTOL_KNOCKBACK_VALUE = -20
 		elseif CH == 2 then PISTOL_KNOCKBACK_VALUE = 20
 		elseif CH == 3 then PISTOL_KNOCKBACK_VALUE = 0.25
 		elseif CH == 4 then PISTOL_KNOCKBACK_VALUE = 1e-5
 		elseif CH == 5 then
-			local CH = gg.prompt({'Input your custom knockback value'})
+			local CH = gg.prompt({'Knockback value:'})
 			if CH and CH[1] then
 				PISTOL_KNOCKBACK_VALUE = CH[1]
 			else
@@ -571,12 +536,12 @@ function cheat_pistolknockback()
 		---
 		elseif CH == 7 then
 			local CH = gg.prompt({'If you think the current knockback value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current pistol/shotgun knockback value'},{curVal.PstlSgKnckbck},{'number'})
-			if CH and CH[1] then curVal.PstlSgKnckbck = CH[1] end
+			if CH and CH[1] then
+				curVal.PstlSgKnckbck = CH[1]
+				memOzt.PistolKnockback = nil
+			end
 			return cheat_pistolknockback()
 		elseif CH == 8 then
-			revert.PistolKnockback = nil
-			return cheat_pistolknockback()
-		elseif CH == 9 then
 			memOzt.PistolKnockback = nil
 			return cheat_pistolknockback()
 		end
@@ -591,13 +556,13 @@ function cheat_pistolknockback()
 					tmp[1][i].flags = gg.TYPE_FLOAT
 				end
 				gg.loadResults(tmp[1])
-				gg.refineNumber(curVal.PstlSgKnckbck)
+				gg.refineNumber(curVal.PstlSgKnckbck) -- BTW, MG value is ,5F!
 			end
 		--specially crafted for above conditions
 			handleMemOzt("PistolKnockback",curVal.PstlSgKnckbck,nil,gg.TYPE_FLOAT,2)
 			if gg.getResultCount() == 0 then
-				memOzt.PistolKnockback,revert.PistolKnockback = nil,nil
-				toast("Can't find the specific set of number. if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
+				memOzt.PistolKnockback = nil
+				toast(f"ErrNotFound"..". if you changed the knockback value and reopened the script, restore the actual current number using 'Change current knockback value' menu")
 			else
 				for i=1,#memOzt.PistolKnockback do
 					memOzt.PistolKnockback[i].value = PISTOL_KNOCKBACK_VALUE
@@ -620,7 +585,7 @@ function cheat_wallhack()
 		"——",
 		"Help",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,f"Cheat_WallHack"..". "..f"Cheat_WallHack_Notice"),nil
 	if CH == 9 then MENU()
 -- Set value that is going to be searched using logic after this `if CH elseif end`
@@ -631,18 +596,15 @@ function cheat_wallhack()
 	elseif CH == 5 then tmp={2,-1,1140457472,"OFF"}
 	---
 	elseif CH == 7 then
-		alert([[Wall hack is a hack where you can pass through walls
+		alert([[Wall hack allows you to pass through walls.
+GKTV (known as Pumpkin Hacker) Wallhack is a recommended, it's Xa-based, fast to turn on/off.
+You can optionally choose to only wallhack entities, makes entities can't push you.
 
-GKTV (known as Pumpkin Hacker)'s Wallhack is recommended, it Xa-based (which is fast to enable/disable),
-able to survive multiple matches (because we're changing Xa, and Xa never changes), and can wallhack entities.
-You can also optionally choose to only wallhack entities, which makes you unpushable by others (only by online players/bots)
+AGH (AlphaGGHacker) method has better physics but is Ca-based,
+needs to be applied every match and took longer than GKTV.
 
-AGH (Alpha GG Hacker) method has best physics (wheels wont get stuck), its Ca-based (thus need to be reapplied every match and takes slightly longer than GKTV)
-
-Technical Explanation:
-Xa = GG CodeApp memory region (marked with purple color, its tiny (means really fast to search numbers), and never changes (not requiring to reapply every time).
-Ca = GG C Alloc memory region (marked with yellow color, its quite big (thus searches takes couple seconds, and it changes a lot (because of the nature of C).
-GG = GameGuardian.]])
+Xa = GG CodeApp memory region marked with purple color, small and fast.
+Ca = GG C Alloc memory region marked with yellow color, quite big, takes couple seconds.]])
 	elseif CH == 8 then
 		CH,memOzt.wallhack_agh,memOzt.wallhack_gktv = nil,nil,nil
 		toast("Memory buffer cleared")
@@ -655,7 +617,7 @@ GG = GameGuardian.]])
 				toast('Previous result found, using previous result.')
 			else
 				toast('No buffer found, creating new buffer.')
-				gg.searchNumber("3476W;6W;"..tmp[2].."F;-17789W::15") -- wall hack
+				gg.searchNumber("3476W;6W;"..tmp[2].."F;-17789W::15") -- wall hack (TODO: update)
 			--gg.searchNumber("3472W;5W;"..tmp[2].."F;-17789W::15") -- wall hack (build -121)
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				tmp[6] = gg.getResults(1)
@@ -663,12 +625,11 @@ GG = GameGuardian.]])
 				gg.searchNumber("2W;16256W;"..tmp[2].."F;24W::9") -- vehicle wallhack
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				table.insert(tmp[6],gg.getResults(1)[1])
-				memOzt.wallhack_gktv,revert.wallhack_gktv = tmp[6],tmp[6]
+				memOzt.wallhack_gktv = tmp[6]
 			end
--- ANTI UNLUCK CHUNK --
 			gg.loadResults(memOzt.wallhack_gktv)
 			if #memOzt.wallhack_gktv == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast(f"ErrNotFound_Report")
 			else
 				if CH ~= 2 and #memOzt.wallhack_gktv == 1 then log("Only found 1 instead of 2 results.\n        Wallhack might partially or not working\n        try to play on build 121.") end
 				if CH == 2 then -- wallhack gktv entity needs to be handled differently
@@ -693,7 +654,7 @@ GG = GameGuardian.]])
 			end
 			handleMemOzt("wallhack_agh",tmp[2],nil,gg.TYPE_DWORD,1e3)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast(f"ErrNotFound_Report")
 			else
 				for i=1,#memOzt.wallhack_agh do
 					memOzt.wallhack_agh[i].value = tmp[3]
@@ -708,18 +669,17 @@ function cheat_bigbody()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		"Restore previous value",
 		"Use custom value",
-		f"__back__"
+		"__back__"
 	},nil,"Big body\nPS: client-side only")
 	if CH then
 		local t
-		if CH == 5 then MENU()
+		if CH == 4 then MENU()
 		elseif CH == 1 then
 			gg.setRanges(gg.REGION_CODE_APP)
 			handleMemOzt("bigbody",4.30000019073,nil,gg.TYPE_FLOAT,22)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast(f"ErrNotFound_Report")
 			else
 				gg.editAll(curVal.BigBody+0.00000019073,gg.TYPE_FLOAT)
 				toast("Big Body ON")
@@ -728,21 +688,13 @@ function cheat_bigbody()
 			gg.setRanges(gg.REGION_CODE_APP)
 			handleMemOzt("bigbody",curVal.BigBody+0.00000019073,nil,gg.TYPE_FLOAT,22)
 			if gg.getResultCount() == 0 then
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast(f"ErrNotFound_Report")
 			else
 				gg.editAll(4.30000019073,gg.TYPE_FLOAT)
 				toast("Big body OFF")
 			end
 		elseif CH == 3 then
-			if revert.bigbody then
-				gg.setValues(revert.bigbody)
-				toast("Big body previous value restored")
-			else
-				toast("No values to restore")
-			end
-			revert.bigbody = nil
-		elseif CH == 4 then
-			local CH = gg.prompt({'Put your custom value (Game default: 4.3,Cheatus default: 5.9, offset: .00000019073)'},{curVal.BigBody},{'number'})
+			CH = gg.prompt({'Put your custom value (Game default: 4.3,Cheatus default: 5.9, offset: .00000019073)'},{curVal.BigBody},{'number'})
 			if CH and CH[1] ~= "" then curVal.BigBody = CH[1] end
 			CH = nil
 			cheat_bigbody()
@@ -754,17 +706,15 @@ function cheat_strongvehicle()
 	local CH = gg.choice({
 		"Strong (30000)",
 		"Default (125)",
-		"Really weak (1)",
-		"Destroy (-1)",
+		"Fragile (1)",
+		"Burnt (-1)",
 		"Custom",
 		"——",
-		"Change current health variable",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Vehicle default health modifier")
 	if CH then
-		if CH == 9 then MENU()
+		if CH == 8 then MENU()
 		elseif CH == 1 then CAR_HEALTH_VALUE = 3e4
 		elseif CH == 2 then CAR_HEALTH_VALUE = 125
 		elseif CH == 3 then CAR_HEALTH_VALUE = 1
@@ -778,22 +728,21 @@ function cheat_strongvehicle()
 			end
 		---
 		elseif CH == 7 then
-			local CH = gg.prompt({'If you think the current Vehicle default health value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Vehicle default health value'},{curVal.CrDfltHlth},{'number'})
-			if CH and CH[1] then curVal.CrDfltHlth = CH[1] end
-			return cheat_strongvehicle()
-		elseif CH == 8 then
-			CH,revert.CarHealth = nil,nil
-			return cheat_strongvehicle()
-		elseif CH == 9 then
 			CH,memOzt.CarHealth = nil,nil
 			return cheat_strongvehicle()
 		end
 		if CAR_HEALTH_VALUE then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("CarHealth",curVal.CrDfltHlth.."D;4D;1F::21",curVal.CrDfltHlth,gg.TYPE_DWORD,50)
-			if gg.getResultCount() == 0 then
-				memOzt.CarHealth,revert.CarHealth = nil,nil
-				toast("Can't find the specific set of number. if you changed the vehicle health value, and reopened the script, restore the actual current number using 'Change current health variable' menu")
+		--basically searching ?D;4D;1F::21
+			if not memOzt.CarHealth then
+				gg.searchNumber(1,gg.TYPE_FLOAT)
+				tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(4)
+				tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp)
+				memOzt.CarHealth = gg.getResults(99)
+			end
+			if not memOzt.CarHealth[1] then
+				memOzt.CarHealth = nil
+				toast(f"ErrNotFound")
 			else
 				for i=1,#memOzt.CarHealth do
 					memOzt.CarHealth[i].flags = gg.TYPE_WORD
@@ -813,34 +762,32 @@ function cheat_noblastdamage()
 		"Default (300)",
 		"Far (3.000.000, dead with almost any explosed explosion)",
 		"——",
-		"Change current damage value",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Blast damage intensity modifier")
 	if CH then
-		if CH == 8 then MENU()
+		if CH == 6 then MENU()
 		elseif CH == 1 then DAMAGE_INTENSITY_VALUE = 0
 		elseif CH == 2 then DAMAGE_INTENSITY_VALUE = 300
 		elseif CH == 3 then DAMAGE_INTENSITY_VALUE = 3e6
 		---
 		elseif CH == 5 then
-			local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{curVal.DmgIntnsty},{'number'})
-			if CH and CH[1] then curVal.DmgIntnsty = CH[1] end
-			cheat_noblastdamage()
-		elseif CH == 6 then
-			CH,revert.NoBlastDamage = nil,nil
-			cheat_noblastdamage()
-		elseif CH == 7 then
 			CH,memOzt.NoBlastDamage = nil,nil
 			cheat_noblastdamage()
 		end
 		if DAMAGE_INTENSITY_VALUE then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("NoBlastDamage",curVal.DmgIntnsty..";2e9::5",curVal.DmgIntnsty,gg.TYPE_FLOAT,9)
-			if gg.getResultCount() == 0 then
-				memOzt.NoBlastDamage,revert.NoBlastDamage = nil,nil
-				toast("Can't find the specific set of number. if you changed the blast intensity value and reopened the script, restore the actual current number using 'Change current damage value' menu")
+		--basically searching ?F;2e9F::5
+			if not memOzt.NoBlastDamage then
+				gg.searchNumber(2e9,gg.TYPE_FLOAT)
+				tmp=gg.getResults(1)
+				tmp[1].address = tmp[1].address - 0x4
+				gg.loadResults(tmp)
+				memOzt.NoBlastDamage = gg.getResults(1)
+			end
+			if not memOzt.NoBlastDamage[1] then
+				memOzt.NoBlastDamage = nil
+				toast(f"ErrNotFound")
 			else
 				for i=1,#memOzt.NoBlastDamage do
 					memOzt.NoBlastDamage[i].value = DAMAGE_INTENSITY_VALUE
@@ -860,66 +807,66 @@ function cheat_floodspawn()
 		"Activate v2 (edit-all values)",
 		"Clear memory buffer",
 		"Back"
-	},nil,"Flood Respawn. WARNING:\n- DO'NT USE THIS TO HARM OTHER PLAYER!\n- THIS CHEAT IS TECHINCALLY POWERFUL, BECAUSE IT INCREASE SERVER LATENCY AND LAG PLAYERS. ONLY USE IT OFFLINE!!\n- if you use this for racing stuff, consider lowering your freeze range to ~40.000-100.000 if after reaching checkpoint wont move to next checkpoint.")
+	},nil,"Floodspawn")
 	if CH then
 		if CH == 5 then MENU() end -- go back
 		if CH == 2 or CH == 4 then -- clear buffer
-			memOzt.respawnCheat = nil
+			memOzt.floodspawn = nil
 			if CH == 4 then cheat_floodspawn() end -- reopen menu
 		end
 		if CH == 1 or CH == 2 or CH == 3 then -- begin search
 			gg.setRanges(cfg.memRange.general)
-			if CH == 1 then -- one entity
+
+		--Begin search respawn anchors and store its result in t var
+			if CH == 1 or CH == 2 then -- one entity
 				toast("Please wait... after the search is done, you should get automatically respawned")
-				t = handleMemOzt("respawnCheat",52428800,nil,gg.TYPE_DWORD,5e3,cfg.memZones.Common_RegionOther)
+				tmp[1] = handleMemOzt("matchBackendAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther) -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
+				tmp[1] = (tmp[1][1]) and tmp[1][1].address or nil -- grab address
+				gg.clearResults()
+				t = handleMemOzt("floodspawn",52428800,nil,gg.TYPE_DWORD,5e3,cfg.memZones.Common_RegionOther)
 			else -- bulk
 				gg.clearResults()
 				gg.searchNumber(52428800,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 				t = gg.getResults(5e3)
 			end
-	--[[for i=1,#t do TODO: fix this stuff only works for 1P not 2P due to different address (1P always ends with 66c, while 2P can ends with either 4/6/e??
-				tmp[0] = ("%x"):format(t[i].address)
-				if not tmp[0]:find('66c$') then
-					t[i] = nil
-				end
-			end
-			gg.loadResults(t)
-			t = gg.getResults(5e3)]]
-			if gg.getResultCount() > 1 and (CH == 1 or CH == 2) then -- if found and targets 1 player, force respawn and find it
-				gg.clearResults()
-			--matchAbortAnchor is temporary name
-				tmp[1] = handleMemOzt("matchAbortAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)
-				if gg.getResultCount() == 0 then
-					tmp[2] = "Unable to automatically respawn, you need to respawn from pause menu"
-				else
+
+		--if found more than 1 and targets 1 player
+			if #t > 1 and (CH == 1 or CH == 2) then
+			--Auto-respawn
+				if tmp[1] then
 					gg.setValues({{
-						address=tmp[1][1].address - 0x41,
+						address=tmp[1] - 0x41,
 						value=1,
 						flags=gg.TYPE_BYTE,
 					--name="[Pb2Chts] Respawn"
 					}})
 					tmp[2] = "Trying to find your entity ID... If you dont get respawned, respawn from pause menu"
+				else
+					tmp[2] = "Unable to automatically respawn, you need to respawn from pause menu"
 				end
-				gg.loadResults(t) -- load t and do the usual thing
-				searchWatchdog(tmp[2],"52428801~52429000","respawnCheat")
+
+			--and find the respawn anchor
+				searchWatchdog(tmp[2],"52428801~52429000","floodspawn")
 				msg = nil -- remove tmp var
 			end
-			if gg.getResultCount() > 0 then -- if found
+
+		--if found
+			if gg.getResultCount() > 0 then
 				CH = gg.prompt({
-					"Put the respawn duration (in seconds)\n0:No duration\n-1:No respawn hack [-1;20]",
-					"RC Car Spam","Win Brawl (client-side)",
-					"Swag Delivery no timer","Freeze camera entity ID (this can prevent player takeover cheat)",
-					"Disable AI",--'Win race (client-side, need to know certain values based on map and track type) [-1;20]"
+					"RC Car Spam","Increase score (client-side, wins Brawl&Kingpin)",
+					"Swag Delivery no timer","Lock entity ID (prevents player takeover)",
+					"Disable AI & respawn","Win Race/Sprint/Knockout",
+					"Respawn duration (in seconds)\n0:No duration\n-1:Floodspawn off\n\nWARNING:\n- DONT USE THIS TO HARM OTHER PLAYERS!\n- THIS CHEAT IS TECHINCALLY POWERFUL, BECAUSE IT INCREASE HOST LATENCY AND LAG PLAYERS. ONLY USE IT OFFLINE!!\n- if you use this for race, consider lowering your freeze range to ~40.000 if after reaching checkpoint wont move to next checkpoint. [-1;20]",
 				},{
-					1,
 					true,false,
 					false,false,
-					true,-- -1
+					false,true,
+					-1,
 				},{
+					"checkbox","checkbox",
+					"checkbox","checkbox",
+					"checkbox","checkbox",
 					"number",
-					"checkbox","checkbox",
-					"checkbox","checkbox",
-					"checkbox",--"number",
 				})
 				if CH then
 				--2nd table that dont affected by timer and crap
@@ -928,66 +875,88 @@ function cheat_floodspawn()
 					for i=1,#t do
 						t[i].value = 52428801
 						t[i].freeze = true
-						t[i].name = "Pb2Chts [RespawnHack]"
-						if CH[2] then -- rc spam
-							table.append(ta,{{
-								address = t[i].address - 0xE,
-								flags = gg.TYPE_WORD,
-								value = -1,
-								freeze = true,
-								name = "Pb2Chts [RCCarSpam]"
-							}})
-						end
-						if CH[3] then -- win brawl
-							table.append(ta,{{
+						t[i].name = "Pb2Chts [RespawnTimer]"
+						if CH[2] then table.append(ta,{ -- win brawl
+							{
 								address = t[i].address - 0x14,
 								flags = gg.TYPE_DWORD,
 								value = 9e6,
 								freeze = true,
-								name = "Pb2Chts [WinBrawl]"
-							}})
+								name = "Pb2Chts [MatchScore]"
+							},
+							{
+								address = t[i].address - 0x8,
+								flags = gg.TYPE_DWORD,
+								value = 9e6,
+								freeze = true,
+								name = "Pb2Chts [MatchKilled]"
+							},
+							{
+								address = t[i].address - 0x4,
+								flags = gg.TYPE_DWORD,
+								value = 0,
+								freeze = true,
+								name = "Pb2Chts [MatchDied]"
+							},
+						})
 						end
-						if CH[4] then -- swag deliver 0 timer
-							table.append(ta,{{
+						if CH[3] then table.append(ta,{ -- swag deliver 0 timer
+							{
 								address = t[i].address + 0xE,
 								flags = gg.TYPE_WORD,
 								value = 0,
 								freeze = true,
 								name = "Pb2Chts [SwagDeliverTim0r]"
-							}})
+							}
+						})
 						end
-						if CH[5] then -- lock camera entity id
-						--fetch current entity cam id
-							gg.loadResults({{address=t[i].address - 0x10,flags=gg.TYPE_WORD}})
-						--and apply
-							table.append(ta,{{
-								address = t[i].address - 0x10,
-								flags = gg.TYPE_WORD,
-								value = gg.getResults(1)[1].value,
-								freeze = true,
-								name = "Pb2Chts [EntityCamID]"
-							}})
-							gg.clearResults() -- get rid of temporary trash after used
-						end
-						if CH[6] then -- disable AI
-							table.append(ta,{{
-								address = t[i].address + 0xE8,
+						if CH[5] then table.append(ta,{ -- disable AI + respawn
+							{
+								address = t[i].address - 0x20,
 								flags = gg.TYPE_BYTE,
 								value = 0,
-								name = "Pb2Chts [EnableAIControl]"
-							}})
+								name = "Pb2Chts [EnableAICtrl+Respawn]"
+							}
+						})
 						end
-				--[[if CH[7] > -1 then -- win race (client-side, need to know some values)
-							table.append(ta,{{
-								address = t[i].address - 0x38,
+						if CH[6] then table.append(ta,{ -- win race (client-side, 11 = DEFINITELY win), if you read this code, let me tell a secret: this shit below WORKS ONLINE !!!! WTF?!?! (2p only if the host uses older version though, i tried some didnt work)
+							{
+								address = t[i].address - 0x34,
 								flags = gg.TYPE_BYTE,
-								value = CH[7],
-								name = "Pb2Chts [WinRace]"
-							}})
-						end]]
+								value = 11, -- u can use 99 cuz knockout lap, but 2P races wont win 1st
+								freeze = true,
+								name = "Pb2Chts [RaceCurrentLap]"
+							}
+						})
+						end
 					end
+				--rc spam
+					if CH[1] then
+						table.append(ta,{{
+							address = t[1].address - 0xE,
+							flags = gg.TYPE_WORD,
+							value = -1,
+							freeze = true,
+							name = "Pb2Chts [RCCarSpam]"
+						}})
+					end
+				--lock entity id (only if floodspawn not used, using both WILL CRASH the game due to buffer-overflow)
+					if CH[4] and CH[7] == "-1" then
+					--fetch current entity id
+						gg.loadResults({{address=t[1].address - 0x10,flags=gg.TYPE_WORD}})
+					--and apply
+						table.append(ta,{{
+							address = t[1].address - 0x10,
+							flags = gg.TYPE_WORD,
+							value = gg.getResults(1)[1].value,
+							freeze = true,
+							name = "Pb2Chts [EntityCamID]"
+						}})
+						gg.clearResults() -- get rid of temporary trash after used
+					end
+
 				--since the only thing required in CH is only the 1st option, change the whole table to that instead
-					CH = CH[1]
+					CH = CH[7]
 				--set other stuff if user ticked those options
 					if ta[1] then
 						gg.setValues(ta)
@@ -1005,10 +974,6 @@ function cheat_floodspawn()
 				--if not disabled
 					elseif CH ~= "-1" then
 						toast("Flood Respawn ON for "..CH.." seconds, click the gg icon to disable")
-					--TODO: what if we temporarily set vehicle health to 0
-					--so any traces will burn as soon as they
-					--show up to prevent occuring lags.
-					--
 					--Way to sleep for a long time but cancellable by user too, which is great
 						for i=1,CH do
 							if gg.isVisible()then
@@ -1022,7 +987,7 @@ function cheat_floodspawn()
 					end
 				end
 			else
-				toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+				toast(f"ErrNotFound_Report")
 			end
 		end
 	end
@@ -1034,112 +999,164 @@ function cheat_c4autorigg()
 		t = {}
 		for i=1,#anchors do table.append(t,{
 			{address=anchors[i]+0x8,flags=gg.TYPE_WORD,value=0},
-			{address=anchors[i]+0x158,flags=gg.TYPE_WORD,value=1}
+		--{address=anchors[i]+0x158,flags=gg.TYPE_WORD,value=1}
 		})
 		end
 		gg.setValues(t)
-		gg.toast(#anchors.." Objects blown up!")
+		gg.toast(#anchors.." C4s rigged!")
 	else
-		gg.toast("Can't find any objects...")
+		gg.toast("Can't find any C4s...")
 	end
 end
 function cheat_runspeedmod()
 	CH = gg.choice({
-		"400",
-		"120 (Default)",
-		"Back"
-	},nil,"Running speed modifier (Controllable, CodeApp implementation)")
-	if CH then
-		if CH == 3 then MENU()
-		elseif CH == 1 then tmp={15120,15400}
-		elseif CH == 2 then tmp={15400,15120} end
+		[15120]="120 (Default)",
+		[15400]="400",
+		[33001]="——",
+		[33002]="Clear memory buffer",
+		[33003]="Back"
+	},nil,"Running speed modifier")
+	if CH == 33003 then MENU()
+	elseif CH == 33002 then
+		CH,memOzt.runSpeed = nil,nil
+		cheat_runspeedmod()
+	elseif CH ~= 33001 then
 		gg.setRanges(gg.REGION_CODE_APP)
-	--some problem: is FLOAT slower than DWORD?
-		handleMemOzt("runSpeed",tmp[1].."W;24000F;985158124D;989855744D::11",tmp[1],gg.TYPE_WORD,1)
-	--handleMemOzt("runSpeed",tmp[1].."W;24000F;985158124D;1114636288D::12",tmp[1],gg.TYPE_WORD,1) build 121
-		if gg.getResultCount() == 0 then
-			gg.toast("Can't find specific set of number")
+	--basically searching ?W;24000F;985158124D;15104W
+		if not memOzt.runSpeed then
+			gg.searchNumber(985158124,gg.TYPE_DWORD)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(24000)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xA) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber(15104)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) end gg.loadResults(tmp)
+			memOzt.runSpeed = gg.getResults(1)
+		end
+		if memOzt.runSpeed[1] then
+			for i=1,#memOzt.runSpeed do
+				memOzt.runSpeed[i].flags = gg.TYPE_WORD
+				memOzt.runSpeed[i].value = CH
+			end
+			gg.setValues(memOzt.runSpeed)
+			gg.toast("Running speed "..CH)
 		else
-		  gg.editAll(tmp[2],gg.TYPE_WORD)
-			gg.toast("Running speed changed")
+			gg.toast(f"ErrNotFound")
 		end
 	end
 end
-function cheat_xpmodifier()
+function cheat_mtcScrnfx()
+--TODO: update
 --Not ready to use gg.REGION_C_BSS yet especially because JokerGGS mentioned a problem with it.
---but i do have another device to test this (VirtualXposed, 64bit)
 	gg.setRanges(cfg.memRange.general)
-	local CH = gg.prompt({
-		'Put your new XP (Play Game limit is 999999, while DWORD integer is the max limit)',
-		'Put your new coin (max 30000, temporary, not recommend if you have infinite coin coz it might get reset)',
+	local CH = gg.prompt(
+	{
+		'Modify XP to (max 999999)',
+		'Modify coin to (max 30000, temporary, not recommend if you have infinite coin coz it might get reset)',
 		'Freeze XP',
 		'Freeze Coin',
-		'Enable skip slow intro animation',
+		'Skip match intro',
 		'Override current controlled player [-1;16]',
 		'Win CTS match (0:disable,-1/1 one of the teams) [-1;1]',
-	},{999999,-1,true,false,false,-1,0},{'number','number','checkbox','checkbox','checkbox','number','number'})
+		'Increase 2P Win count',
+		'Disable (some) screen effects (Shake,Red screen,Grain)',
+		'Disable timers and increase kills/score',
+		'Fix blank screen when slammed into void',
+	},
+	{999999,-1,true,false,false,-1,0,false,false,false,false},
+	{'number','number','checkbox','checkbox','checkbox','number','number','checkbox','checkbox','checkbox','checkbox'}
+	)
 	if CH then
-		tmp[1] = handleMemOzt("CustomXP",1014817001,nil,gg.TYPE_DWORD,1)
-		if gg.getResultCount() == 0 then
-			toast('Can\'t find the specific number.')
-		else
+		tmp[1] = handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1)[1]
+		tmp[2] = handleMemOzt("matchBackendAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)[1] -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
+		if tmp[1] and tmp[2] then
 			t = {}
-			tmp[1] = tmp[1][1].address
+			tmp[1] = tmp[1].address
+			tmp[2] = tmp[2].address
 			if CH[1] and CH[1] ~= "" and CH[1] ~= "-1" then
 				t = table.append(t,{{address=(tmp[1]-0x2E3C4),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
 			--t = table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}}) build -121
 			end
 			if CH[2] and CH[2] ~= "" and CH[2] ~= "-1" then
+				if cfg.memRange.general == gg.REGION_C_BSS then toast("[!] There is a known bug where the game will crash for C-BSS Users, if the game does crash, do not issue any bug report, we're working on it!")gg.sleep(3e3) end
 				t = table.append(t,{{address=(tmp[1]-0x2E1C8),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
 			--t = table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}}) build -121
 			end
+		--[3] Freeze XP
+		--[4] Freeze Coin
+		--TODO: 5,6,7 anchor should be 359.697D
 			if CH[5] then
 				t = table.append(t,{{address=(tmp[1]-0xD9D9B8),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
 			--t = table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}}) build -121
 			end
-			if CH[6] then
-
-			--Not updated for build 134
-				if CH[6] == "-1" then -- 1
-					t = table.append(t,{{address=(tmp[1]-0x403A2C),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
-				elseif CH[6] == "1" then -- 2
-					t = table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=3e4,freeze=true,name="Pb2Chts [WinCTS]"}})
-				end
-
+			if CH[6] and CH[6] ~= "-1" then
+			--TODO: update the anchor of this val below for build 134
+				table.append(t,{{address=(tmp[1]-0x403B54),flags=gg.TYPE_WORD,value=CH[6],name="Pb2Chts [OverrideControlledPlayer]"}})
 			end
 			if CH[7] then
-			--for win cts opponent, the offset is 0x403A2C
-				t = table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=32767,freeze=true,name="Pb2Chts [WinCTS]"}})
+				if CH[7] == "-1" then -- 1
+					table.append(t,{{address=(tmp[1]-0x403A2C),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTS]"}})
+				elseif CH[7] == "1" then -- 2
+					table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTS]"}})
+				end
+			end
+			if CH[8] then -- 2p win count
+				table.append(t,{{address=(tmp[2]-0x18),flags=gg.TYPE_WORD,value=99,freeze=true,name="Pb2Chts [2PWinCount]"}})
+			end
+			if CH[9] then -- disable scrn fx
+				table.append(t,{
+					{address=(tmp[2]+0x54),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Camshake]: Disable"},
+					{address=(tmp[2]+0x88),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [MatchFinishGrainFX]: Disable"},
+					{address=(tmp[2]+0xA8),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Redfilter]: Disable"}
+				})
+			end
+			if CH[10] then -- increase score
+				table.append(t,{
+					{address=(tmp[2]-0x8),flags=gg.TYPE_DWORD,value=9e7,freeze=true,name="Pb2Chts [MatchDistance]"},
+					{address=(tmp[2]+0x38),flags=gg.TYPE_DWORD,value=-1,freeze=true,name="Pb2Chts [MatchTimeout]"},
+					{address=(tmp[2]+0x3C),flags=gg.TYPE_FLOAT,value=2.8250177e-43,freeze=true,name="Pb2Chts [MatchTimer]"}
+				})
+			end
+			if CH[11] then -- prevent blank screen
+				table.append(t,{{address=(tmp[2]+0xF3),flags=gg.TYPE_BYTE,value=0,freeze=true,name="Pb2Chts [isScrnBlank]: No"}})
 			end
 			gg.setValues(t)
 			gg.addListItems(t)
 			toast('Selected operations done')
+		else
+			toast(f"ErrNotFound")
 		end
 	end
 end
 function cheat_changeplayername()
-	gg.setRanges(gg.REGION_C_ALLOC | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 --request user to give player name
-	local player_name = gg.prompt({
+	local CH = gg.prompt({
 		'Put your current player name (case-sensitive, ":" or ";" is required at the beginning, because how GameGuardian search works)',
-		'Put new player name (cant be longer than current name, you can change color/add icon by copy-pasting custom name edited using hex-editor (use hex 1-9 for color))'
+		'Put new player name (cant be longer than current name, you can change color/add icon by copy-pasting custom name edited using hex-editor (use hex 1-9 for color))',
+		'Method (TODO):\n1:Change all (slow, but changes name in match too)\n2:Fast (but name wont be changed in match)\n3:2P Match (Changes your name on multiplayer match) [1;3]',
 	},{
 		curVal.PlayerCurrentName,
-		cfg.PlayerCustomName
+		cfg.PlayerCustomName,
+		1,
 	},{
 		"text",
-		"text"
+		"text",
+		"number",
 	})
 --search old player name
-	if player_name and player_name[1] and player_name[1] ~= ":" then
-		gg.searchNumber(player_name[1],gg.TYPE_BYTE)
-		revert.PlayerName = gg.getResults(5e3)
+	if CH and CH[1] and CH[1] ~= ":" then
+		CH[3] = tonumber(CH[3])
+		if CH[3] == 1 then
+			gg.setRanges(gg.REGION_C_ALLOC | cfg.memRange.general)
+			gg.searchNumber(CH[1],gg.TYPE_BYTE)
+		elseif CH[3] == 2 then
+			gg.setRanges(cfg.memRange.general)
+			gg.searchNumber(CH[1],gg.TYPE_BYTE,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
+		end
 		if gg.getResultCount() == 0 then
 			toast('Can\'t find the player name, this cheat is still in experimentation phase. report issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues')
 		else
-			gg.editAll(player_name[2],gg.TYPE_BYTE)
-			curVal.PlayerCurrentName = player_name[2]
-			toast('"'..player_name[1]..'" changed to "'..player_name[2]..'"\nWarn: this is still in experimentation phase, the name might only apply on your client and not others')
+			gg.getResults(gg.getResultCount()) -- must be called first before calling editAll
+			gg.editAll(CH[2],gg.TYPE_BYTE)
+			curVal.PlayerCurrentName = CH[2]
+			toast(f('"%s" changed to "%s"\nWarn: this is still in testing, it might only applied to your client and not others',CH[1],CH[2]))
 		end
 	end
 end
@@ -1153,11 +1170,11 @@ function cheat_changeplayernamecolor()
 		"Yellow (5,9)",
 		"Green (6h)",
 		"Coin (7h)",
-		"Man icon (8h)",
+		"Player (8h)",
 		"Corrupted (10h)",
 		"——",
 		"Remove all color/icon",
-		f"__back__"
+		"__back__"
 	},nil,"Select the color you want (Experimental)"),gg.prompt({'Put your current player name (case-sensitive)'},{curVal.PlayerCurrentName},{'text'})
 	if CH then
 		if CH == 1 then player_color_choice = 1
@@ -1175,20 +1192,19 @@ function cheat_changeplayernamecolor()
 		if player_color_choice then
 			gg.searchNumber(player_name[1],gg.TYPE_BYTE)
 			local t,removeOffset = gg.getResults(5e3),0
-			revert.PlayerName = gg.getResults(5e3)
 			if gg.getResultCount() == 0 then
 				toast('Can\'t find the player name, this cheat is still in experimentation phase')
 			else
 			--if the chioce is 0, remove color/icons
 				if player_color_choice == 0 then
-					for i=1,#t do
-					--if within the custom color/icon range
+					for i=1,#t do -- loop over player name result
+					--if it within the custom color/icon range
 						if t[i].value >= 0 and t[i].value < 11 then
-						--remove it
+						--remove it, and increment the removeOffset
 							t[i] = nil
 							removeOffset = removeOffset + 1
 						else
-						--and -removeOffset for the rest
+						--else, shift address
 							t[i].address = (t[i].address - removeOffset)
 						end
 					end
@@ -1220,12 +1236,10 @@ function cheat_walkwonkyness()
 		"Default (0.004)",
 		"ON (1)",
 		"OFF (0)",
-		"Restore",
-		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Walk Wonkyness (fancy-cheat)")
 	gg.setRanges(gg.REGION_CODE_APP) -- PS: 0.00999999978 > 0.3 for new version
-	if CH == 5 then MENU()
+	if CH == 3 then MENU()
 	elseif CH == 1 then
 		handleMemOzt("walkwonkyness","0~1;0.3::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0.004,gg.TYPE_FLOAT)
@@ -1238,31 +1252,28 @@ function cheat_walkwonkyness()
 		handleMemOzt("walkwonkyness","1.004;0.3::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness OFF")
-	elseif CH == 4 then
-		gg.setValues(revert.walkwonkyness)
-		revert.walkwonkyness = nil
-	elseif CH == 5 then
-		revert.walkwonkyness = nil
 	end
 end
 function cheat_coloredtree()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Colored trees\nThis will change some shader stuff (actually idk wut this does lol) that affects trees")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={0.04,-999,"ON"}
-	elseif CH == 2 then tmp={-999,0.04,"OFF"} end
-	if tmp then
-		gg.setRanges(gg.REGION_CODE_APP)
-		local t = handleMemOzt("clrdtree","38W;0.06;"..tmp[1]..";-0.04;-0.02::15",tmp[1],gg.TYPE_FLOAT,1)
-	--local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
-		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
-		else
-			gg.editAll(tmp[2],gg.TYPE_FLOAT)
-			toast("Colored trees "..tmp[3])
+	elseif CH then
+		if CH == 1 then tmp={.04,-999,"ON"}
+		elseif CH == 2 then tmp={-999,.04,"OFF"} end
+		if tmp then
+			gg.setRanges(gg.REGION_CODE_APP)
+			local t = handleMemOzt("clrdtree","38W;0.06;"..tmp[1]..";-0.04;-0.02::15",tmp[1],gg.TYPE_FLOAT,1)
+		--local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
+			if gg.getResultCount() == 0 then
+				toast(f"ErrNotFound_Report")
+			else
+				gg.editAll(tmp[2],gg.TYPE_FLOAT)
+				toast("Colored trees "..tmp[3])
+			end
 		end
 	end
 end
@@ -1270,19 +1281,21 @@ function cheat_bigflamethroweritem()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Big flamethrower (Item)\nPS: this will not make the flame burst bigger")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={0.9,5.1403,"ON"}
-	elseif CH == 2 then tmp={5.1403,0.9,"OFF"} end
-	if tmp then
-		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("bigflmthrwritm","0.4;0.2;"..tmp[1]..";24e3::13",tmp[1],gg.TYPE_FLOAT,9)
-		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number")
-		else
-			gg.editAll(tmp[2],gg.TYPE_FLOAT)
-			toast("Big flamethrower "..tmp[3])
+	elseif CH then
+		if CH == 1 then tmp={0.9,5.1403,"ON"}
+		elseif CH == 2 then tmp={5.1403,0.9,"OFF"} end
+		if tmp then
+			gg.setRanges(gg.REGION_CODE_APP)
+			handleMemOzt("bigflmthrwritm","0.4;0.2;"..tmp[1]..";24e3::13",tmp[1],gg.TYPE_FLOAT,9)
+			if gg.getResultCount() == 0 then
+				toast(f"ErrNotFound")
+			else
+				gg.editAll(tmp[2],gg.TYPE_FLOAT)
+				toast("Big flamethrower "..tmp[3])
+			end
 		end
 	end
 end
@@ -1291,58 +1304,63 @@ function cheat_autoshootrocket()
 		"ON",
 		"ON (Only if holding rocket, better to use with Rel0ad)",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Autoshoot rocket. PS:\n- This will make everyone shoot rocket no matter what weapon they hold\n- To use this, use the machine gun, or use Rel0ad (will be quirky if using this)")
 	if CH == 4 then MENU()
-	elseif CH == 1 then tmp={0,0,"ON"}
-	elseif CH == 2 then tmp={754,0,"ON"}
-	elseif CH == 3 then tmp={754,752,"OFF"} end
-	if tmp then
-		gg.setRanges(gg.REGION_CODE_APP)
-		gg.searchNumber(5000,gg.TYPE_FLOAT)
-		t = gg.getResults(1)
-		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number")
-		else
-			t = t[1].address
-			r = {
-				{address=t+0x80,flags=gg.TYPE_WORD,value=tmp[1]},
-				{address=t+0x88,flags=gg.TYPE_WORD,value=tmp[2]}
-			}
-			gg.setValues(r) -- Pretty non-Pb2Chts-standard variable there XD
-			gg.addListItems(r) -- Debugging
-			toast("Autoshoot rocket "..tmp[3])
+	elseif CH then
+		if CH == 1 then tmp={0,0,"ON"}
+		elseif CH == 2 then tmp={754,0,"ON"}
+		elseif CH == 3 then tmp={754,752,"OFF"} end
+		if tmp then
+			gg.setRanges(gg.REGION_CODE_APP)
+			gg.searchNumber(5000,gg.TYPE_FLOAT)
+			t = gg.getResults(1)
+			if gg.getResultCount() == 0 then
+				toast(f"ErrNotFound")
+			else
+				t = t[1].address
+				r = {
+					{address=t+0x80,flags=gg.TYPE_WORD,value=tmp[1]},
+					{address=t+0x88,flags=gg.TYPE_WORD,value=tmp[2]}
+				}
+				gg.setValues(r) -- Pretty non-Pb2Chts-standard variable there XD
+				gg.addListItems(r) -- Debugging
+				toast("Autoshoot rocket "..tmp[3])
+			end
+			r = nil
 		end
-		r = nil
 	end
 end
 function cheat_shadowfx()
 	local CH = gg.choice({
 		"OFF",
 		"ON",
-		f"__back__"
+		"__back__"
 	},nil,"Shadow effects\nInfo: this wont affect your game performance at all (not making it lag/fast)\ndont use this for performance purpose :)")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={1e-4,-1.0012,"Disabled"}
-	elseif CH == 2 then tmp={-1.0012,1e-4,"Enabled"} end
-	if tmp then
-		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("shadow",tmp[1]..";0,07999999821;-6,04130986e27;-2,78792201e28;-3,74440972e28:17",tmp[1],gg.TYPE_FLOAT,1) -- still buggy, but dont have time to fix it ;(
-	--handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1) build -121
-		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
-		else
-			gg.editAll(tmp[2],gg.TYPE_FLOAT)
-			toast("Shadow "..tmp[3])
+	elseif CH then
+		if CH == 1 then tmp={1e-4,-1.0012,"Disabled"}
+		elseif CH == 2 then tmp={-1.0012,1e-4,"Enabled"} end
+		if tmp then
+			gg.setRanges(gg.REGION_CODE_APP)
+		--TODO: not found, update the value
+			handleMemOzt("shadow",tmp[1]..";0,07999999821;-6,04130986e27;-2,78792201e28;-3,74440972e28:17",tmp[1],gg.TYPE_FLOAT,1) -- still buggy, but dont have time to fix it ;(
+		--handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1) build -121
+			if gg.getResultCount() == 0 then
+				toast(f"ErrNotFound_Report")
+			else
+				gg.editAll(tmp[2],gg.TYPE_FLOAT)
+				toast("Shadow "..tmp[3])
+			end
 		end
 	end
 end
-function cheat_clrdpplsp()
-	local CH = gg.choice({
+function cheat_plyxray()
+	local CH,tmp = gg.choice({
 		"ON",
 		"OFF",
-		f"__back__"
-	},nil,"Colored people ESP (ExtraSensoryPerception. i guess this is X-Ray Hack)\nPS: Not work on latest version")
+		"__back__"
+	},nil,"Player X-Ray\nPS: Doesn't work on latest version"),nil
 	if CH == 3 then MENU()
 	elseif CH == 1 then tmp={0.08,436,"ON"}
 	elseif CH == 2 then tmp={436,0.08,"OFF"} end
@@ -1350,7 +1368,7 @@ function cheat_clrdpplsp()
 		gg.setRanges(gg.REGION_CODE_APP)
 		handleMemOzt("clrdpplsp",tmp[1],nil,gg.TYPE_FLOAT,9)
 		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			toast(f"ErrNotFound")
 		else
 			gg.editAll(tmp[2],gg.TYPE_FLOAT)
 			toast("ESP "..tmp[3])
@@ -1384,28 +1402,28 @@ function cheat_deleteingameplaytext()
 		gg.editAll(0,gg.TYPE_BYTE)
 		gg.clearResults()
 	end
-	toast("In-gameplay-text cleared, to restore, you have to restart the game\nPS: This might not work, idk why though..")
+	toast("Gameplay texts cleared! to restore, restart the game\nPS: This might not work, idk why though..")
 end
 function cheat_reflectiongraphics()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
-		f"__back__"
+		"__back__"
 	},nil,"Reflection graphics\nWARNING: this can cause rendering issue that requires restart to fix it\nDont forget to disable this before you get in/out-of match\ni only recommend using this in offline mode so you can easily disable the reflection graphics before getting out of match")
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={49,1,"ON",true} -- << `,true` is trick from lua.org to make lua better prepare a memory slot area whatevr... (will be used for temporary result save below :)
-	elseif CH == 2 then tmp={1,49,"OFF",true} end
+	elseif CH == 1 then tmp={49,1,"ON"}
+	elseif CH == 2 then tmp={1,49,"OFF"} end
 	if CH and tmp[3] then
 		gg.setRanges(gg.REGION_OTHER)
 		if not memOzt.RfTgraphics then
 			gg.searchNumber(144,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
-			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address + 0x8) tmp[4][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[4]) gg.refineNumber(50)
-			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address - 0x4) tmp[4][i].flags = gg.TYPE_DWORD end gg.loadResults(tmp[4]) gg.refineNumber(tmp[1])
+			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address + 0x8) end gg.loadResults(tmp[4]) gg.refineNumber(50)
+			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address - 0x4) end gg.loadResults(tmp[4]) gg.refineNumber(tmp[1])
 		end
-	--specially crafted for above conditions
+	--specially coded for condition above
 		handleMemOzt("RfTgraphics",tmp[1],nil,gg.TYPE_DWORD,1)
 		if gg.getResultCount() == 0 then
-			toast("Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues")
+			toast(f"ErrNotFound_Report")
 		else
 			memOzt.RfTgraphics[1].value = tmp[2]
 			toast("Reflection Graphics "..tmp[3])
@@ -1417,14 +1435,11 @@ end
 function cheat_explodepow()
 	local CH = gg.choice({
 		"Modify Explosion power",
-		"——",
-		"Change current Explosion power",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Explosion power modifier\nCurrent: "..curVal.XplodPow.."\n")
 	if CH then
-		if CH == 6 then MENU()
+		if CH == 3 then MENU()
 		elseif CH == 1 then
 			local CH = gg.prompt({'Put your explosion power. Lower is more powerful\nSet to -1 to disable explosion\n PS:only applies to you'},{curVal.XplodPow},{'number'})
 			if CH and CH[1] then
@@ -1432,27 +1447,25 @@ function cheat_explodepow()
 			else
 				cheat_explodepow()
 			end
-		---
-		elseif CH == 3 then
-			local CH = gg.prompt({'If you think the current explosion power is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current explosion power'},{curVal.PstlSgKnckbck},{'number'})
-			if CH and CH[1] then curVal.XplodPow = CH[1] end
-			cheat_explodepow()
-		elseif CH == 4 then
-			revert.explodePower = nil
-			cheat_explodepow()
-		elseif CH == 5 then
+		elseif CH == 2 then
 			memOzt.explodePower = nil
 			cheat_explodepow()
 		end
 		if EXPLOSION_POWER then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("explodePower","15120W;"..curVal.XplodPow.."F::3",curVal.XplodPow,gg.TYPE_FLOAT,1)
-			if gg.getResultCount() == 0 then
-				memOzt.explodePower,revert.explodePower = nil,nil
-				toast("Can't find the specific set of number. if you changed the explosion power and reopened the script, restore current number using 'Change current explosion power' menu")
+		--basically searching 990904320D;?F;1051260355D::13
+			if not memOzt.explodePower then
+				gg.searchNumber(1051260355,gg.TYPE_DWORD)
+				tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) end gg.loadResults(tmp) gg.refineNumber(990904320)
+				tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x4) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp)
+				memOzt.explodePower = gg.getResults(1)
+			end
+			if not memOzt.explodePower[1] then
+				memOzt.explodePower = nil
+				toast(f"ErrNotFound")
 			else
 				memOzt.explodePower[1].value,curVal.XplodPow = EXPLOSION_POWER,EXPLOSION_POWER
-				toast("Explosion power modified to "..curVal.XplodPow)
+				toast("Explosion power modified to "..EXPLOSION_POWER)
 				gg.setValues(memOzt.explodePower)
 			end
 		end
@@ -1466,10 +1479,8 @@ function cheat_explodedir()
 		"Attractive/magnet (-50000)",
 		"Custom",
 		"——",
-		"Change current value",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Explode direction")
 	if CH == 8 then MENU()
 	elseif CH == 1 then XPLODIR_VAL = 5e4
@@ -1484,22 +1495,21 @@ function cheat_explodedir()
 		end
 	---
 	elseif CH == 6 then
-		local CH = gg.prompt({'If you think the current Damage intensity is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current Damage intensity'},{curVal.DmgIntnsty},{'number'})
-		if CH and CH[1] then curVal.XplodDir = CH[1] end
-		cheat_explodedir()
-	elseif CH == 7 then
-		CH,revert.explodeDir = nil,nil
-		cheat_explodedir()
-	elseif CH == 8 then
 		CH,memOzt.explodeDir = nil,nil
 		cheat_explodedir()
 	end
 	if XPLODIR_VAL then
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("explodeDir","1259902592D;"..curVal.XplodDir.."F::5",curVal.XplodDir,gg.TYPE_FLOAT,9)
-		if gg.getResultCount() == 0 then
-			memOzt.explodeDir,revert.explodeDir = nil,nil
-			toast("Can't find the specific set of number. if you changed the value and reopened the script, restore the actual current number using 'Change current value' menu")
+	--basically searching 990904320D;?F;1051260355D::13
+		if not memOzt.explodeDir then
+			gg.searchNumber(1051260355,gg.TYPE_DWORD)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) end gg.loadResults(tmp) gg.refineNumber(990904320)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x8) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp)
+			memOzt.explodeDir = gg.getResults(1)
+		end
+		if not memOzt.explodeDir[1] then
+			memOzt.explodeDir = nil
+			toast(f"ErrNotFound")
 		else
 			for i=1,#memOzt.explodeDir do
 				memOzt.explodeDir[i].value = XPLODIR_VAL
@@ -1520,12 +1530,10 @@ function cheat_prtclintrvl()
 		"Slow (2s)",
 		"Custom",
 		"——",
-		"Change current interval variable",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Particle interval modifier\nCurrent: "..curVal.PrtclAnmtnIntrvl)
-	if CH == 10 then MENU()
+	if CH == 9 then MENU()
 	elseif CH == 1 then PARTICLE_INT = 0
 	elseif CH == 2 then PARTICLE_INT = 9
 	elseif CH == 3 then PARTICLE_INT = 20
@@ -1539,20 +1547,20 @@ function cheat_prtclintrvl()
 			cheat_prtclintrvl()
 		end
 	---
-	elseif CH == 8 then
-		local CH = gg.prompt({'If you think the current interval value is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current interval'},{curVal.PrtclAnmtnIntrvl},{'number'})
-		if CH and CH[1] then curVal.PrtclAnmtnIntrvl = CH[1] end
-		cheat_prtclintrvl()
-	elseif CH == 9 then revert.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
-	elseif CH == 10 then memOzt.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
+	elseif CH == 8 then memOzt.PrtclAnmtnIntrvl = nil cheat_prtclintrvl()
 	end
 	if PARTICLE_INT then
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("PrtclAnmtnIntrvl","-352321695D;"..curVal.PrtclAnmtnIntrvl.."F::5",curVal.PrtclAnmtnIntrvl,gg.TYPE_FLOAT,1)
-	--handleMemOzt("PrtclAnmtnIntrvl","-352321693D;"..curVal.PrtclAnmtnIntrvl.."F::5",curVal.PrtclAnmtnIntrvl,gg.TYPE_FLOAT,1)
-		if gg.getResultCount() == 0 then
-			memOzt.PrtclAnmtnIntrvl,revert.PrtclAnmtnIntrvl = nil,nil
-			toast("Can't find the specific set of number. if you changed the interval and reopened the script, restore the actual current number using 'Change current interval' menu")
+	--basically searching -5377W;?F;4.3F::7
+		if not memOzt.PrtclAnmtnIntrvl then
+			gg.searchNumber(-5377,gg.TYPE_WORD)
+			tmp=gg.getResults(9e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x6) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(4.3)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) end gg.loadResults(tmp)
+			memOzt.PrtclAnmtnIntrvl = gg.getResults(1)
+		end
+		if not memOzt.PrtclAnmtnIntrvl[1] then
+			memOzt.PrtclAnmtnIntrvl = nil
+			toast(f"ErrNotFound")
 		else
 			for i=1,#memOzt.PrtclAnmtnIntrvl do
 				memOzt.PrtclAnmtnIntrvl[i].value = PARTICLE_INT
@@ -1567,13 +1575,10 @@ end
 function cheat_cardrift()
 	local CH = gg.choice({
 		"Modify drifting speed",
-		"——",
-		"Change current drifting speed",
-		"Restore previous value",
 		"Clear memory buffer",
-		f"__back__"
+		"__back__"
 	},nil,"Drifting speed modifier\nCurrent: "..curVal.DrftSpd.."\n")
-	if CH == 6 then MENU()
+	if CH == 3 then MENU()
 	elseif CH == 1 then
 		local CH = gg.prompt({'How fast you want the drifting rotation? Higher value is more powerful\nDefault:1 (1.3) [1;20]'},{curVal.DrftSpd},{'number'})
 		if CH and CH[1] then
@@ -1581,49 +1586,45 @@ function cheat_cardrift()
 		else
 			cheat_cardrift()
 		end
-	---
-	elseif CH == 3 then
-		local CH = gg.prompt({'If you think the current explosion power is wrong, or get reset due to quiting from script, you can change it here\n\nPut the current explosion power'},{curVal.DrftSpd},{'number'})
-		if CH and CH[1] then curVal.DrftSpd = CH[1] end
-		cheat_cardrift()
-	elseif CH == 4 then
-		revert.DrftSpd = nil
-		cheat_cardrift()
-	elseif CH == 5 then
+	elseif CH == 2 then
 		memOzt.DrftSpd = nil
 		cheat_cardrift()
 	end
 	if DRIFT_SPEED then
 		gg.setRanges(gg.REGION_CODE_APP)
-		handleMemOzt("DrftSpd","120F;"..curVal.DrftSpd.."F;16294W::9",curVal.DrftSpd,gg.TYPE_FLOAT,1) -- 134
-	--handleMemOzt("DrftSpd","120F;"..curVal.DrftSpd.."F;-11020W::9",curVal.DrftSpd,gg.TYPE_FLOAT,1) -- 126
-	--handleMemOzt("DrftSpd","120F;"..curVal.DrftSpd.."F;-712W::9",curVal.DrftSpd,gg.TYPE_FLOAT,1) -- 121
-		if gg.getResultCount() == 0 then
-			memOzt.DrftSpd,revert.DrftSpd = nil,nil
-			toast("Can't find the specific set of number. if you changed the drift speed and reopened the script, restore current number using 'Change current drift speed' menu")
+	--basically searching 120F;?F;16294W::9
+		if not memOzt.DrftSpd then
+		--121:-712
+		--134:-11020
+			gg.searchNumber(31904,gg.TYPE_WORD)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x8) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(120)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x4) end gg.loadResults(tmp)
+			memOzt.DrftSpd = gg.getResults(1)
+		end
+		if not memOzt.DrftSpd[1] then
+			memOzt.DrftSpd = nil
+			toast(f"ErrNotFound_Report")
 		else
 			memOzt.DrftSpd[1].value,curVal.DrftSpd = DRIFT_SPEED,DRIFT_SPEED
 			gg.setValues(memOzt.DrftSpd)
-			toast("Explosion power modified to "..curVal.DrftSpd)
+			toast("Car drifting roration modified to "..curVal.DrftSpd)
 		end
 	end
 	DRIFT_SPEED = nil
 end
 function show_about()
 	local CH = gg.choice({
-		f"__about__",
-		"——",
+		"__about__",
 		f"Disclaimmer",
 		f"License",
 		f"Credits",
-		f"__back__"
-	},nil,f"__about__")
+		"__back__"
+	},nil,f"Title_Version")
 	if CH == 1 then alert(f"About_Text") show_about()
-	---
-	elseif CH == 3 then alert(f"Disclaimmer_Text") show_about()
-	elseif CH == 4 then alert(f"License_Text") show_about()
-	elseif CH == 5 then alert(f"Credits_Text") show_about()
-	elseif CH == 6 then CH = nil MENU() end
+	elseif CH == 2 then alert(f"Disclaimmer_Text") show_about()
+	elseif CH == 3 then alert(f"License_Text") show_about()
+	elseif CH == 4 then alert(f"Credits_Text") show_about()
+	elseif CH == 5 then MENU() end
 end
 --————————————————————————————————--
 
@@ -1632,19 +1633,16 @@ end
 --— Helper functions —————————————--
 --- Its here to make stuff easier & faster
 function table.tostring(t,dp)
-	local d,r,tab,tv = 0,'{\n',function(i)
-		str = ""
-		for i=1,i+(dp or 0) do str = str.."\t" end
-		return str
-	end
+	local r,tv = '{\n'
+	dp = dp or 0
 	for k,v in pairs(t) do
-		r = r..tab(d)
+		r = r..('\t'):rep(dp+1)
+		tv = type(v)
 		if type(k) == 'string' then
 			r = r..k..' = '
 		end
-		tv = type(v)
 		if tv == 'table' then
-			r = r..table.tostring(v,(dp or 0)+1)
+			r = r..table.tostring(v,dp+1)
 		elseif tv == 'number' and #tostring(v) > 7 then
 			r = r..'0x'..("%x"):format(v):gsub("%l",string.upper)
 		elseif tv == 'boolean' or tv == 'number' then
@@ -1652,91 +1650,43 @@ function table.tostring(t,dp)
 		else
 			r = r..'"'..v..'"'
 		end
-		r,tv = r..',\n',nil
+		r = r..',\n'
 	end
-	return r:sub(1,r:len()-2)..'\n'..tab(d-1)..'}'
+	return r..('\t'):rep(dp)..'}'
 end
 function table.merge(...)
-	--[[
-		merge 2 tables, just like Object.assign on JS
-		first table will be replaced by new table...
-		also merge tables recursively
-		recommended only on object-like tables, but not on array-like tables
-	]]
-	local r = {}
+	local r={}
 	for _,t in ipairs{...} do
 		for k,v in pairs(t) do
-			if type(r[k]) == "table" then
-				r[k] = table.merge(r[k],v)
-			else
-				r[k] = v
-			end
+			r[k] = type(r[k]) == "table" and table.merge(r[k],v) or v
 		end
 	end
 	return r
 end
 function table.copy(t)
-  local t2 = {}
-  for k,v in pairs(t) do
-		if type(v) == "table" then
-			t2[k] = table.copy(v) -- make sure ist not just some reference shit (full no messing up factual deep clone)
-		else
-			t2[k] = v
-		end
+  local t2={}
+  for k,v in pairs(t)do
+		t2[k] = type(v) == "table" and table.copy(v)or v
   end
   return t2
 end
-function table.mergeContents(valuesTable,modifierTable)
-	--[[
-		Same as table.merge but optimized for GameGuardian values
-		this is used to "replace" (kindof) gg.editAll()
-		how to use:table.mergeContents({ -- gg result, comes from searching whatever number using gg.searchNumber()
-			{address:1,value:0,type:gg.TYPE_BYTE},
-			{address:2,value:2,type:gg.TYPE_QWORD},
-			{address:3,value:5,type:gg.TYPE_WORD},
-		},{value:1,type:gg.TYPE_DWORD,freeze:true})
-		{ {address:1,value:1,type:gg.TYPE_DWORD,freeze:true},
-			{address:2,value:1,type:gg.TYPE_DWORD,freeze:true},
-		} {address:3,value:1,type:gg.TYPE_DWORD,freeze:true},
-	]]
---for each result
-	for i=1,#valuesTable do
-	--for each contents in modifier table...
-		for k,v in pairs(modifierTable) do
-		--change valuesTable contents to new modifierTable contents
-			valuesTable[i][k] = modifierTable[k]
-		end
-	end
-	return valuesTable
-end
 function table.append(t1,t2)
-	--[[
-		Creates new table then
-		add table 1 and table 2
-	]]
-	for _,v in ipairs(t2) do
-		t1[#t1+1]=v
+	for i=1,#t2 do
+		t1[#t1+1]=t2[i]
 	end
 end
 function searchWatchdog(msg,refineVal,mmBfr)
---[[
-
-]]
-	if gg.getResultCount() < 2 then return gg.getResults(1)
+	local prvVl = gg.getResults(100)
+	if #prvVl < 2 then return prvVl
 	elseif msg then toast(msg.."\nClick GG Icon to abort the search") end
-	local prvVl,foundTheValue = gg.getResults(100)
-	while not foundTheValue do
-		if gg.isVisible() then gg.setVisible(false) foundTheValue = 1 end
-		gg.refineNumber(refineVal)
-		if gg.getResultCount() > 0 then
-			foundTheValue = 1
-		else
-			gg.loadResults(prvVl)
-		end
+	repeat
+		gg.loadResults(prvVl)
 		sleep(100)
-	end
+		gg.refineNumber(refineVal)
+	until gg.isVisible() or gg.getResultCount() > 0
+	gg.setVisible(false)
 	t = gg.getResults(1)
-	prvVl,foundTheValue,memOzt[mmBfr],revert[mmBfr] = nil,nil,t,t
+	memOzt[mmBfr] = t
 	return t
 end
 function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones)
@@ -1763,7 +1713,7 @@ function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones)
 			gg.refineNumber(valRefine,valTypes)
 		end
 		if gg.getResultCount() > 0 then
-			memOzt[memOztName],revert[memOztName] = gg.getResults(dsrdRslts),gg.getResults(dsrdRslts)
+			memOzt[memOztName] = gg.getResults(dsrdRslts)
 		end
 	end
 	return gg.getResults(dsrdRslts)
@@ -1801,11 +1751,8 @@ function optimizeRange(range)
 		end
 	end
   table.remove(range,3)
-	if not next(t) then -- if there {}?? on the table
-		return range -- return the previously given input
-	end
 	log("[AutoMemOpti] Reduced scanned memory zone: "..("%x"):format(range[1]):gsub("%l",string.upper).."—"..("%x"):format(range[2]):gsub("%l",string.upper).." → "..("%x"):format(result[1]):gsub("%l",string.upper).."—"..("%x"):format(result[2]):gsub("%l",string.upper))
-	return result -- else, return the result.
+	return next(t) and result or range -- if there {}?? on the table, return the previously given input, else return the result.
 end
 function findEntityAnchr()
 	gg.setRanges(cfg.memRange.general)
@@ -1814,12 +1761,11 @@ function findEntityAnchr()
 		toast(f"eAchA_wait")
 	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 random anchor
-		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it smoethimes shown 122 instead)
-		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2)
-		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
-		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501+30000(because carhealth&nostealcar cheat))
-
-		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
+		tmp=gg.getResults(5e3)for i=1,#tmp do
 			tmp0 = ("%x"):format(tmp[i].address)
 		--TODO: maybe put a config for this, some platform/arch/build doesnt work, it uses different end address
 			if tmp0:find('508$') or
@@ -1835,15 +1781,14 @@ function findEntityAnchr()
 			end
 		end
 		gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
-		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
-		if gg.getResultCount() > 0 then
-			if gg.getResultCount() > 1 then
-				toast(f("eAchA_dupe",gg.getResultCount()))
-				for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine pistol
+		tmp=gg.getResults(5e3)
+		tmp0 = #tmp
+		if tmp0 > 0 then
+			if tmp0 > 1 then
+				toast(f("eAchA_dupe",tmp0))
+				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine pistol
 				tmp=gg.getResults(1)
-				if tmp[1] then -- just in case nothing found and crash happened
-					tmp0=tmp[1].address - 0x14 -- back to anchor
-				end
+				tmp0=tmp[1]and tmp[1].address-0x14 or nil -- back to anchor
 			else
 				tmp0=tmp[1].address
 			end
@@ -1856,38 +1801,53 @@ function findEntityAnchr()
 		sleep(1e3)
 		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 		t = gg.getResults(200)
-		for i=1,#t do
-			tmp0 = ("%x"):format(t[i].address)
-			if not (tmp0:find('518$') or tmp0:find('d18$')) then t[i] = nil end
-		end
-		while gg.getResultCount() > 1 do
+		tmp0 = #t
+		while tmp0 > 1 do
 			toast(f"eAchB_hold2")
-			sleep(2e3)
+			sleep(1e3)
 			gg.refineNumber(0)
 			t = gg.getResults(200)
-			if gg.getResultCount() == 1 then break
-			elseif gg.getResultCount() == 0 then return
-			elseif gg.getResultCount() == 2 then
+			tmp0 = #t
+			if tmp0 == 1 then break
+			elseif tmp0 == 0 then return
+			elseif tmp0 == 2 then
 				t = gg.getResults(2)
 				if t[1].value == t[2].value then t = {t[1]} break end
 			end
 			toast(f"eAchB_hold1")
-			sleep(2e3)
+			sleep(1e3)
 			gg.refineNumber(13)
 			t = gg.getResults(200)
-			if gg.getResultCount() == 1 then break
-			elseif gg.getResultCount() == 0 then return
-			elseif gg.getResultCount() == 2 then
+			tmp0 = #t
+			if tmp0 == 1 then break
+			elseif tmp0 == 0 then return
+			elseif tmp0 == 2 then
 				t = gg.getResults(2)
 				if t[1].value == t[2].value then t = {t[1]} break end
 			end
+			tmp0 = #t
 		end
 		tmp,tmp0=nil,nil
 		gg.clearResults()
-		return {t[1].address - 0x18}
+		return (t and t[1]) and {t[1].address - 0x18} or nil
+	elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then
+		toast(f"eAchC_wait")
+	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
+		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) tmp[i].flags = gg.TYPE_BYTE end gg.loadResults(tmp) gg.refineNumber('0~256') -- 2/6 (Shooting state)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) end gg.loadResults(tmp) gg.refineNumber(cfg.abjAutoAnchor2_EntityTypeRangeFrom..'~'..cfg.abjAutoAnchor2_EntityTypeRangeTo) -- 3/6 (ControlCode)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC3) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber('0~101')	-- 4/6 (HoldWeapon)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp) gg.refineNumber('-501~30000')                        -- 5/6 (Health)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)
+		if #tmp > 0 then
+			gg.clearResults()
+			for i=1,#tmp do tmp[i]=tmp[i].address end
+			return tmp
+		end
 	else
-		toast(f("ErrorToastNotice","invalidConf"))
-		print("[Error.InvalidConf]: Configuration value for \"cfg.entityAnchrSearchMethod\" ("..cfg.entityAnchrSearchMethod..") is invalid.\n         Possible values: abjAutoAnchor, holdWeapon")
+		toast(f("ErrToastNotice","invalidConf"))
+		print("[Error.InvalidConf]: Configuration value for \"cfg.entityAnchrSearchMethod\" ("..cfg.entityAnchrSearchMethod..") is invalid.\n         Possible values: abjAutoAnchor, holdWeapon, abjAutoBatchAnchor2")
 		log("Your Configuration:\n",cfg)
 	end
 end
@@ -1920,12 +1880,20 @@ function findEntityAnchr_custom(searchType)
 		table.append(tmp,tmp0)
 		for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)log(4,gg.getResultCount())
-	elseif searchType == 'blownUp' then
+	elseif searchType == 'blownUp' then -- exploded tanks or other (persistent) vehicles
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
 		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) tmp[i].flags = gg.TYPE_BYTE end gg.loadResults(tmp) gg.refineNumber(120) -- 2/6 (Shooting state, idle)
 		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) end gg.loadResults(tmp) gg.refineNumber('4~7') -- 3/6 (ControlCode, uncontrolled)
 		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC3) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber('0~101')	-- 4/6 (HoldWeapon)
 		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp) gg.refineNumber('-500~0')                        -- 5/6 (Health)
+		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
+	elseif searchType == 'player' then
+		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 random anchor
+		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
+		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
+		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
+		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
 		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
 	end
@@ -1947,24 +1915,13 @@ function suspend()
 		cfg=cfg,
 		memOzt=memOzt,
 		pid=gg.getTargetInfo.pid,
-		revert=revert
 	},susp_file)
 	print(f"Suspend_Text")
 	os.exit()
 end
 function update_language()
-	--[[
-		Parse language strings...
-	]]
-	if cfg.Language == "auto" then
- -- Only English and Indonesian are supported (for now)
-		curr_lang = gg.getLocale()
-		if curr_lang ~= "in" then
-			curr_lang = "en_US"
-		end
-	else
-		curr_lang = cfg.Language
-	end
+	curr_lang = (cfg.Language == "auto") and (translationTable[gg.getLocale] and gg.getLocale or "en_US") or cfg.Language
+	lang = translationTable[curr_lang]
 end
 function saveConfig()
 	cfg.memZones = lastCfg.memZones
@@ -1978,13 +1935,10 @@ function saveConfig()
 return ]]..table.tostring(cfg)):close()
 end
 function loadConfig()
-	--[[
-		Loads configuration file.
-	]]
+--Loads configuration file.
 	cfg = {
 		memZones={
 			Common_RegionOther={0xB0000000,0xCFFFFFFF},
-			Common_RegionOtherB={0xB0000000,0xBFFFFFFF}
 		},
 		memRange={
 			general = (gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
@@ -1993,12 +1947,10 @@ function loadConfig()
 		enableAutoMemRangeOpti=true,
 		enableLogging=false,
 		entityAnchrSearchMethod="abjAutoAnchor",
-		abjAutoAnchor2_EntityTypeRangeFrom=1, -- minimum limit: 1
-		abjAutoAnchor2_EntityTypeRangeTo=2, -- maximum limit: 3
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.2.9"
+		VERSION="2.4.2"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2008,17 +1960,14 @@ function loadConfig()
 		cfg = table.merge(cfg,cfg_load)
 		lastCfg = table.copy(cfg) -- deep-clone
 	else
-		toast("No configuration files detected, Creating new one...  💾️\nHi There! 👋️ Looks like You're new here.")
+		toast("No configuration files detected, Creating new one... 💾️\nHi There! ️Looks like you're new here 👋")
 		saveConfig()
 	end
 	cfg_load = nil
 	curVal.PlayerCurrentName = cfg.PlayerCurrentName
-	update_language()
 end
 function restoreSuspend()
-	--[[
-		Restore current session from suspend file and remove it afterwards
-	]]
+--Restore current session from suspend file and remove it afterwards
 	local susp = loadfile(susp_file)
 	if susp then
 		susp = susp()
@@ -2026,54 +1975,43 @@ function restoreSuspend()
 		if susp.pid == gg.getTargetInfo.pid then
 			toast(f"Suspend_Detected")
 			cfg = susp.cfg
-			revert = susp.revert
 			memOzt = susp.memOzt
 		end
 	end
 	susp = nil
 end
 function log(...)if cfg.enableLogging then print("[Debug]",...)end end
-print = (function() -- convert table to readable format (with addition of converting 0xXXXXXXXX+ addreses
-	local printLn,tmp = print,{}
+print = (function() -- convert table to string
+	local printLn,tmpArgBuffer = print
 	return function(...)
-		tmp = {...}
-		for i=1,#tmp do
-			if type(tmp[i]) == "table" then
-				tmp[i] = table.tostring(tmp[i])
+		tmpArgBuffer = {...}
+		for i=1,#tmpArgBuffer do
+			if type(tmpArgBuffer[i]) == "table" then
+				tmpArgBuffer[i] = table.tostring(tmpArgBuffer[i])
 			end
 		end
-		return printLn(table.unpack(tmp))
+		return printLn(table.unpack(tmpArgBuffer))
 	end
 end)()
+alert=function(str,...)gg.alert(f(str),...)end
+toast=function(s,f)gg.toast(s,true)end
+sleep=gg.sleep
+isVisible=gg.isVisible
+gg.sleepUntilGgGuiChanged=function(c,v,m)
+	c = c or 500
+	if m then toast(m) m = nil end
+	if v == nil then v = true end
+	gg.setVisible(v)
+	while isVisible() == v do sleep(c) end
+	gg.setVisible(not v)
+end
 --————————————————————————————————--
 
 
 
 --— Initialization ———————————————--
---- This is where everything is prepared
---- before the final MENU() call is happened
---generic functions
-alert=function(str,...)
-	gg.alert(f(str),...)
-end
-toast=function(str,fastmode)
-	if fastmode == nil then fastmode = true end
-	gg.toast(str,fastmode)
-end
-sleep=gg.sleep
-isVisible=gg.isVisible
-gg.sleepUntilGgGuiChanged=function(checkDuration,visible,showNotice)
-	local checkDuration = checkDuration
-	if showNotice then toast(showNotice) end -- "Script paused. Close the GG GUI to continue..."
-	if visible == nil then visible = true end
-	if not checkDuration then checkDuration = 500 end
-	gg.setVisible(visible)
-	showNotice = nil
-	while isVisible() == visible do sleep(checkDuration) end
-	gg.setVisible(false)
-end
 curVal={
-	PstlSgKnckbck=0.25,
+	PstlSgKnckbck=.25,
 	CrDfltHlth=125,
 	DmgIntnsty=300,
 	DrftSpd=1.3,
@@ -2089,32 +2027,24 @@ loadConfig()
 -- Run automatic memory range optimization (needs testing)
 if cfg.enableAutoMemRangeOpti then
 	cfg.memZones.Common_RegionOther = optimizeRange(cfg.memZones.Common_RegionOther)
-	cfg.memZones.Common_RegionOtherB = optimizeRange(cfg.memZones.Common_RegionOtherB)
 end
 
 -- Modify gg.clearList (if enabled in config), to only remove Pb2Chts-related values
 if not cfg.clearAllList then
-	gg.clearList = (function()
-		local clearList,tmp = gg.clearList
-		return function()
-			tmp = gg.getListItems()
-			for i=1,#tmp do
-				if tmp[i].name and tmp[i].name:find"Pb2Chts" then
-					tmp[i] = nil
-				end
+	gg.clearList = function()
+		for _,v in ipairs(gg.getListItems()) do
+			if v.name and v.name:find"Pb2Chts" then
+				gg.removeListItems({v})
 			end
-			clearList()
-			gg.addListItems(tmp)
-			tmp = nil
 		end
-	end)()
+	end
 end
 
--- Initialize language
-local lang = {
+-- Prepare language
+translationTable = {
 en_US={
 Automatic				 = "Automatic",
-About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)",
+About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\nEven if this script was made for build 138, most cheats doesn't work.\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
 Credits					 = "Credits",
 Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.",
 Disclaimmer			 = "Disclaimmer (please read)",
@@ -2125,25 +2055,27 @@ License_Text		 = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\n© 2021-2
 Settings				 = "Settings",
 Suspend					 = "Suspend",
 Suspend_Detected = "Session file detected, continuing from suspend...",
-Suspend_Text		 = "You quit the script using suspend option. you can continue your current session by relaunching the script.",
+Suspend_Text		 = "Script suspended. Continue your current session by rerunning the script.",
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403.",
-ErrorToastNotice = "An error occured (%s): Exit out of script and see print log for more details.",
+ErrToastNotice = "An error occured (%s): Exit out of script and see print log for more details.",
+ErrNotFound		 = "Can't find the specific set of number",
+ErrNotFound_Report = "Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",
 Cheat_WallHack   = "Wall Hack",
 Cheat_WallHack_Notice = "Warn:\n- Careful w/ holes behind walls\n- using the GKTV wallhack is recommended cause its wonky physics can prevent helicopter from falling",
-Cheat_C4AutoRig  = "Blow-up objects",
+Cheat_C4AutoRig  = "C4 auto-trigger",
 Cheat_GodModes   = "God Modes",
 Cheat_GodModes_Notice = "WARN: DON'T USE THIS TO HARM INNOCENT PLAYERS IN ANY WAY!!",
 Cheat_CSD        = "Client-side cheats",
 Cheat_CSD_Notice = "Some cheats won't affect other player",
 eAchA_wait       = "Please wait... don't shoot, hold pistol 🔫",
-eAchA_dupe       = "%s Duplicate results! hold knife 🔪",
-eAchB_hold1      = "Hold your pistol 🔫",
-eAchB_hold2      = "Hold your knife 🔪",
+eAchA_dupe       = "%d Duplicate results! hold knife 🔪",
+eAchB_hold1      = "Hold pistol 🔫",
+eAchB_hold2      = "Hold knife 🔪",
 eAchC_wait       = "Please wait, finding all entities...",
 },
 ['in']={
 Automatic				 = "Otomatis",
-About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
+About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\nKalaupun skrip ini dibuat untuk build 134, kebanyakan cheat tidak bekerja.\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Value WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.",
 Disclaimmer			 = "Disklaimmer (mohon untuk dibaca)",
@@ -2154,26 +2086,29 @@ License_Text		 = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\n© 2021-
 Settings				 = "Pengaturan",
 Suspend					 = "Suspensi",
 Suspend_Detected = "File sesi terdeteksi, melanjutkan dari suspensi...",
-Suspend_Text		 = "Anda keluar dari skrip melalui opsi suspensi. Anda bisa melanjutkan sesi saat ini dengan meluncurkan skrip ini.",
+Suspend_Text		 = "Skrip Disuspensi. Lanjutkan sesi saat ini dengan menjalankan ulang skrip ini.",
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403.",
-ErrorToastNotice = "Galat terjadi (%s): Keluar dari skrip dan lihat log print untuk lebih detail.",
+ErrToastNotice = "Galat terjadi (%s): Keluar dari skrip dan lihat log print untuk lebih detail.",
+ErrNotFound		 = "Tidak bisa menemukan angka tertentu",
+ErrNotFound_Report = "Tidak bisa menemukan angka tertentu, laporkan isu ini di laman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues",
 Cheat_WallHack   = "Tembus Dinding",
 Cheat_WallHack_Notice = "Perhatian:\n- Hati-hati dengan lubang dibelakang dinding\n- Saat menggunakan helikopter, direkomendasikan mengunnakan cheat tembus dinding GKTV karena fisik wonkynya bisa mencegah helikopter jatuh ke void",
-Cheat_C4AutoRig  = "Ledakkan objek",
+Cheat_C4AutoRig  = "Auto-rig C4",
 Cheat_GodModes   = "Mode tuhan",
 Cheat_GodModes_Notice = "PERINGATAN: JANGAN MENGGUNAKAN INI UNTUK MENCURANGI PEMAIN LAIN DENGAN CARA APAPUN!!",
 Cheat_CSD        = "Cheat sisi-klien",
 Cheat_CSD_Notice = "Beberapa cheat tidak akan memengaruhi pemain lain",
 eAchA_wait       = "Mohon tunggu... jangan menembak, pegang pistol 🔫",
-eAchA_dupe       = "%s Hasil duplikat! pegang pisau 🔪",
+eAchA_dupe       = "%d Hasil duplikat! pegang pisau 🔪",
 eAchB_hold1      = "Pegang pistol 🔫",
 eAchB_hold2      = "Pegang pisau 🔪",
 eAchC_wait       = "Mohon tunggu, menemukan semua entitas...",
 }
 }
-function f(i,...)return string.format(lang[curr_lang][i]or i,...)end
+function f(i,...)return string.format(lang[i]or i,...)end
+update_language()
 
--- Restore suspend file if any
+-- Restore session file if any
 restoreSuspend()
 
 --detect if gg gui was open/floating gg icon clicked. if so, close that & show our menu.

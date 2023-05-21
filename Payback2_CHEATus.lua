@@ -822,7 +822,7 @@ function cheat_floodspawn()
 			if CH == 1 or CH == 2 then -- one entity
 				toast("Please wait... after the search is done, you should get automatically respawned")
 				tmp[1] = handleMemOzt("matchBackendAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther) -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
-				if tmp[1] then tmp[1] = tmp[1][1].address end -- grab address
+				tmp[1] = (tmp[1][1]) and tmp[1][1].address or nil -- grab address
 				gg.clearResults()
 				t = handleMemOzt("floodspawn",52428800,nil,gg.TYPE_DWORD,5e3,cfg.memZones.Common_RegionOther)
 			else -- bulk
@@ -834,9 +834,7 @@ function cheat_floodspawn()
 		--if found more than 1 and targets 1 player
 			if #t > 1 and (CH == 1 or CH == 2) then
 			--Auto-respawn
-				if not tmp[1] then
-					tmp[2] = "Unable to automatically respawn, you need to respawn from pause menu"
-				else
+				if tmp[1] then
 					gg.setValues({{
 						address=tmp[1] - 0x41,
 						value=1,
@@ -844,6 +842,8 @@ function cheat_floodspawn()
 					--name="[Pb2Chts] Respawn"
 					}})
 					tmp[2] = "Trying to find your entity ID... If you dont get respawned, respawn from pause menu"
+				else
+					tmp[2] = "Unable to automatically respawn, you need to respawn from pause menu"
 				end
 
 			--and find the respawn anchor
@@ -1023,23 +1023,23 @@ function cheat_runspeedmod()
 		cheat_runspeedmod()
 	elseif CH ~= 33001 then
 		gg.setRanges(gg.REGION_CODE_APP)
-	--basically searching ?W;24000F;60F;576F::19
+	--basically searching ?W;24000F;985158124D;17008W
 		if not memOzt.runSpeed then
-			gg.searchNumber(576,gg.TYPE_FLOAT)
-			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x8) end gg.loadResults(tmp) gg.refineNumber(60)
-			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x8) end gg.loadResults(tmp) gg.refineNumber(24000)
-			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x2) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp)
+			gg.searchNumber(985158124,gg.TYPE_DWORD)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(24000)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xA) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber(17008)
+			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC) end gg.loadResults(tmp)
 			memOzt.runSpeed = gg.getResults(1)
 		end
-		if not memOzt.runSpeed[1] then
-			gg.toast(f"ErrNotFound")
-		else
+		if memOzt.runSpeed[1] then
 			for i=1,#memOzt.runSpeed do
 				memOzt.runSpeed[i].flags = gg.TYPE_WORD
 				memOzt.runSpeed[i].value = CH
 			end
 			gg.setValues(memOzt.runSpeed)
 			gg.toast("Running speed "..CH)
+		else
+			gg.toast(f"ErrNotFound")
 		end
 	end
 end
@@ -1597,7 +1597,7 @@ function cheat_cardrift()
 		else
 			memOzt.DrftSpd[1].value,curVal.DrftSpd = DRIFT_SPEED,DRIFT_SPEED
 			gg.setValues(memOzt.DrftSpd)
-			toast("Explosion power modified to "..curVal.DrftSpd)
+			toast("Car drifting roration modified to "..curVal.DrftSpd)
 		end
 	end
 	DRIFT_SPEED = nil
@@ -1808,7 +1808,7 @@ function findEntityAnchr()
 		end
 		tmp,tmp0=nil,nil
 		gg.clearResults()
-		return {t[1].address - 0x18}
+		return (t and t[1]) and {t[1].address - 0x18} or nil
 	elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then
 		toast(f"eAchC_wait")
 	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
@@ -1929,7 +1929,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.1"
+		VERSION="2.4.2"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
