@@ -107,16 +107,15 @@ function MENU_settings()
 	elseif CH == 1 then gg.clearResults() gg.clearList() toast('Cleared!')
 	---
 	elseif CH == 3 then
-		local CH = gg.prompt({'Default player name:','Default custom player name:'},{cfg.PlayerCurrentName,cfg.PlayerCustomName},{'text','text'})
+		CH = gg.prompt({'Default player name:','Default custom player name:'},{cfg.PlayerCurrentName,cfg.PlayerCustomName},{'text','text'})
 		if CH then
 			if CH[1] ~= "" then cfg.PlayerCurrentName = CH[1] end
-			if CH[2] ~= "" then cfg.PlayerCustomName = CH[1] end
-			CH = nil
+			if CH[2] ~= "" then cfg.PlayerCustomName = CH[2] end
 		end
 		MENU_settings()
 	elseif CH == 4 then
 	--Add your language code below
-		local CH = gg.choice({
+		CH = gg.choice({
 			["en_US"]="🇺🇸️ English",
 			["in"]="🇮🇩️ Indonesia",
 			["auto"]="Auto-detect (uses GameGuardian API, uses English as fallback)",
@@ -127,7 +126,6 @@ function MENU_settings()
 		end
 		MENU_settings()
 	elseif CH == 5 then
-		local CH
 		if cfg.entityAnchrSearchMethod == "holdWeapon" then CH = 1
 		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then CH = 2
 		elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then CH = 3 end
@@ -158,6 +156,7 @@ function MENU_settings()
 		toast("Current settings was reset.\n- If you accidentally clicked it, interrupt the script with the floating stop button and rerun the script.\n- If you sure to reset, save the setting")
 		MENU_settings()
 	end
+	CH = nil
 end
 function MENU_godmode()
 --Let the user choose stuff
@@ -696,7 +695,7 @@ function cheat_bigbody()
 				toast("Big body OFF")
 			end
 		elseif CH == 3 then
-			local CH = gg.prompt({'Put your custom value (Game default: 4.3,Cheatus default: 5.9, offset: .00000019073)'},{curVal.BigBody},{'number'})
+			CH = gg.prompt({'Put your custom value (Game default: 4.3,Cheatus default: 5.9, offset: .00000019073)'},{curVal.BigBody},{'number'})
 			if CH and CH[1] ~= "" then curVal.BigBody = CH[1] end
 			CH = nil
 			cheat_bigbody()
@@ -1166,7 +1165,7 @@ function cheat_changeplayernamecolor()
 		"Yellow (5,9)",
 		"Green (6h)",
 		"Coin (7h)",
-		"Man icon (8h)",
+		"Player (8h)",
 		"Corrupted (10h)",
 		"——",
 		"Remove all color/icon",
