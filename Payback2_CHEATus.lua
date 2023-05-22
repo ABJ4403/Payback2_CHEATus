@@ -1605,13 +1605,13 @@ end
 function show_about()
 	local CH = gg.choice({
 		"__about__",
-		f"Disclaimmer",
+		f"Disclaimer",
 		f"License",
 		f"Credits",
 		"__back__"
 	},nil,f"Title_Version")
 	if CH == 1 then alert(f"About_Text") show_about()
-	elseif CH == 2 then alert(f"Disclaimmer_Text") show_about()
+	elseif CH == 2 then alert(f"Disclaimer_Text") show_about()
 	elseif CH == 3 then alert(f"License_Text") show_about()
 	elseif CH == 4 then alert(f"Credits_Text") show_about()
 	elseif CH == 5 then MENU() end
@@ -1929,7 +1929,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.2"
+		VERSION="2.4.3"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2026,17 +2026,17 @@ Automatic				 = "Automatic",
 About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
 Credits					 = "Credits",
 Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.",
-Disclaimmer			 = "Disclaimmer (please read)",
-Disclaimmer_Text = "DISCLAIMMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
+Disclaimer			 = "Disclaimer (please read)",
+Disclaimer_Text = "DISCLAIMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
 Exit_ThankYouMsg = "	Report a bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Discussion: at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	FAQ: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
 License					 = "License",
-License_Text		 = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\n© 2021-2023 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses",
+License_Text		 = "Payback2 CHEATus, Cheat Lua Script for GameGuardian\n© 2021-2023 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses",
 Settings				 = "Settings",
 Suspend					 = "Suspend",
 Suspend_Detected = "Session file detected, continuing from suspend...",
 Suspend_Text		 = "Script suspended. Continue your current session by rerunning the script.",
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403.",
-ErrToastNotice = "An error occured (%s): Exit out of script and see print log for more details.",
+ErrToastNotice = "An error occurred (%s): Exit out of script and see print log for more details.",
 ErrNotFound		 = "Can't find the specific set of number",
 ErrNotFound_Report = "Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",
 Cheat_WallHack   = "Wall Hack",
@@ -2057,11 +2057,11 @@ Automatic				 = "Otomatis",
 About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Value WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.",
-Disclaimmer			 = "Disklaimmer (mohon untuk dibaca)",
-Disclaimmer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
+Disclaimer			 = "Disklaimmer (mohon untuk dibaca)",
+Disclaimer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
 Exit_ThankYouMsg = "	Laporkan bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Diskusi: https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Pertanyaan yang sering ditanyakan: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
 License					 = "Lisensi",
-License_Text		 = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\n© 2021-2023 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA JAMINAN; bahkan tanpa jaminan tersirat dari\nKELAYAKAN JUAL atau KELAYAKAN UNTUK KEGUNAAN TERTENTU.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses",
+License_Text		 = "Payback2 CHEATus, Cheat Skrip Lua untuk GameGuardian\n© 2021-2023 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA JAMINAN; bahkan tanpa jaminan tersirat dari\nKELAYAKAN JUAL atau KELAYAKAN UNTUK KEGUNAAN TERTENTU.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses",
 Settings				 = "Pengaturan",
 Suspend					 = "Suspensi",
 Suspend_Detected = "File sesi terdeteksi, melanjutkan dari suspensi...",

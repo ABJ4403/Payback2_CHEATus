@@ -1,0 +1,47 @@
+--- Payback2_CHEATus.lua
++++ Payback2_CHEATus_es.lua
+@@ -117,6 +117,7 @@
+ 	--Add your language code below
+ 		CH = gg.choice({
+ 			["en_US"]="🇺🇸️ English",
++			["es"]="🇲🇽️ Español",
+ 			["in"]="🇮🇩️ Indonesia",
+ 			["auto"]="Auto-detect (uses GameGuardian API, uses English as fallback)",
+ 		},cfg.Language,f"Title_Version")
+@@ -2053,6 +2054,37 @@
+ eAchB_hold2      = "Hold knife 🔪",
+ eAchC_wait       = "Please wait, finding all entities...",
+ },
++es={
++Automatic				 = "Automático",
++About_Text			 = "Payback2 CHEATus, creado por ABJ4403.\nEste truco es de código abierto en GitHub (a diferencia de cualquier otro truco, ¡algunos bastardos tramposos no se muestran en absoluto! Lo hacen más allá del propietario)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nInforme problemas aquí: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicencia: GPLv3\nProbado en:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nMensaje importante: algunos o la mayoría de los trucos no funcionan en dispositivos de 64 bits o versiones superiores a 2.104.12.4 (compilación 121)\n\nEste truco es parte de FOSS (software libre y de código abierto)",
++Credits					 = "Créditos",
++Credits_Text		 = "Crédito:\n• mdp43140 - Colaborador principal\n• Mangyu - Inspiración original\n• MisterCuteX - Mega Explosión, Respawn Hack\n• tehtmi - creador de unluac (y ayudante de descompilación)\n• Crystal_Mods100x - Menú HIELO\n• Latic AX & ToxicCoder: proporciona secuencias de comandos eliminadas a través de YT y MediaFire\n• AGH - Wall Hack, Car Health GG Valores\n• GKTV - Guión PB2 GG (truco de pared, cuerpo grande, árbol de colores, elemento lanzallamas grande, sombra, especialmente)\n• XxGabriel5HRxX - Compensaciones GG de altura y aceleración de la rueda del automóvil\n• JokerGGS: sin daños por explosión, Rel0ad, granada Rel0ad, RTX, inmortal, flotador, muñeco de trapo, C4, cohete de disparo automático Dibujo de valores GG\n• antonyROOTlegendMAXx - Offsets GG de vehículos transparentes.\n• MinFRE - Compensaciones GG de policía de 6 estrellas.",
++Disclaimer			 = "Descargo de responsabilidad (por favor lea)",
++Disclaimer_Text = "DESCARGO DE RESPONSABILIDAD:\n	NO hagas mal uso del script para dañar a otros jugadores de Payback2.\n	NO soy RESPONSABLE de su acción con el uso de este script.\n	Recuerda mantener tu paciencia fuera de otros jugadores.\n	Recomiendo SOLO usar este script en modo fuera de línea.\n	Hice esto porque nadie compartiría su guión de trucos.",
++Exit_ThankYouMsg = "	Reportar un error: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Discusión: at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	FAQ: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
++License					 = "Licencia",
++License_Text		 = "Payback2 CHEATus, Truco Lua Script para GameGuardian\n© 2021-2023 ABJ4403\n\nEste programa es software libre: puedes redistribuirlo y/o modificar\nbajo los términos de la Licencia Pública General GNU publicada por\nla Free Software Foundation, ya sea la versión 3 de la Licencia, o\n(a su elección) cualquier versión posterior.\n\nEste programa se distribuye con la esperanza de que sea útil,\npero SIN NINGUNA GARANTIA; sin siquiera la garantía implícita de\nCOMERCIABILIDAD o IDONEIDAD PARA UN FIN DETERMINADO. Ver el\nLicencia Pública General GNU para más detalles.\n\nDebería haber recibido una copia de la Licencia Pública General GNU\njunto con este programa. Si no, consulte https://gnu.org/licenses",
++Settings				 = "Ajustes",
++Suspend					 = "Suspender",
++Suspend_Detected = "Archivo de sesión detectado, continuando desde suspensión...",
++Suspend_Text		 = "Guión suspendido. Continúe con su sesión actual volviendo a ejecutar el script.",
++Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", por ABJ4403.",
++ErrToastNotice = "Ocurrió un error (%s): salga del script y vea el registro de impresión para obtener más detalles.",
++ErrNotFound		 = "No se puede encontrar el conjunto específico de números",
++ErrNotFound_Report = "No puedo encontrar el conjunto específico de números, informe este problema en mi página de GitHub: https://github.com/ABJ4403/Payback2_CHEATus/issues",
++Cheat_WallHack   = "Perforando la Muro",
++Cheat_WallHack_Notice = "Advertencia:\n- Tenga cuidado con los agujeros detrás de las paredes\n- Se recomienda usar el wallhack de GKTV porque su física inestable puede evitar que el helicóptero se caiga.",
++Cheat_C4AutoRig  = "Explotar C4",
++Cheat_GodModes   = "Modos de Dios",
++Cheat_GodModes_Notice = "ADVERTENCIA: ¡NO USE ESTO PARA DAÑAR A JUGADORES INOCENTES DE NINGUNA MANERA!!",
++Cheat_CSD        = "Trucos del lado del cliente",
++Cheat_CSD_Notice = "Algunos trucos no afectarán a otros jugadores",
++eAchA_wait       = "Por favor espere... no dispare, sostenga la pistola 🔫",
++eAchA_dupe       = "%d Resultados duplicados! sostener el cuchillo 🔪",
++eAchB_hold1      = "Sostener pistola 🔫",
++eAchB_hold2      = "Sostener cuchillo 🔪",
++eAchC_wait       = "Por favor espere, encontrando todas las entidades...",
++},
+ ['in']={
+ Automatic				 = "Otomatis",
