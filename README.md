@@ -2,16 +2,13 @@
 [`🇮🇩️ ReadMe Bahasa Indonesia`](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/3e9fe551-422b-4985-b006-25d04a36b7e4)
 Payback2_CHEATus is a GameGuardian Lua Cheat Script for Payback 2.
+Warning: The developer is now aware of hackers/cheaters and thus constantly patching things.
+This project may entering maintenance mode (no longer adding features).
+If you can, only use this script in singleplayer or offline mode,
+DO NOT use this on multiplayer or online mode!
+Thank you for everyone that helps this project going until now.
 
 ## Features
-- `🔫 No Reload`.
-- `🛡️ Immortality`.
-- `🏊‍♀️️ No drowned` (RARE).
-- `👥️ Respawn & Clone`.
-- `🚗️ Vehicle tweaks (speed, jet, color, translucent, quieten noise, wheel height, no steal)` (RARE)
-- `🔫 Pistol/SG Knockback`.
-- `🔫 Weapon Ammo`.
-- `🧱 Wall Hack`.
 - `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happend. UPDATE: devices that primarily use CBSS/Anonymous might not having certain cheats working, though it didnt make the script crashed).
 - `🗜️ Minified version available` (if you really need that tiny size. little note, its not bleeding-edge (very latest to the original script), its rarely updated except major updates...).
 - `📈️ Performance experiment` (optional).
@@ -19,7 +16,6 @@ Payback2_CHEATus is a GameGuardian Lua Cheat Script for Payback 2.
 - `📈️ Memory Memoization` (technical feature that accelerates searches on area that won't change alot).
 - `🦠❌ 0-Malware` its because...
 - `💰❌ FOSS (Free & Open-source)` this cheat source code is not compiled (or even encrypted/obfuscated) so people can make sure this isnt malware.
-- And even more that i didn't even put here 😅..️.
 
 still confused about these stuff? go to [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
 
@@ -28,7 +24,8 @@ This cheat is Open-source on GitHub (unlike any other cheats some cheater bastar
 [`Report issues here`](https://github.com/ABJ4403/Payback2_CHEATus)
 
 Tested on:
-- Payback2 v2.104.12.4
+- Payback2 v2.104.12.4 (build 121, offline mode only)
+- Payback2 v2.106.0 (build 138, unstable)
 - GameGuardian v101.0
 
 This cheat is part of FOSS (Free and Open-Source Software)

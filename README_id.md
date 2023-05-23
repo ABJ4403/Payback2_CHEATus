@@ -2,16 +2,13 @@
 [`🇺🇸️ ReadMe English`](https://github.com/ABJ4403/Payback2_CHEATus)
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/3e9fe551-422b-4985-b006-25d04a36b7e4)
 Payback2_CHEATus adalah Skrip cheat Lua GameGuardian untuk Payback 2.
+Perhatian: Developer sekarang menyadari banyaknya cheater dan terus menambal kode game.
+Project ini kemungkinan akan memasuki mode perawatan (tidak lagi menambahkan fitur).
+Kalau bisa, hanya gunakan skrip ini di mode offline,
+JANGAN menggunakan ini di mode online!
+Terima kasih ke semuanya untuk membantu projek ini sampai sekarang.
 
 ## Fitur
-- `🔫 No Reload` (Tidak ada jeda isi ulang).
-- `🛡️ Immortalitas`.
-- `🏊‍♀️️ Anti-tenggelam` (LANGKA).
-- `👥️ Respawn & Klon`.
-- `🚗️ Tweak kendaraan (kecepatan, jet, warna, tembus pandang, sunyikan bising, tinggi roda, anti-curi)` (LANGKA)
-- `🔫 Knockback Pistol/SG`.
-- `🔫 Amunisi Senjata`.
-- `🧱 Tembus Dinding`.
 - `💻🤝📱 Kompatibilitas lebih baik` (Root/VM, CBSS(todo)/Anonymous/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash. UPDATE: perangkat yang biasa menggunakan CBSS/Anonymous mungkin mengalami masalah dengan beberapa cheat value tidak ditemukan, walaupun tidak membuat skrip galat).
 - `🗜️ Versi minified tersedia` (Jika Anda membutuhkan skrip yang ukurannya kecil. dengan catatan, versi mini tidak bleeding-edge (paling terbaru mendekati skrip original) karena jarang diupdate kecuali ada pembaruan major...).
 - `📈️ Eksperimen performa` (opsional).
@@ -19,7 +16,6 @@ Payback2_CHEATus adalah Skrip cheat Lua GameGuardian untuk Payback 2.
 - `📈️ Memoisasi Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
 - `🦠❌ 0-Malware` itu karena...
 - `💰❌ FOSS (Gratis & bersumber-terbuka)` sumber kode cheat ini tidak dicompile (atau bahkan dienkripsi/obfuscate) jadi orang lain bisa memastikan bahwa ini bukan malware.
-- Dan lebih banyak lagi bahkan saya tidak taruh disini 😅️...
 
 Masih bingung? menuju ke [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
 
@@ -28,7 +24,8 @@ Cheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampi
 [`Laporkan isu disini`](https://github.com/ABJ4403/Payback2_CHEATus)
 
 Diuji di:
-- Payback2 v2.104.12.4
+- Payback2 v2.104.12.4 (build 121, hanya mode offline)
+- Payback2 v2.104.12.4 (build 138, tidak stabil)
 - GameGuardian v101.0
 
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
