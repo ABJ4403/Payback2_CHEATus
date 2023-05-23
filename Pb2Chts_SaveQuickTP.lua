@@ -56,6 +56,8 @@ function changeMapFilter()
 		[ 7]="7. Freedom city",
 		[ 8]="8. Los Francos City",
 		[ 9]="9. Corona City",
+		[10]="10. Desert Outpost",
+		[11]="11. Isla Nublar",
 	},cfg.tpFilterListMap,"Choose which coordinate based on map you currently in")
 	if type(CH) == 'number' then
 		cfg.tpFilterListMap = CH
@@ -89,7 +91,7 @@ function createCheckpoint()
 		"X coord:",
 		"Y coord:",
 		"Z coord:",
-		"Map filter\n-1=Uncategorized\n0=The big freeze\n1=Allegro\n2=Destra\n3=Metropolis\n4=D-Town\n5=Urban shore\n6=House park\n7=Freedom city\n8=Los francos\n9=Corona [-1;9]",
+		"Map filter\n-1=Uncategorized\n0=The big freeze\n1=Allegro\n2=Destra\n3=Metropolis\n4=D-Town\n5=Urban shore\n6=House park\n7=Freedom city\n8=Los francos\n9=Corona\n10=Desert Outpost\n11=Isla Nublar [-1;11]",
 		"Name (optional)"
 	},
 	coords,
@@ -365,7 +367,7 @@ function loadConfig()
 			{75,13,203,2,"Allegro Tank"}, -- TBF quik-emart, Destra bank?, Metropolis near plains & CTS, DTown roof,
 		},
 		createCheckpointAuto=true,
-		VERSION="2.5",
+		VERSION="3.0",
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
