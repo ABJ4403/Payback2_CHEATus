@@ -526,7 +526,7 @@ function cheat_pistolknockback()
 		if CH == 9 then return MENU()
 		elseif CH == 1 then PISTOL_KNOCKBACK_VALUE = -20
 		elseif CH == 2 then PISTOL_KNOCKBACK_VALUE = 20
-		elseif CH == 3 then PISTOL_KNOCKBACK_VALUE = 0.25
+		elseif CH == 3 then PISTOL_KNOCKBACK_VALUE = .25
 		elseif CH == 4 then PISTOL_KNOCKBACK_VALUE = 1e-5
 		elseif CH == 5 then
 			local CH = gg.prompt({'Knockback value:'})
@@ -623,7 +623,7 @@ Ca = GG C Alloc memory region marked with yellow color, quite big, takes couple 
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				tmp[6] = gg.getResults(1)
 				gg.clearResults()
-				gg.searchNumber("2W;16256W;"..tmp[2].."F;24W::9") -- vehicle wallhack
+				gg.searchNumber("2W;16256W;"..tmp[2].."F;24W::9") -- entity wallhack
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				table.insert(tmp[6],gg.getResults(1)[1])
 				memOzt.wallhack_gktv = tmp[6]
@@ -682,12 +682,12 @@ function cheat_bigbody()
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound_Report")
 			else
-				gg.editAll(curVal.BigBody+0.00000019073,gg.TYPE_FLOAT)
+				gg.editAll(curVal.BigBody+.00000019073,gg.TYPE_FLOAT)
 				toast("Big Body ON")
 			end
 		elseif CH == 2 then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("bigbody",curVal.BigBody+0.00000019073,nil,gg.TYPE_FLOAT,22)
+			handleMemOzt("bigbody",curVal.BigBody+.00000019073,nil,gg.TYPE_FLOAT,22)
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound_Report")
 			else
@@ -1236,15 +1236,15 @@ function cheat_walkwonkyness()
 	gg.setRanges(gg.REGION_CODE_APP) -- PS: 0.00999999978 > 0.3 for new version
 	if CH == 3 then MENU()
 	elseif CH == 1 then
-		handleMemOzt("walkwonkyness","0.004~1;0.00999999978::5",nil,gg.TYPE_FLOAT,1)
-		gg.editAll(0.004,gg.TYPE_FLOAT)
+		handleMemOzt("walkwonkyness",".004~1;.00999999978::5",nil,gg.TYPE_FLOAT,1)
+		gg.editAll(.004,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness Default")
 	elseif CH == 2 then
-		handleMemOzt("walkwonkyness","0.004;0.00999999978::5",nil,gg.TYPE_FLOAT,1)
+		handleMemOzt("walkwonkyness",".004;.00999999978::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(1.004,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness ON")
 	elseif CH == 3 then
-		handleMemOzt("walkwonkyness","1.004;0.00999999978::5",nil,gg.TYPE_FLOAT,1)
+		handleMemOzt("walkwonkyness","1.004;.00999999978::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness OFF")
 	end
@@ -1261,7 +1261,7 @@ function cheat_coloredtree()
 		elseif CH == 2 then tmp={-999,.04,"OFF"} end
 		if tmp then
 			gg.setRanges(gg.REGION_CODE_APP)
-			local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
+			local t = handleMemOzt("clrdtree","4.06176449e-39;.06;"..tmp[1]..";-.04;-.02::17",tmp[1],gg.TYPE_FLOAT,1)
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound_Report")
 			else
@@ -1279,11 +1279,11 @@ function cheat_bigflamethroweritem()
 	},nil,"Big flamethrower (Item)\nPS: this will not make the flame burst bigger")
 	if CH == 3 then MENU()
 	elseif CH then
-		if CH == 1 then tmp={0.9,5.1403,"ON"}
-		elseif CH == 2 then tmp={5.1403,0.9,"OFF"} end
+		if CH == 1 then tmp={.9,5.1403,"ON"}
+		elseif CH == 2 then tmp={5.1403,.9,"OFF"} end
 		if tmp then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("bigflmthrwritm","0.4;0.2;"..tmp[1]..";24e3::13",tmp[1],gg.TYPE_FLOAT,9)
+			handleMemOzt("bigflmthrwritm",".4;.2;"..tmp[1]..";24e3::13",tmp[1],gg.TYPE_FLOAT,9)
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound")
 			else
@@ -1296,15 +1296,26 @@ end
 function cheat_autoshootrocket()
 	local CH,r,t = gg.choice({
 		"ON",
-		"ON (Only if holding rocket, better to use with Rel0ad)",
+		"ON (Only if holding rocket, use MG, better to use with Rel0ad)",
+		"Rel0ad v2 Rocket",
+		"Rel0ad v2 Rocket,Pistol,SG (causes problem with Grenade,Knife,C4)",
 		"OFF",
 		"__back__"
-	},nil,"Autoshoot rocket. PS:\n- This will make everyone shoot rocket no matter what weapon they hold\n- To use this, use the machine gun, or use Rel0ad (will be quirky if using this)")
-	if CH == 4 then MENU()
+	},nil,"Autoshoot rocket. PS: This will affect everyone not just the players")
+	if CH == 6 then MENU()
 	elseif CH then
+	--{all,rocket,state title}
+	--about those numbers:
+	--74?:crash
+	--750:no reload
+	--755:c4 spam
+	--758:turret spam
+	--760+:crash
 		if CH == 1 then tmp={0,0,"ON"}
 		elseif CH == 2 then tmp={754,0,"ON"}
-		elseif CH == 3 then tmp={754,752,"OFF"} end
+		elseif CH == 3 then tmp={754,750,"Rel0ad v2 rocket only"}
+		elseif CH == 4 then tmp={750,750,"Rel0ad v2"}
+		elseif CH == 5 then tmp={754,752,"OFF"} end
 		if tmp then
 			gg.setRanges(gg.REGION_CODE_APP)
 			gg.searchNumber(5000,gg.TYPE_FLOAT)
@@ -1317,7 +1328,7 @@ function cheat_autoshootrocket()
 					{address=t+0x80,flags=gg.TYPE_WORD,value=tmp[1]},
 					{address=t+0x88,flags=gg.TYPE_WORD,value=tmp[2]}
 				}
-				gg.setValues(r) -- Pretty non-Pb2Chts-standard variable there XD
+				gg.setValues(r)
 				gg.addListItems(r) -- Debugging
 				toast("Autoshoot rocket "..tmp[3])
 			end
@@ -1354,8 +1365,8 @@ function cheat_plyxray()
 		"__back__"
 	},nil,"Player X-Ray\nPS: Doesn't work on latest version"),nil
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={0.08,436,"ON"}
-	elseif CH == 2 then tmp={436,0.08,"OFF"} end
+	elseif CH == 1 then tmp={.08,436,"ON"}
+	elseif CH == 2 then tmp={436,.08,"OFF"} end
 	if tmp then
 		gg.setRanges(gg.REGION_CODE_APP)
 		handleMemOzt("clrdpplsp",tmp[1],nil,gg.TYPE_FLOAT,9)
@@ -1755,7 +1766,17 @@ function findEntityAnchr()
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
-		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address)
+			if tmp0:find('508$') or
+				 tmp0:find('d08$') or
+				 tmp0:find('5f4$') or
+				 tmp0:find('df4$') then
+				tmp[i].address = (tmp[i].address - 0x8)
+			else
+				tmp[i] = nil
+			end
+		end
+		gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)
 		tmp0 = #tmp
 		if tmp0 > 0 then
@@ -2012,7 +2033,7 @@ end
 if not cfg.clearAllList then
 	gg.clearList = function()
 		for _,v in ipairs(gg.getListItems()) do
-			if v.name and v.name:find"Pb2Chts" then
+			if v.name and v.name:sub(0,8) == "Pb2Chts " then
 				gg.removeListItems({v})
 			end
 		end
@@ -2057,8 +2078,8 @@ Automatic				 = "Otomatis",
 About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Value WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.",
-Disclaimer			 = "Disklaimmer (mohon untuk dibaca)",
-Disclaimer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
+Disclaimer			 = "Disklaimer (mohon untuk dibaca)",
+Disclaimer_Text = "DISKLAIMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
 Exit_ThankYouMsg = "	Laporkan bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Diskusi: https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Pertanyaan yang sering ditanyakan: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
 License					 = "Lisensi",
 License_Text		 = "Payback2 CHEATus, Cheat Skrip Lua untuk GameGuardian\n© 2021-2023 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA JAMINAN; bahkan tanpa jaminan tersirat dari\nKELAYAKAN JUAL atau KELAYAKAN UNTUK KEGUNAAN TERTENTU.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses",

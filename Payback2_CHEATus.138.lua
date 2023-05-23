@@ -222,7 +222,7 @@ function MENU_matchmode()
 		local ta = handleMemOzt('MatchOffset',1217115234,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)
 		if ta[1] then
 			t = {}
-			ta = ta[1].address - 0x142BA4
+			ta = ta[1].address - 0x142BDC
 			ta = {
 				ta+0xB4, -- 1P
 				ta+0x1C4, -- 2P
@@ -255,8 +255,8 @@ function MENU_matchmode()
 			end
 		--Put the changes that applies to both (1 value only) here
 			if CH[3] then table.append(t,{
-				{address=ta[3] + 0x10F4,value=0,freeze=true,flags=gg.TYPE_WORD},
-				{address=ta[3] + 0x10F6,value=0,freeze=true,flags=gg.TYPE_WORD},
+				{address=ta[3] + 0x452804,value=0,freeze=true,flags=gg.TYPE_WORD},
+				{address=ta[3] + 0x452806,value=0,freeze=true,flags=gg.TYPE_WORD},
 			})
 			end
 			gg.setValues(t)
@@ -524,7 +524,7 @@ function cheat_pistolknockback()
 		if CH == 9 then return MENU()
 		elseif CH == 1 then PISTOL_KNOCKBACK_VALUE = -20
 		elseif CH == 2 then PISTOL_KNOCKBACK_VALUE = 20
-		elseif CH == 3 then PISTOL_KNOCKBACK_VALUE = 0.25
+		elseif CH == 3 then PISTOL_KNOCKBACK_VALUE = .25
 		elseif CH == 4 then PISTOL_KNOCKBACK_VALUE = 1e-5
 		elseif CH == 5 then
 			local CH = gg.prompt({'Knockback value:'})
@@ -617,12 +617,12 @@ Ca = GG C Alloc memory region marked with yellow color, quite big, takes couple 
 				toast('Previous result found, using previous result.')
 			else
 				toast('No buffer found, creating new buffer.')
-				gg.searchNumber("3476W;6W;"..tmp[2].."F;-17789W::15") -- wall hack (TODO: update)
-			--gg.searchNumber("3472W;5W;"..tmp[2].."F;-17789W::15") -- wall hack (build -121)
+			--121: 3472W;6W;...
+				gg.searchNumber("3476W;6W;"..tmp[2].."F;-17789W::15") -- wall hack
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				tmp[6] = gg.getResults(1)
 				gg.clearResults()
-				gg.searchNumber("2W;16256W;"..tmp[2].."F;24W::9") -- vehicle wallhack
+				gg.searchNumber("2W;16256W;"..tmp[2].."F;24W::9") -- entity wallhack
 				gg.refineNumber(tmp[2],gg.TYPE_FLOAT)
 				table.insert(tmp[6],gg.getResults(1)[1])
 				memOzt.wallhack_gktv = tmp[6]
@@ -681,12 +681,12 @@ function cheat_bigbody()
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound_Report")
 			else
-				gg.editAll(curVal.BigBody+0.00000019073,gg.TYPE_FLOAT)
+				gg.editAll(curVal.BigBody+.00000019073,gg.TYPE_FLOAT)
 				toast("Big Body ON")
 			end
 		elseif CH == 2 then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("bigbody",curVal.BigBody+0.00000019073,nil,gg.TYPE_FLOAT,22)
+			handleMemOzt("bigbody",curVal.BigBody+.00000019073,nil,gg.TYPE_FLOAT,22)
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound_Report")
 			else
@@ -1241,15 +1241,15 @@ function cheat_walkwonkyness()
 	gg.setRanges(gg.REGION_CODE_APP) -- PS: 0.00999999978 > 0.3 for new version
 	if CH == 3 then MENU()
 	elseif CH == 1 then
-		handleMemOzt("walkwonkyness","0~1;0.3::5",nil,gg.TYPE_FLOAT,1)
+		handleMemOzt("walkwonkyness","0~1;.3::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0.004,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness Default")
 	elseif CH == 2 then
-		handleMemOzt("walkwonkyness","0.004;0.3::5",nil,gg.TYPE_FLOAT,1)
+		handleMemOzt("walkwonkyness",".004;.3::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(1.004,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness ON")
 	elseif CH == 3 then
-		handleMemOzt("walkwonkyness","1.004;0.3::5",nil,gg.TYPE_FLOAT,1)
+		handleMemOzt("walkwonkyness","1.004;.3::5",nil,gg.TYPE_FLOAT,1)
 		gg.editAll(0,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness OFF")
 	end
@@ -1266,8 +1266,8 @@ function cheat_coloredtree()
 		elseif CH == 2 then tmp={-999,.04,"OFF"} end
 		if tmp then
 			gg.setRanges(gg.REGION_CODE_APP)
-			local t = handleMemOzt("clrdtree","38W;0.06;"..tmp[1]..";-0.04;-0.02::15",tmp[1],gg.TYPE_FLOAT,1)
-		--local t = handleMemOzt("clrdtree","4.06176449e-39;0.06;"..tmp[1]..";-0.04;-0.02::17",tmp[1],gg.TYPE_FLOAT,1)
+		--121: 4.06176449e-39F;.6F;...
+			local t = handleMemOzt("clrdtree","38W;.06;"..tmp[1]..";-.04;-.02::15",tmp[1],gg.TYPE_FLOAT,1)
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound_Report")
 			else
@@ -1285,11 +1285,11 @@ function cheat_bigflamethroweritem()
 	},nil,"Big flamethrower (Item)\nPS: this will not make the flame burst bigger")
 	if CH == 3 then MENU()
 	elseif CH then
-		if CH == 1 then tmp={0.9,5.1403,"ON"}
-		elseif CH == 2 then tmp={5.1403,0.9,"OFF"} end
+		if CH == 1 then tmp={.9,5.1403,"ON"}
+		elseif CH == 2 then tmp={5.1403,.9,"OFF"} end
 		if tmp then
 			gg.setRanges(gg.REGION_CODE_APP)
-			handleMemOzt("bigflmthrwritm","0.4;0.2;"..tmp[1]..";24e3::13",tmp[1],gg.TYPE_FLOAT,9)
+			handleMemOzt("bigflmthrwritm",".4;.2;"..tmp[1]..";24e3::13",tmp[1],gg.TYPE_FLOAT,9)
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound")
 			else
@@ -1302,15 +1302,19 @@ end
 function cheat_autoshootrocket()
 	local CH,r,t = gg.choice({
 		"ON",
-		"ON (Only if holding rocket, better to use with Rel0ad)",
+		"ON (Only if holding rocket, use MG, better to use with Rel0ad)",
+		"Rel0ad v2 Rocket",
+		"Rel0ad v2 Rocket,Pistol,SG (causes problem with Grenade,Knife,C4)",
 		"OFF",
 		"__back__"
-	},nil,"Autoshoot rocket. PS:\n- This will make everyone shoot rocket no matter what weapon they hold\n- To use this, use the machine gun, or use Rel0ad (will be quirky if using this)")
-	if CH == 4 then MENU()
+	},nil,"Autoshoot rocket. PS: This will affect everyone not just the players")
+	if CH == 6 then MENU()
 	elseif CH then
 		if CH == 1 then tmp={0,0,"ON"}
 		elseif CH == 2 then tmp={754,0,"ON"}
-		elseif CH == 3 then tmp={754,752,"OFF"} end
+		elseif CH == 3 then tmp={754,750,"Rel0ad v2 rocket only"}
+		elseif CH == 4 then tmp={750,750,"Rel0ad v2"}
+		elseif CH == 5 then tmp={754,752,"OFF"} end
 		if tmp then
 			gg.setRanges(gg.REGION_CODE_APP)
 			gg.searchNumber(5000,gg.TYPE_FLOAT)
@@ -1323,7 +1327,7 @@ function cheat_autoshootrocket()
 					{address=t+0x80,flags=gg.TYPE_WORD,value=tmp[1]},
 					{address=t+0x88,flags=gg.TYPE_WORD,value=tmp[2]}
 				}
-				gg.setValues(r) -- Pretty non-Pb2Chts-standard variable there XD
+				gg.setValues(r)
 				gg.addListItems(r) -- Debugging
 				toast("Autoshoot rocket "..tmp[3])
 			end
@@ -1345,7 +1349,7 @@ function cheat_shadowfx()
 			gg.setRanges(gg.REGION_CODE_APP)
 		--TODO: not found, update the value
 			handleMemOzt("shadow",tmp[1]..";0,07999999821;-6,04130986e27;-2,78792201e28;-3,74440972e28:17",tmp[1],gg.TYPE_FLOAT,1) -- still buggy, but dont have time to fix it ;(
-		--handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1) build -121
+			handleMemOzt("shadow",tmp[1]..";-5.96152076e27;-2.55751098e30;-1.11590087e28;-5.59128595e24:17",tmp[1],gg.TYPE_FLOAT,1) -- who knows this might luckily fix it :/ just temporary code here btw this was made for build 121
 			if gg.getResultCount() == 0 then
 				toast(f"ErrNotFound_Report")
 			else
@@ -1362,8 +1366,8 @@ function cheat_plyxray()
 		"__back__"
 	},nil,"Player X-Ray\nPS: Doesn't work on latest version"),nil
 	if CH == 3 then MENU()
-	elseif CH == 1 then tmp={0.08,436,"ON"}
-	elseif CH == 2 then tmp={436,0.08,"OFF"} end
+	elseif CH == 1 then tmp={.08,436,"ON"}
+	elseif CH == 2 then tmp={436,.08,"OFF"} end
 	if tmp then
 		gg.setRanges(gg.REGION_CODE_APP)
 		handleMemOzt("clrdpplsp",tmp[1],nil,gg.TYPE_FLOAT,9)
@@ -1615,13 +1619,13 @@ end
 function show_about()
 	local CH = gg.choice({
 		"__about__",
-		f"Disclaimmer",
+		f"Disclaimer",
 		f"License",
 		f"Credits",
 		"__back__"
 	},nil,f"Title_Version")
 	if CH == 1 then alert(f"About_Text") show_about()
-	elseif CH == 2 then alert(f"Disclaimmer_Text") show_about()
+	elseif CH == 2 then alert(f"Disclaimer_Text") show_about()
 	elseif CH == 3 then alert(f"License_Text") show_about()
 	elseif CH == 4 then alert(f"Credits_Text") show_about()
 	elseif CH == 5 then MENU() end
@@ -1755,6 +1759,16 @@ function optimizeRange(range)
 	return next(t) and result or range -- if there {}?? on the table, return the previously given input, else return the result.
 end
 function findEntityAnchr()
+--[[
+
+TODO:
+- if we use this on vehicles, the 1st result is a fake (randomized btw)
+- but the fake one always gets updated with the original value,
+- so ig we make a temporary modification.
+- put small delay and recheck for changes.
+- ik its slow but this is the only way to use god mode on vehicles. :(
+
+]]
 	gg.setRanges(cfg.memRange.general)
 	local tmp,tmp0
 	if cfg.entityAnchrSearchMethod == "abjAutoAnchor" then
@@ -1765,16 +1779,15 @@ function findEntityAnchr()
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
-		tmp=gg.getResults(5e3)for i=1,#tmp do
-			tmp0 = ("%x"):format(tmp[i].address)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address)
 		--TODO: maybe put a config for this, some platform/arch/build doesnt work, it uses different end address
+		--TODO: for version newer than 121, vehicle end addresses are randomized for each vehicle
 			if tmp0:find('508$') or
 				 tmp0:find('d08$') or
 				 tmp0:find('5f4$') or
 				 tmp0:find('df4$') or
 				 tmp0:find('58c$') or
-				 tmp0:find('a8c$')
-			then
+				 tmp0:find('a8c$') then
 				tmp[i].address = (tmp[i].address - 0x8)
 			else
 				tmp[i] = nil
@@ -1950,7 +1963,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.2"
+		VERSION="2.4.3"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2033,7 +2046,7 @@ end
 if not cfg.clearAllList then
 	gg.clearList = function()
 		for _,v in ipairs(gg.getListItems()) do
-			if v.name and v.name:find"Pb2Chts" then
+			if v.name and v.name:sub(0,8) == "Pb2Chts " then
 				gg.removeListItems({v})
 			end
 		end
@@ -2047,17 +2060,17 @@ Automatic				 = "Automatic",
 About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\nEven if this script was made for build 138, most cheats doesn't work.\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
 Credits					 = "Credits",
 Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.",
-Disclaimmer			 = "Disclaimmer (please read)",
-Disclaimmer_Text = "DISCLAIMMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
+Disclaimer			 = "Disclaimer (please read)",
+Disclaimer_Text = "DISCLAIMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
 Exit_ThankYouMsg = "	Report a bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Discussion: at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	FAQ: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
 License					 = "License",
-License_Text		 = "Payback2 CHEATus, Cheat LUA Script for GameGuardian\n© 2021-2023 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses",
+License_Text		 = "Payback2 CHEATus, Cheat Lua Script for GameGuardian\n© 2021-2023 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses",
 Settings				 = "Settings",
 Suspend					 = "Suspend",
 Suspend_Detected = "Session file detected, continuing from suspend...",
 Suspend_Text		 = "Script suspended. Continue your current session by rerunning the script.",
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", by ABJ4403.",
-ErrToastNotice = "An error occured (%s): Exit out of script and see print log for more details.",
+ErrToastNotice = "An error occurred (%s): Exit out of script and see print log for more details.",
 ErrNotFound		 = "Can't find the specific set of number",
 ErrNotFound_Report = "Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",
 Cheat_WallHack   = "Wall Hack",
@@ -2078,11 +2091,11 @@ Automatic				 = "Otomatis",
 About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\nKalaupun skrip ini dibuat untuk build 134, kebanyakan cheat tidak bekerja.\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Value WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.",
-Disclaimmer			 = "Disklaimmer (mohon untuk dibaca)",
-Disclaimmer_Text = "DISKLAIMMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
+Disclaimer			 = "Disklaimer (mohon untuk dibaca)",
+Disclaimer_Text = "DISKLAIMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
 Exit_ThankYouMsg = "	Laporkan bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Diskusi: https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Pertanyaan yang sering ditanyakan: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
 License					 = "Lisensi",
-License_Text		 = "Payback2 CHEATus, Cheat Skrip LUA untuk GameGuardian\n© 2021-2023 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA JAMINAN; bahkan tanpa jaminan tersirat dari\nKELAYAKAN JUAL atau KELAYAKAN UNTUK KEGUNAAN TERTENTU.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses",
+License_Text		 = "Payback2 CHEATus, Cheat Skrip Lua untuk GameGuardian\n© 2021-2023 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA JAMINAN; bahkan tanpa jaminan tersirat dari\nKELAYAKAN JUAL atau KELAYAKAN UNTUK KEGUNAAN TERTENTU.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses",
 Settings				 = "Pengaturan",
 Suspend					 = "Suspensi",
 Suspend_Detected = "File sesi terdeteksi, melanjutkan dari suspensi...",
