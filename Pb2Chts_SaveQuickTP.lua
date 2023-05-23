@@ -341,7 +341,7 @@ function exit()
 end
 function saveConfig()
 	cfg.memZones = lastCfg.memZones
-	io.open(cfg_file,'w'):write([[-- This is the configuration file for Pb2Chts.
+	io.open(cfg_file,'w'):write([[-- This is the configuration file for Pb2Chts SaveQuickTP.
 -- You can customize any settings and parameters you want here
 -- Make sure you have a backup of this config file, because even a bit of typo results in config parser failure.
 -- btw cfg.tpCheckpoint data structure looks something like this: {x,y,z,filterMap,"Name"}
