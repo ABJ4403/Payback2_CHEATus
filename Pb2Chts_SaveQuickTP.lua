@@ -45,7 +45,8 @@ function tpPlayerToDest(coords)
 end
 function changeMapFilter()
 	local CH = gg.choice({
-		[-1]="Show all",
+		[-2]="Show all",
+		[-1]="Uncategorized",
 		[ 0]="0. The Big Freeze",
 		[ 1]="1. Allegro City",
 		[ 2]="2. Destra City",
@@ -53,7 +54,7 @@ function changeMapFilter()
 		[ 4]="4. D-Town",
 		[ 5]="5. Urban Shore",
 		[ 6]="6. House Park",
-		[ 7]="7. Freedom city",
+		[ 7]="7. Freedom City",
 		[ 8]="8. Los Francos City",
 		[ 9]="9. Corona City",
 		[10]="10. Desert Outpost",
@@ -165,7 +166,7 @@ function filterCheckpointList()
 	tmp_choicesMenu = {}
 	tmp_tpCheckpoints = {}
 	for i in ipairs(cfg.tpCheckpoint) do -- loop over orig CPs
-		if cfg.tpFilterListMap == -1 or cfg.tpFilterListMap == cfg.tpCheckpoint[i][4] then -- if filter off or matches set filter
+		if cfg.tpFilterListMap == -2 or cfg.tpFilterListMap == cfg.tpCheckpoint[i][4] then -- if filter off or matches set filter
 			tmp_tpCheckpoints[index2] = cfg.tpCheckpoint[i] -- add it
 			index2 = index2 + 1 -- increment external index number tracker
 		end
@@ -367,7 +368,7 @@ function loadConfig()
 			{75,13,203,2,"Allegro Tank"}, -- TBF quik-emart, Destra bank?, Metropolis near plains & CTS, DTown roof,
 		},
 		createCheckpointAuto=true,
-		VERSION="3.0",
+		VERSION="3.1",
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
