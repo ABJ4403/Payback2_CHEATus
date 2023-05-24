@@ -8,14 +8,15 @@ local f,entityTpProps
 -- Cheat menus --
 function MENU()
 --Let the user choose stuff
-	local CH = gg.choice(tmp_choicesMenu,nil,"Pb2Chts_Teleport v"..cfg.VERSION.." (debug build), by ABJ4403\nFilter by map: TODO:StringifyFilterMapInteger")
+	local CH = gg.choice(tmp_choicesMenu,nil,"Pb2Chts Teleport v"..cfg.VERSION.." (debug build), by ABJ4403\nFilter by map: TODO:StringifyFilterMapInteger")
 	if CH then
-		if CH == (#tmp_choicesMenu - 4) then createCheckpoint()
-		elseif CH == (#tmp_choicesMenu - 3) then deleteCheckpoint()
-		elseif CH == (#tmp_choicesMenu - 2) then editCheckpoint()
-		elseif CH == (#tmp_choicesMenu - 1) then changeMapFilter()
+		if		 CH == (#tmp_choicesMenu - 5) then createCheckpoint()
+		elseif CH == (#tmp_choicesMenu - 4) then deleteCheckpoint()
+		elseif CH == (#tmp_choicesMenu - 3) then editCheckpoint()
+		elseif CH == (#tmp_choicesMenu - 2) then changeMapFilter()
+		elseif CH == (#tmp_choicesMenu - 1) then alert("Payback2 CHEATus, Cheat Lua Script for GameGuardian\n© 2021-2023 created by ABJ4403.\nAbout fake online script:\nThis script simulates online, with real player names, and player limit.\n\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\nCredit:\n+ Mangyu - Original script author\n+ mdp43140 - Main Contributor\n+ MisterCuteX - Mega Explosion,Respawn Hack\n+ tehtmi - unluac Creator (and decompile helper)\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX & ToxicCoder - for providing removed script through YT & MediaFire\n+ AGH - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)\n+ GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n+ JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values\n\nDISCLAIMMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.\n\nLicense:\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses") MENU()
 		elseif CH == #tmp_choicesMenu then exit()
-		elseif CH <  (#tmp_choicesMenu - 4) then tpPlayerToDest(tmp_tpCheckpoints[CH]) end
+		elseif CH <  (#tmp_choicesMenu - 5) then tpPlayerToDest(tmp_tpCheckpoints[CH]) end
 	end
 end
 
@@ -179,11 +180,12 @@ function updateCheckpointList()
 		tmp_choicesMenu[i] = i..". "..tostring(tmp_tpCheckpoints[i][5]).." ["..tmp_tpCheckpoints[i][1]..","..tmp_tpCheckpoints[i][2]..","..tmp_tpCheckpoints[i][3].."]"
 	end
 	table.append(tmp_choicesMenu,{ -- Append additional options to choicesMenu
-		"➕ Create TP Checkpoint", -- 1
-		"➖ Delete TP Checkpoint", -- 2
-		"🖊️ Edit TP Checkpoint", 	-- 3
-		"Change filter by map", -- 4
-		"__exit__",            -- 5
+		"➕ Create Checkpoint",	-- 1
+		"➖ Delete Checkpoint",	-- 2
+		"🖊️ Edit Checkpoint",		-- 3
+		"🔍️ Change filter",			-- 4
+		"❔️ __about__",					-- 5
+		"❌️ __exit__",					-- 6
 	})
 end
 
@@ -368,7 +370,7 @@ function loadConfig()
 			{75,13,203,2,"Allegro Tank"}, -- TBF quik-emart, Destra bank?, Metropolis near plains & CTS, DTown roof,
 		},
 		createCheckpointAuto=true,
-		VERSION="3.1",
+		VERSION="3.2",
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
