@@ -126,19 +126,14 @@ function MENU_settings()
 		end
 		MENU_settings()
 	elseif CH == 5 then
-		if cfg.entityAnchrSearchMethod == "holdWeapon" then CH = 1
-		elseif cfg.entityAnchrSearchMethod == "abjAutoAnchor" then CH = 2
-		elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then CH = 3 end
 		CH = gg.choice({
 			"1. Hold weapon (Hold pistol/knife. ~6 seconds)",
 			"2. Auto anchor (Hold pistol, dont shoot. Faster, rarely fails)",
 			"3. Auto anchor 2 (finds any player/ai/vehicle)",
 			"__back__",
-		},CH,f"Title_Version")
+		},cfg.entityAnchrSearchMethod,f"Title_Version")
 		if CH then
-			if CH == 1 then cfg.entityAnchrSearchMethod = "holdWeapon"
-			elseif CH == 2 then cfg.entityAnchrSearchMethod = "abjAutoAnchor"
-			elseif CH == 3 then cfg.entityAnchrSearchMethod = "abjAutoBatchAnchor2" end
+			if CH > 0 and CH < 4 then cfg.entityAnchrSearchMethod = CH end
 			MENU_settings()
 		end
 	---
@@ -149,7 +144,7 @@ function MENU_settings()
 		cfg.clearAllList=false
 		cfg.enableAutoMemRangeOpti=true
 		cfg.enableLogging=false
-		cfg.entityAnchrSearchMethod="abjAutoAnchor"
+		cfg.entityAnchrSearchMethod=2
 		cfg.Language="auto"
 		cfg.PlayerCurrentName=":Player"
 		cfg.PlayerCustomName=":CoolFoe"
@@ -1693,7 +1688,7 @@ function searchWatchdog(msg,refineVal,mmBfr)
 	memOzt[mmBfr] = t
 	return t
 end
-function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones)
+function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones,msg)
 --[[
 	This function handles memory buffer related stuff by saving previous
 	result and return that instead the next time the same search is requested.
@@ -1703,14 +1698,15 @@ function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones)
 --default configs
 	memZones = memZones or {0,-1}
 	dsrdRslts = dsrdRslts or 1
+	msg = msg and msg.."\n" or ""
 --if buffer is found
 	if memOzt[memOztName] then
 	--load previous result
-		toast('Previous result found, using previous result')
+		toast(msg..'Previous result found, using previous result')
 		gg.loadResults(memOzt[memOztName])
 	else
 	--or search new ones
-		toast('No buffer found, creating new buffer')
+		toast(msg..'No buffer found, creating new buffer')
 		gg.searchNumber(val,valTypes,nil,nil,table.unpack(memZones))
 	--optionally refine if valRefine is defined
 		if valRefine then
@@ -1761,7 +1757,7 @@ end
 function findEntityAnchr()
 	gg.setRanges(cfg.memRange.general)
 	local tmp,tmp0
-	if cfg.entityAnchrSearchMethod == "abjAutoAnchor" then
+	if cfg.entityAnchrSearchMethod == 2 then
 		toast(f"eAchA_wait")
 	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 random anchor
@@ -1795,7 +1791,7 @@ function findEntityAnchr()
 			gg.clearResults()
 			return {tmp0}
 		end
-	elseif cfg.entityAnchrSearchMethod == "holdWeapon" then
+	elseif cfg.entityAnchrSearchMethod == 1 then
 		toast(f"eAchB_hold1")
 		sleep(1e3)
 		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
@@ -1833,7 +1829,7 @@ function findEntityAnchr()
 		tmp,tmp0=nil,nil
 		gg.clearResults()
 		return (t and t[1]) and {t[1].address - 0x18} or nil
-	elseif cfg.entityAnchrSearchMethod == "abjAutoBatchAnchor2" then
+	elseif cfg.entityAnchrSearchMethod == 3 then
 		toast(f"eAchC_wait")
 	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
@@ -1850,7 +1846,7 @@ function findEntityAnchr()
 		end
 	else
 		toast(f("ErrToastNotice","invalidConf"))
-		print("[Error.InvalidConf]: Configuration value for \"cfg.entityAnchrSearchMethod\" ("..cfg.entityAnchrSearchMethod..") is invalid.\n         Possible values: abjAutoAnchor, holdWeapon, abjAutoBatchAnchor2")
+		print("[Error.InvalidConf]: Configuration value for \"cfg.entityAnchrSearchMethod\" ("..cfg.entityAnchrSearchMethod..") is invalid.\n         Change this on: Settings > Change entity anchor searching method")
 		log("Your Configuration:\n",cfg)
 	end
 end
@@ -1948,11 +1944,11 @@ function loadConfig()
 		clearAllList=false,
 		enableAutoMemRangeOpti=true,
 		enableLogging=false,
-		entityAnchrSearchMethod="abjAutoAnchor",
+		entityAnchrSearchMethod=2,
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.4"
+		VERSION="2.4.5"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
