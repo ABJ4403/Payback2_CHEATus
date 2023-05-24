@@ -52,7 +52,7 @@ function MENU_CSD()
 		"5. Explosion Power",
 		"6. Explosion Direction",
 		"7. Particle interval (Slow/Fast explosion)",
-		"8. Reflection Graphics",
+		"8. Reflective Texture",
 		"9. Colored trees",
 		"10. Autoshoot Rocket",
 		"11. Car drift",
@@ -75,7 +75,7 @@ function MENU_CSD()
 	elseif CH == 6 then cheat_explodepow()
 	elseif CH == 7 then cheat_explodedir()
 	elseif CH == 8 then cheat_prtclintrvl()
-	elseif CH == 9 then cheat_reflectiongraphics()
+	elseif CH == 9 then cheat_reflectivetexture()
 	elseif CH == 10 then cheat_coloredtree()
 	elseif CH == 11 then cheat_autoshootrocket()
 	elseif CH == 12 then cheat_cardrift()
@@ -1306,7 +1306,9 @@ function cheat_autoshootrocket()
 	elseif CH then
 	--{all,rocket,state title}
 	--about those numbers:
+	--all|rocket
 	--74?:crash
+	--754|752:default
 	--750:no reload
 	--755:c4 spam
 	--758:turret spam
@@ -1407,30 +1409,31 @@ function cheat_deleteingameplaytext()
 	end
 	toast("Gameplay texts cleared! to restore, restart the game\nPS: This might not work, idk why though..")
 end
-function cheat_reflectiongraphics()
+function cheat_reflectivetexture()
 	local CH = gg.choice({
 		"ON",
 		"OFF",
 		"__back__"
-	},nil,"Reflection graphics\nWARNING: this can cause rendering issue that requires restart to fix it\nDont forget to disable this before you get in/out-of match\ni only recommend using this in offline mode so you can easily disable the reflection graphics before getting out of match")
+	},nil,"Reflective texture\nWARNING: this can cause rendering issue that requires restart to fix it\nDont forget to disable this before you get in/out-of match\ni only recommend using this in offline mode so you can easily disable the reflective texture before getting out of match")
 	if CH == 3 then MENU()
 	elseif CH == 1 then tmp={49,1,"ON"}
 	elseif CH == 2 then tmp={1,49,"OFF"} end
 	if CH and tmp[3] then
 		gg.setRanges(gg.REGION_OTHER)
-		if not memOzt.RfTgraphics then
-			gg.searchNumber(144,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
+		if not memOzt.RfTtex then
+		--basically searching 144D;49D;50D::9
+			gg.searchNumber(144,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- Note: this was 112B (112W) when in menu, and -112B (144W) in game
 			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address + 0x8) end gg.loadResults(tmp[4]) gg.refineNumber(50)
 			tmp[4]=gg.getResults(5e3) for i=1,#tmp[4] do tmp[4][i].address = (tmp[4][i].address - 0x4) end gg.loadResults(tmp[4]) gg.refineNumber(tmp[1])
 		end
 	--specially coded for condition above
-		handleMemOzt("RfTgraphics",tmp[1],nil,gg.TYPE_DWORD,1)
+		handleMemOzt("RfTtex",tmp[1],nil,gg.TYPE_DWORD,1)
 		if gg.getResultCount() == 0 then
 			toast(f"ErrNotFound_Report")
 		else
-			memOzt.RfTgraphics[1].value = tmp[2]
-			toast("Reflection Graphics "..tmp[3])
-			gg.setValues(memOzt.RfTgraphics)
+			memOzt.RfTtex[1].value = tmp[2]
+			toast("Reflective Texture "..tmp[3])
+			gg.setValues(memOzt.RfTtex)
 		end
 	end
 	t = nil
@@ -1861,41 +1864,40 @@ function findEntityAnchr_custom(searchType)
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
 		tmp=gg.getResults(5e3) -- will be reused
 		tmp0 = table.copy(tmp) -- make a copy for 2nd searches
-		log(1,gg.getResultCount())
 
 	--search c4s control code (put to tmp)
 		for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xA4) tmp[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp) gg.refineNumber(83886336) -- 3/6 (ControlCode, uncontrolled)
-		tmp=gg.getResults(5e3)log(2,gg.getResultCount())
+		tmp=gg.getResults(5e3)
 		for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xD0) end gg.loadResults(tmp) gg.refineNumber(100)                        -- 5/6 (Health)
-		tmp=gg.getResults(5e3)log(3,gg.getResultCount())
+		tmp=gg.getResults(5e3)
 
 	--search rc car control code (put to tmp0)
 		gg.clearResults()
 		for i=1,#tmp0 do tmp0[i].address = (tmp0[i].address + 0xA4) tmp0[i].flags = gg.TYPE_DWORD end gg.loadResults(tmp0) gg.refineNumber(67109120) -- 3/6 (ControlCode, uncontrolled)
-		tmp0=gg.getResults(5e3)log(2,gg.getResultCount())
+		tmp0=gg.getResults(5e3)
 		for i=1,#tmp0 do tmp0[i].address = (tmp0[i].address - 0xD0) end gg.loadResults(tmp0) gg.refineNumber('1~30000')                        -- 5/6 (Health)
-		tmp0=gg.getResults(5e3)log(3,gg.getResultCount())
+		tmp0=gg.getResults(5e3)
 
 	--merge 2 searches and find anchor
 		table.append(tmp,tmp0)
 		for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
-		tmp=gg.getResults(5e3)log(4,gg.getResultCount())
+		tmp=gg.getResults(5e3)
 	elseif searchType == 'blownUp' then -- exploded tanks or other (persistent) vehicles
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 (random anchor)
-		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) tmp[i].flags = gg.TYPE_BYTE end gg.loadResults(tmp) gg.refineNumber(120) -- 2/6 (Shooting state, idle)
-		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) end gg.loadResults(tmp) gg.refineNumber('4~7') -- 3/6 (ControlCode, uncontrolled)
-		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC3) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber('0~101')	-- 4/6 (HoldWeapon)
-		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp) gg.refineNumber('-500~0')                        -- 5/6 (Health)
-		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
-		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) tmp[i].flags = gg.TYPE_BYTE end gg.loadResults(tmp) gg.refineNumber(120) -- 2/6 (Shooting state, idle)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) end gg.loadResults(tmp) gg.refineNumber('4~7') -- 3/6 (ControlCode, uncontrolled)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC3) tmp[i].flags = gg.TYPE_WORD end gg.loadResults(tmp) gg.refineNumber('0~101')	-- 4/6 (HoldWeapon)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x10) end gg.loadResults(tmp) gg.refineNumber('-500~0')                        -- 5/6 (Health)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)
 	elseif searchType == 'player' then
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 random anchor
-		tmp=gg.getResults(5e3)log(1,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
-		tmp=gg.getResults(5e3)log(2,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
-		tmp=gg.getResults(5e3)log(3,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
-		tmp=gg.getResults(5e3)log(4,gg.getResultCount())for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
-		tmp=gg.getResults(5e3)log(5,gg.getResultCount())for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
-		tmp=gg.getResults(5e3)log(6,gg.getResultCount())
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)
 	end
 	if gg.getResultCount() > 0 then
 		gg.clearResults()
@@ -1950,7 +1952,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.3"
+		VERSION="2.4.4"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2032,11 +2034,14 @@ end
 -- Modify gg.clearList (if enabled in config), to only remove Pb2Chts-related values
 if not cfg.clearAllList then
 	gg.clearList = function()
-		for _,v in ipairs(gg.getListItems()) do
-			if v.name and v.name:sub(0,8) == "Pb2Chts " then
-				gg.removeListItems({v})
+		local t = gg.getListItems()
+		for i=1,#t do
+			if not t[i].name or t[i].name:sub(0,8) ~= "Pb2Chts " then
+				t[i] = nil
 			end
 		end
+		gg.removeListItems(t)
+		t = nil
 	end
 end
 
@@ -2044,7 +2049,7 @@ end
 translationTable = {
 en_US={
 Automatic				 = "Automatic",
-About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
+About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nCoded for hackable build 121\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
 Credits					 = "Credits",
 Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.",
 Disclaimer			 = "Disclaimer (please read)",
@@ -2075,7 +2080,7 @@ eAchC_wait       = "Please wait, finding all entities...",
 },
 ['in']={
 Automatic				 = "Otomatis",
-About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
+About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nDibuat untuk versi build 121\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Value WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.",
 Disclaimer			 = "Disklaimer (mohon untuk dibaca)",
