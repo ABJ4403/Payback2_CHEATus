@@ -1041,22 +1041,21 @@ function cheat_runspeedmod()
 	end
 end
 function cheat_mtcScrnfx()
---TODO: update
 --Not ready to use gg.REGION_C_BSS yet especially because JokerGGS mentioned a problem with it.
 	gg.setRanges(cfg.memRange.general)
 	local CH = gg.prompt(
 	{
 		'Modify XP to (max 999999)',
-		'Modify coin to (max 30000, temporary, not recommend if you have infinite coin coz it might get reset)',
+		'Modify coin to (max 30000, temporary, not recommend if you have infinite coin coz it might get reset, not work)',
 		'Freeze XP',
 		'Freeze Coin',
 		'Skip match intro',
 		'Override current controlled player [-1;16]',
-		'Win CTS match (0:disable,-1/1 one of the teams) [-1;1]',
-		'Increase 2P Win count',
-		'Disable (some) screen effects (Shake,Red screen,Grain)',
+		'Win CTS match (0:disable,-1/1 A/B Team) [-1;1]',
+		'Increase 2P Win count (not work)',
+		'Disable (some) screen effects (Shake)',
 		'Disable timers and increase kills/score',
-		'Fix blank screen when slammed into void',
+		'Fix blank screen when slammed into void (not work)',
 	},
 	{999999,-1,true,false,false,-1,0,false,false,false,false},
 	{'number','number','checkbox','checkbox','checkbox','number','number','checkbox','checkbox','checkbox','checkbox'}
@@ -1065,44 +1064,42 @@ function cheat_mtcScrnfx()
 		tmp[1] = handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1)[1]
 		tmp[2] = handleMemOzt("matchBackendAnchor",367336,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)[1] -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
 		if tmp[1] and tmp[2] then
+		--NOTE: there is still lots of things here that is shifted around,
+		--some of the offsets must be readjusted and retested to work
 			t = {}
 			tmp[1] = tmp[1].address
 			tmp[2] = tmp[2].address
-			if CH[1] and CH[1] ~= "" and CH[1] ~= "-1" then
-				t = table.append(t,{{address=(tmp[1]-0x2E3C4),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}})
-			--t = table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [PlayerCurrentXP]"}}) build -121
+			if CH[1] and CH[1] ~= "" and CH[1] ~= "-2" then
+			--TODO: uhh can we find closer anchors? vv that is a bit too far...
+				table.append(t,{{address=(tmp[1]-0x36154),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [CurrentXP]"}})
 			end
 			if CH[2] and CH[2] ~= "" and CH[2] ~= "-1" then
-				if cfg.memRange.general == gg.REGION_C_BSS then toast("[!] There is a known bug where the game will crash for C-BSS Users, if the game does crash, do not issue any bug report, we're working on it!")gg.sleep(3e3) end
-				t = table.append(t,{{address=(tmp[1]-0x2E1C8),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}})
-			--t = table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_WORD,value=CH[2],freeze=CH[4],name="Pb2Chts [PlayerCurrentCoin]"}}) build -121
+			--TODO: not working
+			--table.append(t,{{address=(tmp[1]-0x608),flags=gg.TYPE_DWORD,value=CH[2],freeze=CH[4],name="Pb2Chts [CurrentCoin]"}})
 			end
 		--[3] Freeze XP
 		--[4] Freeze Coin
-		--TODO: 5,6,7 anchor should be 359.697D
-			if CH[5] then
-				t = table.append(t,{{address=(tmp[1]-0xD9D9B8),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
-			--t = table.append(t,{{address=(tmp[1]-0x403B78),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}}) build -121
+			if CH[5] then -- skip intro
+				table.append(t,{{address=(tmp[2]-0xC),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
 			end
-			if CH[6] and CH[6] ~= "-1" then
-			--TODO: update the anchor of this val below for build 134
-				table.append(t,{{address=(tmp[1]-0x403B54),flags=gg.TYPE_WORD,value=CH[6],name="Pb2Chts [OverrideControlledPlayer]"}})
+			if CH[6] and CH[6] ~= "-1" then -- override player
+				table.append(t,{{address=(tmp[2]+0x18),flags=gg.TYPE_WORD,value=CH[6],name="Pb2Chts [OverridePlayer]"}})
 			end
-			if CH[7] then
+			if CH[7] then -- win cts
 				if CH[7] == "-1" then -- 1
-					table.append(t,{{address=(tmp[1]-0x403A2C),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTS]"}})
+					table.append(t,{{address=(tmp[2]+0x1B4),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTSa]"}})
 				elseif CH[7] == "1" then -- 2
-					table.append(t,{{address=(tmp[1]-0x403A30),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTS]"}})
+					table.append(t,{{address=(tmp[2]+0x1B8),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTSb]"}})
 				end
 			end
 			if CH[8] then -- 2p win count
-				table.append(t,{{address=(tmp[2]-0x18),flags=gg.TYPE_WORD,value=99,freeze=true,name="Pb2Chts [2PWinCount]"}})
+				table.append(t,{{address=(tmp[2]-0x18),flags=gg.TYPE_WORD,value=99,freeze=true,name="Pb2Chts [2PWinCount]"}}) -- TODO: not work?
 			end
 			if CH[9] then -- disable scrn fx
 				table.append(t,{
-					{address=(tmp[2]+0x54),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Camshake]: Disable"},
-					{address=(tmp[2]+0x88),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [MatchFinishGrainFX]: Disable"},
-					{address=(tmp[2]+0xA8),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Redfilter]: Disable"}
+					{address=(tmp[2]+0x68),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Camshake]: Supress"},
+				--{address=(tmp[2]+0x88),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [MatchFinishGrainFX]: Disable"}, -- TODO: not work
+				--{address=(tmp[2]+0xA8),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Redfilter]: Disable"} -- TODO: not work
 				})
 			end
 			if CH[10] then -- increase score
@@ -1113,7 +1110,7 @@ function cheat_mtcScrnfx()
 				})
 			end
 			if CH[11] then -- prevent blank screen
-				table.append(t,{{address=(tmp[2]+0xF3),flags=gg.TYPE_BYTE,value=0,freeze=true,name="Pb2Chts [isScrnBlank]: No"}})
+			--table.append(t,{{address=(tmp[2]+0xF3),flags=gg.TYPE_BYTE,value=0,freeze=true,name="Pb2Chts [isScrnBlank]: No"}}) -- TODO: not work
 			end
 			gg.setValues(t)
 			gg.addListItems(t)

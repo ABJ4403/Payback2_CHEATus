@@ -1054,7 +1054,7 @@ function cheat_mtcScrnfx()
 		'Freeze Coin',
 		'Skip match intro',
 		'Override current controlled player [-1;16]',
-		'Win CTS match (0:disable,-1/1 one of the teams) [-1;1]',
+		'Win CTS match (0:disable,-1/1 A/B Team) [-1;1]',
 		'Increase 2P Win count',
 		'Disable (some) screen effects (Shake,Red screen,Grain)',
 		'Disable timers and increase kills/score',
@@ -1070,7 +1070,7 @@ function cheat_mtcScrnfx()
 			t = {}
 			tmp[1] = tmp[1].address
 			tmp[2] = tmp[2].address
-			if CH[1] and CH[1] ~= "" and CH[1] ~= "-1" then
+			if CH[1] and CH[1] ~= "" and CH[1] ~= "-2" then
 				table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [CurrentXP]"}})
 			end
 			if CH[2] and CH[2] ~= "" and CH[2] ~= "-1" then
@@ -1083,13 +1083,13 @@ function cheat_mtcScrnfx()
 				table.append(t,{{address=(tmp[2]-0xC),flags=gg.TYPE_WORD,value=0,freeze=true,name="Pb2Chts [SkipSlowAnimation]"}})
 			end
 			if CH[6] and CH[6] ~= "-1" then -- override player
-				table.append(t,{{address=(tmp[2]+0x18),flags=gg.TYPE_WORD,value=CH[6],name="Pb2Chts [OverrideControlledPlayer]"}})
+				table.append(t,{{address=(tmp[2]+0x18),flags=gg.TYPE_WORD,value=CH[6],name="Pb2Chts [OverridePlayer]"}})
 			end
 			if CH[7] then -- win cts
 				if CH[7] == "-1" then -- 1
-					table.append(t,{{address=(tmp[2]+0x140),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTS]"}})
+					table.append(t,{{address=(tmp[2]+0x140),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTSa]"}})
 				elseif CH[7] == "1" then -- 2
-					table.append(t,{{address=(tmp[2]+0x13C),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTS]"}})
+					table.append(t,{{address=(tmp[2]+0x13C),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTSb]"}})
 				end
 			end
 			if CH[8] then -- 2p win count
@@ -1097,7 +1097,7 @@ function cheat_mtcScrnfx()
 			end
 			if CH[9] then -- disable scrn fx
 				table.append(t,{
-					{address=(tmp[2]+0x54),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Camshake]: Disable"},
+					{address=(tmp[2]+0x54),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Camshake]: Supress"},
 					{address=(tmp[2]+0x88),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [MatchFinishGrainFX]: Disable"},
 					{address=(tmp[2]+0xA8),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Redfilter]: Disable"}
 				})
