@@ -5,7 +5,7 @@ local cfg_file = gg.getFile..'.conf' -- define config files
 local CH,cfg,lastCfg -- preallocate stuff for who knows...
 local f,entityTpProps
 
--- Cheat menus --
+-- Menus --
 function MENU()
 --Let the user choose stuff
 	local CH = gg.choice(tmp_choicesMenu,nil,"Pb2Chts Teleport v"..cfg.VERSION.." (debug build), by ABJ4403\nFilter by map: TODO:StringifyFilterMapInteger")
@@ -14,55 +14,32 @@ function MENU()
 		elseif CH == (#tmp_choicesMenu - 4) then deleteCheckpoint()
 		elseif CH == (#tmp_choicesMenu - 3) then editCheckpoint()
 		elseif CH == (#tmp_choicesMenu - 2) then changeMapFilter()
-		elseif CH == (#tmp_choicesMenu - 1) then alert("Payback2 CHEATus, Cheat Lua Script for GameGuardian\n© 2021-2023 created by ABJ4403.\nAbout fake online script:\nThis script simulates online, with real player names, and player limit.\n\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\nCredit:\n+ Mangyu - Original script author\n+ mdp43140 - Main Contributor\n+ MisterCuteX - Mega Explosion,Respawn Hack\n+ tehtmi - unluac Creator (and decompile helper)\n+ Crystal_Mods100x - ICE Menu\n+ Latic AX & ToxicCoder - for providing removed script through YT & MediaFire\n+ AGH - for Wall Hack,Car Health GG Values (no thanks for ridicilous encrypted script though...)\n+ GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n+ JokerGGS - for No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing GG Values\n\nDISCLAIMMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.\n\nLicense:\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses") MENU()
+		elseif CH == (#tmp_choicesMenu - 1) then gg.alert("Payback2 CHEATus, Cheat Lua Script for GameGuardian\n© 2021-2023 created by ABJ4403.\nAbout save quick teleport script:\nThis script allows you to teleport to anywhere you want, quickly and easily.\n\nThis cheat is Open-source on GitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- Payback2 v2.106.0 (partial)\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\nLicense:\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses") MENU()
 		elseif CH == #tmp_choicesMenu then exit()
 		elseif CH <  (#tmp_choicesMenu - 5) then tpPlayerToDest(tmp_tpCheckpoints[CH]) end
 	end
 end
-
--- stuff --
-function tpPlayerToDest(coords)
-	local anchAddr = findEntityAnchr()
-	if anchAddr then
-		anchAddr = anchAddr[1]
-		entityTpProps[1].address = anchAddr-0x6B0
-		entityTpProps[1].value   = coords[1]
-		entityTpProps[2].address = anchAddr-0x6AC
-		entityTpProps[2].value   = coords[2]
-		entityTpProps[3].address = anchAddr-0x6A8
-		entityTpProps[3].value   = coords[3]
-		entityTpProps[4].address = anchAddr-0x66C
-		entityTpProps[5].address = anchAddr-0x668
-		entityTpProps[6].address = anchAddr-0x664
-		entityTpProps[7].address = anchAddr-0x660
-		entityTpProps[8].address = anchAddr-0x65C
-		entityTpProps[9].address = anchAddr-0x658
-		gg.setValues(entityTpProps)
-		gg.clearResults()
-		toast("Teleported to "..coords[5].." ["..coords[1]..","..coords[2]..","..coords[3]..']!')
-	else
-		toast('Failed')
-	end
-end
 function changeMapFilter()
-	local CH = gg.choice({
-		[-2]="Show all",
-		[-1]="Uncategorized",
-		[ 0]="0. The Big Freeze",
-		[ 1]="1. Allegro City",
-		[ 2]="2. Destra City",
-		[ 3]="3. Metropolis",
-		[ 4]="4. D-Town",
-		[ 5]="5. Urban Shore",
-		[ 6]="6. House Park",
-		[ 7]="7. Freedom City",
-		[ 8]="8. Los Francos City",
-		[ 9]="9. Corona City",
-		[10]="10. Desert Outpost",
-		[11]="11. Isla Nublar",
-	},cfg.tpFilterListMap,"Choose which coordinate based on map you currently in")
-	if type(CH) == 'number' then
-		cfg.tpFilterListMap = CH
+--add additional options first
+	local filterCategories = {
+		[cfg.tpCategoryAll]="Show all",
+		[cfg.tpCategoryNone]="Uncategorized",
+	}
+--add the categories from config file + the index number
+	for i,v in pairs(cfg.tpCategory) do
+		filterCategories[i] = i..'. '..v
+	end
+--convert cfg.tpFilterList options to gg-readable option
+	local filterChoices = {}
+	for i,v in pairs(filterCategories) do -- for each filter category
+		filterChoices[i] = table.hasValue(cfg.tpFilterList,i) -- compare cfg.tpFilterList to cfg.tpCategory
+	end
+	local CH = gg.multiChoice(filterCategories,filterChoices,"Choose which coordinate based on map you currently in")
+	if type(CH) == 'table' then
+		cfg.tpFilterList = {}
+		for i,v in pairs(CH) do -- convert {1=true,2=false,3=nil,...} to {1,...}
+			if v then table.append(cfg.tpFilterList,{i}) end -- if the option was true, append it
+		end
 		filterCheckpointList()
 		MENU()
 	end
@@ -89,25 +66,7 @@ function createCheckpoint()
 			toast('Failed to find your current entity! you need to find it manually...')
 		end
 	end
-	CH = gg.prompt({
-		"X coord:",
-		"Y coord:",
-		"Z coord:",
-		"Map filter\n-1=Uncategorized\n0=The big freeze\n1=Allegro\n2=Destra\n3=Metropolis\n4=D-Town\n5=Urban shore\n6=House park\n7=Freedom city\n8=Los francos\n9=Corona\n10=Desert Outpost\n11=Isla Nublar [-1;11]",
-		"Name (optional)"
-	},
-	coords,
-	{
-		"number",
-		"number",
-		"number",
-		"number",
-		"text",
-	})
-	if CH then
-		cfg.tpCheckpoint[#cfg.tpCheckpoint+1] = CH
-		filterCheckpointList()
-	end
+	editCheckpointItem(#cfg.tpCheckpoint+1,coords)
 end
 function deleteCheckpoint()
 --Let the user choose stuff
@@ -115,7 +74,7 @@ function deleteCheckpoint()
 	for i in ipairs(cfg.tpCheckpoint) do
 		choicesMenu[i] = i..". "..tostring(cfg.tpCheckpoint[i][5]).." ["..cfg.tpCheckpoint[i][1]..","..cfg.tpCheckpoint[i][2]..","..cfg.tpCheckpoint[i][3].."]"
 	end
-	table.append(choicesMenu,{ -- TODO: Prepend tpCheckpoint to choicesMenu, but does the current implementation work though?
+	table.append(choicesMenu,{
 		"__cancel__",            -- 1
 	})
 	local CH = gg.choice(choicesMenu,nil,"Choose what checkpoint to remove")
@@ -133,33 +92,40 @@ function editCheckpoint()
 	for i in ipairs(cfg.tpCheckpoint) do
 		choicesMenu[i] = i..". "..tostring(cfg.tpCheckpoint[i][5]).." ["..cfg.tpCheckpoint[i][1]..","..cfg.tpCheckpoint[i][2]..","..cfg.tpCheckpoint[i][3].."]"
 	end
-	table.append(choicesMenu,{ -- TODO: Prepend tpCheckpoint to choicesMenu, but does the current implementation work though?
+	table.append(choicesMenu,{
 		"__cancel__",            -- 1
 	})
 	local index = gg.choice(choicesMenu,nil,"Choose what checkpoint to edit")
 	if index then
 		if index == #choicesMenu then
 		elseif index <= (#choicesMenu - 1) then
-			CH = gg.prompt({
-				"X coord:",
-				"Y coord:",
-				"Z coord:",
-				"Map filter\n-1=Uncategorized\n0=The big freeze\n1=Allegro\n2=Destra\n3=Metropolis\n4=D-Town\n5=Urban shore\n6=House park\n7=Freedom city\n8=Los francos\n9=Corona [-1;9]",
-				"Name (optional)"
-			},
-			cfg.tpCheckpoint[index],
-			{
-				"number",
-				"number",
-				"number",
-				"number",
-				"text",
-			})
-			if CH then
-				cfg.tpCheckpoint[index] = CH
-				filterCheckpointList()
-			end
+			editCheckpointItem(index,cfg.tpCheckpoint[index])
 		end
+	end
+end
+
+-- Core functions --
+function tpPlayerToDest(coords)
+	local anchAddr = findEntityAnchr()
+	if anchAddr then
+		anchAddr = anchAddr[1]
+		entityTpProps[1].address = anchAddr-0x6B0
+		entityTpProps[1].value   = coords[1]
+		entityTpProps[2].address = anchAddr-0x6AC
+		entityTpProps[2].value   = coords[2]
+		entityTpProps[3].address = anchAddr-0x6A8
+		entityTpProps[3].value   = coords[3]
+		entityTpProps[4].address = anchAddr-0x66C
+		entityTpProps[5].address = anchAddr-0x668
+		entityTpProps[6].address = anchAddr-0x664
+		entityTpProps[7].address = anchAddr-0x660
+		entityTpProps[8].address = anchAddr-0x65C
+		entityTpProps[9].address = anchAddr-0x658
+		gg.setValues(entityTpProps)
+		gg.clearResults()
+		toast(f('Teleported to %s! [%d,%d,%d]',coords[5],coords[1],coords[2],coords[3]))
+	else
+		toast('Failed')
 	end
 end
 function filterCheckpointList()
@@ -167,7 +133,7 @@ function filterCheckpointList()
 	tmp_choicesMenu = {}
 	tmp_tpCheckpoints = {}
 	for i in ipairs(cfg.tpCheckpoint) do -- loop over orig CPs
-		if cfg.tpFilterListMap == -2 or cfg.tpFilterListMap == cfg.tpCheckpoint[i][4] then -- if filter off or matches set filter
+		if table.hasValue(cfg.tpFilterList,cfg.tpCategoryAll) or table.hasValue(cfg.tpFilterList,cfg.tpCheckpoint[i][4]) then -- if filter off or matched
 			tmp_tpCheckpoints[index2] = cfg.tpCheckpoint[i] -- add it
 			index2 = index2 + 1 -- increment external index number tracker
 		end
@@ -177,7 +143,7 @@ end
 function updateCheckpointList()
 	for i in ipairs(tmp_tpCheckpoints) do -- loop over filtered CPs
 	--build choice menu options (index. Name [X,Y,Z])
-		tmp_choicesMenu[i] = i..". "..tostring(tmp_tpCheckpoints[i][5]).." ["..tmp_tpCheckpoints[i][1]..","..tmp_tpCheckpoints[i][2]..","..tmp_tpCheckpoints[i][3].."]"
+		tmp_choicesMenu[i] = f("%d. %s [%s,%s,%s]",i,tostring(tmp_tpCheckpoints[i][5]),tmp_tpCheckpoints[i][1],tmp_tpCheckpoints[i][2],tmp_tpCheckpoints[i][3])
 	end
 	table.append(tmp_choicesMenu,{ -- Append additional options to choicesMenu
 		"➕ Create Checkpoint",	-- 1
@@ -188,8 +154,35 @@ function updateCheckpointList()
 		"❌️ __exit__",					-- 6
 	})
 end
+function editCheckpointItem(index,coords)
+	local filterCategory = ""
+	for k,v in pairs(cfg.tpCategory) do filterCategory = filterCategory.."\n"..k.."="..v end
+	local CH = gg.prompt({
+		"X coord:",
+		"Y coord:",
+		"Z coord:",
+		"Map filter \n-1=Uncategorized"..filterCategory.." [-1;"..#cfg.tpCategory.."]",
+		"Name (optional)"
+	},
+	coords,
+	{
+		"number",
+		"number",
+		"number",
+		"number",
+		"text",
+	})
+	if CH then
+		cfg.tpCheckpoint[index] = CH
+		filterCheckpointList()
+	end
+end
 
 -- Helper functions --
+function table.hasValue(t,v)
+	for i = 1,#t do if t[i] == v then return true end end
+	return false
+end
 function table.tostring(t,dp)
 	local r,tv = '{\n'
 	dp = dp or 0
@@ -198,6 +191,8 @@ function table.tostring(t,dp)
 		tv = type(v)
 		if type(k) == 'string' then
 			r = r..k..' = '
+		elseif type(k) == 'number' then
+			r = r..'['..k..']='
 		end
 		if tv == 'table' then
 			r = r..table.tostring(v,dp+1)
@@ -360,17 +355,33 @@ function loadConfig()
 		memRange={
 			general = (gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
 		},
+		createCheckpointAuto=true,
 		enableAutoMemRangeOpti=true,
-		entityAnchrSearchMethod="abjAutoAnchor",
-		tpFilterListMap=-1,
+		entityAnchrSearchMethod=2,
+		tpFilterList={-2},
+		tpCategoryAll=-2,
+		tpCategoryNone=-1,
+		tpCategory={
+			[ 0]="The Big Freeze",
+			[ 1]="Allegro City",
+			[ 2]="Destra City",
+			[ 3]="Metropolis",
+			[ 4]="D-Town",
+			[ 5]="Urban Shore",
+			[ 6]="House Park",
+			[ 7]="Freedom City",
+			[ 8]="Los Francos City",
+			[ 9]="Corona City",
+			[10]="Desert Outpost",
+			[11]="Isla Nublar",
+		},
 		tpCheckpoint={
 		--These are just the examples
 			{270,7,152,7,"Freedom Helicopter"}, -- TBF near heli, Allegro wallhack, Destra wallhack, Metropolis wallhack, DTown near heli,
 			{482,7,330,7,"Freedom Tanks"}, -- TBF roadways, Allegro midways, Destra random house, Metropolis forest, DTown void,
 			{75,13,203,2,"Allegro Tank"}, -- TBF quik-emart, Destra bank?, Metropolis near plains & CTS, DTown roof,
 		},
-		createCheckpointAuto=true,
-		VERSION="3.2",
+		VERSION="3.3",
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
