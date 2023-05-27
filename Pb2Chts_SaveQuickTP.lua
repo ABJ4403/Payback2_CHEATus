@@ -1,8 +1,7 @@
--- (pre)Define local variables (can possibly improve performance according to lua-users.org wiki)
-local gg,tmp_tpCheckpoints,tmp_choicesMenu,CH = gg,{},{}
+local tmp_tpCheckpoints,tmp_choicesMenu,CH = {},{}
 gg.getFile,gg.getTargetPackage = gg.getFile():gsub("%.lua$",""),gg.getTargetPackage() -- prefetch some gg output, also strip .lua on gg.getFile
-local cfg_file = gg.getFile..'.conf' -- define config files
-local CH,cfg,lastCfg -- preallocate stuff for who knows...
+local cfg_file = gg.getFile..'.conf'
+local CH,cfg,lastCfg
 local f,entityTpProps
 
 -- Menus --
@@ -16,7 +15,7 @@ function MENU()
 		elseif CH == (#tmp_choicesMenu - 2) then changeMapFilter()
 		elseif CH == (#tmp_choicesMenu - 1) then gg.alert("Payback2 CHEATus, Cheat Lua Script for GameGuardian\n© 2021-2023 created by ABJ4403.\nAbout save quick teleport script:\nThis script allows you to teleport to anywhere you want, quickly and easily.\n\nThis cheat is Open-source on GitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- Payback2 v2.106.0 (partial)\n- GameGuardian v101.0\nThis cheat is part of FOSS (Free and Open-Source Software)\n\nLicense:\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses") MENU()
 		elseif CH == #tmp_choicesMenu then exit()
-		elseif CH <  (#tmp_choicesMenu - 5) then tpPlayerToDest(tmp_tpCheckpoints[CH]) end
+		elseif CH <	(#tmp_choicesMenu - 5) then tpPlayerToDest(tmp_tpCheckpoints[CH]) end
 	end
 end
 function changeMapFilter()
@@ -45,7 +44,7 @@ function changeMapFilter()
 	end
 end
 function createCheckpoint()
-	local coords = {0.5,9,0.5,-1,"Point "..(#cfg.tpCheckpoint+1)}
+	local coords = {9.5,6,9.5,cfg.tpCategoryNone,"Point "..(#cfg.tpCheckpoint+1)}
 	if cfg.createCheckpointAuto then
 		local anchAddr = findEntityAnchr()
 		if anchAddr then
@@ -75,7 +74,7 @@ function deleteCheckpoint()
 		choicesMenu[i] = i..". "..tostring(cfg.tpCheckpoint[i][5]).." ["..cfg.tpCheckpoint[i][1]..","..cfg.tpCheckpoint[i][2]..","..cfg.tpCheckpoint[i][3].."]"
 	end
 	table.append(choicesMenu,{
-		"__cancel__",            -- 1
+		"__cancel__",						-- 1
 	})
 	local CH = gg.choice(choicesMenu,nil,"Choose what checkpoint to remove")
 	if CH then
@@ -93,7 +92,7 @@ function editCheckpoint()
 		choicesMenu[i] = i..". "..tostring(cfg.tpCheckpoint[i][5]).." ["..cfg.tpCheckpoint[i][1]..","..cfg.tpCheckpoint[i][2]..","..cfg.tpCheckpoint[i][3].."]"
 	end
 	table.append(choicesMenu,{
-		"__cancel__",            -- 1
+		"__cancel__",						-- 1
 	})
 	local index = gg.choice(choicesMenu,nil,"Choose what checkpoint to edit")
 	if index then
@@ -110,11 +109,11 @@ function tpPlayerToDest(coords)
 	if anchAddr then
 		anchAddr = anchAddr[1]
 		entityTpProps[1].address = anchAddr-0x6B0
-		entityTpProps[1].value   = coords[1]
+		entityTpProps[1].value	 = coords[1]
 		entityTpProps[2].address = anchAddr-0x6AC
-		entityTpProps[2].value   = coords[2]
+		entityTpProps[2].value	 = coords[2]
 		entityTpProps[3].address = anchAddr-0x6A8
-		entityTpProps[3].value   = coords[3]
+		entityTpProps[3].value	 = coords[3]
 		entityTpProps[4].address = anchAddr-0x66C
 		entityTpProps[5].address = anchAddr-0x668
 		entityTpProps[6].address = anchAddr-0x664
@@ -155,13 +154,13 @@ function updateCheckpointList()
 	})
 end
 function editCheckpointItem(index,coords)
-	local filterCategory = ""
+	local filterCategory = "\n"..cfg.tpCategoryNone.."=Uncategorized"
 	for k,v in pairs(cfg.tpCategory) do filterCategory = filterCategory.."\n"..k.."="..v end
 	local CH = gg.prompt({
 		"X coord:",
 		"Y coord:",
 		"Z coord:",
-		"Map filter \n-1=Uncategorized"..filterCategory.." [-1;"..#cfg.tpCategory.."]",
+		f("Map filter%s [%s;%s]",filterCategory,cfg.tpCategoryNone,#cfg.tpCategory),
 		"Name (optional)"
 	},
 	coords,
@@ -217,11 +216,11 @@ function table.merge(...)
 	return r
 end
 function table.copy(t)
-  local t2={}
-  for k,v in pairs(t)do
-		t2[k]=type(v)=="table"and table.copy(v)or v
-  end
-  return t2
+	local t2={}
+	for k,v in pairs(t)do
+		t2[k] = type(v) == "table" and table.copy(v)or v
+	end
+	return t2
 end
 function table.append(t1,t2)
 	for i=1,#t2 do
@@ -260,26 +259,26 @@ function optimizeRange(range)
 			result[2] = math.max(result[2],t[i]['end'])
 		end
 	end
-  table.remove(range,3)
-	return next(t) and result or range -- if there {}?? on the table, return the previously given input, else return the result.
+	table.remove(range,3)
+	return next(t) and result or range
 end
 function findEntityAnchr()
 	gg.setRanges(cfg.memRange.general)
 	local tmp,tmp0
-	if cfg.entityAnchrSearchMethod == 1 then
+	if cfg.entityAnchrSearchMethod == 2 then
 		toast("Please wait... don't shoot, hold pistol 🔫")
 		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther)) -- 1/6 random anchor
-		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
-		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
-		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
-		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)																				-- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE	end gg.loadResults(tmp) gg.refineNumber(2)						-- 3/6 (ControlCode 2B)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)	-- 4/6 (HoldWeapon 0;0;13;0::W)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD	end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)
-		tmp0 = gg.getResultCount()
+		tmp0 = #tmp
 		if tmp0 > 0 then
 			if tmp0 > 1 then
 				toast(tmp0.." Duplicate results! hold knife 🔪")
-				for i=1,#tmp do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(1e3) gg.refineNumber(0) -- refine pistol
+				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(1500) gg.refineNumber(0) -- refine pistol
 				tmp=gg.getResults(1)
 				tmp0=tmp[1]and tmp[1].address-0x14 or nil -- back to anchor
 			else
@@ -289,7 +288,7 @@ function findEntityAnchr()
 			gg.clearResults()
 			return {tmp0}
 		end
-	elseif cfg.entityAnchrSearchMethod == 2 then
+	elseif cfg.entityAnchrSearchMethod == 1 then
 		toast("Hold your pistol 🔫")
 		sleep(1e3)
 		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
@@ -298,13 +297,13 @@ function findEntityAnchr()
 			tmp0 = ("%x"):format(t[i].address)
 			if not (tmp0:find('518$') or tmp0:find('d18$') or tmp0:find('604$') or tmp0:find('e04$')) then t[i] = nil end
 		end
-		tmp0 = gg.getResultCount()
+		tmp0 = #t
 		while tmp0 > 1 do
 			toast("Hold your knife 🔪")
-			sleep(2e3)
+			sleep(1e3)
 			gg.refineNumber(0)
 			t = gg.getResults(200)
-			tmp0 = gg.getResultCount()
+			tmp0 = #t
 			if tmp0 == 1 then break
 			elseif tmp0 == 0 then return
 			elseif tmp0 == 2 then
@@ -312,24 +311,24 @@ function findEntityAnchr()
 				if t[1].value == t[2].value then t = {t[1]} break end
 			end
 			toast("Hold your pistol 🔫")
-			sleep(2e3)
+			sleep(1e3)
 			gg.refineNumber(13)
 			t = gg.getResults(200)
-			tmp0 = gg.getResultCount()
+			tmp0 = #t
 			if tmp0 == 1 then break
 			elseif tmp0 == 0 then return
 			elseif tmp0 == 2 then
 				t = gg.getResults(2)
 				if t[1].value == t[2].value then t = {t[1]} break end
 			end
-			tmp0 = gg.getResultCount()
+			tmp0 = #t
 		end
 		tmp,tmp0=nil,nil
 		gg.clearResults()
-		return {t[1].address - 0x18}
+		return (t and t[1]) and {t[1].address - 0x18} or nil
 	else
 		toast("An error occured (invalidConf): Exit out of script and see print log for more details.")
-		print("[Error.InvalidConf]: Configuration value for \"cfg.entityAnchrSearchMethod\" ("..cfg.entityAnchrSearchMethod..") is invalid.\n         Possible values: 1 (abjAutoAnchor), 2 (holdWeapon)")
+		print("[Error.InvalidConf]: Configuration value for \"cfg.entityAnchrSearchMethod\" ("..cfg.entityAnchrSearchMethod..") is invalid.\n				 Possible values: 1 (abjAutoAnchor), 2 (holdWeapon)")
 	end
 end
 function exit()
@@ -381,7 +380,7 @@ function loadConfig()
 			{482,7,330,7,"Freedom Tanks"}, -- TBF roadways, Allegro midways, Destra random house, Metropolis forest, DTown void,
 			{75,13,203,2,"Allegro Tank"}, -- TBF quik-emart, Destra bank?, Metropolis near plains & CTS, DTown roof,
 		},
-		VERSION="3.3",
+		VERSION="3.4",
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -391,7 +390,7 @@ function loadConfig()
 		cfg = table.merge(cfg,cfg_load)
 		lastCfg = table.copy(cfg) -- deep-clone
 	else
-		toast("No configuration files detected, Creating new one...  💾️\nHi There! 👋️ Looks like You're new here.")
+		toast("No configuration files detected, Creating new one... 💾️\nHi There! ️Looks like you're new here 👋")
 		saveConfig()
 	end
 	cfg_load = nil
@@ -399,8 +398,8 @@ end
 function log(...)print("[Debug]",...)end
 
 -- Initialization --
+toast=function(s,f)gg.toast(s,true)end
 sleep=gg.sleep
-function toast(s,f)gg.toast(s,true)end
 f=string.format
 entityTpProps={
 	{flags=gg.TYPE_FLOAT}, -- Entity_pX
@@ -424,7 +423,6 @@ if cfg.enableAutoMemRangeOpti then
 end
 
 -- GG GUI Detection and UI Replace stuff --
-gg.clearResults()
 while true do
 	while not gg.isVisible()do sleep(100)end
 	gg.setVisible(false)
