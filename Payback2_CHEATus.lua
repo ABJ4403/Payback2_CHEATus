@@ -546,6 +546,7 @@ function cheat_pistolknockback()
 		-- | gg.REGION_ANONYMOUS
 			gg.setRanges(gg.REGION_C_ALLOC)
 			if not memOzt.PistolKnockback then
+			--basically searching ?F;1067869798D::13
 				gg.searchNumber(1067869798,gg.TYPE_DWORD)
 				tmp[1]=gg.getResults(5e3)
 				for i=1,#tmp[1] do
@@ -1049,7 +1050,7 @@ function cheat_mtcScrnfx()
 		'Freeze Coin',
 		'Skip match intro',
 		'Override current controlled player [-1;16]',
-		'Win CTS match (0:disable,-1/1 A/B Team) [-1;1]',
+		'Win team match (CTS, Gang Warfare, Conquest. A/Off/B) [-1;1]',
 		'Increase 2P Win count',
 		'Disable (some) screen effects (Shake,Red screen,Grain)',
 		'Disable timers and increase kills/score',
@@ -1059,12 +1060,13 @@ function cheat_mtcScrnfx()
 	{'number','number','checkbox','checkbox','checkbox','number','number','checkbox','checkbox','checkbox','checkbox'}
 	)
 	if CH then
-		tmp[1] = handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1)[1]
-		tmp[2] = handleMemOzt("matchBackendAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)[1] -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
-		if tmp[1] and tmp[2] then
+		handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther,"Please wait, searching... (1/2)")
+		gg.clearResults()
+		handleMemOzt("matchBackendAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther,"Please wait, searching... (2/2)") -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
+		if memOzt.xpAnchor or memOzt.matchBackendAnchor then
 			t = {}
-			tmp[1] = tmp[1].address
-			tmp[2] = tmp[2].address
+			tmp[1] = memOzt.xpAnchor[1].address
+			tmp[2] = memOzt.matchBackendAnchor[1].address
 			if CH[1] and CH[1] ~= "" and CH[1] ~= "-2" then
 				table.append(t,{{address=(tmp[1]-0x804),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [CurrentXP]"}})
 			end
@@ -1080,11 +1082,11 @@ function cheat_mtcScrnfx()
 			if CH[6] and CH[6] ~= "-1" then -- override player
 				table.append(t,{{address=(tmp[2]+0x18),flags=gg.TYPE_WORD,value=CH[6],name="Pb2Chts [OverridePlayer]"}})
 			end
-			if CH[7] then -- win cts
+			if CH[7] then -- win team match
 				if CH[7] == "-1" then -- 1
-					table.append(t,{{address=(tmp[2]+0x140),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTSa]"}})
+					table.append(t,{{address=(tmp[2]+0x140),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [TeamScoreA]"}})
 				elseif CH[7] == "1" then -- 2
-					table.append(t,{{address=(tmp[2]+0x13C),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [WinCTSb]"}})
+					table.append(t,{{address=(tmp[2]+0x13C),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [TeamScoreB]"}})
 				end
 			end
 			if CH[8] then -- 2p win count
@@ -1097,7 +1099,7 @@ function cheat_mtcScrnfx()
 					{address=(tmp[2]+0xA8),flags=gg.TYPE_DWORD,value=0,freeze=true,name="Pb2Chts [Redfilter]: Disable"}
 				})
 			end
-			if CH[10] then -- increase score
+			if CH[10] then -- disable timer & increase score
 				table.append(t,{
 					{address=(tmp[2]-0x8),flags=gg.TYPE_DWORD,value=9e7,freeze=true,name="Pb2Chts [MatchDistance]"},
 					{address=(tmp[2]+0x38),flags=gg.TYPE_DWORD,value=-1,freeze=true,name="Pb2Chts [MatchTimeout]"},
@@ -1654,7 +1656,7 @@ function table.tostring(t,dp)
 	return r..('\t'):rep(dp)..'}'
 end
 function table.merge(...)
-	local r={}
+	local r = {}
 	for _,t in ipairs{...} do
 		for k,v in pairs(t) do
 			r[k] = type(r[k]) == "table" and table.merge(r[k],v) or v
@@ -1663,11 +1665,11 @@ function table.merge(...)
 	return r
 end
 function table.copy(t)
-  local t2={}
-  for k,v in pairs(t)do
+	local t2={}
+	for k,v in pairs(t)do
 		t2[k] = type(v) == "table" and table.copy(v)or v
-  end
-  return t2
+	end
+	return t2
 end
 function table.append(t1,t2)
 	for i=1,#t2 do
@@ -1750,8 +1752,7 @@ function optimizeRange(range)
 			result[2] = math.max(result[2],t[i]['end'])
 		end
 	end
-  table.remove(range,3)
-	log("[AutoMemOpti] Reduced scanned memory zone: "..("%x"):format(range[1]):gsub("%l",string.upper).."—"..("%x"):format(range[2]):gsub("%l",string.upper).." → "..("%x"):format(result[1]):gsub("%l",string.upper).."—"..("%x"):format(result[2]):gsub("%l",string.upper))
+	table.remove(range,3)
 	return next(t) and result or range -- if there {}?? on the table, return the previously given input, else return the result.
 end
 function findEntityAnchr()
@@ -1781,7 +1782,7 @@ function findEntityAnchr()
 		if tmp0 > 0 then
 			if tmp0 > 1 then
 				toast(f("eAchA_dupe",tmp0))
-				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine pistol
+				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(1500) gg.refineNumber(0) -- refine pistol
 				tmp=gg.getResults(1)
 				tmp0=tmp[1]and tmp[1].address-0x14 or nil -- back to anchor
 			else
@@ -1948,7 +1949,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.5"
+		VERSION="2.4.6"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
