@@ -1,6 +1,6 @@
 # Payback2 CHEATus, created by ABJ4403.
 [`🇮🇩️ ReadMe Bahasa Indonesia`](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
-![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/3e9fe551-422b-4985-b006-25d04a36b7e4)
+![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/45a12f7e-6d44-4087-bb7c-4cff6bfe6031)
 Payback2_CHEATus is a GameGuardian Lua Cheat Script for Payback 2.
 Warning: The developer is now aware of hackers/cheaters and thus constantly patching things.
 This project may entering maintenance mode (no longer adding features).
@@ -22,10 +22,11 @@ still confused about these stuff? go to [`Wiki`](https://github.com/ABJ4403/Payb
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
 
 [`Report issues here`](https://github.com/ABJ4403/Payback2_CHEATus)
+[`My Telegram Group`](https://t.me/+jCgcRExlrzExZDc1)
 
 Tested on:
 - Payback2 v2.104.12.4 (build 121, offline mode only)
-- Payback2 v2.106.0 (build 138, unstable)
+- Payback2 v2.106.0 (build 138, quite stable enough, some cheats not work)
 - GameGuardian v101.0
 
 This cheat is part of FOSS (Free and Open-Source Software)
