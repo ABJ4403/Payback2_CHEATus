@@ -1058,9 +1058,9 @@ function cheat_mtcScrnfx()
 	{'number','number','checkbox','checkbox','checkbox','number','number','checkbox','checkbox','checkbox','checkbox'}
 	)
 	if CH then
-		handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1)[1]
+		handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1)
 		gg.clearResults()
-		handleMemOzt("matchBackendAnchor",367336,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)[1] -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
+		handleMemOzt("matchBackendAnchor",367336,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther) -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
 		if memOzt.xpAnchor or memOzt.matchBackendAnchor then
 		--NOTE: there is still lots of things here that is shifted around,
 		--some of the offsets must be readjusted and retested to work
@@ -1814,14 +1814,20 @@ TODO:
 			if tmp0 > 1 then
 				toast(f("eAchA_dupe",tmp0))
 				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(1500) gg.refineNumber(0) -- refine pistol
-				tmp=gg.getResults(1)
-				tmp0=tmp[1]and tmp[1].address-0x14 or nil -- back to anchor
+			--back to anchor
+				tmp=gg.getResults(2)
+				if tmp[1] then tmp[1].address = tmp[1].address - 0x14 end
+				if tmp[2] then tmp[2].address = tmp[2].address - 0x14 end
+			--if the dupes still has same value (synced), guess its on a vehicle
+				if (tmp[1] and tmp[2]) and tmp[1].value == tmp[2].value then
+					return {tmp[1].address,tmp[2].address}
+				end
+				gg.clearResults()
+				return {tmp[1] and tmp[1].address or nil} -- one result
 			else
-				tmp0=tmp[1].address
+				gg.clearResults()
+				return {tmp[1].address}
 			end
-			tmp=nil
-			gg.clearResults()
-			return {tmp0}
 		end
 	elseif cfg.entityAnchrSearchMethod == 1 then
 		toast(f"eAchB_hold1")
@@ -2105,7 +2111,7 @@ eAchC_wait       = "Please wait, finding all entities...",
 },
 ['in']={
 Automatic				 = "Otomatis",
-About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nDibuat untuk versi build 138\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4 (tidak dibuat untuk versi ini)\n- Payback2 v2.106.0\n- Payback2 v2.106.1 (beberapa tidak bisa)\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\nKalaupun skrip ini dibuat untuk build 134, kebanyakan cheat tidak bekerja.\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
+About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nDibuat untuk versi build 138\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4 (tidak dibuat untuk versi ini)\n- Payback2 v2.106.0\n- Payback2 v2.106.1 (beberapa tidak bisa)\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\nKalaupun skrip ini dibuat untuk build 138, kebanyakan cheat tidak bekerja.\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Nilai WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Nilai No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.\n• UltraProGamerz - nilai & offset GG spam tembak",
 Disclaimer			 = "Disklaimer (mohon untuk dibaca)",
