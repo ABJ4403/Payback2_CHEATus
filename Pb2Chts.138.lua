@@ -1,7 +1,7 @@
 --— local variables ——————————————--
 --- can reduce latency by couple miliseconds
 local gg,io,os = gg,io,os -- cache table query to make it faster
-gg.getFile,gg.getTargetInfo,gg.getTargetPackage,gg.getLocale = gg.getFile():gsub("%.lua$",""),gg.getTargetInfo(),gg.getTargetPackage(),gg.getLocale() -- prefetch some gg output, also strip .lua on gg.getFile
+gg.getFile,gg.getTargetInfo,gg.getLocale = gg.getFile():gsub("%.lua$",""),gg.getTargetInfo(),gg.getLocale() -- prefetch some gg output, also strip .lua on gg.getFile
 local susp_file,cfg_file = gg.getFile..'.suspend.json',gg.getFile..'.conf' -- define config and suspend files
 local tmp,memOzt,t = {},{},{} -- blank table for who knows...
 local curVal,CH,cfg,lastCfg,curr_lang,lang,translationTable -- preallocate stuff for who knows...
@@ -55,15 +55,16 @@ function MENU_CSD()
 		"8. Reflective Texture",
 		"9. Colored trees",
 		"10. Autoshoot Rocket",
-		"11. Car drift",
-		"12. Walk animation Wonkyness (visual)",
-		"13. Change Name (EXPERIMENTAL)",
-		"14. Change Name Color (EXPERIMENTAL)",
-		"15. Big body",
-		"16. Big Flamethrower (Visual item)",
-		"17. Shadows",
-		"18. Entity X-Ray (visual)",
-		"19. Delete All Names",
+		"11. Spamshoot",
+		"12. Car drift",
+		"13. Walk animation Wonkyness (visual)",
+		"14. Change Name (EXPERIMENTAL)",
+		"15. Change Name Color (EXPERIMENTAL)",
+		"16. Big body",
+		"17. Big Flamethrower (Visual item)",
+		"18. Shadows",
+		"19. Entity X-Ray (visual)",
+		"20. Delete All Names",
 		"——",
 		"__back__"
 	},nil,f"Title_Version")
@@ -78,17 +79,18 @@ function MENU_CSD()
 	elseif CH == 9 then cheat_reflectivetexture()
 	elseif CH == 10 then cheat_coloredtree()
 	elseif CH == 11 then cheat_autoshootrocket()
-	elseif CH == 12 then cheat_cardrift()
-	elseif CH == 13 then cheat_walkwonkyness()
-	elseif CH == 14 then cheat_changeplayername()
-	elseif CH == 15 then cheat_changeplayernamecolor()
-	elseif CH == 16 then cheat_bigbody()
-	elseif CH == 17 then cheat_bigflamethroweritem()
-	elseif CH == 18 then cheat_shadowfx()
-	elseif CH == 19 then cheat_plyxray()
-	elseif CH == 20 then cheat_deleteingameplaytext()
+	elseif CH == 12 then cheat_spamshoot()
+	elseif CH == 13 then cheat_cardrift()
+	elseif CH == 14 then cheat_walkwonkyness()
+	elseif CH == 15 then cheat_changeplayername()
+	elseif CH == 16 then cheat_changeplayernamecolor()
+	elseif CH == 17 then cheat_bigbody()
+	elseif CH == 18 then cheat_bigflamethroweritem()
+	elseif CH == 19 then cheat_shadowfx()
+	elseif CH == 20 then cheat_plyxray()
+	elseif CH == 21 then cheat_deleteingameplaytext()
 ---
-	elseif CH == 22 then MENU() end
+	elseif CH == 23 then MENU() end
 end
 function MENU_settings()
 	local CH = gg.choice({
@@ -1046,7 +1048,7 @@ function cheat_mtcScrnfx()
 		'Freeze Coin',
 		'Skip match intro',
 		'Override current controlled player [-1;16]',
-		'Win CTS match (0:disable,-1/1 A/B Team) [-1;1]',
+		'Win team match (CTS, Gang Warfare, Conquest. A/Off/B) [-1;1]',
 		'Increase 2P Win count (not work)',
 		'Disable (some) screen effects (Shake)',
 		'Disable timers and increase kills/score',
@@ -1056,14 +1058,15 @@ function cheat_mtcScrnfx()
 	{'number','number','checkbox','checkbox','checkbox','number','number','checkbox','checkbox','checkbox','checkbox'}
 	)
 	if CH then
-		tmp[1] = handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1)[1]
-		tmp[2] = handleMemOzt("matchBackendAnchor",367336,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)[1] -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
-		if tmp[1] and tmp[2] then
+		handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1)[1]
+		gg.clearResults()
+		handleMemOzt("matchBackendAnchor",367336,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)[1] -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
+		if memOzt.xpAnchor or memOzt.matchBackendAnchor then
 		--NOTE: there is still lots of things here that is shifted around,
 		--some of the offsets must be readjusted and retested to work
 			t = {}
-			tmp[1] = tmp[1].address
-			tmp[2] = tmp[2].address
+			tmp[1] = memOzt.xpAnchor[1].address
+			tmp[2] = memOzt.matchBackendAnchor[1].address
 			if CH[1] and CH[1] ~= "" and CH[1] ~= "-2" then
 			--TODO: uhh can we find closer anchors? vv that is a bit too far...
 				table.append(t,{{address=(tmp[1]-0x36154),flags=gg.TYPE_DWORD,value=CH[1],freeze=CH[3],name="Pb2Chts [CurrentXP]"}})
@@ -1329,6 +1332,33 @@ function cheat_autoshootrocket()
 				toast("Autoshoot rocket "..tmp[3])
 			end
 			r = nil
+		end
+	end
+end
+function cheat_spamshoot()
+	local CH,r,t = gg.choice({
+		"ON",
+		"OFF",
+		"__back__"
+	},nil,"Spam Shoot. PS:\n+ Make sure you have Autoshoot rocket v2/Rel0ad/C4 Drawing/Immortality\n+ When shooting, you might unable to move the character view")
+	if CH == 3 then MENU()
+	elseif CH then
+		if CH == 1 then tmp={true,"ON"}
+		elseif CH == 2 then tmp={false,"OFF"} end
+		if tmp then
+			gg.setRanges(cfg.memRange.cData)
+			t = handleMemOzt("nearNameAnchor",15663231,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther)
+			if t then
+				t[1].address = (t[1].address) - 0x60
+				t[1].value = 0
+				t[1].freeze = tmp[1]
+				t[1].name = "Pb2Chts [SpamShoot]"
+				gg.setValues(t)
+				gg.addListItems(t)
+				toast("Spam shoot "..tmp[2])
+			else
+				toast(f"ErrNotFound")
+			end
 		end
 	end
 end
@@ -1655,7 +1685,7 @@ function table.tostring(t,dp)
 	return r..('\t'):rep(dp)..'}'
 end
 function table.merge(...)
-	local r={}
+	local r = {}
 	for _,t in ipairs{...} do
 		for k,v in pairs(t) do
 			r[k] = type(r[k]) == "table" and table.merge(r[k],v) or v
@@ -1664,11 +1694,11 @@ function table.merge(...)
 	return r
 end
 function table.copy(t)
-  local t2={}
-  for k,v in pairs(t)do
+	local t2={}
+	for k,v in pairs(t)do
 		t2[k] = type(v) == "table" and table.copy(v)or v
-  end
-  return t2
+	end
+	return t2
 end
 function table.append(t1,t2)
 	for i=1,#t2 do
@@ -1725,8 +1755,8 @@ function optimizeRange(range)
 	This can work on every phone/enviroment/architecture (need testing)
 ]]
 	local t = {
-		table.unpack(gg.getRangesList('/data/app/'..gg.getTargetPackage..'-*/base.apk')),
-		table.unpack(gg.getRangesList('/data/app/'..gg.getTargetPackage..'-*/split_config.*.apk'))
+		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir)),
+		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"))) -- some issue: uuh doesnt work on vxposed, the APK is config.*.apk :/
 	}
 	local result = {
 		range[2],
@@ -1751,8 +1781,8 @@ function optimizeRange(range)
 			result[2] = math.max(result[2],t[i]['end'])
 		end
 	end
-  table.remove(range,3)
-	log("[AutoMemOpti] Reduced scanned memory zone: "..("%x"):format(range[1]):gsub("%l",string.upper).."—"..("%x"):format(range[2]):gsub("%l",string.upper).." → "..("%x"):format(result[1]):gsub("%l",string.upper).."—"..("%x"):format(result[2]):gsub("%l",string.upper))
+	table.remove(range,3)
+	log("[AutoMemOpti] Reduced scanned memory zone: "..("%x—%x → %x—%x"):format(range[1],range[2],result[1],result[2]):gsub("%l",string.upper))
 	return next(t) and result or range -- if there {}?? on the table, return the previously given input, else return the result.
 end
 function findEntityAnchr()
@@ -1783,7 +1813,7 @@ TODO:
 		if tmp0 > 0 then
 			if tmp0 > 1 then
 				toast(f("eAchA_dupe",tmp0))
-				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine pistol
+				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(1500) gg.refineNumber(0) -- refine pistol
 				tmp=gg.getResults(1)
 				tmp0=tmp[1]and tmp[1].address-0x14 or nil -- back to anchor
 			else
@@ -1937,7 +1967,8 @@ function loadConfig()
 			Common_RegionOther={0xB0000000,0xCFFFFFFF},
 		},
 		memRange={
-			general = (gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_OTHER)
+			cData = (gg.REGION_C_DATA | gg.REGION_OTHER),
+			general = (gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_OTHER),
 		},
 		clearAllList=false,
 		enableAutoMemRangeOpti=true,
@@ -1946,7 +1977,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.4"
+		VERSION="2.4.7"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2043,9 +2074,9 @@ end
 translationTable = {
 en_US={
 Automatic				 = "Automatic",
-About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nCoded for latest build 138\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\nEven if this script was made for build 138, most cheats doesn't work.\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
+About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nCoded for build 138\nThis cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nReport issues here: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLicense: GPLv3\nTested on:\n- Payback2 v2.104.12.4 (not work, use script that is designed for build 121)\n- Payback2 v2.106.0 (build 138)\n- Payback2 v2.106.1 (latest build 142, some things not working)\n- GameGuardian v101.0\n\nImportant PS: Some or most of the cheats fail to work on 64bit devices, or version above 2.104.12.4 (build 121)\nEven if this script was made for build 138, most cheats doesn't work.\n\nThis cheat is part of FOSS (Free and Open-Source Software)",
 Credits					 = "Credits",
-Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.",
+Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.\n• UltraProGamerz - Controllable autoshoot value & offset.",
 Disclaimer			 = "Disclaimer (please read)",
 Disclaimer_Text = "DISCLAIMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
 Exit_ThankYouMsg = "	Report a bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Discussion: at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	FAQ: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
@@ -2074,9 +2105,9 @@ eAchC_wait       = "Please wait, finding all entities...",
 },
 ['in']={
 Automatic				 = "Otomatis",
-About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nDibuat untuk versi build terbaru 138\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\nKalaupun skrip ini dibuat untuk build 134, kebanyakan cheat tidak bekerja.\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
+About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nDibuat untuk versi build 138\nCheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)\nGitHub: https://github.com/ABJ4403/Payback2_CHEATus\nLaporkan isu disini: https://github.com/ABJ4403/Payback2_CHEATus/issues\nLisensi: GPLv3\nDiuji di:\n- Payback2 v2.104.12.4 (tidak dibuat untuk versi ini)\n- Payback2 v2.106.0\n- Payback2 v2.106.1 (beberapa tidak bisa)\n- GameGuardian v101.0\n\nPesan penting: Beberapa atau kebanyakan dari cheat tidak bekerja di perangkat 64bit, atau versi diatas 2.104.12.4 (build 121)\nKalaupun skrip ini dibuat untuk build 134, kebanyakan cheat tidak bekerja.\n\nCheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)",
 Credits					 = "Kredit",
-Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Value WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Value No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.",
+Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Nilai WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Nilai No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.\n• UltraProGamerz - nilai & offset GG spam tembak",
 Disclaimer			 = "Disklaimer (mohon untuk dibaca)",
 Disclaimer_Text = "DISKLAIMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
 Exit_ThankYouMsg = "	Laporkan bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Diskusi: https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Pertanyaan yang sering ditanyakan: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
