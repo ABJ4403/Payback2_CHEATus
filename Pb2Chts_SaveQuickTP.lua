@@ -272,7 +272,7 @@ function findEntityAnchr()
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE	end gg.loadResults(tmp) gg.refineNumber(2)						-- 3/6 (ControlCode 2B)
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)	-- 4/6 (HoldWeapon 0;0;13;0::W)
 		tmp=gg.getResults(5e3)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD	end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
-		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) if tmp0:find('508$') or tmp0:find('d08$') or tmp0:find('5f4$') or tmp0:find('df4$') then tmp[i].address = (tmp[i].address - 0x8) else tmp[i] = nil end end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
+		tmp=gg.getResults(5e3)for i=1,#tmp do tmp0 = ("%x"):format(tmp[i].address) tmp[i].address = (tmp[i].address - 0x8) end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)
 		tmp0 = #tmp
 		if tmp0 > 0 then
@@ -293,10 +293,6 @@ function findEntityAnchr()
 		sleep(1e3)
 		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 		t = gg.getResults(200)
-		for i=1,#t do
-			tmp0 = ("%x"):format(t[i].address)
-			if not (tmp0:find('518$') or tmp0:find('d18$') or tmp0:find('604$') or tmp0:find('e04$')) then t[i] = nil end
-		end
 		tmp0 = #t
 		while tmp0 > 1 do
 			toast("Hold your knife 🔪")
