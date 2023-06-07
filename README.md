@@ -17,11 +17,11 @@ Thank you for everyone that helps this project going until now.
 - `🦠❌ 0-Malware` its because...
 - `💰❌ FOSS (Free & Open-source)` this cheat source code is not compiled (or even encrypted/obfuscated) so people can make sure this isnt malware.
 
-still confused about these stuff? go to [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
+still confused about these stuff? see [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
 
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
 
-[`Report issues here`](https://github.com/ABJ4403/Payback2_CHEATus)
+[`Report issues here`](https://github.com/ABJ4403/Payback2_CHEATus/issues)
 [`My Telegram Group`](https://t.me/+jCgcRExlrzExZDc1)
 
 Tested on:

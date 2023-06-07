@@ -3,10 +3,10 @@
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/45a12f7e-6d44-4087-bb7c-4cff6bfe6031)
 Payback2_CHEATus adalah Skrip cheat Lua GameGuardian untuk Payback 2.
 Perhatian: Developer sekarang menyadari banyaknya cheater dan terus menambal kode game.
-Project ini kemungkinan akan memasuki mode perawatan (tidak lagi menambahkan fitur).
+Projek ini kemungkinan akan memasuki mode perawatan (tidak lagi menambahkan fitur).
 Kalau bisa, hanya gunakan skrip ini di mode offline,
 JANGAN menggunakan ini di mode online!
-Terima kasih ke semuanya untuk membantu projek ini sampai sekarang.
+Terima kasih semuanya yang telah membantu projek ini sampai sekarang.
 
 ## Fitur
 - `💻🤝📱 Kompatibilitas lebih baik` (Root/VM, CBSS(todo)/Anonymous/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash. UPDATE: perangkat yang biasa menggunakan CBSS/Anonymous mungkin mengalami masalah dengan beberapa cheat value tidak ditemukan, walaupun tidak membuat skrip galat).
@@ -17,11 +17,11 @@ Terima kasih ke semuanya untuk membantu projek ini sampai sekarang.
 - `🦠❌ 0-Malware` itu karena...
 - `💰❌ FOSS (Gratis & bersumber-terbuka)` sumber kode cheat ini tidak dicompile (atau bahkan dienkripsi/obfuscate) jadi orang lain bisa memastikan bahwa ini bukan malware.
 
-Masih bingung? menuju ke [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
+Masih bingung? lihat bagian [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
 
 Cheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)
 
-[`Laporkan isu disini`](https://github.com/ABJ4403/Payback2_CHEATus)
+[`Laporkan isu disini`](https://github.com/ABJ4403/Payback2_CHEATus/issues)
 [`Grup Telegram Saya`](https://t.me/+jCgcRExlrzExZDc1)
 
 Diuji di:
