@@ -11,7 +11,7 @@ local cfg = {
 	},
 	enableLogging=true,
 	entityAnchrSearchMethod=2,
-	VERSION="1.0"
+	VERSION="1.1"
 }
 
 
@@ -125,19 +125,19 @@ function findEntityAnchr()
 			elseif tmp0 == 0 then return
 			elseif tmp0 == 2 then
 				t = gg.getResults(2)
-				if t[1].value == t[2].value then t = {t[1]} break end
+				if t[1].value == t[2].value then break end
 			end
 			toast("Hold pistol")
 			sleep(2e3)
 			gg.refineNumber(13)
 			t = gg.getResults(200)
 			tmp0 = #t
-			logs=logs.."\n[i] B: "..tmp0
+			logs=logs.."\n[i] A: "..tmp0
 			if tmp0 == 1 then break
 			elseif tmp0 == 0 then return
 			elseif tmp0 == 2 then
 				t = gg.getResults(2)
-				if t[1].value == t[2].value then t = {t[1]} break end
+				if t[1].value == t[2].value then break end
 			end
 			tmp0 = #t
 		end
@@ -192,9 +192,7 @@ DATA = [==[[+] --- Beginning of bug report %s ---
 
 [i] Output of gg.getTargetInfo: %s
 
-[i] Output of ranges for %s (base.apk): %s
-
-[i] Output of ranges for %s (split_config.*.apk): %s
+[i] Output of ranges for %s (*.apk): %s
 
 [i] Result of finding entity anchor with method "abjAutoAnchor": %s
 
@@ -233,7 +231,7 @@ gg.getTargetInfo.uid = nil
 gg.getTargetInfo.pid = nil
 
 
-io.open(gg.getFile.."_report.json","w"):write(f(
+io.open("Pb2Chts_report.json","w"):write(f(
 	DATA,
 	os.date("%d/%m/%y - %T.%s"),
 	cfg.VERSION,
@@ -243,8 +241,7 @@ io.open(gg.getFile.."_report.json","w"):write(f(
 	gg.getTargetInfo.RSS/1e3,
 	f("%x—%x → %x—%x",cfg.memZones.c2[1],cfg.memZones.c2[2],cfg.memZones.c3[1],cfg.memZones.c3[2]),
 	table.tostring(gg.getTargetInfo),
-	gg.getTargetInfo.sourceDir,table.tostring(gg.getRangesList(gg.getTargetInfo.sourceDir)),
-	gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"),table.tostring(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"))),
+	gg.getTargetInfo.sourceDir:gsub("base%.apk$","*.apk"),table.tostring(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","*.apk"))),
 	table.tostring(tmp_achr1),
 	table.tostring(tmp_achr2),
 	logs,
