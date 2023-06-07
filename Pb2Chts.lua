@@ -1084,9 +1084,9 @@ function cheat_mtcScrnfx()
 			end
 			if CH[7] then -- win team match
 				if CH[7] == "-1" then -- 1
-					table.append(t,{{address=(tmp[2]+0x140),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [TeamScoreA]"}})
+					table.append(t,{{address=(tmp[2]+0x1B4),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [TeamScoreA]"}})
 				elseif CH[7] == "1" then -- 2
-					table.append(t,{{address=(tmp[2]+0x13C),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [TeamScoreB]"}})
+					table.append(t,{{address=(tmp[2]+0x1B8),flags=gg.TYPE_WORD,value=999,freeze=true,name="Pb2Chts [TeamScoreB]"}})
 				end
 			end
 			if CH[8] then -- 2p win count
@@ -1233,8 +1233,8 @@ function cheat_walkwonkyness()
 	gg.setRanges(gg.REGION_CODE_APP) -- PS: 0.00999999978 > 0.3 for new version
 	if CH == 3 then MENU()
 	elseif CH == 1 then
-		gg.editAll(.004,gg.TYPE_FLOAT)
 		handleMemOzt("walkwonkyness","0~1;.3::5",nil,gg.TYPE_FLOAT,1)
+		gg.editAll(.004,gg.TYPE_FLOAT)
 		toast("Walk Wonkyness Default")
 	elseif CH == 2 then
 		handleMemOzt("walkwonkyness",".004;.3::5",nil,gg.TYPE_FLOAT,1)
