@@ -74,7 +74,6 @@ TODO:
 	toast("Finished, now you can resume the game to enjoy online-like experience!")
 end
 
--- ANTI UNLUCK 69 CHUNK --
 function changeAllAiName()
 	gg.setRanges(cfg.memRange.general)
 	local randomFakePlayerDataIndexes = genUniqueRandomNumber(#cfg.botsData,1,#cfg.fakePlayerData)
@@ -84,10 +83,9 @@ function changeAllAiName()
 end
 function modifyMatch()
 	gg.clearResults()
--- ANTI UNLUCK 69 CHUNK
-	handleMemOzt("matchBackendAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther,"Please wait... this might take a while... (1/2)\nMake sure you're on: Main Menu > Play > Custom, be ready to press play")
+	handleMemOzt("matchBackendAnchor",367336,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther,"Please wait... this might take a while... (1/2)\nMake sure you're on: Main Menu > Play > Custom, be ready to press play")
 	gg.clearResults()
-	handleMemOzt("xpAnchor",1217115234,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther,"Please wait... this might take a while... (1.5/2)") -- only findable on main menu
+	handleMemOzt("xpAnchor",1014817001,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther,"Please wait... this might take a while... (1.5/2)") -- only findable on main menu
 	if not memOzt.xpAnchor then
 	--This value changes based on the map and if the player is on main menu or not
 	--handleMemOzt("xpAnchor",1217639095,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther,"Please wait... this might take a while... (1.8/2)")
@@ -97,6 +95,7 @@ function modifyMatch()
 	--end
 	end
 	gg.clearResults()
+--TODO
 	local xpAchr = memOzt.xpAnchor[1].address
 	local mtcAchr = memOzt.matchBackendAnchor[1].address
 	local t = {
@@ -114,16 +113,16 @@ function modifyMatch()
 	--{address=xpAchr+0xF,value=,freeze=true,flags=gg.TYPE_BYTE,name="Pb2Chts []"},
 		{address=xpAchr+0xFC,value=math.random(0,1),freeze=true,flags=gg.TYPE_BYTE,name="Pb2Chts [RaceReverse]"},
 	}
-	gg.setValues(t)
-	gg.addListItems(t)
+--gg.setValues(t)
+--gg.addListItems(t)
 
 --Now user should be on pause menu, ask them to quit manually (as for now, i dont find the quit value)
 	toast("Chosen match: "..t[1].value..", mode: "..t[2].value.."\nNow click Play!\nTime limit: 3 seconds")
 	gg.sleep(3e3)
-
-	gg.setValues({
-		{address=mtcAchr-0x34,value=1,flags=gg.TYPE_BYTE,name="Pb2Chts [Pause]"}
-	})
+	--TODO
+	--gg.setValues({
+		--{address=mtcAchr-0x34,value=1,flags=gg.TYPE_BYTE,name="Pb2Chts [Pause]"}
+	--})
 end
 function findAndChangeName(from,to)
 	local memOztIndex = "playerName_"..from
@@ -151,28 +150,38 @@ cfg = {
 	memRange={
 		general = gg.REGION_OTHER
 	},
-	VERSION="0.1",
+	VERSION="0.2",
 	fakePlayerData = {
 --updated: 09/06/23
 --pro/active/legend/reputable players
 	--{name="AyamGGoreng",xp=49230}, -- me now (btw that XP was legit, but outdated info, just like the rest of these below)
+		{name="A1ej4ndro48",xp=40569},
 		{name="AfricanboyKenya",xp=39074},
 		{name="Africanboytanzania",xp=55656},
-		{name="AjjuSaysFukU",xp=127461}, -- ??
+		{name="AjjuSaysFukU",xp=208630},
+		{name="AnnihilatorIsHere",xp=46751},
 		{name="AwesomeMedicYT",xp=999999},
-		{name="BHOOOOOOOOOOTT",xp=32016},
+		{name="BHOOOOOOOOOOTT",xp=35295},
 		{name="BlackCobraYT",xp=126250},
+		{name="CoolFoe64188",xp=26039},
+		{name="cowjazz",xp=478705},
 		{name="doanh20cm",xp=25540},
 		{name="DominicTorretoPro",xp=32997},
+		{name="FootBallerNITT",xp=96161},
 		{name="G1adi4tor48",xp=289702},
 		{name="GameKingYT",xp=22828},
 		{name="GBxBiyaKhan",xp=19183},
+		{name="GrimLabradoodle50495",xp=13898},
 		{name="hacker666argentina",xp=74543},
-		{name="HalfwayEnforcement34",xp=24455},
+		{name="HalfwayEnforcement34",xp=25221},
 		{name="Harshitpooled",xp=37482},
+		{name="jerrygultomm97",xp=26094},
 		{name="Jun1i4",xp=30000}, -- ??
+		{name="karthik7cricket",xp=21421},
+		{name="karthikrao4572",xp=24645},
 		{name="Kenyanicon047",xp=26078},
 		{name="KeralaTigerYT",xp=16458},
+		{name="KHIL(A^o)Di17",xp=22501},
 		{name="KILLINGRACER19",xp=22501},
 		{name="Lifepooled",xp=23382},
 		{name="Lucifer100995",xp=45983},
@@ -180,22 +189,31 @@ cfg = {
 		{name="MarcosAcre789YT",xp=289702},
 		{name="MAYANKKKKKKKKKKK",xp=83048},
 		{name="MichaelCasasYT",xp=21588},
-		{name="M.Nikkor",xp=218948}, -- ??
-		{name="panitiakiamat678",xp=74188},
-		{name="panitiakiamat678",xp=74568},
+		{name="M.Nikkor",xp=116498},
+		{name="Oo2o",xp=31382},
+		{name="OnlyPB2p",xp=28499},
+		{name="panitiakiamat678",xp=75801},
+		{name="PassableScramble12",xp=15929},
 		{name="paybackman",xp=17021},
+		{name="Player_4770344783",xp=7274},
 		{name="premkmr39",xp=33555},
-		{name="PriyanshuDhiman",xp=66469},
-		{name="PSArmy",xp=2487},
+		{name="PrithviSharma14",xp=15912},
+		{name="PriyanshuDhiman",xp=67780},
 		{name="PugGTI",xp=15512},
 		{name="PurposiveSupporter27",xp=29824},
-		{name="RoCkpawa19",xp=75900},
+		{name="PurposiveSupporter27",xp=41280},
+		{name="Rebel19981004",xp=15082},
+		{name="RoCkpawa19",xp=76244},
 		{name="ROLEX7",xp=26226},
 		{name="SharpestPackage32",xp=32696},
 		{name="SynHaxStep",xp=126074},
+		{name="TangibleFill5",xp=53548},
 		{name="TejbirSingh2006",xp=23188},
+		{name="TeologicalFear20",xp=24000},
 		{name="Term1na8or",xp=18095},
-		{name="THEXDESMOND",xp=11751},
+		{name="TheTenRings",xp=42275},
+		{name="THEXDESMOND",xp=14673},
+		{name="TrippingCapybara6065",xp=65666},
 		{name="Villain1818",xp=40816},
 		{name="WhiteLegends1333",xp=28142},
 		{name="xDontTeachMex",xp=21297},
@@ -203,31 +221,70 @@ cfg = {
 --generic/inactive players
 		{name="0nePieCe009",xp=10138},
 		{name="13Punjab13",xp=17892},
+		{name="9MASHESHNAVGIRE9",xp=6088},
 		{name="AgentVirYT",xp=8683},
 		{name="Alien risk",xp=1480},
+		{name="AverageLiking19",xp=18545},
+		{name="ayush27060",xp=2714},
 		{name="best1king1best",xp=828},
-		{name="CoolFoe64188",xp=26039},
+		{name="brokebrian",xp=6192},
+		{name="CasualClock15",xp=10039},
+		{name="CompulsorySelf32",xp=8782},
+		{name="ControllableDeck16",xp=10965},
+		{name="dickgraysonrobin1996",xp=11326},
 		{name="DurableAppelation42",xp=13245},
+		{name="ElusiveExpectation37",xp=12867},
+		{name="Excalibrator",xp=16159},
+		{name="FabledDecendent28",xp=4433},
 		{name="FantasticalShake11",xp=661},
+		{name="GearShifters127",xp=2000},
 		{name="fifteenthdelay62",xp=5837},
 		{name="Hazal1profighterYT",xp=3191},
+		{name="HieseongChoi",xp=4934},
+		{name="IcedShrine35",xp=10877},
+		{name="imnabeelansari",xp=20292},
 		{name="IndonesianBruh9",xp=985},
 		{name="InnerDiginity",xp=7937},
+		{name="IzyanFarhanKhan2",xp=21810},
+		{name="KeenerFabrication10",xp=2260},
+		{name="Largejellyfish1597",xp=46732},
+		{name="LaverYT9283",xp=18959},
+		{name="LOUDSPARKRDS",xp=5936},
+		{name="Manrajveer",xp=1713},
+		{name="ModernFairy48",xp=1636},
 		{name="Mrkokachi",xp=1719},
 		{name="Nasirgamer99",xp=2437},
 		{name="NoobRedTeam",xp=4049},
+		{name="ObsessiveLung20",xp=19429},
+		{name="PlaidHighlander24044",xp=9499},
+		{name="pranayshetty0205",xp=7334},
+		{name="PresentViolet246",xp=16000},
+		{name="PSArmy",xp=2487},
+		{name="Rajprithvi367",xp=20648},
 		{name="RegalLeopard87",xp=7713},
+		{name="rehaanovi?",xp=11566},
 		{name="ReverentialCup31",xp=1803},
+		{name="ScarySpot26",xp=5722},
+		{name="Shivamjustyouaregood",xp=8899},
 		{name="Silly Wyvern 844",xp=11805},
 		{name="summitmalya5",xp=1124},
+		{name="Surjeet2207",xp=9121},
+		{name="ThirteenthGarrison33",xp=7310},
+		{name="TidalSauce30",xp=10000},
 		{name="Toufiq?",xp=1646},
+		{name="UnrulyComputer45",xp=7889},
+		{name="VanquishingDrawing37",xp=5040},
+		{name="VinDieselmax",xp=1186},
 		{name="VividWidth49",xp=948},
 		{name="XxDRAGONERPOWERxX",xp=8573},
 		{name="Yooooooooooooo002",xp=16548},
 
 --known cheaters hehe
 	--{name="AyamGGoreng",xp=999999}, -- okay that was old times to be honest, im no longer cheating (kind of, what i mean by that is im no longer stealing wons/XP, and killing innocent players), its just boring and no longer possible in new version
+	--{name="Ayamggoreng",xp=8714}, -- someone tries to copy me, but also unfortunately steal play game game too that way :/
+		{name="???",xp=177990},
 		{name="Damian406YT",xp=999999},
+		{name="DominicPietersz",xp=999999},
 	--{name="GameReaper46963",xp=999999}, -- this was nonexistent, i made up that name to test things out
 		{name="GamerWTF",xp=999999},
 		{name="[({HYDRA})]",xp=999999},
@@ -236,7 +293,11 @@ cfg = {
 		{name="KsFahim888",xp=999999},
 		{name="marcciblackk",xp=999999},
 		{name="MrSailorWTF",xp=999999},
+		{name="RBLegendBlackCobraYT",xp=999999},
+		{name="Red?legend",xp=999999},
 		{name="XxGodNightshadeYTxXD",xp=978857},
+		{name="YourFvckinLOSER",xp=3916},
+		{name="YourFvckinGirLOSER",xp=999999},
 	},
 	botsData = {
 		{name="Biggs"},
