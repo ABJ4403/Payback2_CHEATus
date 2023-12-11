@@ -1,7 +1,7 @@
 # Payback2 CHEATus, dibuat oleh ABJ4403.
 [`🇺🇸️ ReadMe English`](https://github.com/ABJ4403/Payback2_CHEATus)
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/45a12f7e-6d44-4087-bb7c-4cff6bfe6031)
-Payback2_CHEATus adalah Skrip cheat Lua GameGuardian untuk Payback 2.
+Payback2_CHEATus adalah Skrip cheat Lua GameGuardian untuk Payback 2.<br><br>
 Perhatian: Developer sekarang menyadari banyaknya cheater dan terus menambal kode game.
 Projek ini kemungkinan akan memasuki mode perawatan (tidak lagi menambahkan fitur).
 Kalau bisa, hanya gunakan skrip ini di mode offline,
@@ -15,18 +15,18 @@ Terima kasih semuanya yang telah membantu projek ini sampai sekarang.
 - `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memori (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB, dioptimalkan untuk zona memori OTHER/Anonymous)))
 - `📈️ Memoisasi Memori` (fitur teknikal yang mempercepat pencarian pada area yang tidak selalu berubah).
 - `🦠❌ 0-Malware` itu karena...
-- `💰❌ FOSS (Gratis & bersumber-terbuka)` sumber kode cheat ini tidak dicompile (atau bahkan dienkripsi/obfuscate) jadi orang lain bisa memastikan bahwa ini bukan malware.
+- `💰❌ FOSS (Gratis & sumber-terbuka)` sumber kode cheat ini tidak dicompile (atau bahkan dienkripsi/obfuscate) jadi orang lain bisa memastikan bahwa ini bukan malware.
 
 Masih bingung? lihat bagian [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki)
 
-Cheat ini bersumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)
+Cheat ini sumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)
 
 [`Laporkan isu disini`](https://github.com/ABJ4403/Payback2_CHEATus/issues)
 [`Grup Telegram Saya`](https://t.me/+jCgcRExlrzExZDc1)
 
 Diuji di:
 - Payback2 v2.104.12.4 (build 121, hanya mode offline)
-- Payback2 v2.106.0 (build 138, sudah cukup stabil, beberapa cheat tidak bekerja)
+- Payback2 v2.106.0 (build 138)
 - GameGuardian v101.0
 
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
