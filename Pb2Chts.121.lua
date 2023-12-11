@@ -397,8 +397,8 @@ function cheat_godmode(CH,anchor)
 	end
 	-- [17]
 	-- [18]
-	if CH[19] or CH[1] then table.append(t,{ -- Veichle jet
-		{address=anchor-0x1AC,flags=gg.TYPE_WORD,value=1,freeze=true,name="Pb2Chts [Enable jet]"},
+	if CH[19] or CH[1] then table.append(t,{ -- Vehicle jet
+		{address=anchor-0x1AC,flags=gg.TYPE_WORD,value=1,freeze=true,name="Pb2Chts [VehicleJet]"},
 	})
 	end
 	if CH[20] or CH[1] then table.append(t,{ -- Car speed
@@ -414,7 +414,7 @@ function cheat_godmode(CH,anchor)
 	})
 	end
 	if CH[22] or CH[1] then table.append(t,{ -- Disable vehicle noise
-		{address=anchor+0xDD,flags=gg.TYPE_BYTE,value=-1,freeze=true,name="Pb2Chts [Noise]: Disable"},
+		{address=anchor+0xDD,flags=gg.TYPE_BYTE,value=-1,freeze=true,name="Pb2Chts [VehicleNoise]"},
 	})
 	end
 	-- [23]
@@ -780,6 +780,7 @@ function cheat_noblastdamage()
 			if not memOzt.NoBlastDamage then
 				gg.searchNumber(2e9,gg.TYPE_FLOAT)
 				tmp=gg.getResults(1)
+			--TODO - BUG: on Other 64bit devicee: it will not found and crash
 				tmp[1].address = tmp[1].address - 0x4
 				gg.loadResults(tmp)
 				memOzt.NoBlastDamage = gg.getResults(1)
@@ -804,7 +805,7 @@ function cheat_floodspawn()
 		"Activate",
 		"Activate (Clear buffer)",
 		"Activate v2 (edit-all values)",
-		"Clear memory buffer",
+		"Clear buffer",
 		"Back"
 	},nil,"Floodspawn")
 	if CH then
@@ -818,7 +819,7 @@ function cheat_floodspawn()
 
 		--Begin search respawn anchors and store its result in t var
 			if CH == 1 or CH == 2 then -- one entity
-				toast("Please wait... after the search is done, you should get automatically respawned")
+				toast("Please wait... you should get automatically respawned")
 				tmp[1] = handleMemOzt("matchBackendAnchor",359697,nil,gg.TYPE_DWORD,1,cfg.memZones.Common_RegionOther) -- used for auto-respawn. matchBackendAnchor is temporary name and accelerate search
 				tmp[1] = (tmp[1][1]) and tmp[1][1].address or nil -- grab address
 				gg.clearResults()
@@ -851,26 +852,31 @@ function cheat_floodspawn()
 
 		--if found
 			if gg.getResultCount() > 0 then
+				-- grab current team
+				gg.loadResults({{address=t[1].address - 0x3C,flags=gg.TYPE_DWORD}})
+				local currentTeam = gg.getResults(1)[1].value
+				gg.clearResults() -- get rid of temporary trash after used
+				-- ask user what to do next
 				CH = gg.prompt({
-					"RC Car Spam","Increase score (client-side, wins Brawl&Kingpin)",
-					"Swag Delivery no timer","Lock entity ID (prevents player takeover)",
+					"RC Car Spam","High score (client-side, wins Brawl&Kingpin)",
+					"Swag Delivery no timer","Lock entity ID (prevents player takeover, can cause crash)",
 					"Disable AI & respawn","Win Race/Sprint/Knockout",
-					"Respawn duration (in seconds)\n0:No duration\n-1:Floodspawn off\n\nWARNING:\n- DONT USE THIS TO HARM OTHER PLAYERS!\n- THIS CHEAT IS TECHINCALLY POWERFUL, BECAUSE IT INCREASE HOST LATENCY AND LAG PLAYERS. ONLY USE IT OFFLINE!!\n- if you use this for race, consider lowering your freeze range to ~40.000 if after reaching checkpoint wont move to next checkpoint. [-1;20]",
+					"Switch team (-1:Don't change team) [-1;1]","Respawn duration (in seconds)\n0:Infinite\n-1:Off\n\nWARN:\n- Dont use this to harm other players!\n- This cheat increases latency & lag players. Only use offline! [-1;10]",
 				},{
 					true,false,
 					false,false,
 					false,true,
-					-1,
+					currentTeam,-1,
 				},{
 					"checkbox","checkbox",
 					"checkbox","checkbox",
 					"checkbox","checkbox",
-					"number",
+					"number","number",
 				})
 				if CH then
 				--2nd table that dont affected by timer and crap
 					local ta = {}
-				--prepare respawn/rccarspam/winbrawl values
+				--prepare respawn/rccarspam/winbrawl/team values
 					for i=1,#t do
 						t[i].value = 52428801
 						t[i].freeze = true
@@ -928,8 +934,17 @@ function cheat_floodspawn()
 							}
 						})
 						end
+						if CH[7] ~= -1 then table.append(ta,{ -- switch team (especially CTS, others untested tho)
+							{
+								address = t[i].address - 0x3C,
+								flags = gg.TYPE_DWORD,
+								value = CH[7],
+								name = "Pb2Chts [CurrentMatchTeam]"
+							}
+						})
+						end
 					end
-				--rc spam
+				--rc spam (1 player only :/)
 					if CH[1] then
 						table.append(ta,{{
 							address = t[1].address - 0xE,
@@ -940,7 +955,7 @@ function cheat_floodspawn()
 						}})
 					end
 				--lock entity id (only if floodspawn not used, using both WILL CRASH the game due to buffer-overflow)
-					if CH[4] and CH[7] == "-1" then
+					if CH[4] and CH[8] == "-1" then
 					--fetch current entity id
 						gg.loadResults({{address=t[1].address - 0x10,flags=gg.TYPE_WORD}})
 					--and apply
@@ -953,9 +968,8 @@ function cheat_floodspawn()
 						}})
 						gg.clearResults() -- get rid of temporary trash after used
 					end
-
-				--since the only thing required in CH is only the 1st option, change the whole table to that instead
-					CH = CH[7]
+				--next codes only uses respawn duration val
+					CH = CH[8]
 				--set other stuff if user ticked those options
 					if ta[1] then
 						gg.setValues(ta)
@@ -967,10 +981,10 @@ function cheat_floodspawn()
 						gg.setValues(t)
 						gg.addListItems(t)
 					end
-				--if no duration
+				--if no duration, turn on forever
 					if CH == "0" then
 						toast("Flood Respawn ON\nRemember to turn off again by using \"Clear list items\" button in settings")
-				--if not disabled
+				--if not disabled, turn on and off after defined seconds
 					elseif CH ~= "-1" then
 						toast("Flood Respawn ON for "..CH.." seconds, click the gg icon to disable")
 					--Way to sleep for a long time but cancellable by user too, which is great
@@ -1716,7 +1730,7 @@ function searchWatchdog(msg,refineVal,mmBfr)
 	until gg.isVisible() or gg.getResultCount() > 0
 	gg.setVisible(false)
 	t = gg.getResults(1)
-	memOzt[mmBfr] = t
+	if mmBfr then memOzt[mmBfr] = t end
 	return t
 end
 function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones,msg)
@@ -1750,6 +1764,7 @@ function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones,msg)
 	return gg.getResults(dsrdRslts)
 end
 function optimizeRange(range)
+-- !! warning: you cant optimize memory region for Anonymous
 --[[
 	This optimizes used memory range automatically without using the config thing
 	This can work on every phone/enviroment/architecture (need testing)
@@ -1979,7 +1994,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.7"
+		VERSION="2.4.8"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2080,10 +2095,10 @@ About_Text			 = "Payback2 CHEATus, created by ABJ4403.\nCoded for hackable build
 Credits					 = "Credits",
 Credits_Text		 = "Credit:\n• mdp43140 - Main Contributor\n• Mangyu - Original inspiration\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - unluac Creator (and decompile helper)\n• Crystal_Mods100x - ICE Menu\n• Latic AX & ToxicCoder - providing removed script via YT & MediaFire\n• AGH - Wall Hack,Car Health GG Values\n• GKTV - PB2 GG script (wall hack,big body,colored tree,big flamethower item,shadow,esp)\n• XxGabriel5HRxX - Car wheel height and acceleration GG Offsets\n• JokerGGS - No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4,Autoshoot rocket Drawing GG Values\n• antonyROOTlegendMAXx - Transparent vehicle GG Offsets.\n• MinFRE - 6 star police GG Offsets.\n• UltraProGamerz - Controllable autoshoot value & offset.",
 Disclaimer			 = "Disclaimer (please read)",
-Disclaimer_Text = "DISCLAIMER:\n	Please DO NOT misuse the script to harm other Payback2 players.\n	I'm NOT RESPONSIBLE for your action with using this script.\n	Remember to keep your patience out of other players.\n	i recommend ONLY using this script in offline mode.\n	I made this because no one would share their cheat script.",
+Disclaimer_Text  = "DISCLAIMER:\n	Please DO NOT abuse this script with the intent to harm fellow Payback2 players.\n	I cannot be held accountable for any actions you take while using this script.\n	Always be considerate of other players' experiences and avoid causing disruptions.\n	I strongly advise using this script exclusively in offline mode.\n	I developed this script due to the lack of available cheat scripts shared by others.",
 Exit_ThankYouMsg = "	Report a bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Discussion: at https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	FAQ: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
 License					 = "License",
-License_Text		 = "Payback2 CHEATus, Cheat Lua Script for GameGuardian\n© 2021-2023 ABJ4403\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.	If not, see https://gnu.org/licenses",
+License_Text		 = "Payback2 CHEATus is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\nPayback2 CHEATus is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with Payback2 CHEATus.	If not, see https://gnu.org/licenses",
 Settings				 = "Settings",
 Suspend					 = "Suspend",
 Suspend_Detected = "Session file detected, continuing from suspend...",
@@ -2093,7 +2108,7 @@ ErrToastNotice = "An error occurred (%s): Exit out of script and see print log f
 ErrNotFound		 = "Can't find the specific set of number",
 ErrNotFound_Report = "Can't find the specific set of number, report this issue on my GitHub page: https://github.com/ABJ4403/Payback2_CHEATus/issues",
 Cheat_WallHack   = "Wall Hack",
-Cheat_WallHack_Notice = "Warn:\n- Careful w/ holes behind walls\n- using the GKTV wallhack is recommended cause its wonky physics can prevent helicopter from falling",
+Cheat_WallHack_Notice = "Warning: Some walls didn't have a floor",
 Cheat_C4AutoRig  = "C4 auto-trigger",
 Cheat_GodModes   = "God Modes",
 Cheat_GodModes_Notice = "WARN: DON'T USE THIS TO HARM INNOCENT PLAYERS IN ANY WAY!!",
@@ -2111,20 +2126,20 @@ About_Text			 = "Payback2 CHEATus, dibuat oleh ABJ4403.\nDibuat untuk versi buil
 Credits					 = "Kredit",
 Credits_Text		 = "Kredit:\n• mdp43140 - Kontributor Utama\n• Mangyu - Inspirasi original\n• MisterCuteX - Mega Explosion,Respawn Hack\n• tehtmi - Pembuat unluac (dan helper dekompilasi)\n• Crystal_Mods100x - Menu ICE\n• Latic AX & ToxicCoder - menyediakan skrip yang dihapus via YT & MediaFire\n• AGH - Nilai WallHack,CarHealth GG\n• GKTV - Skrip GG Payback2 (wall hack,big body,pohon berwarna,item flamethower besar,bayangan,esp)\n• XxGabriel5HRxX - offset Tinggi roda mobil dan akselerasi mobil GG\n• JokerGGS - Nilai No Blast Damage,Rel0ad,Rel0ad grenade,RTX,Immortal,Float,Ragdoll,C4 Drawing,Autoshoot roket GG\n• antonyROOTlegendMAXx - Offset kendaraan tembus pandang GG.\n• MinFRE - Offset 6 star police GG.\n• UltraProGamerz - nilai & offset GG spam tembak",
 Disclaimer			 = "Disklaimer (mohon untuk dibaca)",
-Disclaimer_Text = "DISKLAIMER:\n	TOLONG JANGAN menyalahgunakan skrip ini untuk menjahili pemain lain.\n	Saya TIDAK BERTANGGUNG JAWAB atas kerusakan yang anda sebabkan karena MENGGUNAKAN skrip ini.\n	Ingat untuk menjaga kesabaran anda dari pemain lain.\n	Saya merekomendasikan menggunakan skrip ini HANYA di mode offline.\n	Saya membuat ini karena tidak ada orang lain yang membagikan skrip cheat mereka.",
+Disclaimer_Text  = "DISKLAIMER:\n	Mohon JANGAN menyalahgunakan script ini dengan maksud untuk menjahili/merugikan sesama pemain Payback2.\n	Saya tidak bertanggung jawab atas tindakan akibat penggunaan skrip ini.\n	Selalu pertimbangkan pengalaman pemain lain dan hindari menyebabkan gangguan.\n	Saya sangat menyarankan menggunakan skrip ini secara eksklusif dalam mode offline.\n	Saya membuat skrip ini karena tidak ada yang membagikan skrip cheat mereka.",
 Exit_ThankYouMsg = "	Laporkan bug: https://github.com/ABJ4403/Payback2_CHEATus/issues\n	Diskusi: https://github.com/ABJ4403/Payback2_CHEATus/discussions\n	Pertanyaan yang sering ditanyakan: https://github.com/ABJ4403/Payback2_CHEATus/wiki",
 License					 = "Lisensi",
-License_Text		 = "Payback2 CHEATus, Cheat Skrip Lua untuk GameGuardian\n© 2021-2023 ABJ4403\n\nProgram ini adalah perangkat lunak gratis: Anda dapat mendistribusikan kembali dan/atau memodifikasi\ndi bawah ketentuan lisensi publik umum GNU seperti yang diterbitkan oleh\nFree Software Foundation, baik lisensi versi 3, atau\n(pada opsi Anda) versi yang lebih baru.\n\nProgram ini didistribusikan dengan harapan bahwa itu akan berguna,\nTETAPI TANPA JAMINAN; bahkan tanpa jaminan tersirat dari\nKELAYAKAN JUAL atau KELAYAKAN UNTUK KEGUNAAN TERTENTU.	Lihat\nGNU Lisensi Publik Umum untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU\nbersama dengan program ini. Jika tidak, lihat https://gnu.org/licenses",
+License_Text		 = "Payback2 CHEATus adalah perangkat lunak gratis: Anda dapat mendistribusikan ulang dan/atau mengubahnya di bawah ketentuan Lisensi Publik Umum GNU yang diterbitkan oleh Free Software Foundation; lisensi versi 3, atau (sesuai pilihan Anda) versi yang lebih baru.\n\nPayback2 CHEATus didistribusikan dengan harapan akan berguna, tetapi TANPA JAMINAN; bahkan tanpa jaminan DAYA JUAL atau KESESUAIAN UNTUK TUJUAN TERTENTU. Lihat Lisensi Publik Umum GNU untuk detail lebih lanjut.\n\nAnda seharusnya menerima salinan Lisensi Publik Umum GNU bersama Payback2_CHEATus; Jika tidak, lihat https://gnu.org/licenses",
 Settings				 = "Pengaturan",
 Suspend					 = "Suspensi",
 Suspend_Detected = "File sesi terdeteksi, melanjutkan dari suspensi...",
 Suspend_Text		 = "Skrip Disuspensi. Lanjutkan sesi saat ini dengan menjalankan ulang skrip ini.",
 Title_Version		 = "Payback2 CHEATus v"..cfg.VERSION..", oleh ABJ4403.",
-ErrToastNotice = "Galat terjadi (%s): Keluar dari skrip dan lihat log print untuk lebih detail.",
-ErrNotFound		 = "Tidak bisa menemukan angka tertentu",
+ErrToastNotice   = "Galat terjadi (%s): Keluar dari skrip dan lihat log print untuk lebih detail.",
+ErrNotFound		   = "Tidak bisa menemukan angka tertentu",
 ErrNotFound_Report = "Tidak bisa menemukan angka tertentu, laporkan isu ini di laman GitHub saya: https://github.com/ABJ4403/Payback2_CHEATus/issues",
 Cheat_WallHack   = "Tembus Dinding",
-Cheat_WallHack_Notice = "Perhatian:\n- Hati-hati dengan lubang dibelakang dinding\n- Saat menggunakan helikopter, direkomendasikan mengunnakan cheat tembus dinding GKTV karena fisik wonkynya bisa mencegah helikopter jatuh ke void",
+Cheat_WallHack_Notice = "Perhatian: Beberapa dinding tidak ada lantai",
 Cheat_C4AutoRig  = "Auto-rig C4",
 Cheat_GodModes   = "Mode tuhan",
 Cheat_GodModes_Notice = "PERINGATAN: JANGAN MENGGUNAKAN INI UNTUK MENCURANGI PEMAIN LAIN DENGAN CARA APAPUN!!",
