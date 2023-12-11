@@ -1,5 +1,5 @@
 # What the heck is this directory?
-This directory is a list of collection of Payback 2 cheat LUA Script for GameGuardian
+This directory is a list of collection of Payback 2 cheat Lua Script for GameGuardian
 
 # Lists:
 ### `FileName.lua` (`ActualFileName.lua`, from [`some website`]()), By Author <(uploaded by Uploader)>
@@ -12,38 +12,12 @@ This directory is a list of collection of Payback 2 cheat LUA Script for GameGua
 	`Difficulty: 2` `🔏️ Decryptor: MDP43140` `🦠 None (Safe)` `💾️ Compiled binary` `💧️ Leaks variables` `⚙️ Decryption tools: Custom Patched unluac` `⚙️ Requirement: Java`
 
 	Thankfully unlike others, this one is a bit easy. i cant decrypt this using unluac/luadec, i just need the patched custom unluac that has modified non-standard OPCodes, Then it works.
-	
+
 - `PB2_Hydra-WallHack.lua` (`WALL HACK payback2.lua` from [`MediaFire`](https://www.mediafire.com/file/2xekhqk3tsvwq69/WALL+HACK+payback2.lua/file)), by Hydra.
 
 	`Difficulty: 3` `🔏️ Decryptor: ABJ4403, tehtmi, MDP43140` `🦠 Sus, doing some file modification, even though i see its nonsense (kinda not safe)` `🛡️ Obfuscation (level:3)` `🔐️String Encryption (difficulty:3)` `🔐️ Password: 7o31kql9p0` `📈️ Function argument overflow` `✏️ Bytecode modification` `💣️ Decompression bomb` `❌️ Anti-decompiler` `⚙️ Decryption tools: unluac` `⚙️ Requirement: Java, text-editor that supports replacing newlines`
 
-  Finally i had this file decrypted (kindof), Thanks to [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
-  Actually what happened that is the file had some nonsense, this will be visible if you dissasemble the file:
-```
-settable     r59   r71   r71
-gettable     r71   r59   r71
-gettable     r71   r59   r71
-settable     r71    k7   r74
-call         r71     4     2
-settable     r59   r71   r71
-loadnil      r59     0
-test         r59     0
-move         r74   r59
-test         r59     0
-loadbool     r59     0     0
-settable     r59   r71   r71
-call         r71     1     1
-settable     r71    k8   r74
-test         r59     0
-settable     r74   r77   r79
-gettable     r79   r71   r79
-loadnil      r71     8
-newtable     r71     0     0
-```
-  and this nonsense: ```loadk         r0   k36```.
-  both fills the script alot and confuses unluac, eats ~100-200kb size. just disassemble the file, remove all that above, reassemble the file, and decompile it again using patched unluac, it will work.
-
-	I know this isn't really 'decompiled' because the encrypted script debug info is stripped and its huge (400kb), so this makes it harder to reverse-engineer.
+  Finally i had this file decrypted (kindof), Kudos to [tehtmi](https://sourceforge.net/u/tehtmi) (Unluac developer) for some decryption stuff.
 
 	Thanks to [mdp43140](https://github.com/mdp43140) for reverse-engineering to get the password
 - `PB2_AGH_simplescriptv1.lua` (`Payback 2 ❰ ☠ ᴇɴᴄ ☠ ❱.lua` from [`MediaFire`](https://www.mediafire.com/file/og6r5ppblfzd36s/Payback_2__%25E2%259D%25B0_%25E2%2598%25A0_%25E1%25B4%2587%25C9%25B4%25E1%25B4%2584_%25E2%2598%25A0_%25E2%259D%25B1.lua/file)), by "Alpha GG Hacker YT".
@@ -52,7 +26,7 @@ newtable     r71     0     0
 
 	Ridicilous Arbitrary slow loading embedded on the script with 0 way to bypass that at all.
 	Assembled, Obfuscated, Encrypted + the author bullying you in the code itself (even though he missed one thing... password, which is a good thing).
-	
+
 	OR AM I? its DECOMPILED, so he thought his encryption works like a charm, eh?
 
 	this one is almost the same as the hydra wallhack ones, but simpler (if u successfully decompile the script and getting rid of nonsense stuff...)
@@ -83,43 +57,10 @@ newtable     r71     0     0
 
 	Theres's 3 files to decompile
 	Atleast it was easier than the Serrang Gaming encryption ones.
-	Also, you see whats inside of these files? here i tell you:
-	```
--- 🛡️ Script Protected By Alpha GG Hacker YT
--- 🛡️ Visit my Youtube Channel for more updates
--- This Encryption is 50 times more harder to decrypt
--- Subscribe to My YouTube ( Alpha GG Hacker YT )
--- © This is Non-Copyright Script
--- © Serial No. ENC 38639932503
-
-
-
-
-
-🛡️🛡️🛡️ Protected By   🇵🇭 P H I L I P P I N E S 🇵🇭   GameGuardian Official Encrypt Tool 🛡️🛡️🛡️
-
-                       Script ProtectoR : ALPHA GG HACKER
-
-   Proudly Protected by  P H I L I P  P I N E S  Encrypt Tool
-
-[=[=[===========================================================================================================================================================================================>
- $@$@$@    🛡️  E N C R Y P T   B Y   🛡️            $@$@$@    🛡️  E N C R Y P T   B Y   🛡️    @@@ =================[=[=[   A L P H A    G G     H A C K E R  ]=]=]================= @@@    🛡️  E N C R Y P T   B Y   🛡️            @$@$@$    🛡️  E N C R Y P T   B Y   🛡️    @$@$@$
-[=[=[===========================================================================================================================================================================================>
-[The text above this, is repeated 5x]
-
--- © Published in 07_Feb_22
--- © Tools Encrypt By [ 🛡️ Alpha GG Hacker YT 🛡️]
--- © This is Non-Copyright Script
--- © Serial No. ENC 38639932503
-
-
- ==========================================================================================================
-	```
-	Ahh YES, The `🛡️6🛡️6🛡️6  🇵🇭 P H I L I P P I N E S 🇵🇭 Satanism 👺️ Encryption tool 9🛡️9🛡️9🛡️`, very very gloooorious.
-	Don't worry. It's already decrypted (this time without tehtmi help), because its still the same "AlphaGG" encryption tool, that can be decrypted.
+	It's already decrypted (this time without tehtmi help), because its still the same "AlphaGG" encryption tool, that can be decrypted.
 	thankfully, AlphaGG didnt see this and didnt learn his failures.
 	i know, there is still some confusion stuff whatever, but hey atleast i can put the "Safe" label there, because yes its actually safe like the previous script (no, not the one with SerrangGaming encryption tool).
-	btw, script password (just in case you didnt watch AlphaGG's video description): alphaencmodz100yt
+	btw, script password: alphaencmodz100yt
 
 - `PB2_JokerGGScripterV1.lua` (`PB2_JokerGGScripterSV1.lua` from [`MediaFire`](https://www.mediafire.com/file/enpsqtcy8ub6z19/JokerGGScripterSV1.lua/file)), by "JokerGGS".
 
@@ -130,7 +71,7 @@ newtable     r71     0     0
 	also i disabled the log pollution and all the nonsense on the decompiled version, so anyone that really wants to reverse enginner the numbers slightly easier way can just press random button and look on what it searches for.
 	btw, password is "JokerGGScripter" (it might be wrong, because JokerGGS censors the password)
 
-	`PB2_AGH-GGScript-OTHER.lua` (`` from `MediaFire` (LINK NO LONGER OBTAINABLE DUE TO CHANNEL BEING BANNED)), by AlphaGGHacker
+- `PB2_AGH-GGScript-OTHER.lua` (`` from `MediaFire` (LINK NO LONGER OBTAINABLE DUE TO CHANNEL BEING BANNED)), by AlphaGGHacker
 
 	`Difficulty: 10` `🔏️ Decryptor: ABJ4403` `🦠⚠️ SG Encryption is known for doing malicious operations` `🛡️ Obfuscation (level:20)` `🔒️ String Encryption (difficulty:24)` `💾️ Assembly Compiled binary` `📈️ Function argument overflow` `🛡️ Using AGH,SG,PGv? lua encryption tool` `❌️ Anti-decompiler` `❌️ Anti-LuaASM` `❌️ Different file encoding` `🦠 GG Log Pollution & detection` `uses _ENV (Lua environment) variable` `❌️ Debug variable detection`
 
@@ -138,8 +79,14 @@ newtable     r71     0     0
 	so i wont decrypt this, why you might ask? because i modified the script assembly to eliminate almost all log spam, and what do you know dude? i got all the values with gg listItems, and gg script logging
 	if you want to use this, only use the reasmv1.lua script (on the 7z file)
 	the difference is that reasmv1 eliminates almost all log spams, and getting rid of message nonsense, and the log detection thing (just increase the 5.7777999blabla value near `LOG"` on the assembly file)
-	
 	btw this is the last script he shared before youtube terminates his channel
+
+- `Pb2Kgo1.lua` (`𝙿𝙰𝚈𝙱𝙰𝙲𝙺_2_𝙼𝙴𝙽𝚄🇰 🇬 🇴 🇻 🇮 🇵 𝙼𝙾𝙳+🇩 🇴 🇱 🇬 𝚈𝚃_txt_ENCKILLER_GAMING.lua`, from Private Means), By Killer Gaming Official
+
+	`Difficulty: 20` `Compiled Binary` `BigLASM` `Anti-reassemble (Removed .upval & RETURN)`
+
+	I really wanted some of the cheats in here, but they're not using gg.REGION_OTHER
+	and its so hard to decrypt this script
 
 ### you can find these files by downloading the 7z archives in the "encrypted" folder (the 7z archive isn't password-protected like you would expect)
 
@@ -148,11 +95,13 @@ newtable     r71     0     0
 
 # Why i make this?
 Because its VERY HARD to find these scripts dude...
+Once found it will be preserved just in case its gone,
+like AGH channel and all of his scripts
 
 # Decompiler/Decryptor resources:
-- [unluac Discussion about decrypting nonsense (im the one that reports these lool)](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
+- [my own LuaTools](https://github.com/ABJ4403/LuaTools)
+- [unluac Discussion about decompiling AGH script (im the one that reports these lool) + older patched unluac](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
 - [unluac - `Common` Decompiler for LUA v5.x](https://sourceforge.net/projects/unluac)
-- [unluac_patch - Custom patched version of (older) unluac that used to decode AGH script](https://sourceforge.net/p/unluac/discussion/general/thread/904dee6a42)
 - [unluac_patch - Custom patched version of (older) unluac with modified non-standard OPCODES](https://sourceforge.net/p/unluac/discussion/general/thread/88e9b323cc)
 - [LuaDec - LUA Decompiler for lua v5.1-3](https://github.com/viruscamp/luadec)
 - [ChunkSpy - LUA Chuck inspector/dissasembler](https://github.com/viruscamp/luadec/blob/master/ChunkSpy)

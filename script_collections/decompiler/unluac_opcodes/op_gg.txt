@@ -1,4 +1,0 @@
-.op 41 bor
-.op 42 bnot
-.op 43 band
-.op 44 bxor
