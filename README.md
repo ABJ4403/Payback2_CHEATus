@@ -9,13 +9,13 @@ DO NOT use this on multiplayer or online mode!
 Thank you for everyone that helps this project going until now.
 
 ## Features
-- `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happens. UPDATE: devices that primarily use CBSS/Anonymous might not having certain cheats working, though it didn't make the script crashed).
+- `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous(todo)/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happens).
 - `🗜️ Minified version available` (if you really need that tiny size. little note, its not bleeding-edge (very latest to the original script), its rarely updated except major updates...).
 - `📈️ Performance experiment` (optional).
-- `📈️ Memory restricted search` (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB, better optimized for OTHER/Anonymous memory region))).
-- `📈️ Memory Memoization` (technical feature that accelerates searches on area that won't change alot).
+- `📈️ Memory restricted search` (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB, better optimized for OTHER memory region, not work on Anonymous region because how it works))).
+- `📈️ Memory Memoization` (technical feature that significantly accelerates searches on values that won't change alot).
 - `🦠❌ 0-Malware` its because...
-- `💰❌ FOSS (Free & Open-source)` this cheat source code is not compiled (or even encrypted/obfuscated) so people can make sure this isn't malware.
+- `💰❌ FOSS (Free & Open-source)` the source code is not compiled (or even encrypted/obfuscated) so people can make sure this isn't malware.
 
 still confused about these stuff? see [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus/wiki) section
 
@@ -25,23 +25,23 @@ This cheat is Open-source on GitHub (unlike any other cheats some cheater bastar
 [`My Telegram Group`](https://t.me/+jCgcRExlrzExZDc1)
 
 Tested on:
-- Payback2 v2.104.12.4 (build 121, offline mode only)
+- Payback2 v2.104.12.4 (build 121, no longer available due to maintenance burden, you can still get it on my Telegram group)
 - Payback2 v2.106.0 (build 138)
 - GameGuardian v101.0
 
 This cheat is part of FOSS (Free and Open-Source Software)
 
 ## Usage, Downloading the script, etc
-See [How to use Payback2_CHEATus wiki for that](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-use-Payback2_CHEATus)
+See [How to use Payback2_CHEATus](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-use-Payback2_CHEATus) wiki for that
 
-IMPORTANT: there are rules that you MUST follow if you want to share the script: [RulesForSharingThisScript](https://github.com/ABJ4403/Payback2_CHEATus/wiki/Rules-for-sharing-this-script)
+IMPORTANT: [there are rules that you MUST follow if you want to share the script](https://github.com/ABJ4403/Payback2_CHEATus/wiki/Rules-for-sharing-this-script)
 
-Violating the rules means you're also Violating GPLv3 License (especially if its related to sharing encrypted/compiled/obfuscated/unreadable version of Payback2_CHEATus over [MediaFire](https://mediafire.com) or something related).
+Violating the rules means you're also Violating GPLv3 License (especially if its related to sharing encrypted/compiled/obfuscated/unreadable copies of Payback2_CHEATus over [MediaFire](https://mediafire.com) or something related).
 
 ## Credit
 - mdp43140 - Main Contributor.
 - Mangyu - Original inspiration.
-- MisterCuteX - Mega Explosion, Respawn Hack.
+- MisterCuteX - Mega Explosion, Floodspawn.
 - tehtmi - unluac Creator (and decompile helper).
 - Crystal_Mods100x - ICE Menu ([this link](https://gameguardian.net/forum/topic/25781-payback-2/?do=findComment&comment=116945) which points to [this download link](https://gameguardian.net/forum/applications/core/interface/file/attachment.php?id=18369) is gone. try [this mediafire link](https://www.mediafire.com/file/o1kgc0xbcjdyzac/%7B1.0%7D+PB+2.lua/file)).
 - Latic AX & ToxicCoder - for providing the removed script from GameGuardian forum through YT & MediaFire.
@@ -53,7 +53,7 @@ Violating the rules means you're also Violating GPLv3 License (especially if its
 - MinFRE - for 6 star police GG Offsets.
 
 ## License
-[![GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl.html)
 
 Payback2_CHEATus is Free Software: You can use, study, share, and improve it at
 will. Specifically you can redistribute and/or modify it under the terms of the
