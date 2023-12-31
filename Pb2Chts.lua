@@ -48,23 +48,24 @@ function MENU_CSD()
 		"1. Running speed modifier",
 		"2. Strong vehicle",
 		"3. No blast damage",
-		"4. XP,Coin,etc",
-		"5. Explosion Power",
-		"6. Explosion Direction",
-		"7. Particle interval (Slow/Fast explosion)",
-		"8. Reflective Texture",
-		"9. Colored trees",
-		"10. Autoshoot Rocket",
-		"11. Spamshoot",
-		"12. Car drift",
-		"13. Walk animation Wonkyness (visual)",
-		"14. Change Name (EXPERIMENTAL)",
-		"15. Change Name Color (EXPERIMENTAL)",
-		"16. Big body",
-		"17. Big Flamethrower (Visual item)",
-		"18. Shadows",
-		"19. Entity X-Ray (visual)",
-		"20. Delete All Names",
+		"4. Machine gun cheats",
+		"5. XP,Coin,etc",
+		"6. Explosion Power",
+		"7. Explosion Direction",
+		"8. Particle interval (Slow/Fast explosion)",
+		"9. Reflective Texture",
+		"10. Colored trees",
+		"11. Autoshoot Rocket",
+		"12. Spamshoot",
+		"13. Car drift",
+		"14. Walk animation Wonkyness (visual)",
+		"15. Change Name (EXPERIMENTAL)",
+		"16. Change Name Color (EXPERIMENTAL)",
+		"17. Big body",
+		"18. Big Flamethrower (Visual item)",
+		"19. Shadows",
+		"20. Entity X-Ray (visual)",
+		"21. Delete All Names",
 		"——",
 		"__back__"
 	},nil,f"Title_Version")
@@ -72,25 +73,26 @@ function MENU_CSD()
 	if CH == 2 then cheat_runspeedmod()
 	elseif CH == 3 then cheat_strongvehicle()
 	elseif CH == 4 then cheat_noblastdamage()
-	elseif CH == 5 then cheat_mtcScrnfx()
-	elseif CH == 6 then cheat_explodepow()
-	elseif CH == 7 then cheat_explodedir()
-	elseif CH == 8 then cheat_prtclintrvl()
-	elseif CH == 9 then cheat_reflectivetexture()
-	elseif CH == 10 then cheat_coloredtree()
-	elseif CH == 11 then cheat_autoshootrocket()
-	elseif CH == 12 then cheat_spamshoot()
-	elseif CH == 13 then cheat_cardrift()
-	elseif CH == 14 then cheat_walkwonkyness()
-	elseif CH == 15 then cheat_changeplayername()
-	elseif CH == 16 then cheat_changeplayernamecolor()
-	elseif CH == 17 then cheat_bigbody()
-	elseif CH == 18 then cheat_bigflamethroweritem()
-	elseif CH == 19 then cheat_shadowfx()
-	elseif CH == 20 then cheat_plyxray()
-	elseif CH == 21 then cheat_deleteingameplaytext()
+	elseif CH == 5 then cheat_fastMgFireRate()
+	elseif CH == 6 then cheat_mtcScrnfx()
+	elseif CH == 7 then cheat_explodepow()
+	elseif CH == 8 then cheat_explodedir()
+	elseif CH == 9 then cheat_prtclintrvl()
+	elseif CH == 10 then cheat_reflectivetexture()
+	elseif CH == 11 then cheat_coloredtree()
+	elseif CH == 12 then cheat_autoshootrocket()
+	elseif CH == 13 then cheat_spamshoot()
+	elseif CH == 14 then cheat_cardrift()
+	elseif CH == 15 then cheat_walkwonkyness()
+	elseif CH == 16 then cheat_changeplayername()
+	elseif CH == 17 then cheat_changeplayernamecolor()
+	elseif CH == 18 then cheat_bigbody()
+	elseif CH == 19 then cheat_bigflamethroweritem()
+	elseif CH == 20 then cheat_shadowfx()
+	elseif CH == 21 then cheat_plyxray()
+	elseif CH == 22 then cheat_deleteingameplaytext()
 ---
-	elseif CH == 23 then MENU() end
+	elseif CH == 24 then MENU() end
 end
 function MENU_settings()
 	local CH = gg.choice({
@@ -800,6 +802,43 @@ function cheat_noblastdamage()
 		DAMAGE_INTENSITY_VALUE = nil
 	end
 end
+function cheat_fastMgFireRate()
+	CH = gg.choice({
+		"Disable noise + Fast fire rate",
+		"Enable noise + default fire rate",
+		"Clear memory buffer",
+		"Back"
+	},nil,"Machine gun related cheats\nWARNING: WORK IS STILL IN PROGRESS")
+	if CH == 4 then MENU()
+	elseif CH == 3 then
+		CH,memOzt.machineGun = nil,nil
+		cheat_fastMgFireRate()
+	elseif CH then
+		gg.setRanges(gg.REGION_CODE_APP)
+	--basically searching ?W;24000F;985158124D;15104W
+	--target value is something around rounded thousand float value
+		if CH == 1 then tmp={7,0,"ON"}
+		elseif CH == 2 then tmp={120,5000,"OFF"} end
+		if not memOzt.machineGun then
+			-- TODO: optimize this
+			gg.searchNumber("-7776;4864;-8192::9",gg.TYPE_WORD)
+			gg.refineNumber(-7776)
+			memOzt.machineGun = gg.getResults(1)
+		end
+		if memOzt.machineGun[1] then
+			t = memOzt.machineGun[1].address
+			local r = {
+				{address=t-0x2E,flags=gg.TYPE_FLOAT,name="[Pb2Chts] MG Fire Rate",value=tmp[1]},
+				{address=t-0x1A,flags=gg.TYPE_FLOAT,name="[Pb2Chts] MG Noise Pitch",value=tmp[2]}
+			}
+			gg.setValues(r)
+			gg.addListItems(r) -- Debugging
+			gg.toast("Machine gun cheats "..tmp[3])
+		else
+			gg.toast(f"ErrNotFound")
+		end
+	end
+end
 function cheat_floodspawn()
 	CH = gg.choice({
 		"Activate",
@@ -1035,7 +1074,7 @@ function cheat_runspeedmod()
 		cheat_runspeedmod()
 	elseif CH ~= 33001 then
 		gg.setRanges(gg.REGION_CODE_APP)
-	--basically searching ?W;24000F;985158124D;15104W
+	--basically searching ?W;24000F;985158124D;15104W::13
 		if not memOzt.runSpeed then
 			gg.searchNumber(985158124,gg.TYPE_DWORD)
 			tmp=gg.getResults(99)for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x4) tmp[i].flags = gg.TYPE_FLOAT end gg.loadResults(tmp) gg.refineNumber(24000)
@@ -1333,20 +1372,24 @@ function cheat_autoshootrocket()
 		elseif CH == 4 then tmp={669,667,"Rel0ad v2"}
 		elseif CH == 5 then tmp={670,668,"OFF"} end
 		if tmp then
+		--TODO: optimize this
 			gg.setRanges(gg.REGION_CODE_APP)
-			gg.searchNumber(5000,gg.TYPE_FLOAT)
-			t = gg.getResults(1)
-			if gg.getResultCount() == 0 then
-				toast(f"ErrNotFound")
-			else
-				t = t[1].address
+			if not memOzt.autoshootRocket then
+				gg.searchNumber("-7776;4864;-8192::9",gg.TYPE_WORD)
+				gg.refineNumber(-8192)
+				memOzt.autoshootRocket[1] = gg.getResults(1)
+			end
+			if memOzt.autoshootRocket[1] then
+				t = memOzt.autoshootRocket[1].address
 				r = {
-					{address=t+0x2C,flags=gg.TYPE_WORD,value=tmp[1]},
-					{address=t+0x34,flags=gg.TYPE_WORD,value=tmp[2]}
+					{address=t+0xA,flags=gg.TYPE_WORD,value=tmp[1]},
+					{address=t+0x12,flags=gg.TYPE_WORD,value=tmp[2]}
 				}
 				gg.setValues(r)
 				gg.addListItems(r) -- Debugging
 				toast("Autoshoot rocket "..tmp[3])
+			else
+				toast(f"ErrNotFound")
 			end
 			r = nil
 		end
@@ -1678,10 +1721,11 @@ end
 --— Helper functions —————————————--
 --- Its here to make stuff easier & faster
 function table.tostring(t,dp)
-	local r,tv = '{\n'
 	dp = dp or 0
+	local r,tab,tv = '{\n',('\t'):rep(dp)
+	local tabb = tab..'\t'
 	for k,v in pairs(t) do
-		r = r..('\t'):rep(dp+1)
+		r = r..tabb
 		tv = type(v)
 		if type(k) == 'string' then
 			r = r..k..' = '
@@ -1689,7 +1733,7 @@ function table.tostring(t,dp)
 		if tv == 'table' then
 			r = r..table.tostring(v,dp+1)
 		elseif tv == 'number' and #tostring(v) > 7 then
-			r = r..'0x'..("%x"):format(v):gsub("%l",string.upper)
+			r = r..("0x%X"):format(v)
 		elseif tv == 'boolean' or tv == 'number' then
 			r = r..tostring(v)
 		else
@@ -1697,7 +1741,7 @@ function table.tostring(t,dp)
 		end
 		r = r..',\n'
 	end
-	return r..('\t'):rep(dp)..'}'
+	return r..tab..'}'
 end
 function table.merge(...)
 	local r = {}
@@ -1765,13 +1809,15 @@ function handleMemOzt(memOztName,val,valRefine,valTypes,dsrdRslts,memZones,msg)
 	return gg.getResults(dsrdRslts)
 end
 function optimizeRange(range)
+-- !! warning: you cant optimize memory region for Anonymous
 --[[
 	This optimizes used memory range automatically without using the config thing
-	This can work on every phone/enviroment/architecture (need testing)
+	This can work on every phone/environment/architecture (need testing)
 ]]
 	local t = {
 		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir)),
-		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"))) -- some issue: uuh doesnt work on vxposed, the APK is config.*.apk :/
+		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","config.*.apk"))), -- for VirtualXposed
+		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"))) -- AOSP Split APK
 	}
 	local result = {
 		range[2],
@@ -1779,25 +1825,28 @@ function optimizeRange(range)
 	}
 	range[3] = range[2] - range[1] -- calculate the range difference (save it to index 3, later index 3 is removed and table returned)
 	for i=1,#t do -- loop over all gg.getRangesList result tables
+		local ti = t[i]
 	--If:
 	--the start is below minimum range
 	--or the end if above maximum range
 	--or range is more than the stated requirement
 	--or not Other/CodeApp region
-		if t[i].start < range[1] or
-			 t[i]['end'] > range[2] or
-			 (t[i]['end'] - t[i].start) > range[3] or
-			 not (t[i].state == "O" or t[i].state == "Xa") then
-		--Remove it
-			t[i] = nil
-		else
-		--else, calculate the result...
-			result[1] = math.min(result[1],t[i].start)
-			result[2] = math.max(result[2],t[i]['end'])
+		if type(ti) == "table" then
+			if ti.start < range[1] or
+				 ti['end'] > range[2] or
+				 (ti['end'] - ti.start) > range[3] or
+				 not (ti.state == "O" or ti.state == "Xa") then
+			--Remove it
+				t[i] = nil
+			else
+			--else, calculate the result...
+				result[1] = math.min(result[1],ti.start)
+				result[2] = math.max(result[2],ti['end'])
+			end
 		end
 	end
 	table.remove(range,3)
-	log("[AutoMemOpti] Reduced scanned memory zone: "..("%x—%x → %x—%x"):format(range[1],range[2],result[1],result[2]):gsub("%l",string.upper))
+	log(("[AutoMemOpti] Reduced scanned memory zone: %X—%X → %X—%X"):format(range[1],range[2],result[1],result[2]))
 	return next(t) and result or range -- if there {}?? on the table, return the previously given input, else return the result.
 end
 function findEntityAnchr()
@@ -1992,7 +2041,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.8"
+		VERSION="2.4.9"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2018,9 +2067,11 @@ function restoreSuspend()
 			toast(f"Suspend_Detected")
 			cfg = susp.cfg
 			memOzt = susp.memOzt
+			susp = nil
+			return true
 		end
+		susp = nil
 	end
-	susp = nil
 end
 function log(...)if cfg.enableLogging then print("[Debug]",...)end end
 print = (function() -- convert table to string
@@ -2065,11 +2116,6 @@ curVal={
 
 -- Load settings and languages
 loadConfig()
-
--- Run automatic memory range optimization (needs testing)
-if cfg.enableAutoMemRangeOpti then
-	cfg.memZones.Common_RegionOther = optimizeRange(cfg.memZones.Common_RegionOther)
-end
 
 -- Modify gg.clearList (if enabled in config), to only remove Pb2Chts-related values
 if not cfg.clearAllList then
@@ -2153,8 +2199,13 @@ holdKnife        = "Pegang pisau 🔪",
 function f(i,...)return string.format(lang[i]or i,...)end
 update_language()
 
--- Restore session file if any
-restoreSuspend()
+-- Restore session file if any, and run extra operation if there is no session file
+if not restoreSuspend() then
+	-- Run automatic memory range optimization (needs testing)
+	if cfg.enableAutoMemRangeOpti then
+		cfg.memZones.Common_RegionOther = optimizeRange(cfg.memZones.Common_RegionOther)
+	end
+end
 
 --detect if gg gui was open/floating gg icon clicked. if so, close that & show our menu.
 while true do
