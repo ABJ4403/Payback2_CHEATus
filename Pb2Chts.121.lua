@@ -780,7 +780,7 @@ function cheat_noblastdamage()
 			if not memOzt.NoBlastDamage then
 				gg.searchNumber(2e9,gg.TYPE_FLOAT)
 				tmp=gg.getResults(1)
-			--TODO - BUG: on Other 64bit devicee: it will not found and crash
+			--TODO - BUG: on Other 64bit device: it will not found and crash
 				tmp[1].address = tmp[1].address - 0x4
 				gg.loadResults(tmp)
 				memOzt.NoBlastDamage = gg.getResults(1)
@@ -1677,10 +1677,11 @@ end
 --— Helper functions —————————————--
 --- Its here to make stuff easier & faster
 function table.tostring(t,dp)
-	local r,tv = '{\n'
 	dp = dp or 0
+	local r,tab,tv = '{\n',('\t'):rep(dp)
+	local tabb = tab..'\t'
 	for k,v in pairs(t) do
-		r = r..('\t'):rep(dp+1)
+		r = r..tabb
 		tv = type(v)
 		if type(k) == 'string' then
 			r = r..k..' = '
@@ -1688,7 +1689,7 @@ function table.tostring(t,dp)
 		if tv == 'table' then
 			r = r..table.tostring(v,dp+1)
 		elseif tv == 'number' and #tostring(v) > 7 then
-			r = r..'0x'..("%x"):format(v):gsub("%l",string.upper)
+			r = r..("0x%X"):format(v)
 		elseif tv == 'boolean' or tv == 'number' then
 			r = r..tostring(v)
 		else
@@ -1696,7 +1697,7 @@ function table.tostring(t,dp)
 		end
 		r = r..',\n'
 	end
-	return r..('\t'):rep(dp)..'}'
+	return r..tab..'}'
 end
 function table.merge(...)
 	local r = {}
@@ -1767,11 +1768,12 @@ function optimizeRange(range)
 -- !! warning: you cant optimize memory region for Anonymous
 --[[
 	This optimizes used memory range automatically without using the config thing
-	This can work on every phone/enviroment/architecture (need testing)
+	This can work on every phone/environment/architecture (need testing)
 ]]
 	local t = {
 		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir)),
-		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"))) -- some issue: uuh doesnt work on vxposed, the APK is config.*.apk :/
+		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","config.*.apk"))), -- for VirtualXposed
+		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"))) -- AOSP Split APK
 	}
 	local result = {
 		range[2],
@@ -1779,24 +1781,28 @@ function optimizeRange(range)
 	}
 	range[3] = range[2] - range[1] -- calculate the range difference (save it to index 3, later index 3 is removed and table returned)
 	for i=1,#t do -- loop over all gg.getRangesList result tables
+		local ti = t[i]
 	--If:
 	--the start is below minimum range
 	--or the end if above maximum range
 	--or range is more than the stated requirement
 	--or not Other/CodeApp region
-		if t[i].start < range[1] or
-			 t[i]['end'] > range[2] or
-			 (t[i]['end'] - t[i].start) > range[3] or
-			 not (t[i].state == "O" or t[i].state == "Xa") then
-		--Remove it
-			t[i] = nil
-		else
-		--else, calculate the result...
-			result[1] = math.min(result[1],t[i].start)
-			result[2] = math.max(result[2],t[i]['end'])
+		if type(ti) == "table" then
+			if ti.start < range[1] or
+				 ti['end'] > range[2] or
+				 (ti['end'] - ti.start) > range[3] or
+				 not (ti.state == "O" or ti.state == "Xa") then
+			--Remove it
+				t[i] = nil
+			else
+			--else, calculate the result...
+				result[1] = math.min(result[1],ti.start)
+				result[2] = math.max(result[2],ti['end'])
+			end
 		end
 	end
 	table.remove(range,3)
+	log(("[AutoMemOpti] Reduced scanned memory zone: %X—%X → %X—%X"):format(range[1],range[2],result[1],result[2]))
 	return next(t) and result or range -- if there {}?? on the table, return the previously given input, else return the result.
 end
 function findEntityAnchr()
@@ -1837,7 +1843,7 @@ function findEntityAnchr()
 			return {tmp0}
 		end
 	elseif cfg.entityAnchrSearchMethod == 1 then
-		toast(f"eAchB_hold1")
+		toast(f"holdPistol")
 		sleep(1e3)
 		gg.searchNumber(13,gg.TYPE_DWORD,nil,nil,table.unpack(cfg.memZones.Common_RegionOther))
 		t = gg.getResults(200)
@@ -1847,7 +1853,7 @@ function findEntityAnchr()
 		end
 		tmp0 = #t
 		while tmp0 > 1 do
-			toast(f"eAchB_hold2")
+			toast(f"holdKnife")
 			sleep(1e3)
 			gg.refineNumber(0)
 			t = gg.getResults(200)
@@ -1858,7 +1864,7 @@ function findEntityAnchr()
 				t = gg.getResults(2)
 				if t[1].value == t[2].value then t = {t[1]} break end
 			end
-			toast(f"eAchB_hold1")
+			toast(f"holdPistol")
 			sleep(1e3)
 			gg.refineNumber(13)
 			t = gg.getResults(200)
@@ -1994,7 +2000,7 @@ function loadConfig()
 		Language="auto",
 		PlayerCurrentName=":Player",
 		PlayerCustomName=":CoolFoe",
-		VERSION="2.4.8"
+		VERSION="2.4.9"
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
@@ -2020,9 +2026,11 @@ function restoreSuspend()
 			toast(f"Suspend_Detected")
 			cfg = susp.cfg
 			memOzt = susp.memOzt
+			susp = nil
+			return true
 		end
+		susp = nil
 	end
-	susp = nil
 end
 function log(...)if cfg.enableLogging then print("[Debug]",...)end end
 print = (function() -- convert table to string
@@ -2068,11 +2076,6 @@ curVal={
 -- Load settings and languages
 loadConfig()
 
--- Run automatic memory range optimization (needs testing)
-if cfg.enableAutoMemRangeOpti then
-	cfg.memZones.Common_RegionOther = optimizeRange(cfg.memZones.Common_RegionOther)
-end
-
 -- Modify gg.clearList (if enabled in config), to only remove Pb2Chts-related values
 if not cfg.clearAllList then
 	gg.clearList = function()
@@ -2116,9 +2119,9 @@ Cheat_CSD        = "Client-side cheats",
 Cheat_CSD_Notice = "Some cheats won't affect other player",
 eAchA_wait       = "Please wait... don't shoot, hold pistol 🔫",
 eAchA_dupe       = "%d Duplicate results! hold knife 🔪",
-eAchB_hold1      = "Hold pistol 🔫",
-eAchB_hold2      = "Hold knife 🔪",
 eAchC_wait       = "Please wait, finding all entities...",
+holdPistol      = "Hold pistol 🔫",
+holdKnife      = "Hold knife 🔪",
 },
 ['in']={
 Automatic				 = "Otomatis",
@@ -2147,16 +2150,21 @@ Cheat_CSD        = "Cheat sisi-klien",
 Cheat_CSD_Notice = "Beberapa cheat tidak akan memengaruhi pemain lain",
 eAchA_wait       = "Mohon tunggu... jangan menembak, pegang pistol 🔫",
 eAchA_dupe       = "%d Hasil duplikat! pegang pisau 🔪",
-eAchB_hold1      = "Pegang pistol 🔫",
-eAchB_hold2      = "Pegang pisau 🔪",
 eAchC_wait       = "Mohon tunggu, menemukan semua entitas...",
+holdPistol       = "Pegang pistol 🔫",
+holdKnife        = "Pegang pisau 🔪",
 }
 }
 function f(i,...)return string.format(lang[i]or i,...)end
 update_language()
 
--- Restore session file if any
-restoreSuspend()
+-- Restore session file if any, and run extra operation if there is no session file
+if not restoreSuspend() then
+	-- Run automatic memory range optimization (needs testing)
+	if cfg.enableAutoMemRangeOpti then
+		cfg.memZones.Common_RegionOther = optimizeRange(cfg.memZones.Common_RegionOther)
+	end
+end
 
 -- Put some debugging info and warnings
 log(f("[i] Amount of RAM used by the game process: %dMB",gg.getTargetInfo.RSS/1e3))
@@ -2172,7 +2180,6 @@ if gg.getTargetInfo.versionCode ~= 121 then
 		print(f("    Otherwise, this script may not work, if you find any issue and report it, it will be ignored."))
 	end
 end
-
 
 --detect if gg gui was open/floating gg icon clicked. if so, close that & show our menu.
 while true do
