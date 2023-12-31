@@ -25,16 +25,16 @@ Cheat ini sumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilka
 [`Grup Telegram Saya`](https://t.me/+jCgcRExlrzExZDc1)
 
 Diuji di:
-- Payback2 v2.104.12.4 (build 121, hanya mode offline)
+- Payback2 v2.104.12.4 (build 121, tidak tersedia lagi karena beban pemeliharaan, kamu masih bisa mendapatkan ini di grup Telegram saya)
 - Payback2 v2.106.0 (build 138)
 - GameGuardian v101.0
 
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
 
 ## Pengunaan, Mengunduh skrip, dll
-Lihat [Wiki Cara Menggunakan Payback2_CHEATus untuk itu](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-use-Payback2_CHEATus)
+Lihat [Wiki Cara Menggunakan Payback2_CHEATus](https://github.com/ABJ4403/Payback2_CHEATus/wiki/How-to-use-Payback2_CHEATus) untuk itu
 
-PENTING: Ada aturan yang HARUS diikuti jika ingin membagikan skrip: [AturanUntukMembagikanSkripIni](https://github.com/ABJ4403/Payback2_CHEATus/wiki/Rules-for-sharing-this-script)
+PENTING: [Ada aturan yang HARUS diikuti jika ingin membagikan skrip](https://github.com/ABJ4403/Payback2_CHEATus/wiki/Rules-for-sharing-this-script)
 
 Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkait dengan berbagi skrip Payback2_CHEATus yang di enkripsi/kompilasi/obfuscate/tidak bisa dibaca via [MediaFire](https://mediafire.com) atau sesuatu yang terkait).
 
@@ -53,7 +53,7 @@ Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkai
 - MinFRE - untuk offset 6 bintang polisi GG.
 
 ## Lisensi
-[![Gambar GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Gambar GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl.html)
 
 Payback2_CHEATus adalah Perangkat Lunak Gratis: Anda dapat menggunakan, mempelajari, berbagi, dan meningkatkannya.
 Secara khusus Anda dapat mendistribusikan ulang dan/atau memodifikasinya di bawah ketentuan
