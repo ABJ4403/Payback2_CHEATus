@@ -1377,7 +1377,7 @@ function cheat_autoshootrocket()
 			if not memOzt.autoshootRocket then
 				gg.searchNumber("-7776;4864;-8192::9",gg.TYPE_WORD)
 				gg.refineNumber(-8192)
-				memOzt.autoshootRocket[1] = gg.getResults(1)
+				memOzt.autoshootRocket = gg.getResults(1)
 			end
 			if memOzt.autoshootRocket[1] then
 				t = memOzt.autoshootRocket[1].address

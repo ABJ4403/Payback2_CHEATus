@@ -8,8 +8,11 @@ Kalau bisa, hanya gunakan skrip ini di mode offline,
 JANGAN menggunakan ini di mode online!
 Terima kasih semuanya yang telah membantu projek ini sampai sekarang.
 
+## Cheat yang tersedia
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=&pause=1000&color=FFFFFF&center=true&vCenter=true&random=true&width=435&lines=Belum+ada;Nanti+ditambahkan...)](https://git.io/typing-svg)
+
 ## Fitur
-- `💻🤝📱 Kompatibilitas lebih baik` (Root/VM, CBSS(todo)/Anonymous/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash. UPDATE: perangkat yang biasa menggunakan CBSS/Anonymous mungkin mengalami masalah dengan beberapa cheat value tidak ditemukan, walaupun tidak membuat skrip galat).
+- `💻🤝📱 Kompatibilitas lebih baik` (Root/VM, CBSS(todo)/Anonymous(todo)/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash. UPDATE: perangkat yang biasa menggunakan CBSS/Anonymous mungkin mengalami masalah dengan beberapa cheat value tidak ditemukan, walaupun tidak membuat skrip galat).
 - `🗜️ Versi minified tersedia` (Jika Anda membutuhkan skrip yang ukurannya kecil. dengan catatan, versi mini tidak bleeding-edge (paling terbaru mendekati skrip original) karena jarang diupdate kecuali ada pembaruan major...).
 - `📈️ Eksperimen performa` (opsional).
 - `📈️ Pencarian memori terbatas` (hanya cari di beberapa area memori (perhatian: ini mungkin tidak bisa bekerja pada ponsel dengan ukuran RAM berbeda (ponsel saya ramnya 2GB, dioptimalkan untuk zona memori OTHER/Anonymous)))

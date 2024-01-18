@@ -8,8 +8,11 @@ If you can, only use this script in singleplayer or offline mode,
 DO NOT use this on multiplayer or online mode!
 Thank you for everyone that helps this project going until now.
 
+## Available cheats
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=&pause=1000&color=FFFFFF&center=true&vCenter=true&random=true&width=435&lines=TODO;TBD;To+be+done;Not+yet...)](https://git.io/typing-svg)
+
 ## Features
-- `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous(todo)/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happens).
+- `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous(todo)/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happens. UPDATE: devices that primarily use CBSS/Anonymous might not having certain cheats working, though it didn't make the script crashed).
 - `🗜️ Minified version available` (if you really need that tiny size. little note, its not bleeding-edge (very latest to the original script), its rarely updated except major updates...).
 - `📈️ Performance experiment` (optional).
 - `📈️ Memory restricted search` (only search in certain memory areas (warn that this might not work on phones with different RAM size (mine was 2GB, better optimized for OTHER memory region, not work on Anonymous region because how it works))).
