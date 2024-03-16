@@ -1,15 +1,15 @@
 # Payback2 CHEATus, created by ABJ4403.
 [`🇮🇩️ ReadMe Bahasa Indonesia`](https://github.com/ABJ4403/Payback2_CHEATus/blob/main/README_id.md)
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/45a12f7e-6d44-4087-bb7c-4cff6bfe6031)
-Payback2_CHEATus is a GameGuardian Lua Cheat Script for Payback 2.<br><br>
+Payback2_CHEATus is a GameGuardian Lua script for Payback 2.<br><br>
 Warning: The developer is now aware of hackers/cheaters and thus constantly patching things.
-This project may entering maintenance mode (no longer adding features).
+This project may entering maintenance mode (only some minor changes).
 If you can, only use this script in singleplayer or offline mode,
 DO NOT use this on multiplayer or online mode!
 Thank you for everyone that helps this project going until now.
 
 ## Available cheats
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=&pause=1000&color=FFFFFF&center=true&vCenter=true&random=true&width=435&lines=TODO;TBD;To+be+done;Not+yet...)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=&pause=1000&color=FFFFFF&center=true&vCenter=true&random=true&width=435&lines=Wall+Hack;C4+Auto+Rig;Run+speed;Vehicle+health;blast+damage;XP,Coin;Explosion+Power;Particles;Reflective+Texture;Autoshoot;Car+drift;Weapon+Ammo;Rel0ad;car+anti-steal;Immortality;C4+Drawing;Float;Dr0wned;Clone+player;Vehicle+color,jet,acceleration;Translucent+vehicle;Disable+vehicle+noise;Car+wheel+height;Wanted+star;Win+rampage;AI+Control;Auto+unstuck+car;void+mode+&amp;+no+time+limit;Win+team+matches;Fix+broken+vehicles;RC+Car+Spam;High+score;Swag+Delivery+no+timer;Lock+entity+ID;Disable+AI+&amp;+respawn;Switch+team;Skip+match+intro)](https://git.io/typing-svg)
 
 ## Features
 - `💻️🤝️📱️ Better compatibility` (Root/VM, CBSS(todo)/Anonymous(todo)/Other, GG/Standard Lua interpreter, even minifier/beautifier/compiler. All that works without problem, compatible with each other, crash rarely happens. UPDATE: devices that primarily use CBSS/Anonymous might not having certain cheats working, though it didn't make the script crashed).
@@ -24,13 +24,16 @@ still confused about these stuff? see [`Wiki`](https://github.com/ABJ4403/Paybac
 
 This cheat is Open-source on GitHub (unlike any other cheats some cheater bastards not showing at all! they make it beyond proprietary)
 
-[`Report issues here`](https://github.com/ABJ4403/Payback2_CHEATus/issues)
+[`Report issues here`](https://github.com/ABJ4403/Payback2_CHEATus/issues/new)
 [`My Telegram Group`](https://t.me/+jCgcRExlrzExZDc1)
 
-Tested on:
-- Payback2 v2.104.12.4 (build 121, no longer available due to maintenance burden, you can still get it on my Telegram group)
-- Payback2 v2.106.0 (build 138)
+### Tested on:
+- Pb2 v2.104.12.4 (build 121, 32bit, no longer available due to maintenance burden)
+- Pb2 v2.106.0 (build 138, 32bit)
+- Pb2 v2.106.11 (build 1??, not compatible)
 - GameGuardian v101.0
+- Root (using OTHER region)
+- vPhoneGaGa (using OTHER region, untested)
 
 This cheat is part of FOSS (Free and Open-Source Software)
 

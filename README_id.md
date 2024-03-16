@@ -1,15 +1,15 @@
 # Payback2 CHEATus, dibuat oleh ABJ4403.
 [`🇺🇸️ ReadMe English`](https://github.com/ABJ4403/Payback2_CHEATus)
 ![Pb2Chts_Preview](https://repository-images.githubusercontent.com/445452296/45a12f7e-6d44-4087-bb7c-4cff6bfe6031)
-Payback2_CHEATus adalah Skrip cheat Lua GameGuardian untuk Payback 2.<br><br>
+Payback2_CHEATus adalah skrip Lua GameGuardian untuk Payback 2.<br><br>
 Perhatian: Developer sekarang menyadari banyaknya cheater dan terus menambal kode game.
-Projek ini kemungkinan akan memasuki mode perawatan (tidak lagi menambahkan fitur).
+Projek ini kemungkinan akan memasuki mode perawatan (hanya beberapa perubahan kecil).
 Kalau bisa, hanya gunakan skrip ini di mode offline,
-JANGAN menggunakan ini di mode online!
+JANGAN menggunakan ini di mode multipemain atau online!
 Terima kasih semuanya yang telah membantu projek ini sampai sekarang.
 
 ## Cheat yang tersedia
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=&pause=1000&color=FFFFFF&center=true&vCenter=true&random=true&width=435&lines=Belum+ada;Nanti+ditambahkan...)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=&pause=1000&color=FFFFFF&center=true&vCenter=true&random=true&width=435&lines=Tembus+Dinding;C4+Auto+Rig;Kecepatan+lari;Kendaraan+lapis+baja;kerusakan+blast;XP,Koin;Kekuatan+ledakan;Partikel;Tekstur+reflektif;Autoshoot;Drift+mobil;Amunisi+senjata;Rel0ad;mobil+anti-curi;Immortalitas;C4+Drawing;Mengambang;Dr0wned;Klon+pemain;Warna+kendaraan,jet,akelerasi;Kendaraan+Translusen;Matikan+suara+kendaraan;Tinggi+roda+mobil;Wanted+star;Win+rampage;Kendali+AI;unstuck+mobil+otomatis;mode+void+&amp;+tanps+batas+waktu;Win+team+matches;Perbaiki+kendaraan+rusak;RC+Car+Spam;Skor+tinggi;Pengantaran+Swag+tanpa+waktu;Kunci+ID+entitas;Matikan+AI+&amp;+respawn;Tukar+tim;Lewati+intro+match)](https://git.io/typing-svg)
 
 ## Fitur
 - `💻🤝📱 Kompatibilitas lebih baik` (Root/VM, CBSS(todo)/Anonymous(todo)/Other, Interpreter Lua GG/Standar, bahkan minifier/beautifier/compiler. Semua berfungsi tanpa masalah, kompatibel satu sama lain, jarang terjadi crash. UPDATE: perangkat yang biasa menggunakan CBSS/Anonymous mungkin mengalami masalah dengan beberapa cheat value tidak ditemukan, walaupun tidak membuat skrip galat).
@@ -24,13 +24,16 @@ Masih bingung? lihat bagian [`Wiki`](https://github.com/ABJ4403/Payback2_CHEATus
 
 Cheat ini sumber-terbuka (Tidak seperti cheat lain yang cheater tidak menampilkan sama sekali! mereka membuatnya diluar proprietri)
 
-[`Laporkan isu disini`](https://github.com/ABJ4403/Payback2_CHEATus/issues)
+[`Laporkan isu disini`](https://github.com/ABJ4403/Payback2_CHEATus/issues/new)
 [`Grup Telegram Saya`](https://t.me/+jCgcRExlrzExZDc1)
 
-Diuji di:
-- Payback2 v2.104.12.4 (build 121, tidak tersedia lagi karena beban pemeliharaan, kamu masih bisa mendapatkan ini di grup Telegram saya)
-- Payback2 v2.106.0 (build 138)
+### Diuji di:
+- Pb2 v2.104.12.4 (build 121, 32bit, tidak tersedia lagi karena beban pemeliharaan)
+- Pb2 v2.106.0 (build 138, 32bit)
+- Pb2 v2.106.11 (build 1??, tidak kompatibel)
 - GameGuardian v101.0
+- Root (menggunakan region OTHER)
+- vPhoneGaGa (menggunakan region OTHER)
 
 Cheat ini termasuk bagian dari FOSS (Perangkat lunak Gratis dan bersumber-terbuka)
 
@@ -56,9 +59,9 @@ Melanggar aturan berarti Anda juga melanggar lisensi GPLv3 (terutama jika terkai
 - MinFRE - untuk offset 6 bintang polisi GG.
 
 ## Lisensi
-[![Gambar GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl.html)
+[![GNU GPL v3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl.html)
 
-Payback2_CHEATus adalah Perangkat Lunak Gratis: Anda dapat menggunakan, mempelajari, berbagi, dan meningkatkannya.
+Payback2_CHEATus adalah Perangkat Lunak Gratis: Anda dapat menggunakan, mempelajari, berbagi, dan menyempurnakannya.
 Secara khusus Anda dapat mendistribusikan ulang dan/atau memodifikasinya di bawah ketentuan
 [Lisensi Publik Umum GNU](https://www.gnu.org/licenses/gpl.html) sebagai
 diterbitkan oleh Free Software Foundation, baik versi 3 dari Lisensi, atau
