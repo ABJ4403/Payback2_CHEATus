@@ -1,6 +1,6 @@
 local tmp_tpCheckpoints,tmp_choicesMenu,CH = {},{}
 gg.getFile,gg.getTargetPackage = gg.getFile():gsub("%.lua$",""),gg.getTargetPackage() -- prefetch some gg output, also strip .lua on gg.getFile
-local cfg_file = gg.getFile..'.conf'
+local cfg_file = gg.EXT_FILES_DIR..'/Pb2Chts_SaveQuickTP.conf'
 local CH,cfg,lastCfg
 local f,entityTpProps
 
@@ -376,7 +376,7 @@ function loadConfig()
 			{482,7,330,7,"Freedom Tanks"}, -- TBF roadways, Allegro midways, Destra random house, Metropolis forest, DTown void,
 			{75,13,203,2,"Allegro Tank"}, -- TBF quik-emart, Destra bank?, Metropolis near plains & CTS, DTown roof,
 		},
-		VERSION="3.4",
+		VERSION="3.5",
 	}
 	lastCfg = cfg
 	local cfg_load = loadfile(cfg_file)
