@@ -9,9 +9,9 @@ local cfg = {
 		cData = (gg.REGION_C_DATA | gg.REGION_OTHER),
 		general = (gg.REGION_C_BSS | gg.REGION_ANONYMOUS | gg.REGION_OTHER),
 	},
-	enableLogging=true,
+	enableLogging=false,
 	entityAnchrSearchMethod=2,
-	VERSION="1.1"
+	VERSION="1.2"
 }
 
 
@@ -19,19 +19,20 @@ local cfg = {
 
 --— Helper functions —————————————--
 function table.tostring(t,dp)
-	if type(t) ~= 'table' then return t end
-	local r,tv = '{\n'
 	dp = dp or 0
+	local r,tab,tv = '{\n',('\t'):rep(dp)
+	local tabb = tab..'\t'
+	dp = dp + 1
 	for k,v in pairs(t) do
-		r = r..('\t'):rep(dp+1)
+		r = r..tabb
 		tv = type(v)
 		if type(k) == 'string' then
 			r = r..k..' = '
 		end
 		if tv == 'table' then
-			r = r..table.tostring(v,dp+1)
-		elseif tv == 'number' and #tostring(v) > 7 then
-			r = r..'0x'..("%x"):format(v):gsub("%l",string.upper)
+			r = r..table.tostring(v,dp)
+		elseif tv == 'number' and (v < -9999999 or v > 9999999) then
+			r = r..("0x%X"):format(v)
 		elseif tv == 'boolean' or tv == 'number' then
 			r = r..tostring(v)
 		else
@@ -39,7 +40,7 @@ function table.tostring(t,dp)
 		end
 		r = r..',\n'
 	end
-	return r..('\t'):rep(dp)..'}'
+	return r..tabb..'}'
 end
 function table.merge(...)
 	local r = {}
@@ -60,7 +61,8 @@ end
 function optimizeRange(range)
 	local t = {
 		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir)),
-		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"))) -- some issue: uuh doesnt work on vxposed, the APK is config.*.apk :/
+		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","config.*.apk"))), -- for VirtualXposed
+		table.unpack(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","split_config.*.apk"))) -- AOSP Split APK
 	}
 	local result = {
 		range[2],
@@ -68,14 +70,19 @@ function optimizeRange(range)
 	}
 	range[3] = range[2] - range[1]
 	for i=1,#t do
-		if t[i].start < range[1] or
-			 t[i]['end'] > range[2] or
-			 (t[i]['end'] - t[i].start) > range[3] or
-			 not (t[i].state == "O" or t[i].state == "Xa") then
-			t[i] = nil
-		else
-			result[1] = math.min(result[1],t[i].start)
-			result[2] = math.max(result[2],t[i]['end'])
+		local ti = t[i]
+		if type(ti) == "table" then
+			if ti.start < range[1] or
+				 ti['end'] > range[2] or
+				 (ti['end'] - ti.start) > range[3] or
+				 not (ti.state == "O" or ti.state == "Xa") then
+			--Remove it
+				t[i] = nil
+			else
+			--else, calculate the result...
+				result[1] = math.min(result[1],ti.start)
+				result[2] = math.max(result[2],ti['end'])
+			end
 		end
 	end
 	table.remove(range,3)
@@ -85,28 +92,23 @@ function findEntityAnchr()
 	gg.setRanges(cfg.memRange.general)
 	local tmp,tmp0
 	if cfg.entityAnchrSearchMethod == 2 then
-		toast("Make sure you're in a match, don't shoot, hold pistol")
+		toast("Make sure you're in a match, don't shoot, switch weapon to pistol")
 	--this huge packs of "battery" below is basically searching "120W;20W;-501~30000W;13W;2B::??" in accurately optimized way
-		gg.searchNumber(32000,gg.TYPE_WORD,nil,nil) -- 1/6 random anchor
-		tmp=gg.getResults(5e3)logs=logs.."\n[i] 1: "..#tmp for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) end gg.loadResults(tmp) gg.refineNumber(120)                                       -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
+		gg.searchNumber(32000,gg.TYPE_DWORD,nil,nil) -- 1/6 random anchor
+		tmp=gg.getResults(5e3)logs=logs.."\n[i] 1: "..#tmp for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x48) tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber(120)          -- 2/6 shooting state (warn: value sometimes altered a bit? i rarely checked it and it sometimes shows 122 instead)
 		tmp=gg.getResults(5e3)logs=logs.."\n[i] 2: "..#tmp for i=1,#tmp do tmp[i].address = (tmp[i].address + 0xEF) tmp[i].flags = gg.TYPE_BYTE  end gg.loadResults(tmp) gg.refineNumber(2)            -- 3/6 (ControlCode 2B)
 		tmp=gg.getResults(5e3)logs=logs.."\n[i] 3: "..#tmp for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC7) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) gg.refineNumber(55834574848)  -- 4/6 (HoldWeapon 0;0;13;0::W)
 		tmp=gg.getResults(5e3)logs=logs.."\n[i] 4: "..#tmp for i=1,#tmp do tmp[i].address = (tmp[i].address - 0xC)  tmp[i].flags = gg.TYPE_WORD  end gg.loadResults(tmp) gg.refineNumber('-501~30000') -- 5/6 (Health -501~30000W(because carhealth&nostealcar cheat))
 		tmp=gg.getResults(5e3)logs=logs.."\n[i] 5: "..#tmp for i=1,#tmp do tmp[i].address = (tmp[i].address - 0x8) end gg.loadResults(tmp) gg.refineNumber(20) -- 6/6 (Anchor 20)
 		tmp=gg.getResults(5e3)logs=logs.."\n[i] 6: "..#tmp
 		tmp0 = #tmp
-		if tmp0 > 0 then
-			if tmp0 > 1 then
-				toast(tmp0.." Duplicates found! hold knife")
-				for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine knife
-				tmp=gg.getResults(1)
-				if tmp and tmp[1] then
-					tmp[1].address = tmp[1].address - 0x14 -- back to anchor
-				end
-			end
-			gg.clearResults()
-			return tmp
+		if tmp0 > 1 then
+			toast(tmp0.." Duplicates found! switch weapon to knife")
+			for i=1,tmp0 do tmp[i].address = (tmp[i].address + 0x14) tmp[i].flags = gg.TYPE_QWORD end gg.loadResults(tmp) sleep(2e3) gg.refineNumber(0) -- refine knife
+			tmp=gg.getResults(2) logs=logs.."\n[i] 7: "..#tmp
 		end
+		gg.clearResults()
+		return tmp
 	elseif cfg.entityAnchrSearchMethod == 1 then
 		toast("Hold pistol")
 		sleep(2e3)
@@ -114,34 +116,21 @@ function findEntityAnchr()
 		t = gg.getResults(200)
 		tmp0 = #t
 		logs=logs.."\n[i] A: "..tmp0
+		local isKnife = true
 		while tmp0 > 1 do
-			toast("Hold knife")
+			toast(f(isKnife and "Hold Knife" or "Hold Pistol"))
 			sleep(2e3)
-			gg.refineNumber(0)
+			gg.refineNumber(isKnife and 0 or 13)
 			t = gg.getResults(200)
 			tmp0 = #t
-			logs=logs.."\n[i] B: "..tmp0
-			if tmp0 == 1 then break
-			elseif tmp0 == 0 then return
+			logs=logs..("\n[i] %s: %s"):format(isKnife and "B" or "A",tmp0)
+			if tmp0 == 0 then return
 			elseif tmp0 == 2 then
-				t = gg.getResults(2)
 				if t[1].value == t[2].value then break end
 			end
-			toast("Hold pistol")
-			sleep(2e3)
-			gg.refineNumber(13)
-			t = gg.getResults(200)
-			tmp0 = #t
-			logs=logs.."\n[i] A: "..tmp0
-			if tmp0 == 1 then break
-			elseif tmp0 == 0 then return
-			elseif tmp0 == 2 then
-				t = gg.getResults(2)
-				if t[1].value == t[2].value then break end
-			end
-			tmp0 = #t
+			isKnife = not isKnife
 		end
-		tmp,tmp0=nil,nil
+		tmp0=nil
 		gg.clearResults()
 		return t
 	end
@@ -163,14 +152,6 @@ alert=function(str,...)gg.alert(f(str),...)end
 toast=function(s,f)gg.toast(s,true)end
 sleep=gg.sleep
 isVisible=gg.isVisible
-gg.sleepUntilGgGuiChanged=function(c,v,m)
-	c = c or 500
-	if m then toast(m) m = nil end
-	if v == nil then v = true end
-	gg.setVisible(v)
-	while isVisible() == v do sleep(c) end
-	gg.setVisible(not v)
-end
 f=string.format
 --————————————————————————————————--
 
@@ -194,13 +175,14 @@ DATA = [==[[+] --- Beginning of bug report %s ---
 
 [i] Output of ranges for %s (*.apk): %s
 
-[i] Result of finding entity anchor with method "abjAutoAnchor": %s
-
 [i] Result of finding entity anchor with method "holdWeapon": %s
+
+[i] Result of finding entity anchor with method "abjAutoAnchor": %s
 
 [i] Result count logs for finding entity anchors:%s
 
-[+] --- End of bug report %s ---]==]
+[+] --- End of bug report %s ---
+]==]
 
 
 -- gathering player anchors
@@ -231,23 +213,23 @@ gg.getTargetInfo.uid = nil
 gg.getTargetInfo.pid = nil
 
 
-io.open("Pb2Chts_report.json","w"):write(f(
+io.open("Pb2Chts_report.json","a"):write(f(
 	DATA,
-	os.date("%d/%m/%y - %T.%s"),
+	os.date("%x - %T.%s"),
 	cfg.VERSION,
 	gg.ANDROID_SDK_INT,
 	gg.PACKAGE,
 	gg.VERSION,gg.VERSION_INT,gg.BUILD,
 	gg.getTargetInfo.RSS/1e3,
-	f("%x—%x → %x—%x",cfg.memZones.c2[1],cfg.memZones.c2[2],cfg.memZones.c3[1],cfg.memZones.c3[2]),
+	f("%X—%X → %X—%X",cfg.memZones.c2[1],cfg.memZones.c2[2],cfg.memZones.c3[1],cfg.memZones.c3[2]),
 	table.tostring(gg.getTargetInfo),
 	gg.getTargetInfo.sourceDir:gsub("base%.apk$","*.apk"),table.tostring(gg.getRangesList(gg.getTargetInfo.sourceDir:gsub("base%.apk$","*.apk"))),
 	table.tostring(tmp_achr1),
 	table.tostring(tmp_achr2),
 	logs,
-	os.date("%d/%m/%y - %T.%s")
+	os.date("%x - %T.%s")
 )):close()
 gg.setVisible(true)
 toast("[+] Finished!")
 print("[+] Report is generated on "..gg.getFile.."_report.json")
-print("[+] Now you can upload the file to GitHub issues with your report detail")
+print("[+] Now you can upload the file to GitHub issues with your report detail, or send it to my Telegram group @ABJ4403_Group or privately to @ABJ4403")
